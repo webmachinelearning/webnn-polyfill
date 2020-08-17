@@ -10,6 +10,7 @@ import { OperandDescriptor } from "./OperandDescriptor";
 
 import * as tf from '@tensorflow/tfjs-core'
 import "@tensorflow/tfjs-backend-webgl";
+import '@tensorflow/tfjs-backend-cpu';
 
 export class Compilation {
   model_: Model;
@@ -23,7 +24,10 @@ export class Compilation {
 
   async compile(): Promise<void> {
     if (!(await tf.setBackend('webgl'))) {
-      throw new Error('Failed to set tf.js webgl backend.');
+      console.warn('Failed to set tf.js webgl backend, fallback to cpu backend.');
+      if (!(await tf.setBackend('cpu'))) {
+        throw new Error('Failed to set tf.js cpu backend.');
+      }
     }
     await tf.ready();
     this.allocateConstants_();
