@@ -1,0 +1,33 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WebNN API Polyfill | Mocha Tests</title>
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+  <script src="https://unpkg.com/chai/chai.js"></script>
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="../dist/webnn-polyfill.js"></script>
+  <script src="./utils.js"></script>
+  <script>
+    window.onload = setOptions;
+  </script>
+  <script>
+    mocha.setup('bdd');
+  </script>
+  <script src="./ops/add.js"></script>
+  <script src="./ops/matmul.js"></script>
+  <script src="./ops/mul.js"></script>
+  <script src="./ops/conv2d.js"></script>
+  <script src="./ops/pool2d.js"></script>
+  <script src="./ops/reshape.js"></script>
+  <script src="./ops/relu.js"></script>
+  <script src="./ops/softmax.js"></script>
+  <script src="./ops/transpose.js"></script>
+  <script>
+    mocha.globals(['jQuery']);
+    mocha.run();
+  </script>
+</body>
+</html>

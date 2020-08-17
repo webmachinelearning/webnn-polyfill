@@ -1,0 +1,47 @@
+{
+  "name": "webnn-polyfill",
+  "version": "0.0.1",
+  "description": "WebNN API polyfill",
+  "main": "dist/webnn-polyfill.js",
+  "directories": {
+    "src": "src",
+    "test": "test"
+  },
+  "scripts": {
+    "watch": "webpack --watch",
+    "start": "webpack-dev-server --open",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webmachinelearning/webnn-polyfill.git"
+  },
+  "keywords": [
+    "deep-learning",
+    "machine-learning",
+    "neural-network",
+    "deep-neural-network",
+    "javascript",
+    "webnn"
+  ],
+  "authors": [
+    "Ningxin Hu <ningxin.hu@intel.com>"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/webmachinelearning/webnn-polyfill/issues"
+  },
+  "homepage": "https://github.com/webmachinelearning/webnn-polyfill",
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "babel-loader": "^8.1.0",
+    "portfinder": "^1.0.28",
+    "ts-loader": "^8.0.2",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "@tensorflow/tfjs-backend-webgl": "^2.0.1",
+    "@tensorflow/tfjs-core": "^2.0.1"
+  }
+}
