@@ -41,7 +41,8 @@
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "@tensorflow/tfjs-backend-webgl": "^2.0.1",
-    "@tensorflow/tfjs-core": "^2.0.1"
+    "@tensorflow/tfjs-backend-webgl": "^2.3.0",
+    "@tensorflow/tfjs-backend-cpu": "^2.3.0",
+    "@tensorflow/tfjs-core": "^2.3.0"
   }
 }
