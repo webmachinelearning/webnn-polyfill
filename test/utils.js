@@ -16,3 +16,7 @@ function checkOutput(output, expected) {
     assert.isTrue(almostEqual(output[i], expected[i]));
   }
 }
+
+function product(array) {
+  return array.reduce((accumulator, currentValue) => accumulator * currentValue);
+}
