@@ -7,6 +7,9 @@ import { Compilation } from './Compilation';
 import { assert } from './utils';
 import { NamedOperand } from './NamedOperand';
 
+/**
+ * Implements the [Model](https://webmachinelearning.github.io/webnn/#model) interface.
+ */
 export class Model {
   inputs_: Map<string, Input> = new Map();
   outputs_: Map<string, Output> = new Map();
@@ -22,6 +25,7 @@ export class Model {
     this.initialize();
   }
 
+  /** */
   async createCompilation(options: CompilationOptions): Promise<Compilation> {
     const compilation = new Compilation(options, this);
     await compilation.compile();

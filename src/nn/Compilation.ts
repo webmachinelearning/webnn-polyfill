@@ -12,6 +12,9 @@ import * as tf from '@tensorflow/tfjs-core'
 import "@tensorflow/tfjs-backend-webgl";
 import '@tensorflow/tfjs-backend-cpu';
 
+/**
+ * Implements the [Compilation](https://webmachinelearning.github.io/webnn/#compilation) interface.
+ */
 export class Compilation {
   model_: Model;
   constantTensors_: Map<Constant, tf.Tensor> = new Map();
@@ -20,6 +23,11 @@ export class Compilation {
   constructor(options: CompilationOptions, model: Model) {
     // TODO: support compilation options.
     this.model_ = model;
+  }
+
+  /** */
+  async createExecution(): Promise<Execution> {
+    return new Execution(this);
   }
 
   async compile(): Promise<void> {
@@ -60,9 +68,5 @@ export class Compilation {
     for (const tensor of inputTensors.values()) {
       tf.dispose(tensor);
     }
-  }
-
-  async createExecution(): Promise<Execution> {
-    return new Execution(this);
   }
 }

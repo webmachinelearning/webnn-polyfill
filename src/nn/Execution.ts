@@ -6,6 +6,9 @@ import { ExecutionContext } from './ExecutionContext';
 
 import * as tf from '@tensorflow/tfjs-core'
 
+/**
+ * Implements the [Execution](https://webmachinelearning.github.io/webnn/#execution) interface.
+ */
 export class Execution {
   private compilation_: Compilation;
   private inputTensors_: Map<Input, tf.Tensor> = new Map();
@@ -15,6 +18,7 @@ export class Execution {
     this.compilation_ = compilation;
   }
 
+  /** */
   setInput(name: string, data: TypedArray): void {
     assert(typeof name === 'string' &&
         this.compilation_.model_.inputs_.has(name), 'The name parameter is invalid.');
@@ -23,6 +27,7 @@ export class Execution {
     this.inputTensors_.set(input, createTensor(input.desc, data));
   }
 
+  /** */
   setOutput(name: string, data: TypedArray): void {
     assert(typeof name === 'string' &&
         this.compilation_.model_.outputs_.has(name), 'The name parameter is invalid.');
@@ -32,6 +37,7 @@ export class Execution {
     this.outputBuffers_.set(output, data);
   }
 
+  /** */
   async startCompute(): Promise<void> {
     for (const output of this.compilation_.model_.outputs_.values()) {
       const tensor: tf.Tensor = tf.tidy(() => {

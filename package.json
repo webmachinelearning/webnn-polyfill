@@ -10,7 +10,8 @@
   "scripts": {
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open",
-    "build": "webpack"
+    "build": "webpack",
+    "build-docs": "typedoc --options typedoc.json"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "babel-loader": "^8.1.0",
     "portfinder": "^1.0.28",
     "ts-loader": "^8.0.2",
+    "typedoc": "^0.18.0",
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
