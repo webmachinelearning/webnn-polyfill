@@ -62,8 +62,8 @@ export class Compilation {
           constantTenosrs: this.constantTensors_
         } as ExecutionContext);
       });
-      await tensor.data();
       this.outputDescriptors_.set(output, createOperandDescriptorFromTensor(tensor));
+      tf.dispose(tensor);
     }
     for (const tensor of inputTensors.values()) {
       tf.dispose(tensor);

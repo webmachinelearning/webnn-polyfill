@@ -33,7 +33,7 @@ export class Execution {
         this.compilation_.model_.outputs_.has(name), 'The name parameter is invalid.');
     const output = this.compilation_.model_.outputs_.get(name);
     const desc = this.compilation_.outputDescriptors_.get(output);
-    validateTypedArray(data, desc)
+    validateTypedArray(data, desc);
     this.outputBuffers_.set(output, data);
   }
 

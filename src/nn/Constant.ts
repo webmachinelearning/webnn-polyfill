@@ -1,6 +1,6 @@
 import { Operand } from './Operand'
 import { OperandDescriptor } from './OperandDescriptor';
-import { assert, TypedArray, validateTypedArray, createTensor, validateOperandDescriptor, getDataType } from './utils';
+import { assert, TypedArray, validateTypedArray, createTensor, validateOperandDescriptor } from './utils';
 import { OperandType } from './OperandType';
 
 import * as tf from '@tensorflow/tfjs-core'
@@ -12,12 +12,7 @@ export class Constant extends Operand {
   get desc() { return this.desc_; }
 
   createTensor(): tf.Tensor {
-    if (typeof this.value_ === 'number') {
-      const dtype: tf.DataType = getDataType(this.desc_.type);
-      return tf.scalar(this.value_, dtype);
-    } else {
-      return createTensor(this.desc_, this.value_);
-    }
+    return createTensor(this.desc_, this.value_);
   }
 
   static createScalar(value: number, type: OperandType = OperandType.float32): Constant {

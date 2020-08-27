@@ -92,12 +92,18 @@ export function validateTypedArray(value: TypedArray, desc: OperandDescriptor) {
   }
 }
 
-export function createTensor(desc: OperandDescriptor, value: TypedArray): tf.Tensor {
+export function createTensor(desc: OperandDescriptor, value: TypedArray|Number): tf.Tensor {
   const dtype: tf.DataType = getDataType(desc.type);
   if (isTensorType(desc.type)) {
-    return tf.tensor(value, desc.dimensions, dtype);
+    validateTypedArray(value as TypedArray, desc);
+    return tf.tensor(value as TypedArray, desc.dimensions, dtype);
   } else {
-    return tf.scalar(value[0], dtype);
+    if (typeof value === 'number') {
+      return tf.scalar(value, dtype);
+    } else {
+      validateTypedArray(value as TypedArray, desc);
+      return tf.scalar((value as TypedArray)[0], dtype);
+    }
   }
 }
 
