@@ -1,18 +1,20 @@
-import { Output } from './Output';
-import { Operand } from './Operand';
-import { Constant } from './Constant';
-import { Input } from './Input';
-import { ExecutionContext } from './ExecutionContext';
-import * as utils from './utils';
-
 import * as tf from '@tensorflow/tfjs-core';
+
+import {Constant} from './Constant';
+import {ExecutionContext} from './ExecutionContext';
+import {Input} from './Input';
+import {Operand} from './Operand';
+import {Output} from './Output';
+import * as utils from './utils';
 
 export abstract class Operation {
   inputs: Operand[] = [];
   outputs: Output[] = [];
 
   constructor(inputs: Operand[]) {
-    utils.assert(inputs.every(input => input instanceof Operand), 'The inputs parameter is invalid.');
+    utils.assert(
+        inputs.every(input => input instanceof Operand),
+        'The inputs parameter is invalid.');
     this.inputs = inputs;
     this.outputs.push(new Output(this));
   }

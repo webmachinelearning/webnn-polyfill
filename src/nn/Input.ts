@@ -1,6 +1,6 @@
-import { OperandDescriptor } from './OperandDescriptor';
-import { Operand } from './Operand';
-import { assert, validateOperandDescriptor } from './utils';
+import {Operand} from './Operand';
+import {OperandDescriptor} from './OperandDescriptor';
+import {assert, validateOperandDescriptor} from './utils';
 
 export class Input extends Operand {
   readonly name: string;

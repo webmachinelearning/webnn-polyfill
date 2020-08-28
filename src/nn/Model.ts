@@ -1,28 +1,40 @@
-import { Output } from './Output';
-import { Input } from './Input';
-import { Constant } from './Constant';
-import { Operation } from './Operation';
-import { CompilationOptions } from './CompilationOptions';
-import { Compilation } from './Compilation';
-import { NamedOperand } from './NamedOperand';
+import {Compilation} from './Compilation';
+import {CompilationOptions} from './CompilationOptions';
+import {Constant} from './Constant';
+import {Input} from './Input';
+import {NamedOperand} from './NamedOperand';
+import {Operation} from './Operation';
+import {Output} from './Output';
 import * as utils from './utils';
 
 /**
- * Implements the [Model](https://webmachinelearning.github.io/webnn/#model) interface.
+ * Implements the [Model](https://webmachinelearning.github.io/webnn/#model)
+ * interface.
  */
 export class Model {
   private inputs_: Map<string, Input> = new Map();
   private outputs_: Map<string, Output> = new Map();
   private constants_: Constant[] = [];
 
-  get inputs() { return this.inputs_; }
-  get outputs() { return this.outputs_; }
-  get constants() { return this.constants_; }
+  get inputs() {
+    return this.inputs_;
+  }
+  get outputs() {
+    return this.outputs_;
+  }
+  get constants() {
+    return this.constants_;
+  }
 
   constructor(outputs: NamedOperand[]) {
-    utils.assert(outputs.length !== 0, 'The length of outputs parameter should not be 0.');
-    utils.assert(outputs.every(namedOutput => typeof namedOutput.name === 'string' &&
-        namedOutput.operand instanceof Output), 'The outputs parameter is invalid.');
+    utils.assert(
+        outputs.length !== 0,
+        'The length of outputs parameter should not be 0.');
+    utils.assert(
+        outputs.every(
+            namedOutput => typeof namedOutput.name === 'string' &&
+                namedOutput.operand instanceof Output),
+        'The outputs parameter is invalid.');
     for (const namedOutput of outputs) {
       this.outputs_.set(namedOutput.name, namedOutput.operand as Output);
     }

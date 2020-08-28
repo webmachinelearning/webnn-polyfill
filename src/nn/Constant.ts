@@ -1,15 +1,15 @@
-import { Operand } from './Operand';
-import { OperandDescriptor } from './OperandDescriptor';
-import { OperandType } from './OperandType';
-import { TypedArray } from './utils';
+import {Operand} from './Operand';
+import {OperandDescriptor} from './OperandDescriptor';
+import {OperandType} from './OperandType';
 import * as utils from './utils';
+import {TypedArray} from './utils';
 
 export class Constant extends Operand {
   readonly desc: OperandDescriptor;
   readonly value: number|TypedArray;
 
-  static createScalar(value: number, type: OperandType = OperandType.float32)
-      : Constant {
+  static createScalar(value: number, type: OperandType = OperandType.float32):
+      Constant {
     if (typeof type === 'undefined') {
       type = OperandType.float32;
     }

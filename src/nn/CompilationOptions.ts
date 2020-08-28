@@ -1,7 +1,9 @@
-import { PowerPreference } from './PowerPreference';
+import {PowerPreference} from './PowerPreference';
 
 /**
- * Implements the [CompilationOptions](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions) dictionary.
+ * Implements the
+ * [CompilationOptions](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
+ * dictionary.
  */
 export class CompilationOptions {
   /** */

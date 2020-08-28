@@ -1,5 +1,5 @@
 /**
- * Implements the [Operand](https://webmachinelearning.github.io/webnn/#operand) interface.
+ * Implements the [Operand](https://webmachinelearning.github.io/webnn/#operand)
+ * interface.
  */
-export class Operand {
-}
+export class Operand {}

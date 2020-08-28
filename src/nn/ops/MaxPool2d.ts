@@ -1,4 +1,4 @@
-import { Pool } from './Pool';
+import {Pool} from './Pool';
 
 export class MaxPool2d extends Pool {
   getPoolingType(): 'avg'|'max' {

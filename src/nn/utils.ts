@@ -1,7 +1,7 @@
-import { OperandType } from './OperandType';
-import { OperandDescriptor } from './OperandDescriptor';
-
 import * as tf from '@tensorflow/tfjs-core';
+
+import {OperandDescriptor} from './OperandDescriptor';
+import {OperandType} from './OperandType';
 
 /** */
 export type TypedArray =
@@ -56,8 +56,8 @@ export function getDataType(type: OperandType): tf.DataType {
   }
 }
 
-export function createOperandDescriptorFromTensor(tensor: tf.Tensor)
-    : OperandDescriptor {
+export function createOperandDescriptorFromTensor(tensor: tf.Tensor):
+    OperandDescriptor {
   let type: OperandType;
   if (tensor.dtype === 'float32') {
     if (tensor.rankType === tf.Rank.R0) {
@@ -78,31 +78,35 @@ export function createOperandDescriptorFromTensor(tensor: tf.Tensor)
 export function validateOperandDescriptor(desc: OperandDescriptor) {
   assert(desc.type in OperandType, 'The operand type is invalid.');
   if (isTensorType(desc.type)) {
-    assert(isNumberArray(desc.dimensions),
-           'The operand dimensions is invalid.');
+    assert(
+        isNumberArray(desc.dimensions), 'The operand dimensions is invalid.');
   } else {
-    assert(desc.dimensions === undefined,
-           'The operand dimensions is not required.');
+    assert(
+        desc.dimensions === undefined,
+        'The operand dimensions is not required.');
   }
 }
 
 export function validateTypedArray(value: TypedArray, desc: OperandDescriptor) {
   assert(isTypedArray(value), 'The value is not a typed array.');
-  assert(value instanceof getTypedArray(desc.type),
-         'The type of value is invalid.');
+  assert(
+      value instanceof getTypedArray(desc.type),
+      'The type of value is invalid.');
   if (!isTensorType(desc.type)) {
-    assert(value.length === 1,
-           `The value length ${value.length} is invalid, 1 is expected.`);
+    assert(
+        value.length === 1,
+        `The value length ${value.length} is invalid, 1 is expected.`);
   } else {
-    assert(value.length === sizeFromDimensions(desc.dimensions),
-           `the value length ${value.length} is invalid, size of ` +
-           `[${desc.dimensions}] ${sizeFromDimensions(desc.dimensions)} ` +
-           `is expected.`);
+    assert(
+        value.length === sizeFromDimensions(desc.dimensions),
+        `the value length ${value.length} is invalid, size of ` +
+            `[${desc.dimensions}] ${sizeFromDimensions(desc.dimensions)} ` +
+            `is expected.`);
   }
 }
 
-export function createTensor(desc: OperandDescriptor, value: TypedArray|number)
-    : tf.Tensor {
+export function createTensor(
+    desc: OperandDescriptor, value: TypedArray|number): tf.Tensor {
   const dtype: tf.DataType = getDataType(desc.type);
   if (isTensorType(desc.type)) {
     validateTypedArray(value as TypedArray, desc);

@@ -1,5 +1,7 @@
 /**
- * Implements the [OperandType](https://webmachinelearning.github.io/webnn/#enumdef-operandtype) enum.
+ * Implements the
+ * [OperandType](https://webmachinelearning.github.io/webnn/#enumdef-operandtype)
+ * enum.
  */
 export enum OperandType {
   'float32' = 'float32',

@@ -1,7 +1,9 @@
-import { OperandType } from './OperandType';
+import {OperandType} from './OperandType';
 
 /**
- * Implements the [OperandDescriptor](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor) dictionary.
+ * Implements the
+ * [OperandDescriptor](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
+ * dictionary.
  */
 export interface OperandDescriptor {
   /** */
