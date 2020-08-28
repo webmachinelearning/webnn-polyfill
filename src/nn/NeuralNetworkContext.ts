@@ -22,8 +22,6 @@ import { TypedArray } from './utils'
  * Implements the [NeuralNetworkContext](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext) interface.
  */
 export class NeuralNetworkContext {
-  constructor() {}
-
   /** */
   async createModel(outputs: Array<NamedOperand>): Promise<Model> {
     return new Model(outputs);

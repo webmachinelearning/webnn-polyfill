@@ -11,9 +11,13 @@ import * as utils from './utils';
  * Implements the [Model](https://webmachinelearning.github.io/webnn/#model) interface.
  */
 export class Model {
-  inputs_: Map<string, Input> = new Map();
-  outputs_: Map<string, Output> = new Map();
-  constants_: Array<Constant> = [];
+  private inputs_: Map<string, Input> = new Map();
+  private outputs_: Map<string, Output> = new Map();
+  private constants_: Array<Constant> = [];
+
+  get inputs() { return this.inputs_; }
+  get outputs() { return this.outputs_; }
+  get constants() { return this.constants_; }
 
   constructor(outputs: Array<NamedOperand>) {
     utils.assert(outputs.length !== 0, 'The length of outputs parameter should not be 0.');
@@ -22,17 +26,15 @@ export class Model {
     for (const namedOutput of outputs) {
       this.outputs_.set(namedOutput.name, namedOutput.operand as Output);
     }
-    this.initialize();
+    this.initialize_();
   }
 
   /** */
   async createCompilation(options: CompilationOptions): Promise<Compilation> {
-    const compilation = new Compilation(options, this);
-    await compilation.compile();
-    return compilation;
+    return await Compilation.createAndCompile(options, this);
   }
 
-  private initialize(): void {
+  private initialize_(): void {
     const self = this;
     function handleOperation(operation: Operation): void {
       for (const operand of operation.inputs) {
