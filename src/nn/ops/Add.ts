@@ -1,4 +1,4 @@
-import { Binary } from "./Binary";
+import { Binary } from './Binary';
 
 import * as tf from '@tensorflow/tfjs-core';
 

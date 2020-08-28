@@ -13,13 +13,13 @@ import * as utils from './utils';
 export class Model {
   private inputs_: Map<string, Input> = new Map();
   private outputs_: Map<string, Output> = new Map();
-  private constants_: Array<Constant> = [];
+  private constants_: Constant[] = [];
 
   get inputs() { return this.inputs_; }
   get outputs() { return this.outputs_; }
   get constants() { return this.constants_; }
 
-  constructor(outputs: Array<NamedOperand>) {
+  constructor(outputs: NamedOperand[]) {
     utils.assert(outputs.length !== 0, 'The length of outputs parameter should not be 0.');
     utils.assert(outputs.every(namedOutput => typeof namedOutput.name === 'string' &&
         namedOutput.operand instanceof Output), 'The outputs parameter is invalid.');
@@ -31,7 +31,8 @@ export class Model {
 
   /** */
   async createCompilation(options: CompilationOptions): Promise<Compilation> {
-    return await Compilation.createAndCompile(options, this);
+    const compilation = await Compilation.createAndCompile(options, this);
+    return compilation;
   }
 
   private initialize_(): void {
@@ -39,12 +40,11 @@ export class Model {
     function handleOperation(operation: Operation): void {
       for (const operand of operation.inputs) {
         if (operand instanceof Input) {
-          const input = operand as Input;
-          self.inputs_.set(input.name, input);
+          self.inputs_.set(operand.name, operand);
         } else if (operand instanceof Constant) {
-          self.constants_.push((operand as Constant));
+          self.constants_.push(operand);
         } else if (operand instanceof Output) {
-          handleOperation((operand as Output).operation);
+          handleOperation(operand.operation);
         }
       }
     }

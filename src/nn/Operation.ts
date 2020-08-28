@@ -1,17 +1,17 @@
-import { Output } from "./Output";
-import { Operand } from "./Operand";
-import { Constant } from "./Constant";
-import { Input } from "./Input";
-import { ExecutionContext } from "./ExecutionContext";
+import { Output } from './Output';
+import { Operand } from './Operand';
+import { Constant } from './Constant';
+import { Input } from './Input';
+import { ExecutionContext } from './ExecutionContext';
 import * as utils from './utils';
 
-import * as tf from '@tensorflow/tfjs-core'
+import * as tf from '@tensorflow/tfjs-core';
 
 export abstract class Operation {
-  inputs: Array<Operand> = [];
-  outputs: Array<Output> = [];
+  inputs: Operand[] = [];
+  outputs: Output[] = [];
 
-  constructor(inputs: Array<Operand>) {
+  constructor(inputs: Operand[]) {
     utils.assert(inputs.every(input => input instanceof Operand), 'The inputs parameter is invalid.');
     this.inputs = inputs;
     this.outputs.push(new Output(this));
@@ -23,11 +23,11 @@ export abstract class Operation {
 
   protected getTensor(operand: Operand, context: ExecutionContext): tf.Tensor {
     if (operand instanceof Constant) {
-      return context.constantTenosrs.get(operand as Constant);
+      return context.constantTenosrs.get(operand);
     } else if (operand instanceof Input) {
-      return context.inputTensors.get(operand as Input);
+      return context.inputTensors.get(operand);
     } else if (operand instanceof Output) {
-      return (operand as Output).operation.run(context);
+      return operand.operation.run(context);
     } else {
       throw new Error('The operand is invalid.');
     }

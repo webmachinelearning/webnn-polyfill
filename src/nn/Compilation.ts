@@ -1,15 +1,15 @@
-import { CompilationOptions } from "./CompilationOptions";
-import { Execution } from "./Execution";
-import { ExecutionContext } from "./ExecutionContext";
-import { Model } from "./Model";
-import { Constant } from "./Constant";
+import { CompilationOptions } from './CompilationOptions';
+import { Execution } from './Execution';
+import { ExecutionContext } from './ExecutionContext';
+import { Model } from './Model';
+import { Constant } from './Constant';
 import { Input } from './Input';
-import { Output } from "./Output";
-import { OperandDescriptor } from "./OperandDescriptor";
+import { Output } from './Output';
+import { OperandDescriptor } from './OperandDescriptor';
 import * as utils from './utils';
 
-import * as tf from '@tensorflow/tfjs-core'
-import "@tensorflow/tfjs-backend-webgl";
+import * as tf from '@tensorflow/tfjs-core';
+import '@tensorflow/tfjs-backend-webgl';
 import '@tensorflow/tfjs-backend-cpu';
 
 /**
@@ -29,7 +29,8 @@ export class Compilation {
     return new Execution(this);
   }
 
-  static async createAndCompile(options: CompilationOptions, model: Model) : Promise<Compilation> {
+  static async createAndCompile(options: CompilationOptions, model: Model)
+      : Promise<Compilation> {
     const compilation = new Compilation(options, model);
     await compilation.compile_();
     return compilation;
@@ -42,7 +43,8 @@ export class Compilation {
 
   private async compile_(): Promise<void> {
     if (!(await tf.setBackend('webgl'))) {
-      console.warn('Failed to set tf.js webgl backend, fallback to cpu backend.');
+      console.warn('Failed to set tf.js webgl backend, fallback to cpu backend.'
+          );
       if (!(await tf.setBackend('cpu'))) {
         throw new Error('Failed to set tf.js cpu backend.');
       }
@@ -54,7 +56,8 @@ export class Compilation {
 
   private allocateConstants_() {
     for (const constant of this.model_.constants) {
-      this.constantTensors_.set(constant, utils.createTensor(constant.desc, constant.value));
+      this.constantTensors_.set(
+          constant, utils.createTensor(constant.desc, constant.value));
     }
   }
 
@@ -62,17 +65,19 @@ export class Compilation {
     const inputTensors:  Map<Input, tf.Tensor> = new Map();
     for (const input of this.model_.inputs.values()) {
       const typedArrayConstructor = utils.getTypedArray(input.desc.type);
-      const inputBuffer = new typedArrayConstructor(utils.sizeFromDimensions(input.desc.dimensions));
+      const inputBuffer = new typedArrayConstructor(
+          utils.sizeFromDimensions(input.desc.dimensions));
       inputTensors.set(input, utils.createTensor(input.desc, inputBuffer));
     }
     for (const output of this.model_.outputs.values()) {
       const tensor: tf.Tensor = tf.tidy(() => {
         return output.operation.run({
-          inputTensors: inputTensors,
+          inputTensors,
           constantTenosrs: this.constantTensors_
         } as ExecutionContext);
       });
-      this.outputDescriptors_.set(output, utils.createOperandDescriptorFromTensor(tensor));
+      this.outputDescriptors_.set(
+          output, utils.createOperandDescriptorFromTensor(tensor));
       tf.dispose(tensor);
     }
     for (const tensor of inputTensors.values()) {

@@ -11,7 +11,8 @@
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open",
     "build": "webpack",
-    "build-docs": "typedoc --options typedoc.json"
+    "build-docs": "typedoc --options typedoc.json",
+    "lint": "tslint -p . -t verbose"
   },
   "repository": {
     "type": "git",
@@ -40,8 +41,11 @@
     "@tensorflow/tfjs-backend-webgl": "^2.3.0",
     "@tensorflow/tfjs-core": "^2.3.0",
     "babel-loader": "^8.1.0",
+    "clang-format": "^1.4.0",
     "portfinder": "^1.0.28",
     "ts-loader": "^8.0.2",
+    "tslint": "^6.1.3",
+    "tslint-no-circular-imports": "^0.7.0",
     "typedoc": "^0.18.0",
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",

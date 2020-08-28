@@ -9,4 +9,4 @@ export enum OperandType {
   'tensor-float32' = 'tensor-float32',
   'tensor-float16' = 'tensor-float16',
   'tensor-int32' = 'tensor-int32'
-};
+}

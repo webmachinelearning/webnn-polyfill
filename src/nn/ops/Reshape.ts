@@ -1,6 +1,6 @@
-import { Operation } from "../Operation";
-import { Operand } from "../Operand";
-import { ExecutionContext } from "../ExecutionContext";
+import { Operation } from '../Operation';
+import { Operand } from '../Operand';
+import { ExecutionContext } from '../ExecutionContext';
 import * as utils from '../utils';
 
 import * as tf from '@tensorflow/tfjs-core';

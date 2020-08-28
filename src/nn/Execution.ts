@@ -5,7 +5,7 @@ import { ExecutionContext } from './ExecutionContext';
 import { TypedArray } from './utils';
 import * as utils from './utils';
 
-import * as tf from '@tensorflow/tfjs-core'
+import * as tf from '@tensorflow/tfjs-core';
 
 /**
  * Implements the [Execution](https://webmachinelearning.github.io/webnn/#execution) interface.

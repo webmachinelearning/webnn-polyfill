@@ -1,4 +1,4 @@
-import { Operand } from "./Operand";
+import { Operand } from './Operand';
 
 /**
  * Implements the [NamedOperand](https://webmachinelearning.github.io/webnn/#dictdef-namedoperand) dictionary.

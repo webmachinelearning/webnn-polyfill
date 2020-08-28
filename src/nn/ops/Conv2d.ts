@@ -1,10 +1,10 @@
-import { Operation } from "../Operation";
-import { Operand } from "../Operand";
-import { OperandLayout } from "../OperandLayout";
-import { ExecutionContext } from "../ExecutionContext";
+import { Operation } from '../Operation';
+import { Operand } from '../Operand';
+import { OperandLayout } from '../OperandLayout';
+import { ExecutionContext } from '../ExecutionContext';
 import * as utils from '../utils';
 
-import * as tf from '@tensorflow/tfjs-core'
+import * as tf from '@tensorflow/tfjs-core';
 
 export class Conv2d extends Operation {
   private padding_: [number, number, number, number];
@@ -17,17 +17,20 @@ export class Conv2d extends Operation {
               padding: [number, number, number, number] = [0, 0, 0, 0],
               strides: [number, number] = [1, 1],
               dilations: [number, number] = [1, 1],
-              groups: number = 1,
+              groups = 1,
               layout: OperandLayout = OperandLayout.nchw) {
     super([input, filter]);
 
-    utils.assert(utils.isNumberArray(padding) && padding.length === 4, 'The padding parameter is invalid.');
+    utils.assert(utils.isNumberArray(padding) && padding.length === 4,
+                 'The padding parameter is invalid.');
     this.padding_ = padding;
 
-    utils.assert(utils.isNumberArray(strides) && strides.length === 2, 'The strides parameter is invalid.');
+    utils.assert(utils.isNumberArray(strides) && strides.length === 2,
+                 'The strides parameter is invalid.');
     this.strides_ = strides;
 
-    utils.assert(utils.isNumberArray(dilations) && dilations.length === 2, 'The dilations parameter is invalid.');
+    utils.assert(utils.isNumberArray(dilations) && dilations.length === 2,
+                 'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 
     utils.assert(utils.isNumber(groups), 'The gourps parameter is invalid.');
@@ -38,29 +41,35 @@ export class Conv2d extends Operation {
   }
 
   run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D = this.getTensor(this.inputs[0], context) as tf.Tensor4D;
-    let filter: tf.Tensor4D = this.getTensor(this.inputs[1], context) as tf.Tensor4D;
-    utils.assert(this.padding_.every(v => v === this.padding_[0]), 'The tf.conv2d only supports the same padding value.');
+    let input: tf.Tensor4D =
+        this.getTensor(this.inputs[0], context) as tf.Tensor4D;
+    let filter: tf.Tensor4D =
+        this.getTensor(this.inputs[1], context) as tf.Tensor4D;
+    utils.assert(this.padding_.every(v => v === this.padding_[0]),
+                 'The tf.conv2d only supports the same padding value.');
     const padding = this.padding_[0];
-    let input_channels:number;
+    let inputChannels:number;
     if (this.layout_ === OperandLayout.nchw) {
       // nchw -> nhwc
       input = input.transpose([0, 2, 3, 1]);
-      input_channels = input.shape[1];
-      // webnn layout: [output_channels, input_channels/groups, height, width] ->
+      inputChannels = input.shape[1];
+      // webnn layout: [output_channels, input_channels/groups, height, width]
       // tf.js layout: [filterHeight, filterWidth, inDepth, outDepth]
       filter = filter.transpose([2, 3, 1, 0]);
     } else {
       // 'NHWC'
-      input_channels = input.shape[3];
+      inputChannels = input.shape[3];
     }
     let output;
     if (this.groups_ === 1) {
-      output = tf.conv2d(input, filter, this.strides_, padding, 'NHWC', this.dilations_);
-    } else if (this.groups_ === input_channels) {
-      output = tf.depthwiseConv2d(input, filter, this.strides_, padding, 'NHWC', this.dilations_);
+      output = tf.conv2d(input, filter, this.strides_, padding, 'NHWC',
+                         this.dilations_);
+    } else if (this.groups_ === inputChannels) {
+      output = tf.depthwiseConv2d(input, filter, this.strides_, padding, 'NHWC',
+                                  this.dilations_);
     } else {
-      throw new Error(`The tf.js convolution doesn't support groups parameter ${this.groups_}`);
+      throw new Error(`The tf.js convolution doesn't support groups parameter` +
+                      ` ${this.groups_}`);
     }
     if (this.layout_ === OperandLayout.nchw) {
       // nhwc -> nchw

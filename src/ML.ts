@@ -1,4 +1,4 @@
-import { NeuralNetworkContext } from './nn/NeuralNetworkContext'
+import { NeuralNetworkContext } from './nn/NeuralNetworkContext';
 
 /**
  * Implements the [ML](https://webmachinelearning.github.io/webnn/#api-ml) interface.

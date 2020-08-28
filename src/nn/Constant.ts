@@ -1,4 +1,4 @@
-import { Operand } from './Operand'
+import { Operand } from './Operand';
 import { OperandDescriptor } from './OperandDescriptor';
 import { OperandType } from './OperandType';
 import { TypedArray } from './utils';
@@ -8,12 +8,13 @@ export class Constant extends Operand {
   readonly desc: OperandDescriptor;
   readonly value: number|TypedArray;
 
-  static createScalar(value: number, type: OperandType = OperandType.float32): Constant {
+  static createScalar(value: number, type: OperandType = OperandType.float32)
+      : Constant {
     if (typeof type === 'undefined') {
       type = OperandType.float32;
     }
     utils.assert(type in OperandType, 'The operand type is invalid.');
-    return new Constant({type: type} as OperandDescriptor, value);
+    return new Constant({type} as OperandDescriptor, value);
   }
 
   static createTensor(desc: OperandDescriptor, value: TypedArray): Constant {
