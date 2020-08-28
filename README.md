@@ -48,6 +48,13 @@ Open the web browser and navigate to http://localhost:8080/test
 > npm run build-docs
 ```
 
+### Lint and Format
+
+```sh
+> npm run lint
+> npm run format
+```
+
 ## License
 
 This project is following [Apache License Version 2.0](./LICENSE).
