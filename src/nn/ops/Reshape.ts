@@ -1,7 +1,7 @@
 import { Operation } from "../Operation";
 import { Operand } from "../Operand";
 import { ExecutionContext } from "../ExecutionContext";
-import { assert, isNumberArray } from "../utils";
+import * as utils from '../utils';
 
 import * as tf from '@tensorflow/tfjs-core';
 
@@ -10,7 +10,7 @@ export class Reshape extends Operation {
 
   constructor(input: Operand, newShape: number[]) {
     super([input]);
-    assert(isNumberArray(newShape), 'The newShape parameter is invalid.');
+    utils.assert(utils.isNumberArray(newShape), 'The newShape parameter is invalid.');
     this.newShape_ = newShape;
   }
 

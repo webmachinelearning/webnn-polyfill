@@ -2,7 +2,6 @@ import { OperandDescriptor } from './OperandDescriptor';
 import { Input } from './Input';
 import { Model } from './Model';
 import { Constant } from './Constant';
-import { TypedArray } from './utils'
 import { Operand } from './Operand';
 import { Add } from './ops/Add';
 import { Mul } from './ops/Mul';
@@ -17,6 +16,7 @@ import { Relu } from './ops/Relu';
 import { MatMul } from './ops/MatMul';
 import { Softmax } from './ops/Softmax';
 import { Transpose } from './ops/Transpose';
+import { TypedArray } from './utils'
 
 /**
  * Implements the [NeuralNetworkContext](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext) interface.

@@ -2,7 +2,7 @@ import { Operation } from "../Operation";
 import { Operand } from "../Operand";
 import { OperandLayout } from "../OperandLayout";
 import { ExecutionContext } from "../ExecutionContext";
-import { assert, isNumberArray } from "../utils";
+import * as utils from '../utils';
 
 import * as tf from '@tensorflow/tfjs-core';
 
@@ -22,25 +22,25 @@ export abstract class Pool extends Operation {
               layout: OperandLayout = OperandLayout.nchw) {
     super([input]);
 
-    assert(isNumberArray(windowDimensions) && windowDimensions.length === 2, 'The padding parameter is invalid.');
+    utils.assert(utils.isNumberArray(windowDimensions) && windowDimensions.length === 2, 'The padding parameter is invalid.');
     this.windowDimensions_ = windowDimensions;
 
-    assert(isNumberArray(padding) && padding.length === 4, 'The padding parameter is invalid.');
+    utils.assert(utils.isNumberArray(padding) && padding.length === 4, 'The padding parameter is invalid.');
     this.padding_ = padding;
 
-    assert(isNumberArray(strides) && strides.length === 2, 'The strides parameter is invalid.');
+    utils.assert(utils.isNumberArray(strides) && strides.length === 2, 'The strides parameter is invalid.');
     this.strides_ = strides;
 
-    assert(isNumberArray(dilations) && dilations.length === 2, 'The dilations parameter is invalid.');
+    utils.assert(utils.isNumberArray(dilations) && dilations.length === 2, 'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 
-    assert(layout in OperandLayout, 'The layout parameter is invalid.');
+    utils.assert(layout in OperandLayout, 'The layout parameter is invalid.');
     this.layout_ = layout;
   }
 
   run(context: ExecutionContext): tf.Tensor {
     let input: tf.Tensor4D = this.getTensor(this.inputs[0], context) as tf.Tensor4D;
-    assert(this.padding_.every(v => v === this.padding_[0]), 'The tf.conv2d only supports the same padding value.');
+    utils.assert(this.padding_.every(v => v === this.padding_[0]), 'The tf.conv2d only supports the same padding value.');
     const padding = this.padding_[0];
     const poolingType = this.getPoolingType();
     if (this.layout_ === OperandLayout.nchw) {

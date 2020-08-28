@@ -4,8 +4,8 @@ import { Constant } from './Constant';
 import { Operation } from './Operation';
 import { CompilationOptions } from './CompilationOptions';
 import { Compilation } from './Compilation';
-import { assert } from './utils';
 import { NamedOperand } from './NamedOperand';
+import * as utils from './utils';
 
 /**
  * Implements the [Model](https://webmachinelearning.github.io/webnn/#model) interface.
@@ -16,8 +16,8 @@ export class Model {
   constants_: Array<Constant> = [];
 
   constructor(outputs: Array<NamedOperand>) {
-    assert(outputs.length !== 0, 'The length of outputs parameter should not be 0.');
-    assert(outputs.every(namedOutput => typeof namedOutput.name === 'string' &&
+    utils.assert(outputs.length !== 0, 'The length of outputs parameter should not be 0.');
+    utils.assert(outputs.every(namedOutput => typeof namedOutput.name === 'string' &&
         namedOutput.operand instanceof Output), 'The outputs parameter is invalid.');
     for (const namedOutput of outputs) {
       this.outputs_.set(namedOutput.name, namedOutput.operand as Output);

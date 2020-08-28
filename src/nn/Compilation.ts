@@ -4,9 +4,9 @@ import { ExecutionContext } from "./ExecutionContext";
 import { Model } from "./Model";
 import { Constant } from "./Constant";
 import { Input } from './Input';
-import { getTypedArray, sizeFromDimensions, createTensor, createOperandDescriptorFromTensor } from "./utils";
 import { Output } from "./Output";
 import { OperandDescriptor } from "./OperandDescriptor";
+import * as utils from './utils';
 
 import * as tf from '@tensorflow/tfjs-core'
 import "@tensorflow/tfjs-backend-webgl";
@@ -51,9 +51,9 @@ export class Compilation {
   async inferOutputShapes_() {
     const inputTensors:  Map<Input, tf.Tensor> = new Map();
     for (const input of this.model_.inputs_.values()) {
-      const typedArrayConstructor = getTypedArray(input.desc.type);
-      const inputBuffer = new typedArrayConstructor(sizeFromDimensions(input.desc.dimensions));
-      inputTensors.set(input, createTensor(input.desc, inputBuffer));
+      const typedArrayConstructor = utils.getTypedArray(input.desc.type);
+      const inputBuffer = new typedArrayConstructor(utils.sizeFromDimensions(input.desc.dimensions));
+      inputTensors.set(input, utils.createTensor(input.desc, inputBuffer));
     }
     for (const output of this.model_.outputs_.values()) {
       const tensor: tf.Tensor = tf.tidy(() => {
@@ -62,7 +62,7 @@ export class Compilation {
           constantTenosrs: this.constantTensors_
         } as ExecutionContext);
       });
-      this.outputDescriptors_.set(output, createOperandDescriptorFromTensor(tensor));
+      this.outputDescriptors_.set(output, utils.createOperandDescriptorFromTensor(tensor));
       tf.dispose(tensor);
     }
     for (const tensor of inputTensors.values()) {
