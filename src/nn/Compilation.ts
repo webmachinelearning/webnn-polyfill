@@ -60,7 +60,7 @@ export class Compilation {
     }
     await tf.ready();
     this.allocateConstants_();
-    this.inferOutputShapes_();
+    await this.inferOnce_();
   }
 
   private allocateConstants_() {
@@ -70,7 +70,7 @@ export class Compilation {
     }
   }
 
-  private inferOutputShapes_() {
+  private async inferOnce_() {
     const inputTensors: Map<Input, tf.Tensor> = new Map();
     for (const input of this.model_.inputs.values()) {
       const typedArrayConstructor = utils.getTypedArray(input.desc.type);
@@ -84,6 +84,7 @@ export class Compilation {
             {inputTensors, constantTenosrs: this.constantTensors_} as
             ExecutionContext);
       });
+      await tensor.data();
       this.outputDescriptors_.set(
           output, utils.createOperandDescriptorFromTensor(tensor));
       tf.dispose(tensor);
