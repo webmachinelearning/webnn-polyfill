@@ -12,7 +12,7 @@ export class MatMul extends Operation {
   run(context: ExecutionContext): tf.Tensor {
     const a: tf.Tensor = this.getTensor(this.inputs[0], context);
     const b: tf.Tensor = this.getTensor(this.inputs[1], context);
-    if ((a.rank === 1 || a.rank === 2) && (b.rank === 1 || b.rank === 2)) {
+    if (a.rank === 1 || b.rank === 1) {
       return tf.dot(a, b);
     } else {
       return tf.matMul(a, b);
