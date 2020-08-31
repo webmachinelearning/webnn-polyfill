@@ -2,6 +2,9 @@
 
 A JavaScript implementation of the [Web Neural Network API](https://webmachinelearning.github.io/webnn/).
 
+* [API docs](https://webmachinelearning.github.io/webnn-polyfill/docs/)
+* [Unit tests](https://webmachinelearning.github.io/webnn-polyfill/test/)
+
 ## Build and Test
 
 ### Install
