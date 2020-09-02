@@ -7,13 +7,13 @@ import {OperandType} from './OperandType';
 export type TypedArray =
     Float32Array|Int32Array|Uint32Array|Int16Array|Uint16Array;
 
-export function assert(expr: boolean, msg: string) {
+export function assert(expr: boolean, msg: string): void {
   if (!expr) {
     throw new Error(msg);
   }
 }
 
-export function isNumber(value: {}): boolean {
+export function isNumber(value: unknown): boolean {
   return typeof value === 'number';
 }
 
@@ -32,7 +32,8 @@ export function isTypedArray(array: TypedArray): boolean {
       array instanceof Uint16Array;
 }
 
-export function getTypedArray(type: OperandType) {
+export function getTypedArray(type: OperandType): Float32ArrayConstructor|
+    Int32ArrayConstructor|Uint32ArrayConstructor|Uint16ArrayConstructor {
   if (type === 'float32' || type === 'tensor-float32') {
     return Float32Array;
   } else if (type === 'int32' || type === 'tensor-int32') {
@@ -75,7 +76,7 @@ export function createOperandDescriptorFromTensor(tensor: tf.Tensor):
   return {type, dimensions: tensor.shape} as OperandDescriptor;
 }
 
-export function validateOperandDescriptor(desc: OperandDescriptor) {
+export function validateOperandDescriptor(desc: OperandDescriptor): void {
   assert(desc.type in OperandType, 'The operand type is invalid.');
   if (isTensorType(desc.type)) {
     assert(
@@ -87,7 +88,8 @@ export function validateOperandDescriptor(desc: OperandDescriptor) {
   }
 }
 
-export function validateTypedArray(value: TypedArray, desc: OperandDescriptor) {
+export function validateTypedArray(
+    value: TypedArray, desc: OperandDescriptor): void {
   assert(isTypedArray(value), 'The value is not a typed array.');
   assert(
       value instanceof getTypedArray(desc.type),
@@ -101,7 +103,7 @@ export function validateTypedArray(value: TypedArray, desc: OperandDescriptor) {
         value.length === sizeFromDimensions(desc.dimensions),
         `the value length ${value.length} is invalid, size of ` +
             `[${desc.dimensions}] ${sizeFromDimensions(desc.dimensions)} ` +
-            `is expected.`);
+            'is expected.');
   }
 }
 

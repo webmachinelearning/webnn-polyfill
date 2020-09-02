@@ -16,13 +16,13 @@ export class Model {
   private outputs_: Map<string, Output> = new Map();
   private constants_: Constant[] = [];
 
-  get inputs() {
+  get inputs(): Map<string, Input> {
     return this.inputs_;
   }
-  get outputs() {
+  get outputs(): Map<string, Output> {
     return this.outputs_;
   }
-  get constants() {
+  get constants(): Constant[] {
     return this.constants_;
   }
 
@@ -48,20 +48,20 @@ export class Model {
   }
 
   private initialize_(): void {
-    const self = this;
-    function handleOperation(operation: Operation): void {
-      for (const operand of operation.inputs) {
-        if (operand instanceof Input) {
-          self.inputs_.set(operand.name, operand);
-        } else if (operand instanceof Constant) {
-          self.constants_.push(operand);
-        } else if (operand instanceof Output) {
-          handleOperation(operand.operation);
-        }
-      }
-    }
     for (const output of this.outputs_.values()) {
-      handleOperation(output.operation);
+      this.handleOperation_(output.operation);
+    }
+  }
+
+  private handleOperation_(operation: Operation): void {
+    for (const operand of operation.inputs) {
+      if (operand instanceof Input) {
+        this.inputs_.set(operand.name, operand);
+      } else if (operand instanceof Constant) {
+        this.constants_.push(operand);
+      } else if (operand instanceof Output) {
+        this.handleOperation_(operand.operation);
+      }
     }
   }
 }

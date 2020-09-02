@@ -12,7 +12,7 @@
     "start": "webpack-dev-server --open",
     "build": "webpack",
     "build-docs": "typedoc --options typedoc.json",
-    "lint": "tslint -p . -t verbose",
+    "lint": "eslint . --ext .ts",
     "format": "clang-format --glob=\"{src/**/*.ts,test/**/*.js}\" --style=file -i"
   },
   "repository": {
@@ -41,16 +41,21 @@
     "@tensorflow/tfjs-backend-cpu": "^2.3.0",
     "@tensorflow/tfjs-backend-webgl": "^2.3.0",
     "@tensorflow/tfjs-core": "^2.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "@typescript-eslint/parser": "^4.0.1",
     "babel-loader": "^8.1.0",
     "clang-format": "^1.4.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsdoc": "^30.3.1",
+    "eslint-plugin-prefer-arrow": "^1.2.2",
     "portfinder": "^1.0.28",
     "ts-loader": "^8.0.2",
-    "tslint": "^6.1.3",
-    "tslint-no-circular-imports": "^0.7.0",
     "typedoc": "^0.18.0",
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
-  }
+  },
+  "dependencies": {}
 }

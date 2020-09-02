@@ -44,12 +44,10 @@ export class Execution {
   /** */
   async startCompute(): Promise<void> {
     for (const output of this.compilation_.model.outputs.values()) {
-      const tensor: tf.Tensor = tf.tidy(() => {
-        return output.operation.run({
-          inputTensors: this.inputTensors_,
-          constantTenosrs: this.compilation_.constantTensors
-        } as ExecutionContext);
-      });
+      const tensor: tf.Tensor = tf.tidy(() => output.operation.run({
+        inputTensors: this.inputTensors_,
+        constantTenosrs: this.compilation_.constantTensors
+      } as ExecutionContext));
       const data = await tensor.data();
       tf.dispose(tensor);
       this.outputBuffers_.get(output).set(data);

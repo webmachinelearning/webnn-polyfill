@@ -23,13 +23,13 @@ export class Compilation {
   private constantTensors_: Map<Constant, tf.Tensor> = new Map();
   private outputDescriptors_: Map<Output, OperandDescriptor> = new Map();
 
-  get model() {
+  get model(): Model {
     return this.model_;
   }
-  get constantTensors() {
+  get constantTensors(): Map<Constant, tf.Tensor> {
     return this.constantTensors_;
   }
-  get outputDescriptors() {
+  get outputDescriptors(): Map<Output, OperandDescriptor> {
     return this.outputDescriptors_;
   }
 
@@ -41,6 +41,7 @@ export class Compilation {
   static async createAndCompile(options: CompilationOptions, model: Model):
       Promise<Compilation> {
     const compilation = new Compilation(options, model);
+    // eslint-disable-next-line
     await compilation.compile_();
     return compilation;
   }
@@ -63,14 +64,14 @@ export class Compilation {
     await this.inferOnce_();
   }
 
-  private allocateConstants_() {
+  private allocateConstants_(): void {
     for (const constant of this.model_.constants) {
       this.constantTensors_.set(
           constant, utils.createTensor(constant.desc, constant.value));
     }
   }
 
-  private async inferOnce_() {
+  private async inferOnce_(): Promise<void> {
     const inputTensors: Map<Input, tf.Tensor> = new Map();
     for (const input of this.model_.inputs.values()) {
       const typedArrayConstructor = utils.getTypedArray(input.desc.type);
@@ -79,11 +80,10 @@ export class Compilation {
       inputTensors.set(input, utils.createTensor(input.desc, inputBuffer));
     }
     for (const output of this.model_.outputs.values()) {
-      const tensor: tf.Tensor = tf.tidy(() => {
-        return output.operation.run(
-            {inputTensors, constantTenosrs: this.constantTensors_} as
-            ExecutionContext);
-      });
+      const tensor: tf.Tensor = tf.tidy(
+          () => output.operation.run(
+              {inputTensors, constantTenosrs: this.constantTensors_} as
+              ExecutionContext));
       await tensor.data();
       this.outputDescriptors_.set(
           output, utils.createOperandDescriptorFromTensor(tensor));

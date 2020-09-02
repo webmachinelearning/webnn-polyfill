@@ -8,7 +8,7 @@ export class ML {
   private nnContext: NeuralNetworkContext = null;
 
   /** */
-  getNeuralNetworkContext() {
+  getNeuralNetworkContext(): NeuralNetworkContext {
     if (!this.nnContext) {
       this.nnContext = new NeuralNetworkContext();
     }

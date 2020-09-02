@@ -72,7 +72,7 @@ export class Conv2d extends Operation {
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
     } else {
       throw new Error(
-          `The tf.js convolution doesn't support groups parameter` +
+          'The tf.js convolution doesn\'t support groups parameter' +
           ` ${this.groups_}`);
     }
     if (this.layout_ === OperandLayout.nchw) {
