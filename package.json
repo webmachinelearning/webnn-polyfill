@@ -13,7 +13,7 @@
     "build": "webpack",
     "build-docs": "typedoc --options typedoc.json",
     "lint": "tslint -p . -t verbose",
-    "format": "clang-format --glob=src/**/*.ts --style=file -i"
+    "format": "clang-format --glob=\"{src/**/*.ts,test/**/*.js}\" --style=file -i"
   },
   "repository": {
     "type": "git",

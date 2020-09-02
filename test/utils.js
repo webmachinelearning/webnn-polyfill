@@ -1,6 +1,7 @@
 const assert = chai.assert;
 
-function almostEqual(a, b, episilon=1e-6, rtol=5.0*1.1920928955078125e-7) {
+function almostEqual(
+    a, b, episilon = 1e-6, rtol = 5.0 * 1.1920928955078125e-7) {
   let delta = Math.abs(a - b);
   if (delta <= episilon + rtol * Math.abs(b)) {
     return true;
@@ -18,5 +19,6 @@ function checkOutput(output, expected) {
 }
 
 function product(array) {
-  return array.reduce((accumulator, currentValue) => accumulator * currentValue);
+  return array.reduce(
+      (accumulator, currentValue) => accumulator * currentValue);
 }

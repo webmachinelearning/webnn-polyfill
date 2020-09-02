@@ -3,7 +3,8 @@ describe('test reshape', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
 
   async function testReshape(oldShape, newShape) {
-    const input = nn.input('input', {type: 'tensor-float32', dimensions: oldShape});
+    const input =
+        nn.input('input', {type: 'tensor-float32', dimensions: oldShape});
     const output = nn.reshape(input, newShape);
     const model = await nn.createModel([{name: 'output', operand: output}]);
     const compilation = await model.createCompilation();
