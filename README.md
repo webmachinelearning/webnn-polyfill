@@ -28,7 +28,7 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 > npm run build
 
 # Production build
-> NODE_ENV=production npm run build
+> npm run build-production
 ```
 
 ### Test
