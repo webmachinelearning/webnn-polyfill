@@ -1,5 +1,7 @@
+'use strict';
+import {checkOutput} from '../utils.js';
+
 describe('test pool2d', function() {
-  const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
   it('maxPool2d', async function() {
@@ -11,7 +13,22 @@ describe('test pool2d', function() {
     const compilation = await model.createCompilation();
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
-                         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+                         1,
+                         2,
+                         3,
+                         4,
+                         5,
+                         6,
+                         7,
+                         8,
+                         9,
+                         10,
+                         11,
+                         12,
+                         13,
+                         14,
+                         15,
+                         16,
                        ]));
     const outputBuffer = new Float32Array(4);
     execution.setOutput('output', outputBuffer);
@@ -31,7 +48,22 @@ describe('test pool2d', function() {
     const compilation = await model.createCompilation();
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
-                         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+                         1,
+                         2,
+                         3,
+                         4,
+                         5,
+                         6,
+                         7,
+                         8,
+                         9,
+                         10,
+                         11,
+                         12,
+                         13,
+                         14,
+                         15,
+                         16,
                        ]));
     const outputBuffer = new Float32Array(4);
     execution.setOutput('output', outputBuffer);
@@ -51,14 +83,14 @@ describe('test pool2d', function() {
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
                          1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25
+                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
                        ]));
     const outputBuffer = new Float32Array(25);
     execution.setOutput('output', outputBuffer);
     await execution.startCompute();
     const expected = [
       13, 14, 15, 15, 15, 18, 19, 20, 20, 20, 23, 24, 25,
-      25, 25, 23, 24, 25, 25, 25, 23, 24, 25, 25, 25
+      25, 25, 23, 24, 25, 25, 25, 23, 24, 25, 25, 25,
     ];
     checkOutput(outputBuffer, expected);
   });
@@ -74,7 +106,7 @@ describe('test pool2d', function() {
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
                          1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25
+                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
                        ]));
     const outputBuffer = new Float32Array(4);
     execution.setOutput('output', outputBuffer);
@@ -92,7 +124,22 @@ describe('test pool2d', function() {
     const compilation = await model.createCompilation();
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
-                         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+                         1,
+                         2,
+                         3,
+                         4,
+                         5,
+                         6,
+                         7,
+                         8,
+                         9,
+                         10,
+                         11,
+                         12,
+                         13,
+                         14,
+                         15,
+                         16,
                        ]));
     const outputBuffer = new Float32Array(4);
     execution.setOutput('output', outputBuffer);
@@ -112,14 +159,14 @@ describe('test pool2d', function() {
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
                          1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25
+                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
                        ]));
     const outputBuffer = new Float32Array(25);
     execution.setOutput('output', outputBuffer);
     await execution.startCompute();
     const expected = [
       7,    7.5, 8,    8.5, 9,    9.5, 10,   10.5, 11,   11.5, 12,   12.5, 13,
-      13.5, 14,  14.5, 15,  15.5, 16,  16.5, 17,   17.5, 18,   18.5, 19
+      13.5, 14,  14.5, 15,  15.5, 16,  16.5, 17,   17.5, 18,   18.5, 19,
     ];
     checkOutput(outputBuffer, expected);
   });
@@ -136,7 +183,7 @@ describe('test pool2d', function() {
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
                          1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
-                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25
+                         14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
                        ]));
     const outputBuffer = new Float32Array(4);
     execution.setOutput('output', outputBuffer);
@@ -168,7 +215,7 @@ describe('test pool2d', function() {
           -0.88333017, -0.9641269,  0.6065926,   -0.5830042,  -0.81138134,
           1.3569402,   1.2891295,   0.2508177,   0.20211531,  0.8832168,
           -0.19886094, -0.61088,    0.682026,    -0.5253442,  1.5022339,
-          1.0256356,   1.0642492,   -0.4169051,  -0.8740329,  1.1494869
+          1.0256356,   1.0642492,   -0.4169051,  -0.8740329,  1.1494869,
         ]));
     const outputBuffer = new Float32Array(3);
     execution.setOutput('output', outputBuffer);

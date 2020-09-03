@@ -1,5 +1,7 @@
+'use strict';
+import {checkOutput} from '../utils.js';
+
 describe('test relu', function() {
-  const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
   it('relu', async function() {
@@ -22,7 +24,7 @@ describe('test relu', function() {
           -0.02097719, -2.6274924,  0.7993208,   -0.31359985, 0.9019325,
           -0.02042965, 0.5222995,   1.3394557,   -1.0482218,  1.1774449,
           0.8999488,   -1.1143959,  1.0122099,   -0.48604885, -0.06009902,
-          -0.1766853,  1.4515465,   -0.7182982,  2.0361354,   0.7899623
+          -0.1766853,  1.4515465,   -0.7182982,  2.0361354,   0.7899623,
         ]));
     const outputBuffer = new Float32Array(60);
     execution.setOutput('output', outputBuffer);
@@ -37,7 +39,7 @@ describe('test relu', function() {
       0.9181723, 0.,        0.56652546, 0.,         0.,        0.,
       0.7993208, 0.,        0.9019325,  0.,         0.5222995, 1.3394557,
       0.,        1.1774449, 0.8999488,  0.,         1.0122099, 0.,
-      0.,        0.,        1.4515465,  0.,         2.0361354, 0.7899623
+      0.,        0.,        1.4515465,  0.,         2.0361354, 0.7899623,
     ];
     checkOutput(outputBuffer, expected);
   });

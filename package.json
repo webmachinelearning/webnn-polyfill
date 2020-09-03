@@ -11,9 +11,12 @@
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open",
     "build": "webpack",
+    "build-production": "cross-env NODE_ENV=production webpack",
     "build-docs": "typedoc --options typedoc.json",
-    "lint": "eslint . --ext .ts",
-    "format": "clang-format --glob=\"{src/**/*.ts,test/**/*.js}\" --style=file -i"
+    "lintts": "eslint . --config .eslintrc.js --ext .ts",
+    "lintjs": "eslint . --no-eslintrc --config .eslintrcforjs.js --ext .js",
+    "lint": "npm run lintts && npm run lintjs",
+    "format": "clang-format --glob=\"{{src,test}/**/*.ts,{src,test}/**/*.js}\" --style=file -i"
   },
   "repository": {
     "type": "git",
@@ -45,7 +48,9 @@
     "@typescript-eslint/parser": "^4.0.1",
     "babel-loader": "^8.1.0",
     "clang-format": "^1.4.0",
+    "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsdoc": "^30.3.1",
     "eslint-plugin-prefer-arrow": "^1.2.2",

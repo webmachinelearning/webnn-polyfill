@@ -1,5 +1,7 @@
+'use strict';
+import {checkOutput} from '../utils.js';
+
 describe('test conv2d', function() {
-  const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
   it('conv2d with padding', async function() {
@@ -15,14 +17,14 @@ describe('test conv2d', function() {
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
                          0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                         13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
+                         13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
                        ]));
     const outputBuffer = new Float32Array(25);
     execution.setOutput('output', outputBuffer);
     await execution.startCompute();
     const expected = [
       12.,  21., 27., 33.,  24.,  33.,  54.,  63., 72.,  51.,  63.,  99., 108.,
-      117., 81., 93., 144., 153., 162., 111., 72., 111., 117., 123., 84.
+      117., 81., 93., 144., 153., 162., 111., 72., 111., 117., 123., 84.,
     ];
     checkOutput(outputBuffer, expected);
   });
@@ -39,7 +41,7 @@ describe('test conv2d', function() {
     const execution = await compilation.createExecution();
     execution.setInput('input', new Float32Array([
                          0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-                         13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24
+                         13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
                        ]));
     const outputBuffer = new Float32Array(9);
     execution.setOutput('output', outputBuffer);
@@ -63,7 +65,7 @@ describe('test conv2d', function() {
     execution.setInput('input', new Float32Array([
                          0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11,
                          12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-                         24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
+                         24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
                        ]));
     const outputBuffer = new Float32Array(12);
     execution.setOutput('output', outputBuffer);

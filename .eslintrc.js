@@ -1,7 +1,7 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['**/*.js', 'node_modules/', 'types/'],
-  env: { 'es6': true, 'node': true },
+  ignorePatterns: ['**/*.js', 'node_modules/'],
+  env: { 'es6': true, 'browser': true },
   parser: '@typescript-eslint/parser',
   parserOptions: { 'project': 'tsconfig.json', 'sourceType': 'module' },
   plugins: ['@typescript-eslint', 'prefer-arrow', 'import', 'jsdoc'],

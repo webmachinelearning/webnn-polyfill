@@ -1,5 +1,7 @@
+'use strict';
+import {checkOutput, sizeOfShape} from '../utils.js';
+
 describe('test reshape', function() {
-  const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
   async function testReshape(oldShape, newShape) {
@@ -9,7 +11,7 @@ describe('test reshape', function() {
     const model = await nn.createModel([{name: 'output', operand: output}]);
     const compilation = await model.createCompilation();
     const execution = await compilation.createExecution();
-    const bufferSize = product(oldShape);
+    const bufferSize = sizeOfShape(oldShape);
     const inputBuffer = new Float32Array(bufferSize);
     for (let i = 0; i < inputBuffer.length; ++i) {
       inputBuffer[i] = Math.random();

@@ -2,6 +2,7 @@
 <head>
   <meta charset="utf-8">
   <title>WebNN API Polyfill | Mocha Tests</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
 </head>
 <body>
@@ -9,21 +10,21 @@
   <script src="https://unpkg.com/chai/chai.js"></script>
   <script src="https://unpkg.com/mocha/mocha.js"></script>
   <script src="../dist/webnn-polyfill.js"></script>
-  <script src="./utils.js"></script>
-  <script>
+  <script type="module" src="./utils.js"></script>
+  <script class="mocha-init">
     mocha.setup('bdd');
+    mocha.checkLeaks();
   </script>
-  <script src="./ops/add.js"></script>
-  <script src="./ops/matmul.js"></script>
-  <script src="./ops/mul.js"></script>
-  <script src="./ops/conv2d.js"></script>
-  <script src="./ops/pool2d.js"></script>
-  <script src="./ops/reshape.js"></script>
-  <script src="./ops/relu.js"></script>
-  <script src="./ops/softmax.js"></script>
-  <script src="./ops/transpose.js"></script>
-  <script>
-    mocha.globals(['jQuery']);
+  <script type="module" src="./ops/add.js"></script>
+  <script type="module" src="./ops/matmul.js"></script>
+  <script type="module" src="./ops/mul.js"></script>
+  <script type="module" src="./ops/conv2d.js"></script>
+  <script type="module" src="./ops/pool2d.js"></script>
+  <script type="module" src="./ops/reshape.js"></script>
+  <script type="module" src="./ops/relu.js"></script>
+  <script type="module" src="./ops/softmax.js"></script>
+  <script type="module" src="./ops/transpose.js"></script>
+  <script class="mocha-exec" type="module">
     mocha.run();
   </script>
 </body>
