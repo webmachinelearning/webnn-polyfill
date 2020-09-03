@@ -1,7 +1,5 @@
 /**
- * Implements the
- * [OperandLayout](https://webmachinelearning.github.io/webnn/#enumdef-operandlayout)
- * enum.
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-operandlayout)
  */
 export enum OperandLayout {
   'nchw' = 'nchw',

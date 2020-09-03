@@ -2,10 +2,7 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {OperandDescriptor} from './OperandDescriptor';
 import {OperandType} from './OperandType';
-
-/** */
-export type TypedArray =
-    Float32Array|Int32Array|Uint32Array|Int16Array|Uint16Array;
+import {ArrayBufferView as TypedArray} from './types';
 
 export function assert(expr: boolean, msg: string): void {
   if (!expr) {

@@ -1,5 +1,14 @@
+import {Operand as OperandImpl} from './OperandImpl';
+
 /**
- * Implements the [Operand](https://webmachinelearning.github.io/webnn/#operand)
- * interface.
+ * [spec](https://webmachinelearning.github.io/webnn/#operand)
  */
-export class Operand {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Operand {}
+
+interface OperandConstructor {
+  new(): Operand;
+}
+
+// eslint-disable-next-line no-redeclare
+export const Operand: OperandConstructor = OperandImpl;

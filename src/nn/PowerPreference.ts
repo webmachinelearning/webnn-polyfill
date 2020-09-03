@@ -1,7 +1,5 @@
 /**
- * Implements the
- * [PowerPreference](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
- * enum.
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
  */
 export enum PowerPreference {
   'default' = 'default',

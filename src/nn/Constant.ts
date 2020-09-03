@@ -1,8 +1,8 @@
-import {Operand} from './Operand';
 import {OperandDescriptor} from './OperandDescriptor';
+import {Operand} from './OperandImpl';
 import {OperandType} from './OperandType';
+import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
-import {TypedArray} from './utils';
 
 export class Constant extends Operand {
   readonly desc: OperandDescriptor;

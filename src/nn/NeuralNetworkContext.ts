@@ -1,138 +1,91 @@
-import {Constant} from './Constant';
-import {Input} from './Input';
 import {Model} from './Model';
 import {NamedOperand} from './NamedOperand';
+import {NeuralNetworkContext as NeuralNetworkContextImpl} from './NeuralNetworkContextImpl';
 import {Operand} from './Operand';
 import {OperandDescriptor} from './OperandDescriptor';
 import {OperandLayout} from './OperandLayout';
 import {OperandType} from './OperandType';
-import {Add} from './ops/Add';
-import {AveragePool2d} from './ops/AveragePool2d';
-import {Conv2d} from './ops/Conv2d';
-import {MatMul} from './ops/MatMul';
-import {MaxPool2d} from './ops/MaxPool2d';
-import {Mul} from './ops/Mul';
-import {Relu} from './ops/Relu';
-import {Reshape} from './ops/Reshape';
-import {Softmax} from './ops/Softmax';
-import {Transpose} from './ops/Transpose';
-import {TypedArray} from './utils';
+import {ArrayBufferView} from './types';
 
 /**
- * Implements the
- * [NeuralNetworkContext](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext)
- * interface.
+ * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext)
  */
-export class NeuralNetworkContext {
+export interface NeuralNetworkContext {
   /** */
-  async createModel(outputs: NamedOperand[]): Promise<Model> {
-    return new Model(outputs);
-  }
+  createModel(outputs: NamedOperand[]): Promise<Model>;
 
   /** */
-  input(name: string, desc: OperandDescriptor): Input {
-    return new Input(name, desc);
-  }
+  input(name: string, desc: OperandDescriptor): Operand;
 
   /** */
-  constant(desc: OperandDescriptor, value: TypedArray): Constant;
+  constant(desc: OperandDescriptor, value: ArrayBufferView): Operand;
   /** */
-  constant(value: number, type: OperandType): Constant;
-  constant(
-      descOrValue: OperandDescriptor|number,
-      valueOrType: TypedArray|OperandType): Constant {
-    if (typeof descOrValue === 'number') {
-      return Constant.createScalar(descOrValue, valueOrType as OperandType);
-    } else {
-      return Constant.createTensor(descOrValue, valueOrType as TypedArray);
-    }
-  }
+  constant(value: number, type: OperandType): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-binary)
    */
-  add(a: Operand, b: Operand): Operand {
-    return (new Add(a, b)).output;
-  }
+  add(a: Operand, b: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-pool2d)
    */
   averagePool2d(
-      input: Operand, windowDimensions: [number, number] = [-1, -1],
-      padding: [number, number, number, number] = [0, 0, 0, 0],
-      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      layout: OperandLayout = OperandLayout.nchw): Operand {
-    return (new AveragePool2d(
-                input, windowDimensions, padding, strides, dilations, layout))
-        .output;
-  }
+      input: Operand, windowDimensions?: [number, number],
+      padding?: [number, number, number, number], strides?: [number, number],
+      dilations?: [number, number], layout?: OperandLayout): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-conv2d)
    */
   conv2d(
       input: Operand, filter: Operand,
-      padding: [number, number, number, number] = [0, 0, 0, 0],
-      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      groups = 1, layout: OperandLayout = OperandLayout.nchw): Operand {
-    return (new Conv2d(
-                input, filter, padding, strides, dilations, groups, layout))
-        .output;
-  }
+      padding?: [number, number, number, number], strides?: [number, number],
+      dilations?: [number, number], groups?: number,
+      layout?: OperandLayout): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-matmul)
    */
-  matmul(a: Operand, b: Operand): Operand {
-    return (new MatMul(a, b)).output;
-  }
+  matmul(a: Operand, b: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-binary)
    */
-  mul(a: Operand, b: Operand): Operand {
-    return (new Mul(a, b)).output;
-  }
+  mul(a: Operand, b: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-pool2d)
    */
   maxPool2d(
-      input: Operand, windowDimensions: [number, number] = [-1, -1],
-      padding: [number, number, number, number] = [0, 0, 0, 0],
-      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      layout: OperandLayout = OperandLayout.nchw): Operand {
-    return (new MaxPool2d(
-                input, windowDimensions, padding, strides, dilations, layout))
-        .output;
-  }
+      input: Operand, windowDimensions?: [number, number],
+      padding?: [number, number, number, number], strides?: [number, number],
+      dilations?: [number, number], layout?: OperandLayout): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-relu)
    */
-  relu(input: Operand): Operand {
-    return (new Relu(input)).output;
-  }
+  relu(input: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-reshape)
    */
-  reshape(input: Operand, newShape: number[]): Operand {
-    return (new Reshape(input, newShape)).output;
-  }
+  reshape(input: Operand, newShape: number[]): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-softmax)
    */
-  softmax(x: Operand): Operand {
-    return (new Softmax(x)).output;
-  }
+  softmax(x: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext-transpose)
    */
-  transpose(input: Operand, permutation?: number[]): Operand {
-    return (new Transpose(input, permutation)).output;
-  }
+  transpose(input: Operand, permutation?: number[]): Operand;
 }
+
+interface NeuralNetworkContextConstructor {
+  new(): NeuralNetworkContext;
+}
+// eslint-disable-next-line no-redeclare
+export const NeuralNetworkContext: NeuralNetworkContextConstructor =
+    NeuralNetworkContextImpl;

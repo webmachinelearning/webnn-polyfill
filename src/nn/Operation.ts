@@ -3,7 +3,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import {Constant} from './Constant';
 import {ExecutionContext} from './ExecutionContext';
 import {Input} from './Input';
-import {Operand} from './Operand';
+import {Operand} from './OperandImpl';
 import {Output} from './Output';
 import * as utils from './utils';
 

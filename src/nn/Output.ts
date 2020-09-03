@@ -1,4 +1,4 @@
-import {Operand} from './Operand';
+import {Operand} from './OperandImpl';
 import {Operation} from './Operation';
 
 export class Output extends Operand {

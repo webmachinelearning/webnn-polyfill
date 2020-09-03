@@ -53,7 +53,8 @@ module.exports = {
     'eqeqeq': ['error', 'smart'],
     'guard-for-in': 'off',
     'id-match': 'error',
-    'max-len': ['error', { 'code': 80, 'ignoreUrls': true}],
+    'max-len':
+      ['error', {'code': 80, 'ignoreUrls': true, 'ignorePattern': '^import\\s.+\\sfrom\\s.+;$'}],
     'new-parens': 'error',
     'no-bitwise': 'off',
     'no-caller': 'error',

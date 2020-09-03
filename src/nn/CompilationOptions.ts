@@ -1,11 +1,9 @@
 import {PowerPreference} from './PowerPreference';
 
 /**
- * Implements the
- * [CompilationOptions](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
- * dictionary.
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
  */
-export class CompilationOptions {
+export interface CompilationOptions {
   /** */
-  powerPreference: PowerPreference = PowerPreference.default;
+  powerPreference?: PowerPreference;
 }

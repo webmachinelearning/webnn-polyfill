@@ -1,9 +1,7 @@
 import {Operand} from './Operand';
 
 /**
- * Implements the
- * [NamedOperand](https://webmachinelearning.github.io/webnn/#dictdef-namedoperand)
- * dictionary.
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-namedoperand)
  */
 export interface NamedOperand {
   /** */
