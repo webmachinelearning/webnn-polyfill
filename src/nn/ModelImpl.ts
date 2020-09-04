@@ -36,7 +36,7 @@ export class Model implements ModelInterface {
     for (const namedOutput of outputs) {
       this.outputs_.set(namedOutput.name, namedOutput.operand as Output);
     }
-    this.initialize_();
+    this.initialize();
   }
 
   async createCompilation(options: CompilationOptions): Promise<Compilation> {
@@ -44,20 +44,20 @@ export class Model implements ModelInterface {
     return compilation;
   }
 
-  private initialize_(): void {
+  private initialize(): void {
     for (const output of this.outputs_.values()) {
-      this.handleOperation_(output.operation);
+      this.handleOperation(output.operation);
     }
   }
 
-  private handleOperation_(operation: Operation): void {
+  private handleOperation(operation: Operation): void {
     for (const operand of operation.inputs) {
       if (operand instanceof Input) {
         this.inputs_.set(operand.name, operand);
       } else if (operand instanceof Constant) {
         this.constants_.push(operand);
       } else if (operand instanceof Output) {
-        this.handleOperation_(operand.operation);
+        this.handleOperation(operand.operation);
       }
     }
   }

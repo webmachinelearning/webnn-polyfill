@@ -37,8 +37,7 @@ export class Compilation implements CompilationInterface {
   static async createAndCompile(options: CompilationOptions, model: Model):
       Promise<Compilation> {
     const compilation = new Compilation(options, model);
-    // eslint-disable-next-line
-    await compilation.compile_();
+    await compilation.compile();
     return compilation;
   }
 
@@ -50,7 +49,7 @@ export class Compilation implements CompilationInterface {
     this.model_ = model;
   }
 
-  private async compile_(): Promise<void> {
+  private async compile(): Promise<void> {
     if (!(await tf.setBackend('webgl'))) {
       console.warn(
           'Failed to set tf.js webgl backend, fallback to cpu backend.');
@@ -59,18 +58,18 @@ export class Compilation implements CompilationInterface {
       }
     }
     await tf.ready();
-    this.allocateConstants_();
-    await this.inferOnce_();
+    this.allocateConstants();
+    await this.inferOnce();
   }
 
-  private allocateConstants_(): void {
+  private allocateConstants(): void {
     for (const constant of this.model_.constants) {
       this.constantTensors_.set(
           constant, utils.createTensor(constant.desc, constant.value));
     }
   }
 
-  private async inferOnce_(): Promise<void> {
+  private async inferOnce(): Promise<void> {
     const inputTensors: Map<Input, tf.Tensor> = new Map();
     for (const input of this.model_.inputs.values()) {
       const typedArrayConstructor = utils.getTypedArray(input.desc.type);
