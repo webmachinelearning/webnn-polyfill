@@ -42,9 +42,7 @@ export class Compilation implements CompilationInterface {
   }
 
   constructor(options?: CompilationOptions, model?: Model) {
-    utils.assert(
-        typeof options !== 'undefined' && typeof model !== 'undefined',
-        'Invalid arguments');
+    utils.assert(typeof model !== 'undefined', 'Invalid arguments');
     // TODO: support compilation options.
     this.model_ = model;
   }
