@@ -1,6 +1,6 @@
-import {OperandDescriptor} from './OperandDescriptor';
-import {Operand} from './OperandImpl';
-import {OperandType} from './OperandType';
+import {OperandDescriptor} from './operand_descriptor';
+import {Operand} from './operand_impl';
+import {OperandType} from './operand_type';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 

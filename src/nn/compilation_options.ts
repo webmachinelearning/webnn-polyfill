@@ -1,4 +1,4 @@
-import {PowerPreference} from './PowerPreference';
+import {PowerPreference} from './power_preference';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)

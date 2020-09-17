@@ -3,15 +3,15 @@ import '@tensorflow/tfjs-backend-cpu';
 
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Compilation as CompilationInterface} from './Compilation';
-import {CompilationOptions} from './CompilationOptions';
-import {Constant} from './Constant';
-import {ExecutionContext} from './ExecutionContext';
-import {Execution} from './ExecutionImpl';
-import {Input} from './Input';
-import {Model} from './ModelImpl';
-import {OperandDescriptor} from './OperandDescriptor';
-import {Output} from './Output';
+import {Compilation as CompilationInterface} from './compilation';
+import {CompilationOptions} from './compilation_options';
+import {Constant} from './constant';
+import {ExecutionContext} from './execution_context';
+import {Execution} from './execution_impl';
+import {Input} from './input';
+import {Model} from './model_impl';
+import {OperandDescriptor} from './operand_descriptor';
+import {Output} from './output';
 import * as utils from './utils';
 
 export class Compilation implements CompilationInterface {

@@ -1,4 +1,4 @@
-import {Operand} from './Operand';
+import {Operand} from './operand';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-namedoperand)

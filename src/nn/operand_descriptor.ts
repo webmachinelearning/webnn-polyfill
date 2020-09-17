@@ -1,4 +1,4 @@
-import {OperandType} from './OperandType';
+import {OperandType} from './operand_type';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)

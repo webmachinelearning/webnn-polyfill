@@ -1,5 +1,5 @@
-import {OperandDescriptor} from './OperandDescriptor';
-import {Operand} from './OperandImpl';
+import {OperandDescriptor} from './operand_descriptor';
+import {Operand} from './operand_impl';
 import {assert, validateOperandDescriptor} from './utils';
 
 export class Input extends Operand {

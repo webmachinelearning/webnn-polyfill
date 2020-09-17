@@ -1,4 +1,4 @@
-import {Execution as ExecutionImpl} from './ExecutionImpl';
+import {Execution as ExecutionImpl} from './execution_impl';
 import {ArrayBufferView} from './types';
 
 /**

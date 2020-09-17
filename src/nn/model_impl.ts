@@ -1,11 +1,11 @@
-import {Compilation} from './CompilationImpl';
-import {CompilationOptions} from './CompilationOptions';
-import {Constant} from './Constant';
-import {Input} from './Input';
-import {Model as ModelInterface} from './Model';
-import {NamedOperand} from './NamedOperand';
-import {Operation} from './Operation';
-import {Output} from './Output';
+import {Compilation} from './compilation_impl';
+import {CompilationOptions} from './compilation_options';
+import {Constant} from './constant';
+import {Input} from './input';
+import {Model as ModelInterface} from './model';
+import {NamedOperand} from './named_operand';
+import {Operation} from './operation';
+import {Output} from './output';
 import * as utils from './utils';
 
 export class Model implements ModelInterface {

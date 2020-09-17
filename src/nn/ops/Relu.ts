@@ -1,8 +1,8 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../ExecutionContext';
-import {Operand} from '../Operand';
-import {Operation} from '../Operation';
+import {ExecutionContext} from '../execution_context';
+import {Operand} from '../operand';
+import {Operation} from '../operation';
 
 export class Relu extends Operation {
   constructor(input: Operand) {

@@ -1,8 +1,8 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../ExecutionContext';
-import {Operand} from '../Operand';
-import {Operation} from '../Operation';
+import {ExecutionContext} from '../execution_context';
+import {Operand} from '../operand';
+import {Operation} from '../operation';
 
 export abstract class Binary extends Operation {
   constructor(a: Operand, b: Operand) {

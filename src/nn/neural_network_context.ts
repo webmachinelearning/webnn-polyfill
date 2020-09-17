@@ -1,10 +1,10 @@
-import {Model} from './Model';
-import {NamedOperand} from './NamedOperand';
-import {NeuralNetworkContext as NeuralNetworkContextImpl} from './NeuralNetworkContextImpl';
-import {Operand} from './Operand';
-import {OperandDescriptor} from './OperandDescriptor';
-import {OperandLayout} from './OperandLayout';
-import {OperandType} from './OperandType';
+import {Model} from './model';
+import {NamedOperand} from './named_operand';
+import {NeuralNetworkContext as NeuralNetworkContextImpl} from './neural_network_context_impl';
+import {Operand} from './operand';
+import {OperandDescriptor} from './operand_descriptor';
+import {OperandLayout} from './operand_layout';
+import {OperandType} from './operand_type';
 import {ArrayBufferView} from './types';
 
 /**

@@ -1,10 +1,10 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Compilation} from './CompilationImpl';
-import {Execution as ExecutionInterface} from './Execution';
-import {ExecutionContext} from './ExecutionContext';
-import {Input} from './Input';
-import {Output} from './Output';
+import {Compilation} from './compilation_impl';
+import {Execution as ExecutionInterface} from './execution';
+import {ExecutionContext} from './execution_context';
+import {Input} from './input';
+import {Output} from './output';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 

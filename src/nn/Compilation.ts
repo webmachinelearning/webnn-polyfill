@@ -1,5 +1,5 @@
-import {Compilation as CompilationImpl} from './CompilationImpl';
-import {Execution} from './Execution';
+import {Compilation as CompilationImpl} from './compilation_impl';
+import {Execution} from './execution';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#compilation)

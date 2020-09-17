@@ -1,6 +1,6 @@
-import {Compilation} from './Compilation';
-import {CompilationOptions} from './CompilationOptions';
-import {Model as ModelImpl} from './ModelImpl';
+import {Compilation} from './compilation';
+import {CompilationOptions} from './compilation_options';
+import {Model as ModelImpl} from './model_impl';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#model)

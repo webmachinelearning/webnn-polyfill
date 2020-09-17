@@ -1,5 +1,5 @@
-import {Operand} from './OperandImpl';
-import {Operation} from './Operation';
+import {Operand} from './operand_impl';
+import {Operation} from './operation';
 
 export class Output extends Operand {
   readonly operation: Operation;

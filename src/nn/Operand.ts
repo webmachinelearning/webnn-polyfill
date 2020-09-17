@@ -1,4 +1,4 @@
-import {Operand as OperandImpl} from './OperandImpl';
+import {Operand as OperandImpl} from './operand_impl';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#operand)

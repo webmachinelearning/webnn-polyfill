@@ -1,5 +1,5 @@
-import {ML as MLInterface} from './ML';
-import {NeuralNetworkContext} from './nn/NeuralNetworkContextImpl';
+import {ML as MLInterface} from './ml';
+import {NeuralNetworkContext} from './nn/neural_network_context_impl';
 
 export class ML implements MLInterface {
   private nnContext: NeuralNetworkContext = null;

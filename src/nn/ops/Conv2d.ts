@@ -1,9 +1,9 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../ExecutionContext';
-import {Operand} from '../Operand';
-import {OperandLayout} from '../OperandLayout';
-import {Operation} from '../Operation';
+import {ExecutionContext} from '../execution_context';
+import {Operand} from '../operand';
+import {OperandLayout} from '../operand_layout';
+import {Operation} from '../operation';
 import * as utils from '../utils';
 
 export class Conv2d extends Operation {
