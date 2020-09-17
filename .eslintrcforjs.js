@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['**/*.ts', 'node_modules/', 'dist/', 'webpack.config.js'],
+  ignorePatterns: ['**/*.ts', 'node_modules/', 'dist/', 'docs/', 'webpack.config.js'],
   env: { 'es6': true, 'browser': true, 'node': true, 'mocha': true},
   parserOptions: { ecmaVersion: 2017, sourceType: 'module'},
   globals: {
