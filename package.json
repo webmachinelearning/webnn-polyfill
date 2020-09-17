@@ -16,7 +16,8 @@
     "lintts": "eslint . --config .eslintrc.js --ext .ts",
     "lintjs": "eslint . --no-eslintrc --config .eslintrcforjs.js --ext .js",
     "lint": "npm run lintts && npm run lintjs",
-    "format": "clang-format --glob=\"{{src,test}/**/*.ts,{src,test}/**/*.js}\" --style=file -i"
+    "format": "clang-format --glob=\"{{src,test}/**/*.ts,{src,test}/**/*.js}\" --style=file -i",
+    "test": "cross-env NODE_ENV=test mocha --require ./test/node_setup.js --exit --recursive"
   },
   "repository": {
     "type": "git",
@@ -40,13 +41,16 @@
   "homepage": "https://github.com/webmachinelearning/webnn-polyfill",
   "devDependencies": {
     "@babel/core": "^7.11.4",
+    "@babel/polyfill": "^7.11.5",
     "@babel/preset-env": "^7.11.0",
+    "@babel/register": "^7.11.5",
     "@tensorflow/tfjs-backend-cpu": "^2.3.0",
     "@tensorflow/tfjs-backend-webgl": "^2.3.0",
     "@tensorflow/tfjs-core": "^2.3.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "babel-loader": "^8.1.0",
+    "chai": "^4.2.0",
     "clang-format": "^1.4.0",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
@@ -54,6 +58,7 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsdoc": "^30.3.1",
     "eslint-plugin-prefer-arrow": "^1.2.2",
+    "mocha": "^8.1.3",
     "portfinder": "^1.0.28",
     "ts-loader": "^8.0.2",
     "typedoc": "^0.18.0",

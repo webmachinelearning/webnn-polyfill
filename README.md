@@ -32,7 +32,12 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 ```
 
 ### Test
+#### Run tests in node.js.
+```hs
+> npm test
+```
 
+#### Run tests in web browser.
 ```sh
 > npm start
 ```
