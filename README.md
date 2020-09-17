@@ -7,61 +7,71 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 
 ## Build and Test
 
-### Install
+### Setup
 
 ```sh
 > npm install
 ```
 
-### Start
-
-```sh
-> npm start
-
-# Start an HTTPS server
-> HTTPS=true npm start
-```
-
 ### Build
+#### Development build
 
 ```sh
 > npm run build
+```
 
-# Production build
+#### Production build
+
+```
 > npm run build-production
 ```
 
 ### Test
 #### Run tests in node.js.
+
 ```hs
 > npm test
 ```
 
 #### Run tests in web browser.
+
 ```sh
 > npm start
 ```
 
 Open the web browser and navigate to http://localhost:8080/test
 
-### Watch
-
-```sh
-> npm run watch
-```
-
-### Docs
+## Other scripts
+### Build docs
 
 ```sh
 > npm run build-docs
 ```
 
-### Lint and Format
+### Lint
 
 ```sh
 > npm run lint
+```
+
+### Format
+
+```sh
 > npm run format
 ```
+
+### Start dev server
+
+```sh
+> npm run dev
+```
+
+### Watch files
+
+```sh
+> npm run watch
+```
+
 
 ## License
 
