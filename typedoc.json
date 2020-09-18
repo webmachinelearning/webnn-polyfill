@@ -1,0 +1,14 @@
+{
+  "out": "./docs/",
+  "readme": "none",
+  "includes": "./src",
+  "exclude": [
+    "**/node_modules/**"
+  ],
+  "mode": "file",
+  "excludeExternals": true,
+  "excludeNotExported": true,
+  "excludePrivate": true,
+  "ignoreCompilerErrors": true,
+  "excludeNotDocumented": true
+}
