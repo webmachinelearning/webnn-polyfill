@@ -1,9 +1,9 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Constant} from './constant';
-import {Input} from './input';
+import {ConstantOperand} from './constant_operand';
+import {InputOperand} from './input_operand';
 
 export interface ExecutionContext {
-  inputTensors: Map<Input, tf.Tensor>;
-  constantTenosrs: Map<Constant, tf.Tensor>;
+  inputTensors: Map<InputOperand, tf.Tensor>;
+  constantTenosrs: Map<ConstantOperand, tf.Tensor>;
 }

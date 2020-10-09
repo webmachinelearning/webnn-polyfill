@@ -1,4 +1,4 @@
-import {Compilation} from './compilation';
+import {Compilation} from './compilation_impl';
 import {CompilationOptions} from './compilation_options';
 import {Model as ModelImpl} from './model_impl';
 
@@ -7,7 +7,7 @@ import {Model as ModelImpl} from './model_impl';
  */
 export interface Model {
   /** */
-  createCompilation(options: CompilationOptions): Promise<Compilation>;
+  compile(options: CompilationOptions): Promise<Compilation>;
 }
 
 interface ModelConstructor {

@@ -23,3 +23,10 @@ export function sizeOfShape(array) {
   return array.reduce(
       (accumulator, currentValue) => accumulator * currentValue);
 }
+
+export function checkShape(shape, expected) {
+  assert.isTrue(shape.length === expected.length);
+  for (let i = 0; i < shape.length; ++i) {
+    assert.isTrue(shape[i] === expected[i]);
+  }
+}

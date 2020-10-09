@@ -1,45 +1,40 @@
 import {Compilation} from './compilation_impl';
 import {CompilationOptions} from './compilation_options';
-import {Constant} from './constant';
-import {Input} from './input';
+import {ConstantOperand} from './constant_operand';
+import {InputOperand} from './input_operand';
 import {Model as ModelInterface} from './model';
-import {NamedOperand} from './named_operand';
+import {NamedOperands} from './named_operands';
 import {Operation} from './operation';
-import {Output} from './output';
+import {OutputOperand} from './output_operand';
 import * as utils from './utils';
 
 export class Model implements ModelInterface {
-  private inputs_: Map<string, Input> = new Map();
-  private outputs_: Map<string, Output> = new Map();
-  private constants_: Constant[] = [];
+  private inputs_: Map<string, InputOperand> = new Map();
+  private outputs_: Map<string, OutputOperand> = new Map();
+  private constants_: ConstantOperand[] = [];
 
-  get inputs(): Map<string, Input> {
+  get inputs(): Map<string, InputOperand> {
     return this.inputs_;
   }
-  get outputs(): Map<string, Output> {
+  get outputs(): Map<string, OutputOperand> {
     return this.outputs_;
   }
-  get constants(): Constant[] {
+  get constants(): ConstantOperand[] {
     return this.constants_;
   }
 
-  constructor(outputs?: NamedOperand[]) {
+  constructor(outputs?: NamedOperands) {
     utils.assert(typeof outputs !== 'undefined', 'Invalid argument');
-    utils.assert(
-        outputs.length !== 0,
-        'The length of outputs parameter should not be 0.');
-    utils.assert(
-        outputs.every(
-            namedOutput => typeof namedOutput.name === 'string' &&
-                namedOutput.operand instanceof Output),
-        'The outputs parameter is invalid.');
-    for (const namedOutput of outputs) {
-      this.outputs_.set(namedOutput.name, namedOutput.operand as Output);
+    for (const name in outputs) {
+      utils.assert(
+          typeof name === 'string' && outputs[name] instanceof OutputOperand,
+          'The outputs parameter is invalid.');
+      this.outputs_.set(name, outputs[name] as OutputOperand);
     }
     this.initialize();
   }
 
-  async createCompilation(options: CompilationOptions): Promise<Compilation> {
+  async compile(options: CompilationOptions): Promise<Compilation> {
     const compilation = await Compilation.createAndCompile(options, this);
     return compilation;
   }
@@ -52,11 +47,11 @@ export class Model implements ModelInterface {
 
   private handleOperation(operation: Operation): void {
     for (const operand of operation.inputs) {
-      if (operand instanceof Input) {
+      if (operand instanceof InputOperand) {
         this.inputs_.set(operand.name, operand);
-      } else if (operand instanceof Constant) {
+      } else if (operand instanceof ConstantOperand) {
         this.constants_.push(operand);
-      } else if (operand instanceof Output) {
+      } else if (operand instanceof OutputOperand) {
         this.handleOperation(operand.operation);
       }
     }

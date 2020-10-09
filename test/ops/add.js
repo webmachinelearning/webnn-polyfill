@@ -1,13 +1,14 @@
 'use strict';
-import {checkOutput} from '../utils.js';
+import {checkOutput, checkShape} from '../utils.js';
 
 describe('test add', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
 
   it('add constant and input', async function() {
-    const a = nn.input('a', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const b = nn.constant(
-        {type: 'tensor-float32', dimensions: [3, 4, 5]}, new Float32Array([
+    const builder = nn.createModelBuilder();
+    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.constant(
+        {type: 'float32', dimensions: [3, 4, 5]}, new Float32Array([
           -0.5781865,  -0.49248728, -0.2162451,  -0.13176449, -0.52118045,
           1.9125274,   0.6508799,   0.71873736,  -2.3154447,  0.8080079,
           0.3022368,   0.21394566,  -0.6511544,  0.20001237,  -0.08041809,
@@ -21,12 +22,12 @@ describe('test add', function() {
           1.0590587,   -1.7948701,  -1.7195907,  -0.9120889,  -0.9391962,
           -0.2566791,  -0.5464537,  1.4351872,   0.5705938,   -0.30327085,
         ]));
-    const output = nn.add(a, b);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput(
-        'a', new Float32Array([
+    const c = builder.add(a, b);
+    const model = builder.createModel({'c': c});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'a': {
+        buffer: new Float32Array([
           0.08939514,  -1.5887482,  0.8545348,   0.20523034,  -0.41728342,
           1.01752,     0.19677015,  0.5398451,   0.56893295,  1.2511084,
           2.0092728,   1.0606714,   0.4893267,   0.09536829,  -2.3467007,
@@ -39,10 +40,11 @@ describe('test add', function() {
           0.9446942,   -0.35489243, 0.44452578,  0.00648887,  -0.55656946,
           -0.735903,   0.22050636,  -0.5008282,  -1.3132697,  1.6642882,
           -0.48397836, 0.20099205,  -0.28786168, 1.3315053,   -0.41619393,
-        ]));
-    const outputBuffer = new Float32Array(60);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
+        ]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387,
       2.9300475,   0.84765005,  1.2585825,   -1.7465117,  2.0591164,
@@ -57,18 +59,19 @@ describe('test add', function() {
       0.32315564,  -1.5743638,  -2.220419,   -2.2253585,  0.72509193,
       -0.74065745, -0.34546167, 1.1473255,   1.9020991,   -0.7194648,
     ];
-    checkOutput(outputBuffer, expected);
+    checkOutput(outputs.c.buffer, expected);
   });
 
   it('add two inputs', async function() {
-    const a = nn.input('a', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const b = nn.input('b', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const output = nn.add(a, b);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput(
-        'a', new Float32Array([
+    const builder = nn.createModelBuilder();
+    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
+    const c = builder.add(a, b);
+    const model = builder.createModel({'c': c});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'a': {
+        buffer: new Float32Array([
           0.08939514,  -1.5887482,  0.8545348,   0.20523034,  -0.41728342,
           1.01752,     0.19677015,  0.5398451,   0.56893295,  1.2511084,
           2.0092728,   1.0606714,   0.4893267,   0.09536829,  -2.3467007,
@@ -81,9 +84,10 @@ describe('test add', function() {
           0.9446942,   -0.35489243, 0.44452578,  0.00648887,  -0.55656946,
           -0.735903,   0.22050636,  -0.5008282,  -1.3132697,  1.6642882,
           -0.48397836, 0.20099205,  -0.28786168, 1.3315053,   -0.41619393,
-        ]));
-    execution.setInput(
-        'b', new Float32Array([
+        ]),
+      },
+      'b': {
+        buffer: new Float32Array([
           -0.5781865,  -0.49248728, -0.2162451,  -0.13176449, -0.52118045,
           1.9125274,   0.6508799,   0.71873736,  -2.3154447,  0.8080079,
           0.3022368,   0.21394566,  -0.6511544,  0.20001237,  -0.08041809,
@@ -96,10 +100,11 @@ describe('test add', function() {
           0.203841,    0.02521433,  -1.7966009,  -1.4287543,  0.3222213,
           1.0590587,   -1.7948701,  -1.7195907,  -0.9120889,  -0.9391962,
           -0.2566791,  -0.5464537,  1.4351872,   0.5705938,   -0.30327085,
-        ]));
-    const outputBuffer = new Float32Array(60);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
+        ]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387,
       2.9300475,   0.84765005,  1.2585825,   -1.7465117,  2.0591164,
@@ -114,18 +119,19 @@ describe('test add', function() {
       0.32315564,  -1.5743638,  -2.220419,   -2.2253585,  0.72509193,
       -0.74065745, -0.34546167, 1.1473255,   1.9020991,   -0.7194648,
     ];
-    checkOutput(outputBuffer, expected);
+    checkOutput(outputs.c.buffer, expected);
   });
 
   it('add broadcast', async function() {
-    const a = nn.input('a', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const b = nn.input('b', {type: 'tensor-float32', dimensions: [5]});
-    const output = nn.add(a, b);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput(
-        'a', new Float32Array([
+    const builder = nn.createModelBuilder();
+    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.input('b', {type: 'float32', dimensions: [5]});
+    const c = builder.add(a, b);
+    const model = builder.createModel({'c': c});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'a': {
+        buffer: new Float32Array([
           -0.08539673, 0.11800674,  -1.2358714,  0.30089188,  -0.73443925,
           1.4894297,   0.16823359,  -2.2034893,  1.0740992,   -0.35457978,
           0.61524934,  0.462153,    0.5992003,   -0.81047946, -2.2757835,
@@ -138,17 +144,20 @@ describe('test add', function() {
           0.8815683,   -0.31157655, 0.57511795,  -1.1924151,  -1.8408557,
           -0.85080767, -1.3341717,  0.54687303,  -0.14426671, -0.15728855,
           0.323939,    1.167636,    0.03020451,  0.91373825,  1.0675793,
-        ]));
-    execution.setInput('b', new Float32Array([
-                         0.6338172,
-                         1.630534,
-                         -1.3819867,
-                         -1.0427561,
-                         1.058136,
-                       ]));
-    const outputBuffer = new Float32Array(60);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
+        ]),
+      },
+      'b': {
+        buffer: new Float32Array([
+          0.6338172,
+          1.630534,
+          -1.3819867,
+          -1.0427561,
+          1.058136,
+        ]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       0.5484205,   1.7485408, -2.6178582, -0.7418642,  0.32369673,
       2.123247,    1.7987677, -3.585476,  0.0313431,   0.7035562,
@@ -163,6 +172,6 @@ describe('test add', function() {
       -0.21699047, 0.2963624, -0.8351137, -1.1870228,  0.90084743,
       0.95775616,  2.79817,   -1.3517822, -0.12901783, 2.1257153,
     ];
-    checkOutput(outputBuffer, expected);
+    checkOutput(outputs.c.buffer, expected);
   });
 });
