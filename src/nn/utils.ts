@@ -10,18 +10,19 @@ export function assert(expr: boolean, msg: string): void {
   }
 }
 
-export function isNumber(value: unknown): boolean {
-  return typeof value === 'number';
+export function isInteger(value: unknown): boolean {
+  return typeof value === 'number' && Number.isInteger(value);
 }
 
-export function isNumberArray(array: number[]): boolean {
-  return array instanceof Array && array.every(v => isNumber(v));
+export function isIntegerArray(array: number[]): boolean {
+  return array instanceof Array && array.every(v => isInteger(v));
 }
 
 export function isTypedArray(array: TypedArray): boolean {
   return array instanceof Float32Array || array instanceof Int32Array ||
       array instanceof Uint32Array || array instanceof Int16Array ||
-      array instanceof Uint16Array;
+      array instanceof Uint16Array || array instanceof Int8Array ||
+      array instanceof Uint8Array;
 }
 
 export function getTypedArray(type: OperandType): Float32ArrayConstructor|
@@ -67,6 +68,9 @@ export function createOperandDescriptorFromTensor(tensor: tf.Tensor):
 
 export function validateOperandDescriptor(desc: OperandDescriptor): void {
   assert(desc.type in OperandType, 'The operand type is invalid.');
+  if (desc.dimensions) {
+    assert(isIntegerArray(desc.dimensions), 'The dimensions is invalid.');
+  }
 }
 
 export function validateTypedArray(
@@ -82,6 +86,23 @@ export function validateTypedArray(
           'is expected.');
 }
 
+export function validateValueType(value: number, type: OperandType): void {
+  if (type === OperandType.int32) {
+    assert(Number.isInteger(value), 'the value is not an int32.');
+  } else if (type === OperandType.uint32) {
+    assert(
+        Number.isInteger(value) && value >= 0, 'the value is not an uint32.');
+  } else if (type === OperandType.int8) {
+    assert(
+        Number.isInteger(value) && value >= -128 && value <= 127,
+        'the value is not an int8.');
+  } else if (type === OperandType.uint8) {
+    assert(
+        Number.isInteger(value) && value >= 0 && value <= 255,
+        'the value is not an uint8.');
+  }
+}
+
 export function createTensor(
     desc: OperandDescriptor, value: TypedArray|number): tf.Tensor {
   const dtype: tf.DataType = getDataType(desc.type);
@@ -90,6 +111,7 @@ export function createTensor(
     return tf.tensor(value as TypedArray, desc.dimensions, dtype);
   } else {
     if (typeof value === 'number') {
+      validateValueType(value, desc.type);
       return tf.scalar(value, dtype);
     } else {
       validateTypedArray(value, desc);
@@ -99,7 +121,7 @@ export function createTensor(
 }
 
 export function sizeFromDimensions(dim: number[]): number {
-  if (dim === undefined || (isNumberArray(dim) && dim.length === 0)) {
+  if (dim === undefined || (isIntegerArray(dim) && dim.length === 0)) {
     // scalar
     return 1;
   } else {

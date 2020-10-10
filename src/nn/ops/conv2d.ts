@@ -21,21 +21,21 @@ export class Conv2d extends Operation {
     super([input, filter]);
 
     utils.assert(
-        utils.isNumberArray(padding) && padding.length === 4,
+        utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
     this.padding_ = padding;
 
     utils.assert(
-        utils.isNumberArray(strides) && strides.length === 2,
+        utils.isIntegerArray(strides) && strides.length === 2,
         'The strides parameter is invalid.');
     this.strides_ = strides;
 
     utils.assert(
-        utils.isNumberArray(dilations) && dilations.length === 2,
+        utils.isIntegerArray(dilations) && dilations.length === 2,
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 
-    utils.assert(utils.isNumber(groups), 'The gourps parameter is invalid.');
+    utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
     this.groups_ = groups;
 
     utils.assert(layout in OperandLayout, 'The layout parameter is invalid.');

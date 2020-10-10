@@ -12,7 +12,7 @@ export class Transpose extends Operation {
     super([input]);
     if (permutation) {
       utils.assert(
-          utils.isNumberArray(permutation),
+          utils.isIntegerArray(permutation),
           'The permutation parameter is invalid.');
       this.permutation_ = permutation;
     } else {

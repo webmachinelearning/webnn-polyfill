@@ -11,6 +11,7 @@ export class ConstantOperand extends Operand {
   static createScalar(value: number, type: OperandType = OperandType.float32):
       ConstantOperand {
     utils.assert(type in OperandType, 'The operand type is invalid.');
+    utils.validateValueType(value, type);
     return new ConstantOperand({type} as OperandDescriptor, value);
   }
 

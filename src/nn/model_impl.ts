@@ -31,6 +31,7 @@ export class Model implements ModelInterface {
           'The outputs parameter is invalid.');
       this.outputs_.set(name, outputs[name] as OutputOperand);
     }
+    utils.assert(this.outputs_.size !== 0, 'The outputs is empty');
     this.initialize();
   }
 

@@ -107,7 +107,7 @@ export class Compilation implements CompilationInterface {
       if (input.dimensions !== undefined) {
         const dimensions = input.dimensions;
         utils.assert(
-            utils.isNumberArray(dimensions) === true,
+            utils.isIntegerArray(dimensions) === true,
             'The type of the input dimensions is invalid.');
         utils.assert(
             dimensions.length === inputOperand.desc.dimensions.length,
