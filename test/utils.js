@@ -12,7 +12,7 @@ export function almostEqual(
   }
 }
 
-export function checkOutput(output, expected) {
+export function checkValue(output, expected) {
   assert.isTrue(output.length === expected.length);
   for (let i = 0; i < output.length; ++i) {
     assert.isTrue(almostEqual(output[i], expected[i]));

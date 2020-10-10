@@ -1,22 +1,20 @@
 'use strict';
-import {checkOutput} from '../utils.js';
+import * as utils from '../utils.js';
 
 describe('test transpose', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
 
   async function checkTranspose(
-      inputShape, inputData, expected, permutation = undefined) {
-    const input =
-        nn.input('input', {type: 'tensor-float32', dimensions: inputShape});
-    const output = nn.transpose(input, permutation);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput('input', new Float32Array(inputData));
-    const outputBuffer = new Float32Array(24);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
-    checkOutput(outputBuffer, expected);
+      inputShape, inputData, expectedShape, expected, permutation = undefined) {
+    const builder = nn.createModelBuilder();
+    const x = builder.input('x', {type: 'float32', dimensions: inputShape});
+    const y = builder.transpose(x, permutation);
+    const model = builder.createModel({y});
+    const compiledModel = await model.compile();
+    const inputs = {'x': {buffer: new Float32Array(inputData)}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.y.dimensions, expectedShape);
+    utils.checkValue(outputs.y.buffer, expected);
   }
 
   it('transpose default', async function() {
@@ -33,7 +31,7 @@ describe('test transpose', function() {
       0.26321858, 0.02267954, 0.04169406, 0.09732241, 0.33851373, 0.13075736,
       0.04260185, 0.22069663, 0.24857993, 0.03296741, 0.74131566, 0.82511896,
     ];
-    await checkTranspose(inputShape, inputData, expected);
+    await checkTranspose(inputShape, inputData, [4, 3, 2], expected);
   });
 
   it('transpose permutations', async function() {
@@ -46,6 +44,8 @@ describe('test transpose', function() {
       0.43689877, 0.7603583,  0.14368972, 0.11940759, 0.4834097,  0.6982117,
       0.7195266,  0.72893023, 0.896649,   0.13060148, 0.07824122, 0.33766487,
     ];
+    const expectedShapes =
+        [[2, 3, 4], [2, 4, 3], [3, 2, 4], [3, 4, 2], [4, 2, 3], [4, 3, 2]];
     const expecteds = [
       [
         0.7760998,  0.8363521,  0.10145967, 0.00533229, 0.8190919,  0.83241564,
@@ -86,7 +86,8 @@ describe('test transpose', function() {
     ];
     for (let i = 0; i < permutations.length; ++i) {
       await checkTranspose(
-          inputShape, inputData, expecteds[i], permutations[i]);
+          inputShape, inputData, expectedShapes[i], expecteds[i],
+          permutations[i]);
     }
   });
 });

@@ -23,7 +23,7 @@ describe('test add', function() {
           -0.2566791,  -0.5464537,  1.4351872,   0.5705938,   -0.30327085,
         ]));
     const c = builder.add(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -59,7 +59,7 @@ describe('test add', function() {
       0.32315564,  -1.5743638,  -2.220419,   -2.2253585,  0.72509193,
       -0.74065745, -0.34546167, 1.1473255,   1.9020991,   -0.7194648,
     ];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('add two inputs', async function() {
@@ -67,7 +67,7 @@ describe('test add', function() {
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.add(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -119,7 +119,7 @@ describe('test add', function() {
       0.32315564,  -1.5743638,  -2.220419,   -2.2253585,  0.72509193,
       -0.74065745, -0.34546167, 1.1473255,   1.9020991,   -0.7194648,
     ];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('add broadcast', async function() {
@@ -127,7 +127,7 @@ describe('test add', function() {
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.add(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -172,6 +172,6 @@ describe('test add', function() {
       -0.21699047, 0.2963624, -0.8351137, -1.1870228,  0.90084743,
       0.95775616,  2.79817,   -1.3517822, -0.12901783, 2.1257153,
     ];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 });

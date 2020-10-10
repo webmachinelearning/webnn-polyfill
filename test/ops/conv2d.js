@@ -13,7 +13,7 @@ describe('test conv2d', function() {
         new Float32Array(9).fill(1));
     const padding = [1, 1, 1, 1];
     const output = builder.conv2d(input, filter, padding);
-    const model = builder.createModel({'output': output});
+    const model = builder.createModel({output});
     const compiledModel = await model.compile();
     const inputs = {
       'input': {
@@ -29,7 +29,7 @@ describe('test conv2d', function() {
       12.,  21., 27., 33.,  24.,  33.,  54.,  63., 72.,  51.,  63.,  99., 108.,
       117., 81., 93., 144., 153., 162., 111., 72., 111., 117., 123., 84.,
     ];
-    utils.checkOutput(outputs.output.buffer, expected);
+    utils.checkValue(outputs.output.buffer, expected);
   });
 
   it('conv2d without padding', async function() {
@@ -40,7 +40,7 @@ describe('test conv2d', function() {
         {type: 'float32', dimensions: [1, 1, 3, 3]},
         new Float32Array(9).fill(1));
     const output = builder.conv2d(input, filter);
-    const model = builder.createModel({'output': output});
+    const model = builder.createModel({output});
     const compiledModel = await model.compile();
     const inputs = {
       'input': {
@@ -53,7 +53,7 @@ describe('test conv2d', function() {
     const outputs = await compiledModel.compute(inputs);
     utils.checkShape(outputs.output.dimensions, [1, 1, 3, 3]);
     const expected = [54., 63., 72., 99., 108., 117., 144., 153., 162.];
-    utils.checkOutput(outputs.output.buffer, expected);
+    utils.checkValue(outputs.output.buffer, expected);
   });
 
   it('conv2d with strides=2 and padding', async function() {
@@ -66,7 +66,7 @@ describe('test conv2d', function() {
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
     const output = builder.conv2d(input, filter, padding, strides);
-    const model = builder.createModel({'output': output});
+    const model = builder.createModel({output});
     const compiledModel = await model.compile();
     const inputs = {
       'input': {
@@ -81,6 +81,6 @@ describe('test conv2d', function() {
     utils.checkShape(outputs.output.dimensions, [1, 1, 4, 3]);
     const expected =
         [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.];
-    utils.checkOutput(outputs.output.buffer, expected);
+    utils.checkValue(outputs.output.buffer, expected);
   });
 });

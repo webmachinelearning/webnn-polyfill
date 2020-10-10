@@ -11,7 +11,7 @@ describe('test matmul', function() {
         {type: 'float32', dimensions: [4]},
         new Float32Array([0.8782074, 0.22533207, 0.7134056, 0.04190519]));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -23,7 +23,7 @@ describe('test matmul', function() {
     // c's shape is scalar
     utils.checkShape(outputs.c.dimensions, []);
     const expected = [1.1453342];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('matmul 1dx2d', async function() {
@@ -45,7 +45,7 @@ describe('test matmul', function() {
           -0.13988003,
         ]));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -56,7 +56,7 @@ describe('test matmul', function() {
     // c's shape is [3]
     utils.checkShape(outputs.c.dimensions, [3]);
     const expected = [0.6616409, -0.80990994, 0.8797145];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('matmul 2dx1d', async function() {
@@ -66,7 +66,7 @@ describe('test matmul', function() {
         {type: 'float32', dimensions: [4]},
         new Float32Array([0.25528687, 0.2126722, 0.26320502, 0.8297401]));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -90,7 +90,7 @@ describe('test matmul', function() {
     // c's shape is [3]
     utils.checkShape(outputs.c.dimensions, [3]);
     const expected = [0.8839391, 0.9928265, 0.5955407];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('matmul 2d', async function() {
@@ -112,7 +112,7 @@ describe('test matmul', function() {
           1.402278,
         ]));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -146,7 +146,7 @@ describe('test matmul', function() {
       3.9256358,
       3.873897,
     ];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('matmul 3d', async function() {
@@ -161,7 +161,7 @@ describe('test matmul', function() {
           -0.47976026, 0.01067371,  -0.79455626, -1.4024538,
         ]));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -197,7 +197,7 @@ describe('test matmul', function() {
       1.3158847,
       1.7268425,
     ];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 
   it('matmul 4d', async function() {
@@ -212,7 +212,7 @@ describe('test matmul', function() {
           0.72717273,  1.1277325,   2.0261378,  -1.4311641,
         ]));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({'c': c});
+    const model = builder.createModel({c});
     const compiledModel = await model.compile();
     const inputs = {
       'a': {
@@ -248,6 +248,6 @@ describe('test matmul', function() {
       -0.2531564,
       1.4829493,
     ];
-    utils.checkOutput(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.buffer, expected);
   });
 });

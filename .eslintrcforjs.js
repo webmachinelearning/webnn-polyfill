@@ -6,7 +6,6 @@ module.exports = {
   globals: {
     'assert': 'readonly',
     'chai': 'readonly',
-    'checkOutput': 'readonly'
   },
   rules: {
     'semi': 'error',
