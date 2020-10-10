@@ -30,7 +30,7 @@ export class Compilation implements CompilationInterface {
       const input = inputs[inputName];
       const inputOperand = this.inputOperands_.get(inputName);
       let desc: OperandDescriptor;
-      if (typeof input.dimensions !== 'undefined') {
+      if (input.dimensions !== undefined) {
         desc = {type: inputOperand.desc.type, dimensions: input.dimensions} as
             OperandDescriptor;
       } else {
@@ -40,7 +40,7 @@ export class Compilation implements CompilationInterface {
     }
 
     const outputNames: string[] = [];
-    if (typeof outputs !== 'undefined') {
+    if (outputs !== undefined) {
       for (const outputName in outputs) {
         utils.assert(
             typeof outputName === 'string' &&
@@ -66,8 +66,8 @@ export class Compilation implements CompilationInterface {
       tf.dispose(tensor);
       results[outputName] = {buffer: data, dimensions: desc.dimensions} as
           Output;
-      if (typeof outputs !== 'undefined' && outputName in outputs &&
-          typeof outputs[outputName].buffer !== 'undefined') {
+      if (outputs !== undefined && outputName in outputs &&
+          outputs[outputName].buffer !== undefined) {
         const buffer = outputs[outputName].buffer;
         utils.validateTypedArray(buffer, desc);
         outputs[outputName].buffer.set(data);
@@ -88,9 +88,9 @@ export class Compilation implements CompilationInterface {
     return compilation;
   }
 
-  constructor(options?: CompilationOptions) {
-    if (typeof options !== 'undefined') {
-      console.warn('The options parameter is not supported.');
+  constructor(options: CompilationOptions = {}) {
+    if (options.powerPreference !== undefined) {
+      console.warn('The power preference is not supported.');
     }
   }
 
@@ -102,10 +102,9 @@ export class Compilation implements CompilationInterface {
       const input = inputs[name];
       const inputOperand = this.inputOperands_.get(name);
       utils.assert(
-          typeof input.buffer !== 'undefined',
-          'The buffer of the input is undefined.');
+          input.buffer !== undefined, 'The buffer of the input is undefined.');
       utils.validateTypedArray(input.buffer, inputOperand.desc);
-      if (typeof input.dimensions !== 'undefined') {
+      if (input.dimensions !== undefined) {
         const dimensions = input.dimensions;
         utils.assert(
             utils.isNumberArray(dimensions) === true,

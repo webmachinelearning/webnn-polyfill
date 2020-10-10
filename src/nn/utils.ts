@@ -85,7 +85,7 @@ export function validateTypedArray(
 export function createTensor(
     desc: OperandDescriptor, value: TypedArray|number): tf.Tensor {
   const dtype: tf.DataType = getDataType(desc.type);
-  if (typeof desc.dimensions !== 'undefined') {
+  if (desc.dimensions !== undefined) {
     validateTypedArray(value as TypedArray, desc);
     return tf.tensor(value as TypedArray, desc.dimensions, dtype);
   } else {
@@ -99,7 +99,7 @@ export function createTensor(
 }
 
 export function sizeFromDimensions(dim: number[]): number {
-  if (typeof dim === 'undefined' || (isNumberArray(dim) && dim.length === 0)) {
+  if (dim === undefined || (isNumberArray(dim) && dim.length === 0)) {
     // scalar
     return 1;
   } else {

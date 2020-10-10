@@ -24,7 +24,7 @@ export class Model implements ModelInterface {
   }
 
   constructor(outputs?: NamedOperands) {
-    utils.assert(typeof outputs !== 'undefined', 'Invalid argument');
+    utils.assert(outputs !== undefined, 'Invalid argument');
     for (const name in outputs) {
       utils.assert(
           typeof name === 'string' && outputs[name] instanceof OutputOperand,

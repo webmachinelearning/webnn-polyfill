@@ -10,9 +10,6 @@ export class ConstantOperand extends Operand {
 
   static createScalar(value: number, type: OperandType = OperandType.float32):
       ConstantOperand {
-    if (typeof type === 'undefined') {
-      type = OperandType.float32;
-    }
     utils.assert(type in OperandType, 'The operand type is invalid.');
     return new ConstantOperand({type} as OperandDescriptor, value);
   }
