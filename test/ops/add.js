@@ -1,5 +1,5 @@
 'use strict';
-import {checkOutput, checkShape} from '../utils.js';
+import * as utils from '../utils.js';
 
 describe('test add', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
@@ -44,7 +44,7 @@ describe('test add', function() {
       },
     };
     const outputs = await compiledModel.compute(inputs);
-    checkShape(outputs.c.dimensions, [3, 4, 5]);
+    utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387,
       2.9300475,   0.84765005,  1.2585825,   -1.7465117,  2.0591164,
@@ -59,7 +59,7 @@ describe('test add', function() {
       0.32315564,  -1.5743638,  -2.220419,   -2.2253585,  0.72509193,
       -0.74065745, -0.34546167, 1.1473255,   1.9020991,   -0.7194648,
     ];
-    checkOutput(outputs.c.buffer, expected);
+    utils.checkOutput(outputs.c.buffer, expected);
   });
 
   it('add two inputs', async function() {
@@ -104,7 +104,7 @@ describe('test add', function() {
       },
     };
     const outputs = await compiledModel.compute(inputs);
-    checkShape(outputs.c.dimensions, [3, 4, 5]);
+    utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387,
       2.9300475,   0.84765005,  1.2585825,   -1.7465117,  2.0591164,
@@ -119,7 +119,7 @@ describe('test add', function() {
       0.32315564,  -1.5743638,  -2.220419,   -2.2253585,  0.72509193,
       -0.74065745, -0.34546167, 1.1473255,   1.9020991,   -0.7194648,
     ];
-    checkOutput(outputs.c.buffer, expected);
+    utils.checkOutput(outputs.c.buffer, expected);
   });
 
   it('add broadcast', async function() {
@@ -157,7 +157,7 @@ describe('test add', function() {
       },
     };
     const outputs = await compiledModel.compute(inputs);
-    checkShape(outputs.c.dimensions, [3, 4, 5]);
+    utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       0.5484205,   1.7485408, -2.6178582, -0.7418642,  0.32369673,
       2.123247,    1.7987677, -3.585476,  0.0313431,   0.7035562,
@@ -172,6 +172,6 @@ describe('test add', function() {
       -0.21699047, 0.2963624, -0.8351137, -1.1870228,  0.90084743,
       0.95775616,  2.79817,   -1.3517822, -0.12901783, 2.1257153,
     ];
-    checkOutput(outputs.c.buffer, expected);
+    utils.checkOutput(outputs.c.buffer, expected);
   });
 });

@@ -1,13 +1,14 @@
 'use strict';
-import {checkOutput} from '../utils.js';
+import * as utils from '../utils.js';
 
 describe('test mul', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
 
   it('mul input and constant', async function() {
-    const a = nn.input('a', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const b = nn.constant(
-        {type: 'tensor-float32', dimensions: [3, 4, 5]}, new Float32Array([
+    const builder = nn.createModelBuilder();
+    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.constant(
+        {type: 'float32', dimensions: [3, 4, 5]}, new Float32Array([
           2.0435283,  0.07213961,  -1.1644137,  -1.2209045,  0.8982674,
           0.21796915, 0.27658972,  0.7744382,   -0.52159035, -0.969913,
           0.6081186,  -0.04225572, 0.3275312,   -0.06443629, -2.257355,
@@ -21,12 +22,11 @@ describe('test mul', function() {
           1.9665064,  0.35833818,  -0.87076694, -0.76727265, 0.6157508,
           -0.5558823, 0.18417479,  -0.93904793, -0.00859687, 0.5034271,
         ]));
-    const output = nn.mul(a, b);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput(
-        'a', new Float32Array([
+    const c = builder.mul(a, b);
+    const model = builder.createModel({'c': c});
+    const compiledModel = await model.compile();
+    const inputs = {
+        'a': {buffer: new Float32Array([
           5.6232101e-01,  1.3117781e-01,  -1.4161869e+00, 2.0386910e-02,
           9.1077393e-01,  7.4952751e-01,  -2.8509337e-01, -1.6272701e+00,
           1.0271618e+00,  4.2815253e-01,  -7.7895027e-01, 9.7542489e-01,
@@ -42,10 +42,9 @@ describe('test mul', function() {
           -5.1780093e-01, -3.8996863e-01, 5.3133094e-01,  2.3897937e-01,
           -1.3832775e+00, 6.3414145e-01,  1.0691971e+00,  5.7040757e-01,
           3.0711100e-01,  8.8405716e-01,  -2.1583509e+00, 4.3243581e-01,
-        ]));
-    const outputBuffer = new Float32Array(60);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
+        ])}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       1.1491189e+00,  9.4631165e-03,  1.6490275e+00,  -2.4890469e-02,
       8.1811851e-01,  1.6337387e-01,  -7.8853898e-02, -1.2602202e+00,
@@ -63,18 +62,18 @@ describe('test mul', function() {
       1.2045124e+00,  -4.8655939e-01, 6.5835893e-01,  -3.1707945e-01,
       5.6562103e-02,  -8.3017206e-01, 1.8555066e-02,  2.1769990e-01,
     ];
-    checkOutput(outputBuffer, expected);
+    utils.checkOutput(outputs.c.buffer, expected);
   });
 
   it('mul two inputs', async function() {
-    const a = nn.input('a', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const b = nn.input('b', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const output = nn.mul(a, b);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput(
-        'a', new Float32Array([
+    const builder = nn.createModelBuilder();
+    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
+    const c = builder.mul(a, b);
+    const model = builder.createModel({'c': c});
+    const compiledModel = await model.compile();
+    const inputs = {
+        'a': {buffer: new Float32Array([
           2.0435283,  0.07213961,  -1.1644137,  -1.2209045,  0.8982674,
           0.21796915, 0.27658972,  0.7744382,   -0.52159035, -0.969913,
           0.6081186,  -0.04225572, 0.3275312,   -0.06443629, -2.257355,
@@ -87,9 +86,8 @@ describe('test mul', function() {
           0.9748209,  1.0242884,   0.7939937,   0.24449475,  -1.3840157,
           1.9665064,  0.35833818,  -0.87076694, -0.76727265, 0.6157508,
           -0.5558823, 0.18417479,  -0.93904793, -0.00859687, 0.5034271,
-        ]));
-    execution.setInput(
-        'b', new Float32Array([
+        ])},
+        'b': {buffer: new Float32Array([
           5.6232101e-01,  1.3117781e-01,  -1.4161869e+00, 2.0386910e-02,
           9.1077393e-01,  7.4952751e-01,  -2.8509337e-01, -1.6272701e+00,
           1.0271618e+00,  4.2815253e-01,  -7.7895027e-01, 9.7542489e-01,
@@ -105,10 +103,9 @@ describe('test mul', function() {
           -5.1780093e-01, -3.8996863e-01, 5.3133094e-01,  2.3897937e-01,
           -1.3832775e+00, 6.3414145e-01,  1.0691971e+00,  5.7040757e-01,
           3.0711100e-01,  8.8405716e-01,  -2.1583509e+00, 4.3243581e-01,
-        ]));
-    const outputBuffer = new Float32Array(60);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
+        ])}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       1.1491189e+00,  9.4631165e-03,  1.6490275e+00,  -2.4890469e-02,
       8.1811851e-01,  1.6337387e-01,  -7.8853898e-02, -1.2602202e+00,
@@ -126,18 +123,18 @@ describe('test mul', function() {
       1.2045124e+00,  -4.8655939e-01, 6.5835893e-01,  -3.1707945e-01,
       5.6562103e-02,  -8.3017206e-01, 1.8555066e-02,  2.1769990e-01,
     ];
-    checkOutput(outputBuffer, expected);
+    utils.checkOutput(outputs.c.buffer, expected);
   });
 
   it('mul broadcast', async function() {
-    const a = nn.input('a', {type: 'tensor-float32', dimensions: [3, 4, 5]});
-    const b = nn.input('b', {type: 'tensor-float32', dimensions: [5]});
-    const output = nn.mul(a, b);
-    const model = await nn.createModel([{name: 'output', operand: output}]);
-    const compilation = await model.createCompilation();
-    const execution = await compilation.createExecution();
-    execution.setInput(
-        'a', new Float32Array([
+    const builder = nn.createModelBuilder();
+    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.input('b', {type: 'float32', dimensions: [5]});
+    const c = builder.mul(a, b);
+    const model = builder.createModel({'c': c});
+    const compiledModel = await model.compile();
+    const inputs = {
+        'a': {buffer: new Float32Array([
           -0.08539673, 0.11800674,  -1.2358714,  0.30089188,  -0.73443925,
           1.4894297,   0.16823359,  -2.2034893,  1.0740992,   -0.35457978,
           0.61524934,  0.462153,    0.5992003,   -0.81047946, -2.2757835,
@@ -150,17 +147,16 @@ describe('test mul', function() {
           0.8815683,   -0.31157655, 0.57511795,  -1.1924151,  -1.8408557,
           -0.85080767, -1.3341717,  0.54687303,  -0.14426671, -0.15728855,
           0.323939,    1.167636,    0.03020451,  0.91373825,  1.0675793,
-        ]));
-    execution.setInput('b', new Float32Array([
+        ])},
+        'b': {buffer: new Float32Array([
                          0.6338172,
                          1.630534,
                          -1.3819867,
                          -1.0427561,
                          1.058136,
-                       ]));
-    const outputBuffer = new Float32Array(60);
-    execution.setOutput('output', outputBuffer);
-    await execution.startCompute();
+                       ])}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.05412592, 0.192414,    1.707958,    -0.31375682, -0.7771366,
       0.9440262,   0.2743106,   3.045193,    -1.1200235,  -0.37519363,
@@ -175,6 +171,6 @@ describe('test mul', function() {
       -0.5392565,  -2.1754124,  -0.7557713,  0.15043499,  -0.16643268,
       0.20531811,  1.9038703,   -0.04174223, -0.9528061,  1.129644,
     ];
-    checkOutput(outputBuffer, expected);
+    utils.checkOutput(outputs.c.buffer, expected);
   });
 });

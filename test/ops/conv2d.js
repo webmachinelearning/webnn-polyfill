@@ -1,5 +1,5 @@
 'use strict';
-import {checkOutput, checkShape} from '../utils.js';
+import * as utils from '../utils.js';
 
 describe('test conv2d', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
@@ -24,12 +24,12 @@ describe('test conv2d', function() {
       },
     };
     const outputs = await compiledModel.compute(inputs);
-    checkShape(outputs.output.dimensions, [1, 1, 5, 5]);
+    utils.checkShape(outputs.output.dimensions, [1, 1, 5, 5]);
     const expected = [
       12.,  21., 27., 33.,  24.,  33.,  54.,  63., 72.,  51.,  63.,  99., 108.,
       117., 81., 93., 144., 153., 162., 111., 72., 111., 117., 123., 84.,
     ];
-    checkOutput(outputs.output.buffer, expected);
+    utils.checkOutput(outputs.output.buffer, expected);
   });
 
   it('conv2d without padding', async function() {
@@ -51,9 +51,9 @@ describe('test conv2d', function() {
       },
     };
     const outputs = await compiledModel.compute(inputs);
-    checkShape(outputs.output.dimensions, [1, 1, 3, 3]);
+    utils.checkShape(outputs.output.dimensions, [1, 1, 3, 3]);
     const expected = [54., 63., 72., 99., 108., 117., 144., 153., 162.];
-    checkOutput(outputs.output.buffer, expected);
+    utils.checkOutput(outputs.output.buffer, expected);
   });
 
   it('conv2d with strides=2 and padding', async function() {
@@ -78,9 +78,9 @@ describe('test conv2d', function() {
       },
     };
     const outputs = await compiledModel.compute(inputs);
-    checkShape(outputs.output.dimensions, [1, 1, 4, 3]);
+    utils.checkShape(outputs.output.dimensions, [1, 1, 4, 3]);
     const expected =
         [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.];
-    checkOutput(outputs.output.buffer, expected);
+    utils.checkOutput(outputs.output.buffer, expected);
   });
 });
