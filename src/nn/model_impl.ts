@@ -49,6 +49,9 @@ export class Model implements ModelInterface {
   private handleOperation(operation: Operation): void {
     for (const operand of operation.inputs) {
       if (operand instanceof InputOperand) {
+        if (this.inputs_.has(operand.name)) {
+          throw new Error('The name of this input is duplicated.');
+        }
         this.inputs_.set(operand.name, operand);
       } else if (operand instanceof ConstantOperand) {
         this.constants_.push(operand);

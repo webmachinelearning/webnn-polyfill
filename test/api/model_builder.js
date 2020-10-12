@@ -503,11 +503,18 @@ describe('test ModelBuilder', function() {
     expect(() => builder.createModel({'a': {}})).to.throw(Error);
   });
 
-  it('builder.createModel should throw for cross builders inputs', () => {
+  it('builder should throw for cross builders inputs', () => {
     const builder2 = nn.createModelBuilder();
     const a = builder.input('a', desc);
     const b = builder2.input('b', desc);
     expect(() => builder.matmul(a, b)).to.throw(Error);
     expect(() => builder2.matmul(a, b)).to.throw(Error);
+  });
+
+  it('builder.createModel should throw for duplicated inputs', () => {
+    const a = builder.input('a', desc);
+    const b = builder.input('a', desc);
+    const c = builder.matmul(a, b);
+    expect(() => builder.createModel({c})).to.throw(Error);
   });
 });
