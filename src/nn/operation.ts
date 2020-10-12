@@ -16,7 +16,7 @@ export abstract class Operation {
         inputs.every(input => input instanceof Operand),
         'The inputs parameter is invalid.');
     this.inputs = inputs;
-    this.outputs.push(new OutputOperand(this));
+    this.outputs.push(new OutputOperand(this, this.inputs[0].builder));
   }
 
   get output(): OutputOperand {

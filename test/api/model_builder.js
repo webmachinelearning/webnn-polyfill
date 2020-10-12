@@ -507,7 +507,7 @@ describe('test ModelBuilder', function() {
     const builder2 = nn.createModelBuilder();
     const a = builder.input('a', desc);
     const b = builder2.input('b', desc);
-    const c = builder.matmul(a, b);
-    expect(() => builder.createModel({c})).to.throw(Error);
+    expect(() => builder.matmul(a, b)).to.throw(Error);
+    expect(() => builder2.matmul(a, b)).to.throw(Error);
   });
 });

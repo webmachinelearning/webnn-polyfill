@@ -1,3 +1,4 @@
+import {ModelBuilder} from './model_builder_impl';
 import {OperandDescriptor} from './operand_descriptor';
 import {Operand} from './operand_impl';
 import {assert, validateOperandDescriptor} from './utils';
@@ -6,8 +7,8 @@ export class InputOperand extends Operand {
   readonly name: string;
   readonly desc: OperandDescriptor;
 
-  constructor(name: string, desc: OperandDescriptor) {
-    super();
+  constructor(name: string, desc: OperandDescriptor, builder: ModelBuilder) {
+    super(builder);
     assert(typeof name === 'string', 'The name parameter is invalid');
     this.name = name;
     validateOperandDescriptor(desc);
