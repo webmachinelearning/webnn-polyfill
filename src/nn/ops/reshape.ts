@@ -11,7 +11,8 @@ export class Reshape extends Operation {
   constructor(input: Operand, newShape: number[]) {
     super([input]);
     utils.assert(
-        utils.isIntegerArray(newShape), 'The newShape parameter is invalid.');
+        utils.isIntegerArray(newShape) && newShape.length !== 0,
+        'The newShape parameter is invalid.');
     this.newShape_ = newShape;
   }
 

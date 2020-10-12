@@ -3,16 +3,17 @@
 const expect = chai.expect;
 
 describe('test NeuralNetworkContext', function() {
-  it('check navigator.ml', () => {
-    expect(navigator.ml).to.be.a('object');
+  it('navigator.ml should be a ML', () => {
+    expect(navigator.ml).to.be.an.instanceof(ML);
   });
 
-  it('check navigator.ml.getNeuralNetworkContext', () => {
+  it('ml.getNeuralNetworkContext should be a function', () => {
     expect(navigator.ml.getNeuralNetworkContext).to.be.a('function');
   });
 
-  it('getNeuralNetworkContext should return an object', () => {
-    expect(navigator.ml.getNeuralNetworkContext()).to.be.a('object');
+  it('ml.getNeuralNetworkContext should return a NeuralNetworkContext', () => {
+    expect(navigator.ml.getNeuralNetworkContext())
+            .to.be.an.instanceof(NeuralNetworkContext);
   });
 
   it('NeuralNetworkContext should have createModelBuilder method', () => {
@@ -20,8 +21,8 @@ describe('test NeuralNetworkContext', function() {
     expect(nn.createModelBuilder).to.be.a('function');
   });
 
-  it('nn.createModelBuilder should return an object', () => {
+  it('nn.createModelBuilder should return a ModelBuilder', () => {
     const nn = navigator.ml.getNeuralNetworkContext();
-    expect(nn.createModelBuilder()).to.be.a('object');
+    expect(nn.createModelBuilder()).to.be.an.instanceof(ModelBuilder);
   });
 });

@@ -10,14 +10,12 @@ export class Transpose extends Operation {
 
   constructor(input: Operand, permutation?: number[]) {
     super([input]);
-    if (permutation) {
+    if (permutation !== undefined) {
       utils.assert(
-          utils.isIntegerArray(permutation),
+          utils.isIntegerArray(permutation) && permutation.length !== 0,
           'The permutation parameter is invalid.');
-      this.permutation_ = permutation;
-    } else {
-      this.permutation_ = undefined;
     }
+    this.permutation_ = permutation;
   }
 
   run(context: ExecutionContext): tf.Tensor {
