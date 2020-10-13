@@ -15,6 +15,7 @@ import {NamedOutputs} from './named_outputs';
 import {OperandDescriptor} from './operand_descriptor';
 import {Output} from './output';
 import {OutputOperand} from './output_operand';
+import {PowerPreference} from './power_preference';
 import * as utils from './utils';
 
 export class Compilation implements CompilationInterface {
@@ -89,8 +90,15 @@ export class Compilation implements CompilationInterface {
   }
 
   constructor(options: CompilationOptions = {}) {
+    this.validateOptions(options);
+  }
+
+  private validateOptions(options: CompilationOptions) {
+    utils.assert(options instanceof Object, 'Invalid options.');
     if (options.powerPreference !== undefined) {
-      console.warn('The power preference is not supported.');
+      utils.assert(
+          options.powerPreference in PowerPreference,
+          'Invalid power preference.');
     }
   }
 
