@@ -38,7 +38,7 @@ describe('test Model', function() {
       await model.compile('invalid');
       assert.fail();
     } catch (err) {
-      expect(err).not.to.be.an.instanceof(chai.AssertionError);
+      assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
   });
@@ -48,7 +48,7 @@ describe('test Model', function() {
       await model.compile({powerPreference: 'invalid'});
       assert.fail();
     } catch (err) {
-      expect(err).not.to.be.an.instanceof(chai.AssertionError);
+      assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
   });

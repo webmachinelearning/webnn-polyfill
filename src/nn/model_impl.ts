@@ -50,7 +50,11 @@ export class Model implements ModelInterface {
     for (const operand of operation.inputs) {
       if (operand instanceof InputOperand) {
         if (this.inputs_.has(operand.name)) {
-          throw new Error('The name of this input is duplicated.');
+          if (this.inputs_.get(operand.name) !== operand) {
+            throw new Error('The name of this input is existed.');
+          } else {
+            continue;
+          }
         }
         this.inputs_.set(operand.name, operand);
       } else if (operand instanceof ConstantOperand) {

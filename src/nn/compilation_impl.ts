@@ -132,6 +132,9 @@ export class Compilation implements CompilationInterface {
           }
         }
       } else {
+        utils.assert(
+            !utils.isDyanmicShape(inputOperand.desc.dimensions),
+            'The input dimensions is not specified.');
         dimensions = inputOperand.desc.dimensions;
       }
       utils.validateTypedArray(
