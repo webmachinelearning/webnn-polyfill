@@ -70,7 +70,7 @@ export class Compilation implements CompilationInterface {
       if (outputs !== undefined && outputName in outputs &&
           outputs[outputName].buffer !== undefined) {
         const buffer = outputs[outputName].buffer;
-        utils.validateTypedArray(buffer, desc);
+        utils.validateTypedArray(buffer, desc.type, desc.dimensions);
         outputs[outputName].buffer.set(data);
       }
     }
@@ -111,24 +111,31 @@ export class Compilation implements CompilationInterface {
       const inputOperand = this.inputOperands_.get(name);
       utils.assert(
           input.buffer !== undefined, 'The buffer of the input is undefined.');
-      utils.validateTypedArray(input.buffer, inputOperand.desc);
+      let dimensions;
       if (input.dimensions !== undefined) {
-        const dimensions = input.dimensions;
+        dimensions = input.dimensions;
         utils.assert(
             utils.isIntegerArray(dimensions) === true,
             'The type of the input dimensions is invalid.');
         utils.assert(
             dimensions.length === inputOperand.desc.dimensions.length,
             'The rank of the input dimensions is invalid.');
+        utils.assert(
+            !utils.isDyanmicShape(dimensions),
+            'The value of input dimensions is negative.');
         for (let i = 0; i < inputOperand.desc.dimensions.length; ++i) {
           const d = inputOperand.desc.dimensions[i];
-          if (d !== -1) {
+          if (d > 0) {
             utils.assert(
                 d === dimensions[i],
                 'The value of the input dimensions is invalid.');
           }
         }
+      } else {
+        dimensions = inputOperand.desc.dimensions;
       }
+      utils.validateTypedArray(
+          input.buffer, inputOperand.desc.type, dimensions);
     }
   }
 
@@ -165,10 +172,12 @@ export class Compilation implements CompilationInterface {
     const inputs: NamedInputs = {};
     for (const inputName of this.inputOperands_.keys()) {
       const inputOperand = this.inputOperands_.get(inputName);
+      // assume 1 for negative dim value.
+      const shape = inputOperand.desc.dimensions.map(x => x < 0 ? 1 : x);
       const typedArrayConstructor = utils.getTypedArray(inputOperand.desc.type);
       const inputBuffer = new typedArrayConstructor(
           utils.sizeFromDimensions(inputOperand.desc.dimensions));
-      inputs[inputName] = {buffer: inputBuffer} as Input;
+      inputs[inputName] = {buffer: inputBuffer, dimensions: shape} as Input;
     }
     await this.compute(inputs);
   }

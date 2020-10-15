@@ -73,16 +73,18 @@ export function validateOperandDescriptor(desc: OperandDescriptor): void {
   }
 }
 
+export function isDyanmicShape(dimensions: number[]): boolean {
+  return !dimensions.every(x => x > 0);
+}
+
 export function validateTypedArray(
-    value: TypedArray, desc: OperandDescriptor): void {
+    value: TypedArray, type: OperandType, dimensions: number[]): void {
   assert(isTypedArray(value), 'The value is not a typed array.');
+  assert(value instanceof getTypedArray(type), 'The type of value is invalid.');
   assert(
-      value instanceof getTypedArray(desc.type),
-      'The type of value is invalid.');
-  assert(
-      value.length === sizeFromDimensions(desc.dimensions),
+      value.length === sizeFromDimensions(dimensions),
       `the value length ${value.length} is invalid, size of ` +
-          `[${desc.dimensions}] ${sizeFromDimensions(desc.dimensions)} ` +
+          `[${dimensions}] ${sizeFromDimensions(dimensions)} ` +
           'is expected.');
 }
 
@@ -107,14 +109,14 @@ export function createTensor(
     desc: OperandDescriptor, value: TypedArray|number): tf.Tensor {
   const dtype: tf.DataType = getDataType(desc.type);
   if (desc.dimensions !== undefined) {
-    validateTypedArray(value as TypedArray, desc);
+    validateTypedArray(value as TypedArray, desc.type, desc.dimensions);
     return tf.tensor(value as TypedArray, desc.dimensions, dtype);
   } else {
     if (typeof value === 'number') {
       validateValueType(value, desc.type);
       return tf.scalar(value, dtype);
     } else {
-      validateTypedArray(value, desc);
+      validateTypedArray(value, desc.type, desc.dimensions);
       return tf.scalar(value[0], dtype);
     }
   }
@@ -126,6 +128,8 @@ export function sizeFromDimensions(dim: number[]): number {
     return 1;
   } else {
     return dim.reduce(
-        (accumulator, currentValue) => accumulator * currentValue);
+        (accumulator, currentValue) =>
+            currentValue > 0 ? accumulator * currentValue : accumulator,
+        1);
   }
 }

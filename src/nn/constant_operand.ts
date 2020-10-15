@@ -21,7 +21,7 @@ export class ConstantOperand extends Operand {
       desc: OperandDescriptor, value: TypedArray,
       builder: ModelBuilder): ConstantOperand {
     utils.validateOperandDescriptor(desc);
-    utils.validateTypedArray(value, desc);
+    utils.validateTypedArray(value, desc.type, desc.dimensions);
     return new ConstantOperand(desc, value, builder);
   }
 
