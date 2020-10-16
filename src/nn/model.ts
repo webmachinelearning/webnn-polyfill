@@ -1,4 +1,4 @@
-import {Compilation} from './compilation_impl';
+import {Compilation} from './compilation';
 import {CompilationOptions} from './compilation_options';
 import {Model as ModelImpl} from './model_impl';
 

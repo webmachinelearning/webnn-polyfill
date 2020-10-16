@@ -1,4 +1,4 @@
-import {ModelBuilder} from './model_builder_impl';
+import {ModelBuilder} from './model_builder';
 import {NeuralNetworkContext as NeuralNetworkContextImpl} from './neural_network_context_impl';
 
 
