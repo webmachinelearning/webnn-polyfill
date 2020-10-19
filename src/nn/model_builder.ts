@@ -1,5 +1,5 @@
-import {ModelBuilder as ModelBuilderImpl} from './model_builder_impl';
 import {Model} from './model';
+import {ModelBuilder as ModelBuilderImpl} from './model_builder_impl';
 import {NamedOperands} from './named_operands';
 import {Operand} from './operand';
 import {OperandDescriptor} from './operand_descriptor';

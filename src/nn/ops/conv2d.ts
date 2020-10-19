@@ -56,8 +56,8 @@ export class Conv2d extends Operation {
       // nchw -> nhwc
       input = input.transpose([0, 2, 3, 1]);
       inputChannels = input.shape[1];
-      // webnn layout: [output_channels, input_channels/groups, height, width]
-      // tf.js layout: [filterHeight, filterWidth, inDepth, outDepth]
+      // nchw filter: [output_channels, input_channels/groups, height, width]
+      // nhwc filter: [height, width, input_channels/groups, output_channels]
       filter = filter.transpose([2, 3, 1, 0]);
     } else {
       // 'NHWC'
@@ -65,9 +65,15 @@ export class Conv2d extends Operation {
     }
     let output;
     if (this.groups_ === 1) {
+      // tf.conv2d filter: [filterHeight, filterWidth, inDepth, outDepth].
       output = tf.conv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
-    } else if (this.groups_ === inputChannels) {
+    } else if (
+        this.groups_ === inputChannels && this.groups_ === filter.shape[3]) {
+      // webnn filter: [height, width, input_channels/groups, output_channels]
+      // tf.depthwiseConv2d filter: [filterHeight, filterWidth, inChannels,
+      // channelMultiplier].
+      filter = filter.transpose([0, 1, 3, 2]);
       output = tf.depthwiseConv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
     } else {
