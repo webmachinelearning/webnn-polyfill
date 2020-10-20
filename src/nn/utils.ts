@@ -45,6 +45,27 @@ export function getTypedArray(type: OperandType): Float32ArrayConstructor|
   }
 }
 
+export function cloneTypedArray(value: TypedArray): TypedArray {
+  let array;
+  if (value instanceof Float32Array) {
+    array = new Float32Array(value.length);
+  } else if (value instanceof Int32Array) {
+    array = new Int32Array(value.length);
+  } else if (value instanceof Uint32Array) {
+    array = new Uint32Array(value.length);
+  } else if (value instanceof Uint16Array) {
+    array = new Uint16Array(value.length);
+  } else if (value instanceof Int8Array) {
+    array = new Int8Array(value.length);
+  } else if (value instanceof Uint8Array) {
+    array = new Uint8Array(value.length);
+  } else {
+    throw new Error('Type is not supported.');
+  }
+  array.set(value);
+  return array;
+}
+
 export function getDataType(type: OperandType): tf.DataType {
   if (type === 'float32') {
     return 'float32';

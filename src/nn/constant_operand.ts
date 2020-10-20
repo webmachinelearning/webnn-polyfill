@@ -30,6 +30,10 @@ export class ConstantOperand extends Operand {
       builder: ModelBuilder) {
     super(builder);
     this.desc = desc;
-    this.value = value;
+    if (typeof value === 'number') {
+      this.value = value;
+    } else {
+      this.value = utils.cloneTypedArray(value);
+    }
   }
 }

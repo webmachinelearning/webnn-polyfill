@@ -267,4 +267,50 @@ describe('test Compilation', function() {
          expect(err).to.be.an.instanceof(Error);
        }
      });
+
+  it('Model should be immutable after creation', async () => {
+    const builder = nn.createModelBuilder();
+    const desc = {type: 'float32', dimensions: [2, 2]};
+    const a = builder.input('a', desc);
+    const bufferB = new Float32Array(4).fill(1);
+    let b = builder.constant({type: 'float32', dimensions: [2, 2]}, bufferB);
+    const c = builder.matmul(a, b);
+    const bufferA = new Float32Array(4).fill(1);
+    const expectedC = [2, 2, 2, 2];
+    const model = builder.createModel({c});
+    let compiledModel = await model.compile();
+    let inputs = {a: {buffer: bufferA}};
+    let outputs = await compiledModel.compute(inputs);
+    utils.checkValue(outputs.c.buffer, expectedC);
+    utils.checkShape(outputs.c.dimensions, [2, 2]);
+
+    // Change buffer of constant b should not impact model execution.
+    bufferB.set(new Array(4).fill(2));
+    compiledModel = await model.compile();
+    outputs = await compiledModel.compute(inputs);
+    utils.checkValue(outputs.c.buffer, expectedC);
+    utils.checkShape(outputs.c.dimensions, [2, 2]);
+
+    // Replace b with a new constant should not impact model execution.
+    b = builder.constant({type: 'float32', dimensions: [2, 2]}, bufferB);
+    compiledModel = await model.compile();
+    outputs = await compiledModel.compute(inputs);
+    utils.checkValue(outputs.c.buffer, expectedC);
+    utils.checkShape(outputs.c.dimensions, [2, 2]);
+
+    // Change opearnd type of b should not impact model execution.
+    b = builder.input('b', desc);
+    compiledModel = await model.compile();
+    outputs = await compiledModel.compute(inputs);
+    utils.checkValue(outputs.c.buffer, expectedC);
+    utils.checkShape(outputs.c.dimensions, [2, 2]);
+
+    // Create new model with new b.
+    const model2 = builder.createModel({'c': builder.matmul(a, b)});
+    compiledModel = await model2.compile();
+    inputs = {'a': {buffer: bufferA}, 'b': {buffer: bufferB}};
+    outputs = await compiledModel.compute(inputs);
+    utils.checkValue(outputs.c.buffer, [4, 4, 4, 4]);
+    utils.checkShape(outputs.c.dimensions, [2, 2]);
+  });
 });
