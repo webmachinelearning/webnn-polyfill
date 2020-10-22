@@ -15,7 +15,9 @@ import {MaxPool2d} from './ops/max_pool2d';
 import {Mul} from './ops/mul';
 import {Relu} from './ops/relu';
 import {Reshape} from './ops/reshape';
+import {Sigmoid} from './ops/sigmoid';
 import {Softmax} from './ops/softmax';
+import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
@@ -107,9 +109,19 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Reshape(input, newShape)).output;
   }
 
+  sigmoid(x: Operand): Operand {
+    this.validateOperandBuilder([x]);
+    return (new Sigmoid(x)).output;
+  }
+
   softmax(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Softmax(x)).output;
+  }
+
+  tanh(x: Operand): Operand {
+    this.validateOperandBuilder([x]);
+    return (new Tanh(x)).output;
   }
 
   transpose(input: Operand, permutation?: number[]): Operand {

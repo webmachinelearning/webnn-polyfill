@@ -6,6 +6,8 @@ import {OperandDescriptor} from './operand_descriptor';
 import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
 import {ArrayBufferView} from './types';
+// import {RecurrentNetworkActivation, RecurrentNetworkWeightLayout,
+// RecurrentNetworkDirection} from './types';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
@@ -45,6 +47,29 @@ export interface ModelBuilder {
       layout?: OperandLayout): Operand;
 
   /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-gru)
+   */
+  // gru(input: Operand, weight: Operand, recurrentWeight: Operand,
+  //     steps: number, hiddenSize: number,
+  //     bias?: Operand, recurrentBias?: Operand,
+  //     initialHiddenState?: Operand,
+  //     resetAfter?: boolean,
+  //     returnSequence?: boolean,
+  //     direction?: RecurrentNetworkDirection,
+  //     layout?: RecurrentNetworkWeightLayout,
+  //     activations?: RecurrentNetworkActivation[]): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-grucell)
+   */
+  // gruCell(
+  //     input: Operand, weight: Operand, recurrentWeight: Operand, hiddenState:
+  //     Operand, hiddenSize: number, bias?: Operand, recurrentBias?: Operand,
+  //     resetAfter?: boolean, layout?: RecurrentNetworkWeightLayout,
+  //     activations?: RecurrentNetworkActivation[]
+  // ): Operand;
+
+  /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-matmul)
    */
   matmul(a: Operand, b: Operand): Operand;
@@ -73,9 +98,25 @@ export interface ModelBuilder {
   reshape(input: Operand, newShape: number[]): Operand;
 
   /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+   */
+  sigmoid(x: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-slice)
+   */
+  // slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
+  // Operand;
+
+  /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-softmax)
    */
   softmax(x: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+   */
+  tanh(x: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-transpose)
