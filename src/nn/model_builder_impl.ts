@@ -16,6 +16,7 @@ import {Mul} from './ops/mul';
 import {Relu} from './ops/relu';
 import {Reshape} from './ops/reshape';
 import {Sigmoid} from './ops/sigmoid';
+import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
 import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
@@ -112,6 +113,12 @@ export class ModelBuilder implements ModelBuilderInterface {
   sigmoid(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Sigmoid(x)).output;
+  }
+
+  slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
+      Operand {
+    this.validateOperandBuilder([input]);
+    return (new Slice(input, starts, sizes, axes)).output;
   }
 
   softmax(x: Operand): Operand {

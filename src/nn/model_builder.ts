@@ -105,8 +105,8 @@ export interface ModelBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-slice)
    */
-  // slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
-  // Operand;
+  slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
+      Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-softmax)
