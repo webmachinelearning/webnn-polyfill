@@ -5,49 +5,144 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {Compilation as CompilationInterface} from './compilation';
 import {CompilationOptions} from './compilation_options';
-import {Constant} from './constant';
+import {ConstantOperand} from './constant_operand';
 import {ExecutionContext} from './execution_context';
-import {Execution} from './execution_impl';
 import {Input} from './input';
+import {InputOperand} from './input_operand';
 import {Model} from './model_impl';
+import {NamedInputs} from './named_inputs';
+import {NamedOutputs} from './named_outputs';
 import {OperandDescriptor} from './operand_descriptor';
 import {Output} from './output';
+import {OutputOperand} from './output_operand';
+import {PowerPreference} from './power_preference';
 import * as utils from './utils';
 
 export class Compilation implements CompilationInterface {
-  private model_: Model;
-  private constantTensors_: Map<Constant, tf.Tensor> = new Map();
-  private outputDescriptors_: Map<Output, OperandDescriptor> = new Map();
+  private inputOperands_: Map<string, InputOperand> = new Map();
+  private outputOperands_: Map<string, OutputOperand> = new Map();
+  private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
-  get model(): Model {
-    return this.model_;
-  }
-  get constantTensors(): Map<Constant, tf.Tensor> {
-    return this.constantTensors_;
-  }
-  get outputDescriptors(): Map<Output, OperandDescriptor> {
-    return this.outputDescriptors_;
-  }
+  async compute(inputs: NamedInputs, outputs?: NamedOutputs):
+      Promise<NamedOutputs> {
+    this.validateInputs(inputs);
+    const inputTensors: Map<InputOperand, tf.Tensor> = new Map();
+    for (const inputName in inputs) {
+      const input = inputs[inputName];
+      const inputOperand = this.inputOperands_.get(inputName);
+      let desc: OperandDescriptor;
+      if (input.dimensions !== undefined) {
+        desc = {type: inputOperand.desc.type, dimensions: input.dimensions} as
+            OperandDescriptor;
+      } else {
+        desc = inputOperand.desc;
+      }
+      inputTensors.set(inputOperand, utils.createTensor(desc, input.buffer));
+    }
 
-  /** */
-  async createExecution(): Promise<Execution> {
-    return new Execution(this);
+    const outputNames: string[] = [];
+    if (outputs !== undefined) {
+      for (const outputName in outputs) {
+        utils.assert(
+            typeof outputName === 'string' &&
+                this.outputOperands_.has(outputName),
+            'The name of the output is invalid.');
+        outputNames.push(outputName);
+      }
+    } else {
+      for (const outputName of this.outputOperands_.keys()) {
+        outputNames.push(outputName);
+      }
+    }
+
+    const results: NamedOutputs = {};
+    for (const outputName of outputNames) {
+      const outputOperand = this.outputOperands_.get(outputName);
+      const tensor: tf.Tensor = tf.tidy(
+          () => outputOperand.operation.run(
+              {inputTensors, constantTenosrs: this.constantTensors_} as
+              ExecutionContext));
+      const desc = utils.createOperandDescriptorFromTensor(tensor);
+      const data = await tensor.data();
+      tf.dispose(tensor);
+      results[outputName] = {buffer: data, dimensions: desc.dimensions} as
+          Output;
+      if (outputs !== undefined && outputName in outputs &&
+          outputs[outputName].buffer !== undefined) {
+        const buffer = outputs[outputName].buffer;
+        utils.validateTypedArray(buffer, desc.type, desc.dimensions);
+        outputs[outputName].buffer.set(data);
+      }
+    }
+
+    for (const tensor of inputTensors.values()) {
+      tf.dispose(tensor);
+    }
+
+    return results;
   }
 
   static async createAndCompile(options: CompilationOptions, model: Model):
       Promise<Compilation> {
-    const compilation = new Compilation(options, model);
-    await compilation.compile();
+    const compilation = new Compilation(options);
+    await compilation.compile(model);
     return compilation;
   }
 
-  constructor(options?: CompilationOptions, model?: Model) {
-    utils.assert(typeof model !== 'undefined', 'Invalid arguments');
-    // TODO: support compilation options.
-    this.model_ = model;
+  constructor(options: CompilationOptions = {}) {
+    this.validateOptions(options);
   }
 
-  private async compile(): Promise<void> {
+  private validateOptions(options: CompilationOptions) {
+    utils.assert(options instanceof Object, 'Invalid options.');
+    if (options.powerPreference !== undefined) {
+      utils.assert(
+          options.powerPreference in PowerPreference,
+          'Invalid power preference.');
+    }
+  }
+
+  private validateInputs(inputs: NamedInputs) {
+    for (const name in inputs) {
+      utils.assert(
+          typeof name === 'string' && this.inputOperands_.has(name),
+          'The name of the input is invalid.');
+      const input = inputs[name];
+      const inputOperand = this.inputOperands_.get(name);
+      utils.assert(
+          input.buffer !== undefined, 'The buffer of the input is undefined.');
+      let dimensions;
+      if (input.dimensions !== undefined) {
+        dimensions = input.dimensions;
+        utils.assert(
+            utils.isIntegerArray(dimensions) === true,
+            'The type of the input dimensions is invalid.');
+        utils.assert(
+            dimensions.length === inputOperand.desc.dimensions.length,
+            'The rank of the input dimensions is invalid.');
+        utils.assert(
+            !utils.isDyanmicShape(dimensions),
+            'The value of input dimensions is negative.');
+        for (let i = 0; i < inputOperand.desc.dimensions.length; ++i) {
+          const d = inputOperand.desc.dimensions[i];
+          if (d > 0) {
+            utils.assert(
+                d === dimensions[i],
+                'The value of the input dimensions is invalid.');
+          }
+        }
+      } else {
+        utils.assert(
+            !utils.isDyanmicShape(inputOperand.desc.dimensions),
+            'The input dimensions is not specified.');
+        dimensions = inputOperand.desc.dimensions;
+      }
+      utils.validateTypedArray(
+          input.buffer, inputOperand.desc.type, dimensions);
+    }
+  }
+
+  private async compile(model: Model): Promise<void> {
     try {
       if (!(await tf.setBackend('webgl'))) {
         console.warn(
@@ -63,37 +158,30 @@ export class Compilation implements CompilationInterface {
       }
     }
     await tf.ready();
-    this.allocateConstants();
+    this.allocateConstants(model);
+    this.inputOperands_ = model.inputs;
+    this.outputOperands_ = model.outputs;
     await this.inferOnce();
   }
 
-  private allocateConstants(): void {
-    for (const constant of this.model_.constants) {
+  private allocateConstants(model: Model): void {
+    for (const constant of model.constants) {
       this.constantTensors_.set(
           constant, utils.createTensor(constant.desc, constant.value));
     }
   }
 
   private async inferOnce(): Promise<void> {
-    const inputTensors: Map<Input, tf.Tensor> = new Map();
-    for (const input of this.model_.inputs.values()) {
-      const typedArrayConstructor = utils.getTypedArray(input.desc.type);
+    const inputs: NamedInputs = {};
+    for (const inputName of this.inputOperands_.keys()) {
+      const inputOperand = this.inputOperands_.get(inputName);
+      // assume 1 for negative dim value.
+      const shape = inputOperand.desc.dimensions.map(x => x < 0 ? 1 : x);
+      const typedArrayConstructor = utils.getTypedArray(inputOperand.desc.type);
       const inputBuffer = new typedArrayConstructor(
-          utils.sizeFromDimensions(input.desc.dimensions));
-      inputTensors.set(input, utils.createTensor(input.desc, inputBuffer));
+          utils.sizeFromDimensions(inputOperand.desc.dimensions));
+      inputs[inputName] = {buffer: inputBuffer, dimensions: shape} as Input;
     }
-    for (const output of this.model_.outputs.values()) {
-      const tensor: tf.Tensor = tf.tidy(
-          () => output.operation.run(
-              {inputTensors, constantTenosrs: this.constantTensors_} as
-              ExecutionContext));
-      await tensor.data();
-      this.outputDescriptors_.set(
-          output, utils.createOperandDescriptorFromTensor(tensor));
-      tf.dispose(tensor);
-    }
-    for (const tensor of inputTensors.values()) {
-      tf.dispose(tensor);
-    }
+    await this.compute(inputs);
   }
 }

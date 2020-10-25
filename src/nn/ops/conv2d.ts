@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../execution_context';
-import {Operand} from '../operand';
+import {Operand} from '../operand_impl';
 import {OperandLayout} from '../operand_layout';
 import {Operation} from '../operation';
 import * as utils from '../utils';
@@ -21,21 +21,21 @@ export class Conv2d extends Operation {
     super([input, filter]);
 
     utils.assert(
-        utils.isNumberArray(padding) && padding.length === 4,
+        utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
     this.padding_ = padding;
 
     utils.assert(
-        utils.isNumberArray(strides) && strides.length === 2,
+        utils.isIntegerArray(strides) && strides.length === 2,
         'The strides parameter is invalid.');
     this.strides_ = strides;
 
     utils.assert(
-        utils.isNumberArray(dilations) && dilations.length === 2,
+        utils.isIntegerArray(dilations) && dilations.length === 2,
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 
-    utils.assert(utils.isNumber(groups), 'The gourps parameter is invalid.');
+    utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
     this.groups_ = groups;
 
     utils.assert(layout in OperandLayout, 'The layout parameter is invalid.');
@@ -56,8 +56,8 @@ export class Conv2d extends Operation {
       // nchw -> nhwc
       input = input.transpose([0, 2, 3, 1]);
       inputChannels = input.shape[1];
-      // webnn layout: [output_channels, input_channels/groups, height, width]
-      // tf.js layout: [filterHeight, filterWidth, inDepth, outDepth]
+      // nchw filter: [output_channels, input_channels/groups, height, width]
+      // nhwc filter: [height, width, input_channels/groups, output_channels]
       filter = filter.transpose([2, 3, 1, 0]);
     } else {
       // 'NHWC'
@@ -65,9 +65,15 @@ export class Conv2d extends Operation {
     }
     let output;
     if (this.groups_ === 1) {
+      // tf.conv2d filter: [filterHeight, filterWidth, inDepth, outDepth].
       output = tf.conv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
-    } else if (this.groups_ === inputChannels) {
+    } else if (
+        this.groups_ === inputChannels && this.groups_ === filter.shape[3]) {
+      // webnn filter: [height, width, input_channels/groups, output_channels]
+      // tf.depthwiseConv2d filter: [filterHeight, filterWidth, inChannels,
+      // channelMultiplier].
+      filter = filter.transpose([0, 1, 3, 2]);
       output = tf.depthwiseConv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
     } else {

@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../execution_context';
-import {Operand} from '../operand';
+import {Operand} from '../operand_impl';
 import {OperandLayout} from '../operand_layout';
 import {Operation} from '../operation';
 import * as utils from '../utils';
@@ -22,22 +22,22 @@ export abstract class Pool extends Operation {
     super([input]);
 
     utils.assert(
-        utils.isNumberArray(windowDimensions) && windowDimensions.length === 2,
+        utils.isIntegerArray(windowDimensions) && windowDimensions.length === 2,
         'The padding parameter is invalid.');
     this.windowDimensions_ = windowDimensions;
 
     utils.assert(
-        utils.isNumberArray(padding) && padding.length === 4,
+        utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
     this.padding_ = padding;
 
     utils.assert(
-        utils.isNumberArray(strides) && strides.length === 2,
+        utils.isIntegerArray(strides) && strides.length === 2,
         'The strides parameter is invalid.');
     this.strides_ = strides;
 
     utils.assert(
-        utils.isNumberArray(dilations) && dilations.length === 2,
+        utils.isIntegerArray(dilations) && dilations.length === 2,
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 

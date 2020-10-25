@@ -1,11 +1,11 @@
-import {Operand} from './operand_impl';
-import {Operation} from './operation';
+import {ArrayBufferView} from './types';
 
-export class Output extends Operand {
-  readonly operation: Operation;
-
-  constructor(operation: Operation) {
-    super();
-    this.operation = operation;
-  }
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-output)
+ */
+export interface Output {
+  /** */
+  readonly buffer?: ArrayBufferView;
+  /** */
+  readonly dimensions?: number[];
 }

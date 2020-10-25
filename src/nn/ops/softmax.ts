@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../execution_context';
-import {Operand} from '../operand';
+import {Operand} from '../operand_impl';
 import {Operation} from '../operation';
 
 export class Softmax extends Operation {

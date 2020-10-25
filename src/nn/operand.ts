@@ -1,4 +1,6 @@
+import {ModelBuilder} from './model_builder';
 import {Operand as OperandImpl} from './operand_impl';
+
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#operand)
@@ -7,7 +9,7 @@ import {Operand as OperandImpl} from './operand_impl';
 export interface Operand {}
 
 interface OperandConstructor {
-  new(): Operand;
+  new(builder: ModelBuilder): Operand;
 }
 
 // eslint-disable-next-line no-redeclare

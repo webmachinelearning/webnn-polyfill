@@ -12,7 +12,7 @@ export function almostEqual(
   }
 }
 
-export function checkOutput(output, expected) {
+export function checkValue(output, expected) {
   assert.isTrue(output.length === expected.length);
   for (let i = 0; i < output.length; ++i) {
     assert.isTrue(almostEqual(output[i], expected[i]));
@@ -22,4 +22,11 @@ export function checkOutput(output, expected) {
 export function sizeOfShape(array) {
   return array.reduce(
       (accumulator, currentValue) => accumulator * currentValue);
+}
+
+export function checkShape(shape, expected) {
+  assert.isTrue(shape.length === expected.length);
+  for (let i = 0; i < shape.length; ++i) {
+    assert.isTrue(shape[i] === expected[i]);
+  }
 }

@@ -1,17 +1,18 @@
 import {Compilation as CompilationImpl} from './compilation_impl';
-import {Execution} from './execution';
+import {NamedInputs} from './named_inputs';
+import {NamedOutputs} from './named_outputs';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#compilation)
  */
 export interface Compilation {
   /** */
-  createExecution(): Promise<Execution>;
+  compute(inputs: NamedInputs, outputs?: NamedOutputs): Promise<NamedOutputs>;
 }
 
-interface ComilationConstructor {
+interface CompilationConstructor {
   new(): Compilation;
 }
 
 // eslint-disable-next-line no-redeclare
-export const Compilation: ComilationConstructor = CompilationImpl;
+export const Compilation: CompilationConstructor = CompilationImpl;

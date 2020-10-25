@@ -7,7 +7,7 @@ import {Model as ModelImpl} from './model_impl';
  */
 export interface Model {
   /** */
-  createCompilation(options: CompilationOptions): Promise<Compilation>;
+  compile(options: CompilationOptions): Promise<Compilation>;
 }
 
 interface ModelConstructor {
