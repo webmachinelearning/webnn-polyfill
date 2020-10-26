@@ -10,6 +10,10 @@ export function assert(expr: boolean, msg: string): void {
   }
 }
 
+export function isBoolean(value: unknown): boolean {
+  return typeof value === 'boolean';
+}
+
 export function isInteger(value: unknown): boolean {
   return typeof value === 'number' && Number.isInteger(value);
 }

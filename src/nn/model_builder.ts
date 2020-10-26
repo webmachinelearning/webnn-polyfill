@@ -6,8 +6,7 @@ import {OperandDescriptor} from './operand_descriptor';
 import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
 import {ArrayBufferView} from './types';
-// import {RecurrentNetworkActivation, RecurrentNetworkWeightLayout,
-// RecurrentNetworkDirection} from './types';
+import {RecurrentNetworkActivation, RecurrentNetworkWeightLayout} from './types';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
@@ -22,7 +21,7 @@ export interface ModelBuilder {
   /** */
   constant(desc: OperandDescriptor, value: ArrayBufferView): Operand;
   /** */
-  constant(value: number, type: OperandType): Operand;
+  constant(value: number, type?: OperandType): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
@@ -62,12 +61,12 @@ export interface ModelBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-grucell)
    */
-  // gruCell(
-  //     input: Operand, weight: Operand, recurrentWeight: Operand, hiddenState:
-  //     Operand, hiddenSize: number, bias?: Operand, recurrentBias?: Operand,
-  //     resetAfter?: boolean, layout?: RecurrentNetworkWeightLayout,
-  //     activations?: RecurrentNetworkActivation[]
-  // ): Operand;
+  gruCell(
+      input: Operand, weight: Operand, recurrentWeight: Operand,
+      hiddenState: Operand, hiddenSize: number, bias?: Operand,
+      recurrentBias?: Operand, resetAfter?: boolean,
+      layout?: RecurrentNetworkWeightLayout,
+      activations?: RecurrentNetworkActivation[]): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-matmul)
@@ -112,6 +111,11 @@ export interface ModelBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-softmax)
    */
   softmax(x: Operand): Operand;
+
+  /**
+   * spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   */
+  sub(a: Operand, b: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)

@@ -10,6 +10,7 @@ import {OperandType} from './operand_type';
 import {Add} from './ops/add';
 import {AveragePool2d} from './ops/average_pool2d';
 import {Conv2d} from './ops/conv2d';
+import {GruCell} from './ops/gru';
 import {MatMul} from './ops/matmul';
 import {MaxPool2d} from './ops/max_pool2d';
 import {Mul} from './ops/mul';
@@ -18,9 +19,11 @@ import {Reshape} from './ops/reshape';
 import {Sigmoid} from './ops/sigmoid';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
+import {Sub} from './ops/sub';
 import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
 import {ArrayBufferView as TypedArray} from './types';
+import {RecurrentNetworkActivation, RecurrentNetworkWeightLayout} from './types';
 import * as utils from './utils';
 
 export class ModelBuilder implements ModelBuilderInterface {
@@ -33,11 +36,14 @@ export class ModelBuilder implements ModelBuilderInterface {
   }
 
   constant(desc: OperandDescriptor, value: TypedArray): ConstantOperand;
-  constant(value: number, type: OperandType): ConstantOperand;
+  constant(value: number, type?: OperandType): ConstantOperand;
   constant(
       descOrValue: OperandDescriptor|number,
       valueOrType: TypedArray|OperandType): ConstantOperand {
     if (typeof descOrValue === 'number') {
+      if (valueOrType === undefined) {
+        valueOrType = OperandType.float32;
+      }
       return ConstantOperand.createScalar(
           descOrValue, valueOrType as OperandType, this);
     } else {
@@ -77,6 +83,21 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Conv2d(
                 input, filter, padding, strides, dilations, groups, layout))
         .output;
+  }
+
+  gruCell(
+      input: Operand, weight: Operand, recurrentWeight: Operand,
+      hiddenState: Operand, hiddenSize: number, bias?: Operand,
+      recurrentBias?: Operand, resetAfter = true,
+      layout: RecurrentNetworkWeightLayout = RecurrentNetworkWeightLayout.zrn,
+      activations: RecurrentNetworkActivation[] = [
+        RecurrentNetworkActivation.sigmoid, RecurrentNetworkActivation.tanh
+      ]): Operand {
+    this.validateOperandBuilder(
+        [input, weight, recurrentWeight, hiddenState, bias, recurrentBias]);
+    return GruCell.build(
+        this, input, weight, recurrentWeight, hiddenState, hiddenSize, bias,
+        recurrentBias, resetAfter, layout, activations);
   }
 
   matmul(a: Operand, b: Operand): Operand {
@@ -124,6 +145,11 @@ export class ModelBuilder implements ModelBuilderInterface {
   softmax(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Softmax(x)).output;
+  }
+
+  sub(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Sub(a, b)).output;
   }
 
   tanh(x: Operand): Operand {
