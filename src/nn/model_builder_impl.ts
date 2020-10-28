@@ -9,21 +9,19 @@ import {OperandDescriptor} from './operand_descriptor';
 import {Operand} from './operand_impl';
 import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
-import {Add} from './ops/add';
 import {AveragePool2d} from './ops/average_pool2d';
+import {Add, Div, Max, Min, Mul, Sub} from './ops/binary';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gru, GruCell} from './ops/gru';
 import {MatMul} from './ops/matmul';
 import {MaxPool2d} from './ops/max_pool2d';
-import {Mul} from './ops/mul';
 import {Relu} from './ops/relu';
 import {Reshape} from './ops/reshape';
 import {Sigmoid} from './ops/sigmoid';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
 import {Squeeze} from './ops/squeeze';
-import {Sub} from './ops/sub';
 import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
 import {ArrayBufferView as TypedArray} from './types';
@@ -64,6 +62,31 @@ export class ModelBuilder implements ModelBuilderInterface {
   add(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Add(a, b)).output;
+  }
+
+  sub(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Sub(a, b)).output;
+  }
+
+  mul(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Mul(a, b)).output;
+  }
+
+  div(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Div(a, b)).output;
+  }
+
+  max(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Max(a, b)).output;
+  }
+
+  min(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Min(a, b)).output;
   }
 
   averagePool2d(
@@ -123,11 +146,6 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new MatMul(a, b)).output;
   }
 
-  mul(a: Operand, b: Operand): Operand {
-    this.validateOperandBuilder([a, b]);
-    return (new Mul(a, b)).output;
-  }
-
   maxPool2d(
       input: Operand, windowDimensions: [number, number] = [-1, -1],
       padding: [number, number, number, number] = [0, 0, 0, 0],
@@ -168,11 +186,6 @@ export class ModelBuilder implements ModelBuilderInterface {
   squeeze(input: Operand, axes?: number[]): Operand {
     this.validateOperandBuilder([input]);
     return (new Squeeze(input, axes)).output;
-  }
-
-  sub(a: Operand, b: Operand): Operand {
-    this.validateOperandBuilder([a, b]);
-    return (new Sub(a, b)).output;
   }
 
   tanh(x: Operand): Operand {

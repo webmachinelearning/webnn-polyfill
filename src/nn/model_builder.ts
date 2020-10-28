@@ -24,10 +24,36 @@ export interface ModelBuilder {
   /** */
   constant(value: number, type?: OperandType): Operand;
 
+  // element-wise binary operations
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
    */
   add(a: Operand, b: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   */
+  sub(a: Operand, b: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   */
+  mul(a: Operand, b: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   */
+  div(a: Operand, b: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   */
+  max(a: Operand, b: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   */
+  min(a: Operand, b: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
@@ -66,11 +92,6 @@ export interface ModelBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-matmul)
    */
   matmul(a: Operand, b: Operand): Operand;
-
-  /**
-   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
-   */
-  mul(a: Operand, b: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
@@ -114,7 +135,7 @@ export interface ModelBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
    */
-  sub(a: Operand, b: Operand): Operand;
+
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)

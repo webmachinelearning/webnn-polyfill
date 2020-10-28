@@ -17,3 +17,39 @@ export abstract class Binary extends Operation {
 
   abstract runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor;
 }
+
+export class Add extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.add(a, b);
+  }
+}
+
+export class Sub extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.sub(a, b);
+  }
+}
+
+export class Mul extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.mul(a, b);
+  }
+}
+
+export class Div extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.div(a, b);
+  }
+}
+
+export class Max extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.maximum(a, b);
+  }
+}
+
+export class Min extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.minimum(a, b);
+  }
+}
