@@ -9,8 +9,9 @@ import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
 import {Add} from './ops/add';
 import {AveragePool2d} from './ops/average_pool2d';
+import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
-import {GruCell} from './ops/gru';
+import {Gru, GruCell} from './ops/gru';
 import {MatMul} from './ops/matmul';
 import {MaxPool2d} from './ops/max_pool2d';
 import {Mul} from './ops/mul';
@@ -19,11 +20,12 @@ import {Reshape} from './ops/reshape';
 import {Sigmoid} from './ops/sigmoid';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
+import {Squeeze} from './ops/squeeze';
 import {Sub} from './ops/sub';
 import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
 import {ArrayBufferView as TypedArray} from './types';
-import {RecurrentNetworkActivation, RecurrentNetworkWeightLayout} from './types';
+import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from './types';
 import * as utils from './utils';
 
 export class ModelBuilder implements ModelBuilderInterface {
@@ -74,6 +76,11 @@ export class ModelBuilder implements ModelBuilderInterface {
         .output;
   }
 
+  concat(inputs: Operand[], axis: number): Operand {
+    this.validateOperandBuilder(inputs);
+    return (new Concat(inputs, axis)).output;
+  }
+
   conv2d(
       input: Operand, filter: Operand,
       padding: [number, number, number, number] = [0, 0, 0, 0],
@@ -85,14 +92,27 @@ export class ModelBuilder implements ModelBuilderInterface {
         .output;
   }
 
+  gru(input: Operand, weight: Operand, recurrentWeight: Operand, steps: number,
+      hiddenSize: number, bias?: Operand, recurrentBias?: Operand,
+      initialHiddenState?: Operand, resetAfter?: boolean,
+      returnSequence?: boolean, direction?: RecurrentNetworkDirection,
+      layout?: RecurrentNetworkWeightLayout,
+      activations?: RecurrentNetworkActivation[]): Operand[] {
+    this.validateOperandBuilder([
+      input, weight, recurrentWeight, bias, recurrentBias, initialHiddenState
+    ]);
+    return Gru.build(
+        this, input, weight, recurrentWeight, steps, hiddenSize, bias,
+        recurrentBias, initialHiddenState, resetAfter, returnSequence,
+        direction, layout, activations);
+  }
+
   gruCell(
       input: Operand, weight: Operand, recurrentWeight: Operand,
       hiddenState: Operand, hiddenSize: number, bias?: Operand,
-      recurrentBias?: Operand, resetAfter = true,
-      layout: RecurrentNetworkWeightLayout = RecurrentNetworkWeightLayout.zrn,
-      activations: RecurrentNetworkActivation[] = [
-        RecurrentNetworkActivation.sigmoid, RecurrentNetworkActivation.tanh
-      ]): Operand {
+      recurrentBias?: Operand, resetAfter?: boolean,
+      layout?: RecurrentNetworkWeightLayout,
+      activations?: RecurrentNetworkActivation[]): Operand {
     this.validateOperandBuilder(
         [input, weight, recurrentWeight, hiddenState, bias, recurrentBias]);
     return GruCell.build(
@@ -145,6 +165,11 @@ export class ModelBuilder implements ModelBuilderInterface {
   softmax(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Softmax(x)).output;
+  }
+
+  squeeze(input: Operand, axes?: number[]): Operand {
+    this.validateOperandBuilder([input]);
+    return (new Squeeze(input, axes)).output;
   }
 
   sub(a: Operand, b: Operand): Operand {

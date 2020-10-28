@@ -6,7 +6,7 @@ import {OperandDescriptor} from './operand_descriptor';
 import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
 import {ArrayBufferView} from './types';
-import {RecurrentNetworkActivation, RecurrentNetworkWeightLayout} from './types';
+import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from './types';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
@@ -37,6 +37,12 @@ export interface ModelBuilder {
       dilations?: [number, number], layout?: OperandLayout): Operand;
 
   /**
+   *
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-concat)
+   */
+  concat(inputs: Operand[], axis: number): Operand;
+
+  /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-conv2d)
    */
   conv2d(
@@ -48,15 +54,12 @@ export interface ModelBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-gru)
    */
-  // gru(input: Operand, weight: Operand, recurrentWeight: Operand,
-  //     steps: number, hiddenSize: number,
-  //     bias?: Operand, recurrentBias?: Operand,
-  //     initialHiddenState?: Operand,
-  //     resetAfter?: boolean,
-  //     returnSequence?: boolean,
-  //     direction?: RecurrentNetworkDirection,
-  //     layout?: RecurrentNetworkWeightLayout,
-  //     activations?: RecurrentNetworkActivation[]): Operand;
+  gru(input: Operand, weight: Operand, recurrentWeight: Operand, steps: number,
+      hiddenSize: number, bias?: Operand, recurrentBias?: Operand,
+      initialHiddenState?: Operand, resetAfter?: boolean,
+      returnSequence?: boolean, direction?: RecurrentNetworkDirection,
+      layout?: RecurrentNetworkWeightLayout,
+      activations?: RecurrentNetworkActivation[]): Operand[];
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-grucell)
@@ -113,7 +116,12 @@ export interface ModelBuilder {
   softmax(x: Operand): Operand;
 
   /**
-   * spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-squeeze)
+   */
+  squeeze(input: Operand, axes?: number[]): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
    */
   sub(a: Operand, b: Operand): Operand;
 

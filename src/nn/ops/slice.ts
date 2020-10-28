@@ -21,8 +21,15 @@ export class Slice extends Operation {
         'The starts parameter is invalid.');
     this.sizes_ = sizes;
     utils.assert(
+        sizes.length === sizes.length,
+        'The length of sizes is not equal to the length of sizes.))');
+    utils.assert(
         axes === undefined || utils.isIntegerArray(axes),
         'The starts parameter is invalid.');
+    if (axes !== undefined) {
+      utils.assert(
+          sizes.length === axes.length, 'The length of axes is invalid.))');
+    }
     this.axes_ = axes;
   }
 
