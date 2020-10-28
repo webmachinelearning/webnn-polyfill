@@ -16,14 +16,12 @@ import {Conv2d} from './ops/conv2d';
 import {Gru, GruCell} from './ops/gru';
 import {MatMul} from './ops/matmul';
 import {MaxPool2d} from './ops/max_pool2d';
-import {Relu} from './ops/relu';
 import {Reshape} from './ops/reshape';
-import {Sigmoid} from './ops/sigmoid';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
 import {Squeeze} from './ops/squeeze';
-import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
+import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 
@@ -59,6 +57,7 @@ export class ModelBuilder implements ModelBuilderInterface {
         'The operand is not built by this builder.');
   }
 
+  // element-wise binary operations
   add(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Add(a, b)).output;
@@ -87,6 +86,27 @@ export class ModelBuilder implements ModelBuilderInterface {
   min(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Min(a, b)).output;
+  }
+
+  // element-wise unary operations
+  exp(x: Operand): Operand {
+    this.validateOperandBuilder([x]);
+    return (new Exp(x)).output;
+  }
+
+  sigmoid(x: Operand): Operand {
+    this.validateOperandBuilder([x]);
+    return (new Sigmoid(x)).output;
+  }
+
+  sqrt(x: Operand): Operand {
+    this.validateOperandBuilder([x]);
+    return (new Sqrt(x)).output;
+  }
+
+  tanh(x: Operand): Operand {
+    this.validateOperandBuilder([x]);
+    return (new Tanh(x)).output;
   }
 
   averagePool2d(
@@ -167,11 +187,6 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Reshape(input, newShape)).output;
   }
 
-  sigmoid(x: Operand): Operand {
-    this.validateOperandBuilder([x]);
-    return (new Sigmoid(x)).output;
-  }
-
   slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
       Operand {
     this.validateOperandBuilder([input]);
@@ -186,11 +201,6 @@ export class ModelBuilder implements ModelBuilderInterface {
   squeeze(input: Operand, axes?: number[]): Operand {
     this.validateOperandBuilder([input]);
     return (new Squeeze(input, axes)).output;
-  }
-
-  tanh(x: Operand): Operand {
-    this.validateOperandBuilder([x]);
-    return (new Tanh(x)).output;
   }
 
   transpose(input: Operand, permutation?: number[]): Operand {

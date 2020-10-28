@@ -16,3 +16,33 @@ export abstract class Unary extends Operation {
 
   abstract runOp(x: tf.Tensor): tf.Tensor;
 }
+
+export class Exp extends Unary {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.exp(x);
+  }
+}
+
+export class Sigmoid extends Unary {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.sigmoid(x);
+  }
+}
+
+export class Sqrt extends Unary {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.sqrt(x);
+  }
+}
+
+export class Tanh extends Unary {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.tanh(x);
+  }
+}
+
+export class Relu extends Unary {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.relu(x);
+  }
+}

@@ -55,6 +55,27 @@ export interface ModelBuilder {
    */
   min(a: Operand, b: Operand): Operand;
 
+  // element-wise unary operations
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+   */
+  exp(x: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+   */
+  sigmoid(x: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+   */
+  tanh(x: Operand): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+   */
+  sqrt(x: Operand): Operand;
+
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
    */
@@ -112,11 +133,6 @@ export interface ModelBuilder {
   reshape(input: Operand, newShape: number[]): Operand;
 
   /**
-   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
-   */
-  sigmoid(x: Operand): Operand;
-
-  /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-slice)
    */
   slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
@@ -131,16 +147,6 @@ export interface ModelBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-squeeze)
    */
   squeeze(input: Operand, axes?: number[]): Operand;
-
-  /**
-   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
-   */
-
-
-  /**
-   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
-   */
-  tanh(x: Operand): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-transpose)
