@@ -7,6 +7,7 @@ import {Operand} from './operand';
 import {OperandDescriptor} from './operand_descriptor';
 import {OperandType} from './operand_type';
 import {Pooling2dOptions} from './pooling2d_options';
+import {SliceOptions} from './slice_options';
 import {ArrayBufferView} from './types';
 
 /**
@@ -130,8 +131,9 @@ export interface ModelBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-slice)
    */
-  slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
-      Operand;
+  slice(
+      input: Operand, starts: number[], sizes: number[],
+      options?: SliceOptions): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-softmax)

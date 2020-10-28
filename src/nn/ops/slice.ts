@@ -45,7 +45,7 @@ export class Slice extends Operation {
       }
     }
     utils.assert(
-        this.axes_.every(axis => axis < rank && axis > -rank),
+        this.axes_.every(axis => axis < rank && axis >= -rank),
         'The value of axes is invalid.');
     utils.assert(
         this.starts_.length === this.axes_.length,

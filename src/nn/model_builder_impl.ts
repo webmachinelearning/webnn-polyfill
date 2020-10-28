@@ -21,6 +21,7 @@ import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
 import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
 import {Pooling2dOptions} from './pooling2d_options';
+import {SliceOptions} from './slice_options';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 
@@ -181,10 +182,11 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Reshape(input, newShape)).output;
   }
 
-  slice(input: Operand, starts: number[], sizes: number[], axes?: number[]):
-      Operand {
+  slice(
+      input: Operand, starts: number[], sizes: number[],
+      options: SliceOptions = {}): Operand {
     this.validateOperandBuilder([input]);
-    return (new Slice(input, starts, sizes, axes)).output;
+    return (new Slice(input, starts, sizes, options.axes)).output;
   }
 
   softmax(x: Operand): Operand {
