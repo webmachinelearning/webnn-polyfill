@@ -17,7 +17,7 @@ import {Transpose} from './ops/transpose';
 import * as utils from './utils';
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-operandlayout)
+ * [OperandLayout](https://webmachinelearning.github.io/webnn/#enumdef-operandlayout)
  */
 export enum OperandLayout {
   'nchw' = 'nchw',
@@ -25,18 +25,23 @@ export enum OperandLayout {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-conv2doptions)
+ * [Conv2dOptions](https://webmachinelearning.github.io/webnn/#dictdef-conv2doptions)
  */
 export interface Conv2dOptions {
+  /** */
   padding?: [number, number, number, number];
+  /** */
   strides?: [number, number];
+  /** */
   dilations?: [number, number];
+  /** */
   groups?: number;
+  /** */
   layout?: OperandLayout;
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-recurrentnetworkweightlayout)
+ * [RecurrentNetworkWeightLayout](https://webmachinelearning.github.io/webnn/#enumdef-recurrentnetworkweightlayout)
  */
 export enum RecurrentNetworkWeightLayout {
   'zrn' = 'zrn',
@@ -44,7 +49,7 @@ export enum RecurrentNetworkWeightLayout {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-recurrentnetworkactivation)
+ * [RecurrentNetworkActivation](https://webmachinelearning.github.io/webnn/#enumdef-recurrentnetworkactivation)
  */
 export enum RecurrentNetworkActivation {
   'relu' = 'relu',
@@ -53,7 +58,7 @@ export enum RecurrentNetworkActivation {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-recurrentnetworkdirection)
+ * [RecurrentNetworkDirection](https://webmachinelearning.github.io/webnn/#enumdef-recurrentnetworkdirection)
  */
 export enum RecurrentNetworkDirection {
   'forward' = 'forward',
@@ -62,63 +67,97 @@ export enum RecurrentNetworkDirection {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-gruoptions)
+ * [GruOptions](https://webmachinelearning.github.io/webnn/#dictdef-gruoptions)
  */
 export interface GruOptions {
+  /** */
   bias?: Operand;
+  /** */
   recurrentBias?: Operand;
+  /** */
   initialHiddenState?: Operand;
+  /** */
   resetAfter?: boolean;
+  /** */
   returnSequence?: boolean;
+  /** */
   direction?: RecurrentNetworkDirection;
+  /** */
   layout?: RecurrentNetworkWeightLayout;
+  /** */
   activations?: RecurrentNetworkActivation[];
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-grucelloptions)
+ * [GruCellOptions](https://webmachinelearning.github.io/webnn/#dictdef-grucelloptions)
  */
 export interface GruCellOptions {
+  /** */
   bias?: Operand;
+  /** */
   recurrentBias?: Operand;
+  /** */
   resetAfter?: boolean;
+  /** */
   layout?: RecurrentNetworkWeightLayout;
+  /** */
   activations?: RecurrentNetworkActivation[];
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-pool2doptions)
+ * [Pooling2dOptions](https://webmachinelearning.github.io/webnn/#dictdef-pool2doptions)
  */
 export interface Pooling2dOptions {
+  /** */
   windowDimensions?: [number, number];
+  /** */
   padding?: [number, number, number, number];
+  /** */
   strides?: [number, number];
+  /** */
   dilations?: [number, number];
+  /** */
   layout?: OperandLayout;
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-sliceoptions)
+ * [SliceOptions](https://webmachinelearning.github.io/webnn/#dictdef-sliceoptions)
  */
 export interface SliceOptions {
+  /** */
   axes?: number[];
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedoperands)
+ * [NamedOperands](https://webmachinelearning.github.io/webnn/#typedefdef-namedoperands)
  */
 export type NamedOperands = Record<string, Operand>;
 
+/**
+ * [ModelBuilder](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
+ */
 export class ModelBuilder {
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
+  */
   createModel(outputs: NamedOperands): Model {
     return new Model(outputs);
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
+  */
   input(name: string, desc: OperandDescriptor): InputOperand {
     return new InputOperand(name, desc, this);
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
+  */
   constant(desc: OperandDescriptor, value: TypedArray): ConstantOperand;
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
+  */
   constant(value: number, type?: OperandType): ConstantOperand;
   constant(
       descOrValue: OperandDescriptor|number,
@@ -142,62 +181,98 @@ export class ModelBuilder {
   }
 
   // element-wise binary operations
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+  */
   add(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Add(a, b)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+  */
   sub(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Sub(a, b)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+  */
   mul(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Mul(a, b)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+  */
   div(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Div(a, b)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+  */
   max(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Max(a, b)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-binary)
+  */
   min(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new Min(a, b)).output;
   }
 
   // element-wise unary operations
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+  */
   exp(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Exp(x)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+  */
   sigmoid(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Sigmoid(x)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+  */
   sqrt(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Sqrt(x)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-unary)
+  */
   tanh(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Tanh(x)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-concat)
+  */
   concat(inputs: Operand[], axis: number): Operand {
     this.validateOperandBuilder(inputs);
     return (new Concat(inputs, axis)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-conv2d)
+  */
   conv2d(input: Operand, filter: Operand, options: Conv2dOptions = {}):
       Operand {
     this.validateOperandBuilder([input, filter]);
@@ -207,6 +282,9 @@ export class ModelBuilder {
         .output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-gru)
+  */
   gru(input: Operand, weight: Operand, recurrentWeight: Operand, steps: number,
       hiddenSize: number, options: GruOptions = {}): Operand[] {
     this.validateOperandBuilder([
@@ -220,6 +298,9 @@ export class ModelBuilder {
         options.activations);
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-grucell)
+  */
   gruCell(
       input: Operand, weight: Operand, recurrentWeight: Operand,
       hiddenState: Operand, hiddenSize: number,
@@ -234,12 +315,18 @@ export class ModelBuilder {
         options.activations);
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-matmul)
+  */
   matmul(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new MatMul(a, b)).output;
   }
 
   // pooling operations
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
+  */
   averagePool2d(input: Operand, options: Pooling2dOptions = {}): Operand {
     this.validateOperandBuilder([input]);
     return (new AveragePool2d(
@@ -248,6 +335,9 @@ export class ModelBuilder {
         .output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
+  */
   maxPool2d(input: Operand, options: Pooling2dOptions = {}): Operand {
     this.validateOperandBuilder([input]);
     return (new MaxPool2d(
@@ -256,16 +346,25 @@ export class ModelBuilder {
         .output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-relu)
+  */
   relu(input: Operand): Operand {
     this.validateOperandBuilder([input]);
     return (new Relu(input)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-reshape)
+  */
   reshape(input: Operand, newShape: number[]): Operand {
     this.validateOperandBuilder([input]);
     return (new Reshape(input, newShape)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-slice)
+  */
   slice(
       input: Operand, starts: number[], sizes: number[],
       options: SliceOptions = {}): Operand {
@@ -273,16 +372,25 @@ export class ModelBuilder {
     return (new Slice(input, starts, sizes, options.axes)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-softmax)
+  */
   softmax(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Softmax(x)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-squeeze)
+  */
   squeeze(input: Operand, axes?: number[]): Operand {
     this.validateOperandBuilder([input]);
     return (new Squeeze(input, axes)).output;
   }
 
+  /** 
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-transpose)
+  */
   transpose(input: Operand, permutation?: number[]): Operand {
     this.validateOperandBuilder([input]);
     return (new Transpose(input, permutation)).output;

@@ -1,12 +1,11 @@
 import {Compilation} from './compilation';
-import {Model as ModelInterface} from './model';
 import {NamedOperands} from './model_builder';
 import {ConstantOperand, InputOperand, OutputOperand} from './operand';
 import {Operation} from './operation';
 import * as utils from './utils';
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
+ * [PowerPreference](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
  */
 export enum PowerPreference {
   'default' = 'default',
@@ -15,14 +14,17 @@ export enum PowerPreference {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
+ * [CompilationOptions](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
  */
 export interface CompilationOptions {
   /** */
   powerPreference?: PowerPreference;
 }
 
-export class Model implements ModelInterface {
+/**
+ * [Model](https://webmachinelearning.github.io/webnn/#api-model)
+ */
+export class Model {
   private inputs_: Map<string, InputOperand> = new Map();
   private outputs_: Map<string, OutputOperand> = new Map();
   private constants_: ConstantOperand[] = [];
@@ -49,6 +51,7 @@ export class Model implements ModelInterface {
     this.initialize();
   }
 
+  /** */
   async compile(options: CompilationOptions): Promise<Compilation> {
     const compilation = await Compilation.createAndCompile(options, this);
     return compilation;

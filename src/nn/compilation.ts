@@ -3,7 +3,6 @@ import '@tensorflow/tfjs-backend-cpu';
 
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Compilation as CompilationInterface} from './compilation';
 import {CompilationOptions, Model, PowerPreference} from './model';
 import {ConstantOperand, InputOperand, OutputOperand} from './operand';
 import {OperandDescriptor} from './operand';
@@ -11,7 +10,7 @@ import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-input)
+ * [Input](https://webmachinelearning.github.io/webnn/#dictdef-input)
  */
 export interface Input {
   /** */
@@ -21,7 +20,7 @@ export interface Input {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-output)
+ * [Output](https://webmachinelearning.github.io/webnn/#dictdef-output)
  */
 export interface Output {
   /** */
@@ -31,12 +30,12 @@ export interface Output {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedinputs)
+ * [NamedInputs](https://webmachinelearning.github.io/webnn/#typedefdef-namedinputs)
  */
 export type NamedInputs = Record<string, Input>;
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedoutputs)
+ * [NamedOutputs](https://webmachinelearning.github.io/webnn/#typedefdef-namedoutputs)
  */
 export type NamedOutputs = Record<string, Output>;
 
@@ -45,11 +44,15 @@ export interface ExecutionContext {
   constantTenosrs: Map<ConstantOperand, tf.Tensor>;
 }
 
-export class Compilation implements CompilationInterface {
+/**
+ * [Compilation](https://webmachinelearning.github.io/webnn/#api-compilation)
+ */
+export class Compilation {
   private inputOperands_: Map<string, InputOperand> = new Map();
   private outputOperands_: Map<string, OutputOperand> = new Map();
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
+  /** */
   async compute(inputs: NamedInputs, outputs?: NamedOutputs):
       Promise<NamedOutputs> {
     this.validateInputs(inputs);
