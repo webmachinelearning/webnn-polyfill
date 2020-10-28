@@ -1,7 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {OperandDescriptor} from './operand_descriptor';
-import {OperandType} from './operand_type';
+import {OperandDescriptor, OperandType} from './operand';
 import {ArrayBufferView as TypedArray} from './types';
 
 export function assert(expr: boolean, msg: string): void {

@@ -1,7 +1,5 @@
-import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from '../gru_options';
-import {ModelBuilder} from '../model_builder_impl';
-import {Operand} from '../operand_impl';
-import {OperandType} from '../operand_type';
+import {ModelBuilder, RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from '../model_builder';
+import {Operand, OperandType} from '../operand';
 import * as utils from '../utils';
 
 export class GruCell {

@@ -1,10 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ConstantOperand} from './constant_operand';
-import {ExecutionContext} from './execution_context';
-import {InputOperand} from './input_operand';
-import {Operand} from './operand_impl';
-import {OutputOperand} from './output_operand';
+import {ExecutionContext} from './compilation';
+import {ConstantOperand, InputOperand, Operand, OutputOperand} from './operand';
 import * as utils from './utils';
 
 export abstract class Operation {

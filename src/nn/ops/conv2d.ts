@@ -1,8 +1,8 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../execution_context';
-import {Operand} from '../operand_impl';
-import {OperandLayout} from '../operand_layout';
+import {ExecutionContext} from '../compilation';
+import {OperandLayout} from '../model_builder';
+import {Operand} from '../operand';
 import {Operation} from '../operation';
 import * as utils from '../utils';
 
