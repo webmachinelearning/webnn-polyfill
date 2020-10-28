@@ -290,28 +290,51 @@ describe('test ModelBuilder', function() {
         {type: 'float32', dimensions: [1, 1, 3, 3]},
         new Float32Array(9).fill(1));
     expect(() => builder.conv2d(input)).to.throw(Error);
-    expect(() => builder.conv2d(input, filter, 0)).to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [])).to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0])).to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], 1))
-        .to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], []))
-        .to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], [1]))
-        .to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], [1, 1], 1))
-        .to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], [1, 1], []))
-        .to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], [1, 1], [1]))
-        .to.throw(Error);
-    expect(() => builder.conv2d(input, filter, [0, 0, 0, 0], [1, 1], [1, 1], [
-      1,
-    ])).to.throw(Error);
-    expect(
-        () => builder.conv2d(
-            input, filter, [0, 0, 0, 0], [1, 1], [1, 1], 1, 'abcd'))
-        .to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {padding: 0})).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {padding: []})).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0],
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: 1,
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [],
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [1],
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: 1,
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [],
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1],
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1, 1],
+      groups: [1],
+    })).to.throw(Error);
+    expect(() => builder.conv2d(input, filter, {
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1, 1],
+      groups: 1,
+      layout: 'abcd',
+    })).to.throw(Error);
   });
 
   // test matmul

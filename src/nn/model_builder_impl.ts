@@ -1,6 +1,7 @@
 import {ConstantOperand} from './constant_operand';
 import {InputOperand} from './input_operand';
 import {ModelBuilder as ModelBuilderInterface} from './model_builder';
+import {Conv2dOptions} from './conv2d_options';
 import {Model} from './model_impl';
 import {NamedOperands} from './named_operands';
 import {OperandDescriptor} from './operand_descriptor';
@@ -81,15 +82,9 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Concat(inputs, axis)).output;
   }
 
-  conv2d(
-      input: Operand, filter: Operand,
-      padding: [number, number, number, number] = [0, 0, 0, 0],
-      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      groups = 1, layout: OperandLayout = OperandLayout.nchw): Operand {
+  conv2d(input: Operand, filter: Operand, options?: Conv2dOptions): Operand {
     this.validateOperandBuilder([input, filter]);
-    return (new Conv2d(
-                input, filter, padding, strides, dilations, groups, layout))
-        .output;
+    return (new Conv2d(input, filter, options)).output;
   }
 
   gru(input: Operand, weight: Operand, recurrentWeight: Operand, steps: number,

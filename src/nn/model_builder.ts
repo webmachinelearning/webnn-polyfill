@@ -1,3 +1,4 @@
+import {Conv2dOptions} from './conv2d_options';
 import {Model} from './model';
 import {ModelBuilder as ModelBuilderImpl} from './model_builder_impl';
 import {NamedOperands} from './named_operands';
@@ -45,11 +46,7 @@ export interface ModelBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-conv2d)
    */
-  conv2d(
-      input: Operand, filter: Operand,
-      padding?: [number, number, number, number], strides?: [number, number],
-      dilations?: [number, number], groups?: number,
-      layout?: OperandLayout): Operand;
+  conv2d(input: Operand, filter: Operand, options?: Conv2dOptions): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-gru)
