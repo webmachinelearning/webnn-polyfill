@@ -6,6 +6,8 @@ import {OperandLayout} from '../operand_layout';
 import {Operation} from '../operation';
 import * as utils from '../utils';
 
+type PoolingType = 'avg'|'max';
+
 export abstract class Pool extends Operation {
   protected windowDimensions_: [number, number];
   protected padding_: [number, number, number, number];
@@ -72,5 +74,17 @@ export abstract class Pool extends Operation {
     return output;
   }
 
-  abstract getPoolingType(): 'avg'|'max';
+  abstract getPoolingType(): PoolingType;
+}
+
+export class AveragePool2d extends Pool {
+  getPoolingType(): PoolingType {
+    return 'avg';
+  }
+}
+
+export class MaxPool2d extends Pool {
+  getPoolingType(): PoolingType {
+    return 'max';
+  }
 }

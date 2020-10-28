@@ -5,8 +5,8 @@ import {ModelBuilder as ModelBuilderImpl} from './model_builder_impl';
 import {NamedOperands} from './named_operands';
 import {Operand} from './operand';
 import {OperandDescriptor} from './operand_descriptor';
-import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
+import {Pooling2dOptions} from './pooling2d_options';
 import {ArrayBufferView} from './types';
 
 /**
@@ -77,14 +77,6 @@ export interface ModelBuilder {
   sqrt(x: Operand): Operand;
 
   /**
-   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
-   */
-  averagePool2d(
-      input: Operand, windowDimensions?: [number, number],
-      padding?: [number, number, number, number], strides?: [number, number],
-      dilations?: [number, number], layout?: OperandLayout): Operand;
-
-  /**
    *
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-concat)
    */
@@ -114,13 +106,16 @@ export interface ModelBuilder {
    */
   matmul(a: Operand, b: Operand): Operand;
 
+  // pooling operations
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
    */
-  maxPool2d(
-      input: Operand, windowDimensions?: [number, number],
-      padding?: [number, number, number, number], strides?: [number, number],
-      dilations?: [number, number], layout?: OperandLayout): Operand;
+  averagePool2d(input: Operand, options?: Pooling2dOptions): Operand;
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pool2d)
+   */
+  maxPool2d(input: Operand, options?: Pooling2dOptions): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-relu)

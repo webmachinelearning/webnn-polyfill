@@ -364,7 +364,9 @@ describe('test ModelBuilder', function() {
   it('builder.averagePool2d should return an operand', () => {
     const input =
         builder.input('input', {type: 'float32', dimensions: [1, 1, 5, 5]});
-    expect(builder.averagePool2d(input, [2, 2])).to.be.an.instanceof(Operand);
+    expect(builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+    })).to.be.an.instanceof(Operand);
   });
 
   it('builder.averagePool2d should throw for invalid parameters', () => {
@@ -373,27 +375,61 @@ describe('test ModelBuilder', function() {
     expect(() => builder.averagePool2d({}, {})).to.throw(Error);
     const input =
         builder.input('input', {type: 'float32', dimensions: [1, 1, 5, 5]});
-    expect(() => builder.averagePool2d(input, [])).to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], 0)).to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [])).to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0])).to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0, 0, 0], 1))
-        .to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0, 0, 0], []))
-        .to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0, 0, 0], [1]))
-        .to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0, 0, 0], [1, 1], 1))
-        .to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0, 0, 0], [1, 1], []))
-        .to.throw(Error);
-    expect(() => builder.averagePool2d(input, [2, 2], [0, 0, 0, 0], [1, 1], [
-      1,
-    ])).to.throw(Error);
-    expect(
-        () => builder.averagePool2d(
-            input, [2, 2], [0, 0, 0, 0], [1, 1], [1, 1], 'abcd'))
-        .to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: 0,
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: 1,
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: 1,
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1],
+    })).to.throw(Error);
+    expect(() => builder.averagePool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1, 1],
+      layout: 'abcd',
+    })).to.throw(Error);
   });
 
   // test maxPool2d
@@ -404,7 +440,9 @@ describe('test ModelBuilder', function() {
   it('builder.maxPool2d should return an operand', () => {
     const input =
         builder.input('input', {type: 'float32', dimensions: [1, 1, 5, 5]});
-    expect(builder.maxPool2d(input, [2, 2])).to.be.an.instanceof(Operand);
+    expect(builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+    })).to.be.an.instanceof(Operand);
   });
 
   it('builder.maxPool2d should throw for invalid parameters', () => {
@@ -413,26 +451,59 @@ describe('test ModelBuilder', function() {
     expect(() => builder.maxPool2d({}, {})).to.throw(Error);
     const input =
         builder.input('input', {type: 'float32', dimensions: [1, 1, 5, 5]});
-    expect(() => builder.maxPool2d(input, [])).to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], 0)).to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [])).to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0])).to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0, 0, 0], 1))
-        .to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0, 0, 0], []))
-        .to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0, 0, 0], [1]))
-        .to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0, 0, 0], [1, 1], 1))
-        .to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0, 0, 0], [1, 1], []))
-        .to.throw(Error);
-    expect(() => builder.maxPool2d(input, [2, 2], [0, 0, 0, 0], [1, 1], [1]))
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [],
+    })).to.throw(Error);
+    expect(
+        () => builder.maxPool2d(input, {windowDimensions: [2, 2], padding: 0}))
         .to.throw(Error);
     expect(
-        () => builder.maxPool2d(
-            input, [2, 2], [0, 0, 0, 0], [1, 1], [1, 1], 'abcd'))
+        () => builder.maxPool2d(input, {windowDimensions: [2, 2], padding: []}))
         .to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0],
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: 1,
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [],
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1],
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: 1,
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [],
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1],
+    })).to.throw(Error);
+    expect(() => builder.maxPool2d(input, {
+      windowDimensions: [2, 2],
+      padding: [0, 0, 0, 0],
+      strides: [1, 1],
+      dilations: [1, 1],
+      layout: 'abcd',
+    })).to.throw(Error);
   });
 
   // test relu

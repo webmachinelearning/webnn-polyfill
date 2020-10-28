@@ -8,7 +8,7 @@ describe('test pool2d', function() {
     const builder = nn.createModelBuilder();
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 4, 4]});
     const windowDimensions = [3, 3];
-    const y = builder.maxPool2d(x, windowDimensions);
+    const y = builder.maxPool2d(x, {windowDimensions});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {
@@ -28,8 +28,7 @@ describe('test pool2d', function() {
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 4, 4]});
     const windowDimensions = [2, 2];
     const dilations = [2, 2];
-    const y =
-        builder.maxPool2d(x, windowDimensions, undefined, undefined, dilations);
+    const y = builder.maxPool2d(x, {windowDimensions, dilations});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {
@@ -49,7 +48,7 @@ describe('test pool2d', function() {
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
-    const y = builder.maxPool2d(x, windowDimensions, padding);
+    const y = builder.maxPool2d(x, {windowDimensions, padding});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {
@@ -74,7 +73,7 @@ describe('test pool2d', function() {
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
-    const y = builder.maxPool2d(x, windowDimensions, undefined, strides);
+    const y = builder.maxPool2d(x, {windowDimensions, strides});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {
@@ -95,7 +94,7 @@ describe('test pool2d', function() {
     const builder = nn.createModelBuilder();
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 4, 4]});
     const windowDimensions = [3, 3];
-    const y = builder.averagePool2d(x, windowDimensions);
+    const y = builder.averagePool2d(x, {windowDimensions});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {
@@ -115,7 +114,7 @@ describe('test pool2d', function() {
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
-    const y = builder.averagePool2d(x, windowDimensions, padding);
+    const y = builder.averagePool2d(x, {windowDimensions, padding});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {
@@ -140,7 +139,7 @@ describe('test pool2d', function() {
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
-    const y = builder.averagePool2d(x, windowDimensions, undefined, strides);
+    const y = builder.averagePool2d(x, {windowDimensions, strides});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {

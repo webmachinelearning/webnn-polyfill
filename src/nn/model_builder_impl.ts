@@ -7,21 +7,20 @@ import {Model} from './model_impl';
 import {NamedOperands} from './named_operands';
 import {OperandDescriptor} from './operand_descriptor';
 import {Operand} from './operand_impl';
-import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
-import {AveragePool2d} from './ops/average_pool2d';
 import {Add, Div, Max, Min, Mul, Sub} from './ops/binary';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gru, GruCell} from './ops/gru';
 import {MatMul} from './ops/matmul';
-import {MaxPool2d} from './ops/max_pool2d';
+import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
 import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
+import {Pooling2dOptions} from './pooling2d_options';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 
@@ -109,17 +108,6 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Tanh(x)).output;
   }
 
-  averagePool2d(
-      input: Operand, windowDimensions: [number, number] = [-1, -1],
-      padding: [number, number, number, number] = [0, 0, 0, 0],
-      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      layout: OperandLayout = OperandLayout.nchw): Operand {
-    this.validateOperandBuilder([input]);
-    return (new AveragePool2d(
-                input, windowDimensions, padding, strides, dilations, layout))
-        .output;
-  }
-
   concat(inputs: Operand[], axis: number): Operand {
     this.validateOperandBuilder(inputs);
     return (new Concat(inputs, axis)).output;
@@ -166,14 +154,20 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new MatMul(a, b)).output;
   }
 
-  maxPool2d(
-      input: Operand, windowDimensions: [number, number] = [-1, -1],
-      padding: [number, number, number, number] = [0, 0, 0, 0],
-      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      layout: OperandLayout = OperandLayout.nchw): Operand {
+  // pooling operations
+  averagePool2d(input: Operand, options: Pooling2dOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new AveragePool2d(
+                input, options.windowDimensions, options.padding,
+                options.strides, options.dilations, options.layout))
+        .output;
+  }
+
+  maxPool2d(input: Operand, options: Pooling2dOptions = {}): Operand {
     this.validateOperandBuilder([input]);
     return (new MaxPool2d(
-                input, windowDimensions, padding, strides, dilations, layout))
+                input, options.windowDimensions, options.padding,
+                options.strides, options.dilations, options.layout))
         .output;
   }
 
