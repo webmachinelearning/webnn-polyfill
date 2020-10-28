@@ -70,8 +70,8 @@ describe('test gru', function() {
         {type: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(0));
     const output = builder.gruCell(
-        input, weight, recurrentWeight, hiddenState, hiddenSize, bias,
-        recurrentBias);
+        input, weight, recurrentWeight, hiddenState, hiddenSize,
+        {bias, recurrentBias});
     const model = builder.createModel({output});
     const compiledModel = await model.compile();
     const inputs = {
@@ -125,8 +125,8 @@ describe('test gru', function() {
         {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const operands = builder.gru(
-        input, weight, recurrentWeight, steps, hiddenSize, bias, recurrentBias,
-        initialHiddenState);
+        input, weight, recurrentWeight, steps, hiddenSize,
+        {bias, recurrentBias, initialHiddenState});
     const model = builder.createModel({output: operands[0]});
     const compiledModel = await model.compile();
     const inputs = {

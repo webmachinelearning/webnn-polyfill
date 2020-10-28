@@ -1,57 +1,45 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../execution_context';
-import {Conv2dOptions} from '../conv2d_options';
 import {Operand} from '../operand_impl';
 import {OperandLayout} from '../operand_layout';
 import {Operation} from '../operation';
 import * as utils from '../utils';
 
 export class Conv2d extends Operation {
-  private padding_: [number, number, number, number] = [0, 0, 0, 0];
-  private strides_: [number, number] = [1, 1];
-  private dilations_: [number, number] = [1, 1];
-  private groups_ = 1;
-  private layout_: OperandLayout = OperandLayout.nchw;
+  private padding_: [number, number, number, number];
+  private strides_: [number, number];
+  private dilations_: [number, number];
+  private groups_: number;
+  private layout_: OperandLayout;
 
-  constructor(input: Operand, filter: Operand, options: Conv2dOptions = {}) {
+  constructor(
+      input: Operand, filter: Operand,
+      padding: [number, number, number, number] = [0, 0, 0, 0],
+      strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
+      groups = 1, layout: OperandLayout = OperandLayout.nchw) {
     super([input, filter]);
 
-    if (options.padding !== undefined) {
-      utils.assert(
-          utils.isIntegerArray(options.padding) && options.padding.length === 4,
-          'The options.padding parameter is invalid.');
-      this.padding_ = options.padding;
-    }
+    utils.assert(
+        utils.isIntegerArray(padding) && padding.length === 4,
+        'The padding parameter is invalid.');
+    this.padding_ = padding;
 
-    if (options.strides !== undefined) {
-      utils.assert(
-          utils.isIntegerArray(options.strides) && options.strides.length === 2,
-          'The options.strides parameter is invalid.');
-      this.strides_ = options.strides;
-    }
+    utils.assert(
+        utils.isIntegerArray(strides) && strides.length === 2,
+        'The strides parameter is invalid.');
+    this.strides_ = strides;
 
-    if (options.dilations !== undefined) {
-      utils.assert(
-          utils.isIntegerArray(options.dilations) &&
-              options.dilations.length === 2,
-          'The options.dilations parameter is invalid.');
-      this.dilations_ = options.dilations;
-    }
+    utils.assert(
+        utils.isIntegerArray(dilations) && dilations.length === 2,
+        'The dilations parameter is invalid.');
+    this.dilations_ = dilations;
 
-    if (options.groups !== undefined) {
-      utils.assert(
-          utils.isInteger(options.groups),
-          'The options.gourps parameter is invalid.');
-      this.groups_ = options.groups;
-    }
+    utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
+    this.groups_ = groups;
 
-    if (options.layout !== undefined) {
-      utils.assert(
-          options.layout in OperandLayout,
-          'The options.layout parameter is invalid.');
-      this.layout_ = options.layout;
-    }
+    utils.assert(layout in OperandLayout, 'The layout parameter is invalid.');
+    this.layout_ = layout;
   }
 
   run(context: ExecutionContext): tf.Tensor {

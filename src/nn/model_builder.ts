@@ -1,4 +1,5 @@
 import {Conv2dOptions} from './conv2d_options';
+import {GruCellOptions, GruOptions} from './gru_options';
 import {Model} from './model';
 import {ModelBuilder as ModelBuilderImpl} from './model_builder_impl';
 import {NamedOperands} from './named_operands';
@@ -7,7 +8,6 @@ import {OperandDescriptor} from './operand_descriptor';
 import {OperandLayout} from './operand_layout';
 import {OperandType} from './operand_type';
 import {ArrayBufferView} from './types';
-import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from './types';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder)
@@ -52,21 +52,15 @@ export interface ModelBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-gru)
    */
   gru(input: Operand, weight: Operand, recurrentWeight: Operand, steps: number,
-      hiddenSize: number, bias?: Operand, recurrentBias?: Operand,
-      initialHiddenState?: Operand, resetAfter?: boolean,
-      returnSequence?: boolean, direction?: RecurrentNetworkDirection,
-      layout?: RecurrentNetworkWeightLayout,
-      activations?: RecurrentNetworkActivation[]): Operand[];
+      hiddenSize: number, options?: GruOptions): Operand[];
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-grucell)
    */
   gruCell(
       input: Operand, weight: Operand, recurrentWeight: Operand,
-      hiddenState: Operand, hiddenSize: number, bias?: Operand,
-      recurrentBias?: Operand, resetAfter?: boolean,
-      layout?: RecurrentNetworkWeightLayout,
-      activations?: RecurrentNetworkActivation[]): Operand;
+      hiddenState: Operand, hiddenSize: number,
+      options?: GruCellOptions): Operand;
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-matmul)

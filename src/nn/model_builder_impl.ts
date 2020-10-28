@@ -1,7 +1,8 @@
 import {ConstantOperand} from './constant_operand';
+import {Conv2dOptions} from './conv2d_options';
+import {GruCellOptions, GruOptions} from './gru_options';
 import {InputOperand} from './input_operand';
 import {ModelBuilder as ModelBuilderInterface} from './model_builder';
-import {Conv2dOptions} from './conv2d_options';
 import {Model} from './model_impl';
 import {NamedOperands} from './named_operands';
 import {OperandDescriptor} from './operand_descriptor';
@@ -26,7 +27,6 @@ import {Sub} from './ops/sub';
 import {Tanh} from './ops/tanh';
 import {Transpose} from './ops/transpose';
 import {ArrayBufferView as TypedArray} from './types';
-import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from './types';
 import * as utils from './utils';
 
 export class ModelBuilder implements ModelBuilderInterface {
@@ -82,37 +82,40 @@ export class ModelBuilder implements ModelBuilderInterface {
     return (new Concat(inputs, axis)).output;
   }
 
-  conv2d(input: Operand, filter: Operand, options?: Conv2dOptions): Operand {
+  conv2d(input: Operand, filter: Operand, options: Conv2dOptions = {}):
+      Operand {
     this.validateOperandBuilder([input, filter]);
-    return (new Conv2d(input, filter, options)).output;
+    return (new Conv2d(
+                input, filter, options.padding, options.strides,
+                options.dilations, options.groups, options.layout))
+        .output;
   }
 
   gru(input: Operand, weight: Operand, recurrentWeight: Operand, steps: number,
-      hiddenSize: number, bias?: Operand, recurrentBias?: Operand,
-      initialHiddenState?: Operand, resetAfter?: boolean,
-      returnSequence?: boolean, direction?: RecurrentNetworkDirection,
-      layout?: RecurrentNetworkWeightLayout,
-      activations?: RecurrentNetworkActivation[]): Operand[] {
+      hiddenSize: number, options: GruOptions = {}): Operand[] {
     this.validateOperandBuilder([
-      input, weight, recurrentWeight, bias, recurrentBias, initialHiddenState
+      input, weight, recurrentWeight, options.bias, options.recurrentBias,
+      options.initialHiddenState
     ]);
     return Gru.build(
-        this, input, weight, recurrentWeight, steps, hiddenSize, bias,
-        recurrentBias, initialHiddenState, resetAfter, returnSequence,
-        direction, layout, activations);
+        this, input, weight, recurrentWeight, steps, hiddenSize, options.bias,
+        options.recurrentBias, options.initialHiddenState, options.resetAfter,
+        options.returnSequence, options.direction, options.layout,
+        options.activations);
   }
 
   gruCell(
       input: Operand, weight: Operand, recurrentWeight: Operand,
-      hiddenState: Operand, hiddenSize: number, bias?: Operand,
-      recurrentBias?: Operand, resetAfter?: boolean,
-      layout?: RecurrentNetworkWeightLayout,
-      activations?: RecurrentNetworkActivation[]): Operand {
-    this.validateOperandBuilder(
-        [input, weight, recurrentWeight, hiddenState, bias, recurrentBias]);
+      hiddenState: Operand, hiddenSize: number,
+      options: GruCellOptions = {}): Operand {
+    this.validateOperandBuilder([
+      input, weight, recurrentWeight, hiddenState, options.bias,
+      options.recurrentBias
+    ]);
     return GruCell.build(
-        this, input, weight, recurrentWeight, hiddenState, hiddenSize, bias,
-        recurrentBias, resetAfter, layout, activations);
+        this, input, weight, recurrentWeight, hiddenState, hiddenSize,
+        options.bias, options.recurrentBias, options.resetAfter, options.layout,
+        options.activations);
   }
 
   matmul(a: Operand, b: Operand): Operand {

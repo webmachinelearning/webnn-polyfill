@@ -1,7 +1,7 @@
+import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from '../gru_options';
 import {ModelBuilder} from '../model_builder_impl';
 import {Operand} from '../operand_impl';
 import {OperandType} from '../operand_type';
-import {RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from '../types';
 import * as utils from '../utils';
 
 export class GruCell {
@@ -196,8 +196,13 @@ export class Gru {
         const result = builder.reshape(
             builder.gruCell(
                 cellInput, cellWeight[slot], cellRecurrentWeight[slot],
-                cellHidden[slot], hiddenSize, cellBias[slot],
-                cellRecurrentBias[slot], resetAfter, layout, activations),
+                cellHidden[slot], hiddenSize, {
+                  bias: cellBias[slot],
+                  recurrentBias: cellRecurrentBias[slot],
+                  resetAfter,
+                  layout,
+                  activations
+                }),
             [1, -1, hiddenSize]);
 
         cellOutput =
