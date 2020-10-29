@@ -4,8 +4,7 @@ import '@tensorflow/tfjs-backend-cpu';
 import * as tf from '@tensorflow/tfjs-core';
 
 import {CompilationOptions, Model, PowerPreference} from './model';
-import {ConstantOperand, InputOperand, OutputOperand} from './operand';
-import {OperandDescriptor} from './operand';
+import {ConstantOperand, InputOperand, OperandDescriptor, OutputOperand} from './operand';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 

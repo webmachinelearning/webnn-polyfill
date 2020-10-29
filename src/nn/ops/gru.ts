@@ -1,4 +1,7 @@
-import {ModelBuilder, RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from '../model_builder';
+import {
+  ModelBuilder, RecurrentNetworkActivation, RecurrentNetworkDirection,
+  RecurrentNetworkWeightLayout
+} from '../model_builder';
 import {Operand, OperandType} from '../operand';
 import * as utils from '../utils';
 

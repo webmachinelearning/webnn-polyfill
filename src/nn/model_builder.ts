@@ -1,11 +1,8 @@
 import {Model} from './model';
-import {ConstantOperand, InputOperand, Operand} from './operand';
+import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OperandType} from './operand';
 import {Add, Div, Max, Min, Mul, Sub} from './ops/binary';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
-import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
-import {ArrayBufferView as TypedArray} from './types';
-import {OperandDescriptor, OperandType} from './operand';
 import {Gru, GruCell} from './ops/gru';
 import {MatMul} from './ops/matmul';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
@@ -14,6 +11,8 @@ import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
+import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
+import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 
 /**
