@@ -9,32 +9,32 @@ import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
 /**
- * [Input](https://webmachinelearning.github.io/webnn/#dictdef-input)
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-input)
  */
 export interface Input {
   /** */
-  readonly buffer: ArrayBufferView;
+  buffer: ArrayBufferView;
   /** */
-  readonly dimensions?: number[];
+  dimensions?: number[];
 }
 
 /**
- * [Output](https://webmachinelearning.github.io/webnn/#dictdef-output)
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-output)
  */
 export interface Output {
   /** */
-  readonly buffer?: ArrayBufferView;
+  buffer?: ArrayBufferView;
   /** */
-  readonly dimensions?: number[];
+  dimensions?: number[];
 }
 
 /**
- * [NamedInputs](https://webmachinelearning.github.io/webnn/#typedefdef-namedinputs)
+ * [API spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedinputs)
  */
 export type NamedInputs = Record<string, Input>;
 
 /**
- * [NamedOutputs](https://webmachinelearning.github.io/webnn/#typedefdef-namedoutputs)
+ * [API spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedoutputs)
  */
 export type NamedOutputs = Record<string, Output>;
 
@@ -44,7 +44,7 @@ export interface ExecutionContext {
 }
 
 /**
- * [Compilation](https://webmachinelearning.github.io/webnn/#api-compilation)
+ * [API spec](https://webmachinelearning.github.io/webnn/#compilation)
  */
 export class Compilation {
   private inputOperands_: Map<string, InputOperand> = new Map();
@@ -52,7 +52,7 @@ export class Compilation {
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
   /** */
-  async compute(inputs: NamedInputs, outputs?: NamedOutputs):
+  async compute(inputs: NamedInputs, outputs: NamedOutputs = {}):
       Promise<NamedOutputs> {
     this.validateInputs(inputs);
     const inputTensors: Map<InputOperand, tf.Tensor> = new Map();
@@ -70,7 +70,7 @@ export class Compilation {
     }
 
     const outputNames: string[] = [];
-    if (outputs !== undefined) {
+    if (Object.keys(outputs).length !== 0) {
       for (const outputName in outputs) {
         utils.assert(
             typeof outputName === 'string' &&

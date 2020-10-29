@@ -4,7 +4,7 @@ import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
 /**
- * [OperandType](https://webmachinelearning.github.io/webnn/#enumdef-operandtype)
+ * [API spec](https://webmachinelearning.github.io/webnn/#enumdef-operandtype)
  */
 export enum OperandType {
   'float32' = 'float32',
@@ -16,7 +16,7 @@ export enum OperandType {
 }
 
 /**
- * [OperandDescriptor](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
  */
 export interface OperandDescriptor {
   /** */
@@ -26,7 +26,7 @@ export interface OperandDescriptor {
 }
 
 /**
- * [Operand](https://webmachinelearning.github.io/webnn/#api-operand)
+ * [API spec](https://webmachinelearning.github.io/webnn/#api-operand)
  */
 export class Operand {
   private readonly builder_: ModelBuilder;

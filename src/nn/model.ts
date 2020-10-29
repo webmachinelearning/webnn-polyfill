@@ -5,7 +5,7 @@ import {Operation} from './operation';
 import * as utils from './utils';
 
 /**
- * [PowerPreference](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
+ * [API spec](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
  */
 export enum PowerPreference {
   'default' = 'default',
@@ -14,7 +14,7 @@ export enum PowerPreference {
 }
 
 /**
- * [CompilationOptions](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
  */
 export interface CompilationOptions {
   /** */
@@ -22,7 +22,7 @@ export interface CompilationOptions {
 }
 
 /**
- * [Model](https://webmachinelearning.github.io/webnn/#api-model)
+ * [API spec](https://webmachinelearning.github.io/webnn/#model)
  */
 export class Model {
   private inputs_: Map<string, InputOperand> = new Map();

@@ -1,7 +1,7 @@
 import {ModelBuilder} from './model_builder';
 
 /**
- * [NeuralNetworkContext](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext)
+ * [API spec](https://webmachinelearning.github.io/webnn/#neuralnetworkcontext)
  */
 export class NeuralNetworkContext {
   /** */
