@@ -29,12 +29,14 @@ export interface Output {
 }
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedinputs)
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedinputs)
  */
 export type NamedInputs = Record<string, Input>;
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedoutputs)
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedoutputs)
  */
 export type NamedOutputs = Record<string, Output>;
 

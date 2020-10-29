@@ -16,7 +16,8 @@ export enum OperandType {
 }
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
  */
 export interface OperandDescriptor {
   /** */

@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../compilation';
-import {OperandLayout} from '../model_builder';
+import {Conv2dOptions, OperandLayout} from '../model_builder';
 import {Operand} from '../operand';
 import {Operation} from '../operation';
 import * as utils from '../utils';
@@ -13,13 +13,17 @@ export class Conv2d extends Operation {
   private groups_: number;
   private layout_: OperandLayout;
 
-  constructor(
-      input: Operand, filter: Operand,
+  constructor(input: Operand, filter: Operand, options: Conv2dOptions = {}) {
+    super([input, filter]);
+    this.initOptions(
+        options.padding, options.strides, options.dilations, options.groups,
+        options.layout);
+  }
+
+  private initOptions(
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       groups = 1, layout: OperandLayout = OperandLayout.nchw) {
-    super([input, filter]);
-
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');

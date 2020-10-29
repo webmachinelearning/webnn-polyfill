@@ -7,7 +7,7 @@ describe('test squeeze', function() {
   async function testSqueeze(oldShape, axes, expectedShape) {
     const builder = nn.createModelBuilder();
     const x = builder.input('x', {type: 'float32', dimensions: oldShape});
-    const y = builder.squeeze(x, axes);
+    const y = builder.squeeze(x, {axes});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const bufferSize = utils.sizeOfShape(oldShape);
@@ -26,7 +26,7 @@ describe('test squeeze', function() {
   });
 
   it('squeeze one dimension with axes', async function() {
-    await testSqueeze([1, 3, 4, 5], [0], [3, 4, 5]);
+    await testSqueeze([1, 3, 1, 5], [0], [3, 1, 5]);
   });
 
   it('squeeze two dimensions by default', async function() {

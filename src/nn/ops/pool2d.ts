@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../compilation';
-import {OperandLayout} from '../model_builder';
+import {OperandLayout, Pooling2dOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {Operation} from '../operation';
 import * as utils from '../utils';
@@ -16,13 +16,18 @@ export abstract class Pool extends Operation {
   protected groups_: number;
   protected layout_: OperandLayout;
 
-  constructor(
-      input: Operand, windowDimensions: [number, number] = [-1, -1],
+  constructor(input: Operand, options: Pooling2dOptions = {}) {
+    super([input]);
+    this.initOptions(
+        options.windowDimensions, options.padding, options.strides,
+        options.dilations, options.layout);
+  }
+
+  private initOptions(
+      windowDimensions: [number, number] = [-1, -1],
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       layout: OperandLayout = OperandLayout.nchw) {
-    super([input]);
-
     utils.assert(
         utils.isIntegerArray(windowDimensions) && windowDimensions.length === 2,
         'The padding parameter is invalid.');

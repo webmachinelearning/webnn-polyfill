@@ -8,7 +8,7 @@ describe('test transpose', function() {
       inputShape, inputData, expectedShape, expected, permutation = undefined) {
     const builder = nn.createModelBuilder();
     const x = builder.input('x', {type: 'float32', dimensions: inputShape});
-    const y = builder.transpose(x, permutation);
+    const y = builder.transpose(x, {permutation});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {'x': {buffer: new Float32Array(inputData)}};

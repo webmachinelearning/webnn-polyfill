@@ -557,9 +557,11 @@ describe('test ModelBuilder', function() {
     expect(() => builder.transpose('x')).to.throw(Error);
     expect(() => builder.transpose({})).to.throw(Error);
     const x = builder.input('x', {type: 'float32', dimensions: [3, 4]});
-    expect(() => builder.transpose(x, [])).to.throw(Error);
-    expect(() => builder.transpose(x, [{}])).to.throw(Error);
-    expect(() => builder.transpose(x, ['1', '-1'])).to.throw(Error);
+    expect(() => builder.transpose(x, {permutation: []})).to.throw(Error);
+    expect(() => builder.transpose(x, {permutation: [{}]})).to.throw(Error);
+    expect(() => builder.transpose(x, {
+      permutation: ['1', '-1'],
+    })).to.throw(Error);
   });
 
   // test softmax

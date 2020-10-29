@@ -5,7 +5,8 @@ import {Operation} from './operation';
 import * as utils from './utils';
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-powerpreference)
  */
 export enum PowerPreference {
   'default' = 'default',
@@ -14,7 +15,8 @@ export enum PowerPreference {
 }
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions)
  */
 export interface CompilationOptions {
   /** */
