@@ -1,5 +1,6 @@
 import {Model} from './model';
 import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OperandType} from './operand';
+import {BatchNormalization} from './ops/batch_norm';
 import {Add, Div, Max, Min, Mul, Sub} from './ops/binary';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
@@ -21,6 +22,21 @@ import * as utils from './utils';
 export enum OperandLayout {
   'nchw' = 'nchw',
   'nhwc' = 'nhwc'
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-batchnormalizationoptions)
+ */
+export interface BatchNormalizationOptions {
+  /** */
+  scale?: Operand;
+  /** */
+  bias?: Operand;
+  /** */
+  axis?: number;
+  /** */
+  epsilon?: number;
 }
 
 /**
@@ -291,6 +307,18 @@ export class ModelBuilder {
   tanh(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Tanh(x)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-batchnormalization)
+   */
+  batchNormalization(
+      input: Operand, mean: Operand, variance: Operand,
+      options: BatchNormalizationOptions = {}): Operand {
+    this.validateOperandBuilder(
+        [input, mean, variance, options.scale, options.bias]);
+    return (new BatchNormalization(input, mean, variance, options)).output;
   }
 
   /**
