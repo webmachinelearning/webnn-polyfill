@@ -10,6 +10,7 @@ import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
+import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
 import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
@@ -170,6 +171,13 @@ export interface TransposeOptions {
 export interface ClampOptions {
   minValue?: Operand;
   maxValue?: Operand;
+}
+
+/**
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-splitoptions)
+ */
+export interface SplitOptions {
+  axis?: number;
 }
 
 /**
@@ -452,6 +460,12 @@ export class ModelBuilder {
   softmax(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Softmax(x)).output;
+  }
+
+  split(input: Operand, splits: number|number[], options: SplitOptions = {}):
+      Operand[] {
+    this.validateOperandBuilder([input]);
+    return (new Split(input, splits, options)).outputs;
   }
 
   /**

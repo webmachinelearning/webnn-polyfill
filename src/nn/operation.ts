@@ -20,8 +20,6 @@ export abstract class Operation {
 
   constructor(builder: ModelBuilder) {
     this.builder_ = builder;
-    // Operation produces 1 output operand by default.
-    this.outputs_.push(new OutputOperand(this));
   }
 
   abstract inputs(): Operand[];
@@ -29,6 +27,12 @@ export abstract class Operation {
 }
 
 export abstract class SingleOutputOperation extends Operation {
+  constructor(builder: ModelBuilder) {
+    super(builder);
+    // Operation produces 1 output operand by default.
+    this.outputs_.push(new OutputOperand(this));
+  }
+
   get output(): OutputOperand {
     return this.outputs_[0];
   }
