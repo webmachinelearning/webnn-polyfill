@@ -5,6 +5,7 @@ import {Add, Div, MatMul, Max, Min, Mul, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
+import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {Reshape} from './ops/reshape';
@@ -54,6 +55,22 @@ export interface Conv2dOptions {
   groups?: number;
   /** */
   layout?: OperandLayout;
+}
+
+/**
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-gemmoptions)
+ */
+export interface GemmOptions {
+  /** */
+  c?: Operand;
+  /** */
+  alpha?: number;
+  /** */
+  beta?: number;
+  /** */
+  aTranspose?: boolean;
+  /** */
+  bTranspose?: boolean;
 }
 
 /**
@@ -363,6 +380,15 @@ export class ModelBuilder {
       Operand {
     this.validateOperandBuilder([input, filter]);
     return (new Conv2d(input, filter, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-gemm)
+   */
+  gemm(a: Operand, b: Operand, options: GemmOptions = {}): Operand {
+    this.validateOperandBuilder([a, b, options.c]);
+    return Gemm.build(this, a, b, options);
   }
 
   /**
