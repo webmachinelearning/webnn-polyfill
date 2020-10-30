@@ -2,16 +2,28 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../compilation';
 import {Operand} from '../operand';
-import {Operation} from '../operation';
+import {SingleOutputOperation} from '../operation';
+import * as utils from '../utils';
 
-export abstract class Binary extends Operation {
+export abstract class Binary extends SingleOutputOperation {
+  private a_: Operand;
+  private b_: Operand;
+
   constructor(a: Operand, b: Operand) {
-    super([a, b]);
+    super(a.builder);
+    utils.validateOperand(a);
+    this.a_ = a;
+    utils.validateOperand(b);
+    this.b_ = b;
+  }
+
+  inputs(): Operand[] {
+    return [this.a_, this.b_];
   }
 
   run(context: ExecutionContext): tf.Tensor {
-    const a: tf.Tensor = this.getTensor(this.inputs[0], context);
-    const b: tf.Tensor = this.getTensor(this.inputs[1], context);
+    const a: tf.Tensor = context.getTensor(this.a_);
+    const b: tf.Tensor = context.getTensor(this.b_);
     return this.runOp(a, b);
   }
 
@@ -51,5 +63,15 @@ export class Max extends Binary {
 export class Min extends Binary {
   runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
     return tf.minimum(a, b);
+  }
+}
+
+export class MatMul extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    if (a.rank === 1 || b.rank === 1) {
+      return tf.dot(a, b);
+    } else {
+      return tf.matMul(a, b);
+    }
   }
 }

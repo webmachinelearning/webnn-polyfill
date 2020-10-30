@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {OperandDescriptor, OperandType} from './operand';
+import {Operand, OperandDescriptor, OperandType} from './operand';
 import {ArrayBufferView as TypedArray} from './types';
 
 export function assert(expr: boolean, msg: string): void {
@@ -156,4 +156,14 @@ export function sizeFromDimensions(dim: number[]): number {
             currentValue > 0 ? accumulator * currentValue : accumulator,
         1);
   }
+}
+
+export function validateOperand(input: Operand, name = ''): void {
+  assert(input instanceof Operand, `The parameter ${name} is not an operand.`);
+}
+
+export function validateOptionalOperand(input: Operand, name = ''): void {
+  assert(
+      input === undefined || input instanceof Operand,
+      `The parameter ${name} is not an optional operand.`);
 }

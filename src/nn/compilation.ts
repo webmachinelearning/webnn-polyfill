@@ -4,7 +4,7 @@ import '@tensorflow/tfjs-backend-cpu';
 import * as tf from '@tensorflow/tfjs-core';
 
 import {CompilationOptions, Model, PowerPreference} from './model';
-import {ConstantOperand, InputOperand, OperandDescriptor, OutputOperand} from './operand';
+import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OutputOperand} from './operand';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
@@ -40,9 +40,49 @@ export type NamedInputs = Record<string, Input>;
  */
 export type NamedOutputs = Record<string, Output>;
 
-export interface ExecutionContext {
-  inputTensors: Map<InputOperand, tf.Tensor>;
-  constantTenosrs: Map<ConstantOperand, tf.Tensor>;
+export class ExecutionContext {
+  private inputTensors_: Map<InputOperand, tf.Tensor>;
+  private constantTenosrs_: Map<ConstantOperand, tf.Tensor>;
+
+  constructor(constantTensors: Map<ConstantOperand, tf.Tensor>) {
+    this.constantTenosrs_ = constantTensors;
+    this.inputTensors_ = new Map();
+  }
+
+  allocateInputTensors(
+      inputs: NamedInputs, inputOperands: Map<string, InputOperand>): void {
+    for (const inputName in inputs) {
+      const input = inputs[inputName];
+      const inputOperand = inputOperands.get(inputName);
+      let desc: OperandDescriptor;
+      if (input.dimensions !== undefined) {
+        desc = {type: inputOperand.desc.type, dimensions: input.dimensions} as
+            OperandDescriptor;
+      } else {
+        desc = inputOperand.desc;
+      }
+      this.inputTensors_.set(
+          inputOperand, utils.createTensor(desc, input.buffer));
+    }
+  }
+
+  releaseInputTensors(): void {
+    for (const tensor of this.inputTensors_.values()) {
+      tf.dispose(tensor);
+    }
+  }
+
+  getTensor(operand: Operand): tf.Tensor {
+    if (operand instanceof ConstantOperand) {
+      return this.constantTenosrs_.get(operand);
+    } else if (operand instanceof InputOperand) {
+      return this.inputTensors_.get(operand);
+    } else if (operand instanceof OutputOperand) {
+      return operand.getTensor(this);
+    } else {
+      throw new Error('The operand is invalid.');
+    }
+  }
 }
 
 /**
@@ -57,19 +97,8 @@ export class Compilation {
   async compute(inputs: NamedInputs, outputs: NamedOutputs = {}):
       Promise<NamedOutputs> {
     this.validateInputs(inputs);
-    const inputTensors: Map<InputOperand, tf.Tensor> = new Map();
-    for (const inputName in inputs) {
-      const input = inputs[inputName];
-      const inputOperand = this.inputOperands_.get(inputName);
-      let desc: OperandDescriptor;
-      if (input.dimensions !== undefined) {
-        desc = {type: inputOperand.desc.type, dimensions: input.dimensions} as
-            OperandDescriptor;
-      } else {
-        desc = inputOperand.desc;
-      }
-      inputTensors.set(inputOperand, utils.createTensor(desc, input.buffer));
-    }
+    const context = new ExecutionContext(this.constantTensors_);
+    context.allocateInputTensors(inputs, this.inputOperands_);
 
     const outputNames: string[] = [];
     if (Object.keys(outputs).length !== 0) {
@@ -89,10 +118,7 @@ export class Compilation {
     const results: NamedOutputs = {};
     for (const outputName of outputNames) {
       const outputOperand = this.outputOperands_.get(outputName);
-      const tensor: tf.Tensor = tf.tidy(
-          () => outputOperand.operation.run(
-              {inputTensors, constantTenosrs: this.constantTensors_} as
-              ExecutionContext));
+      const tensor: tf.Tensor = tf.tidy(() => outputOperand.getTensor(context));
       const desc = utils.createOperandDescriptorFromTensor(tensor);
       const data = await tensor.data();
       tf.dispose(tensor);
@@ -106,9 +132,7 @@ export class Compilation {
       }
     }
 
-    for (const tensor of inputTensors.values()) {
-      tf.dispose(tensor);
-    }
+    context.releaseInputTensors();
 
     return results;
   }

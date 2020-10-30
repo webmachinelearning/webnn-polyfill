@@ -1,12 +1,11 @@
 import {Model} from './model';
 import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OperandType} from './operand';
 import {BatchNormalization} from './ops/batch_norm';
-import {Add, Div, Max, Min, Mul, Sub} from './ops/binary';
+import {Add, Div, MatMul, Max, Min, Mul, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gru, GruCell} from './ops/gru';
-import {MatMul} from './ops/matmul';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
@@ -475,7 +474,10 @@ export class ModelBuilder {
 
   private validateOperandBuilder(operands: Operand[]) {
     utils.assert(
-        operands.every(operand => operand ? operand.builder === this : true),
+        operands.every(
+            operand => operand ?
+                (operand instanceof Operand && operand.builder === this) :
+                true),
         'The operand is not built by this builder.');
   }
 }

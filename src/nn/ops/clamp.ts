@@ -3,42 +3,50 @@ import * as tf from '@tensorflow/tfjs-core';
 import {ExecutionContext} from '../compilation';
 import {ClampOptions} from '../model_builder';
 import {Operand} from '../operand';
-import {Operation} from '../operation';
+import {SingleOutputOperation} from '../operation';
+import * as utils from '../utils';
 
-export class Clamp extends Operation {
+export class Clamp extends SingleOutputOperation {
+  private x_: Operand;
   private minValue_?: Operand;
   private maxValue_?: Operand;
 
   constructor(x: Operand, options: ClampOptions = {}) {
-    const inputs: Operand[] = [];
-    if (options.minValue !== undefined) {
-      inputs.push(options.minValue);
-    }
-    if (options.maxValue !== undefined) {
-      inputs.push(options.maxValue);
-    }
-    super(inputs);
-    // Add the references of minValue and maxValue.
+    super(x.builder);
+    utils.validateOperand(x);
+    this.x_ = x;
+    utils.validateOptionalOperand(options.minValue);
     this.minValue_ = options.minValue;
+    utils.validateOptionalOperand(options.maxValue);
     this.maxValue_ = options.maxValue;
   }
 
+  inputs(): Operand[] {
+    const inputs = [this.x_];
+    if (this.minValue_) {
+      inputs.push(this.minValue_);
+    }
+    if (this.maxValue_) {
+      inputs.push(this.maxValue_);
+    }
+    return inputs;
+  }
+
   run(context: ExecutionContext): tf.Tensor {
-    const x: tf.Tensor = this.getTensor(this.inputs[0], context);
-    if (this.minValue_ === undefined) {
-      if (this.maxValue_ === undefined) {
-        return x;
+    const x: tf.Tensor = context.getTensor(this.x_);
+    if (this.minValue_) {
+      if (this.maxValue_) {
+        return tf.minimum(
+            tf.maximum(x, context.getTensor(this.minValue_)),
+            context.getTensor(this.maxValue_));
       } else {
-        const max: tf.Tensor = this.getTensor(this.maxValue_, context);
-        return tf.minimum(x, max);
+        return tf.maximum(x, context.getTensor(this.minValue_));
       }
     } else {
-      const min: tf.Tensor = this.getTensor(this.minValue_, context);
-      if (this.maxValue_ === undefined) {
-        return tf.maximum(x, min);
+      if (this.maxValue_) {
+        return tf.minimum(x, context.getTensor(this.maxValue_));
       } else {
-        const max: tf.Tensor = this.getTensor(this.maxValue_, context);
-        return tf.minimum(tf.maximum(x, min), max);
+        return x;
       }
     }
   }

@@ -3,21 +3,24 @@ import * as tf from '@tensorflow/tfjs-core';
 import {ExecutionContext} from '../compilation';
 import {OperandLayout, Pooling2dOptions} from '../model_builder';
 import {Operand} from '../operand';
-import {Operation} from '../operation';
+import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 type PoolingType = 'avg'|'max';
 
-export abstract class Pool extends Operation {
-  protected windowDimensions_: [number, number];
-  protected padding_: [number, number, number, number];
-  protected strides_: [number, number];
-  protected dilations_: [number, number];
-  protected groups_: number;
-  protected layout_: OperandLayout;
+export abstract class Pool extends SingleOutputOperation {
+  protected input_: Operand;
+  protected windowDimensions_?: [number, number];
+  protected padding_?: [number, number, number, number];
+  protected strides_?: [number, number];
+  protected dilations_?: [number, number];
+  protected groups_?: number;
+  protected layout_?: OperandLayout;
 
   constructor(input: Operand, options: Pooling2dOptions = {}) {
-    super([input]);
+    super(input.builder);
+    utils.validateOperand(input);
+    this.input_ = input;
     this.initOptions(
         options.windowDimensions, options.padding, options.strides,
         options.dilations, options.layout);
@@ -52,9 +55,12 @@ export abstract class Pool extends Operation {
     this.layout_ = layout;
   }
 
+  inputs(): Operand[] {
+    return [this.input_];
+  }
+
   run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D =
-        this.getTensor(this.inputs[0], context) as tf.Tensor4D;
+    let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
     utils.assert(
         this.padding_.every(v => v === this.padding_[0]),
         'The tf.conv2d only supports the same padding value.');

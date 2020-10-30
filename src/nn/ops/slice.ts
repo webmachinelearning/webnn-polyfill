@@ -2,17 +2,20 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../compilation';
 import {Operand} from '../operand';
-import {Operation} from '../operation';
+import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class Slice extends Operation {
+export class Slice extends SingleOutputOperation {
+  private input_: Operand;
   private starts_: number[];
   private sizes_: number[];
-  private axes_: number[]|undefined;
+  private axes_?: number[];
 
   constructor(
       input: Operand, starts: number[], sizes: number[], axes?: number[]) {
-    super([input]);
+    super(input.builder);
+    utils.validateOperand(input);
+    this.input_ = input;
     utils.assert(
         utils.isIntegerArray(starts), 'The starts parameter is invalid.');
     this.starts_ = starts;
@@ -33,9 +36,12 @@ export class Slice extends Operation {
     this.axes_ = axes;
   }
 
+  inputs(): Operand[] {
+    return [this.input_];
+  }
+
   run(context: ExecutionContext): tf.Tensor {
-    const input: tf.Tensor4D =
-        this.getTensor(this.inputs[0], context) as tf.Tensor4D;
+    const input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
     const rank = input.shape.length;
     if (this.axes_ === undefined) {
       // assume axes is [0, 1,...r-1] if it is not defined.

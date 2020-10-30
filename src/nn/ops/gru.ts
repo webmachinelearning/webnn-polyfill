@@ -7,6 +7,16 @@ export class Gru {
       builder: ModelBuilder, input: Operand, weight: Operand,
       recurrentWeight: Operand, steps: number, hiddenSize: number,
       options: GruOptions = {}): Operand[] {
+    utils.validateOperand(input);
+    utils.validateOperand(weight);
+    utils.validateOperand(recurrentWeight);
+    utils.validateOptionalOperand(options.bias);
+    utils.validateOptionalOperand(options.recurrentBias);
+    utils.validateOptionalOperand(options.initialHiddenState);
+    utils.assert(
+        options.initialHiddenState === undefined ||
+            options.initialHiddenState instanceof Operand,
+        'The options.initialHiddenState is invalid.');
     return Gru.buildWithOptions(
         builder, input, weight, recurrentWeight, steps, hiddenSize,
         options.bias, options.recurrentBias, options.initialHiddenState,
@@ -134,6 +144,12 @@ export class GruCell {
       builder: ModelBuilder, input: Operand, weight: Operand,
       recurrentWeight: Operand, hiddenState: Operand, hiddenSize: number,
       options: GruCellOptions = {}): Operand {
+    utils.validateOperand(input);
+    utils.validateOperand(weight);
+    utils.validateOperand(recurrentWeight);
+    utils.validateOperand(hiddenState);
+    utils.validateOptionalOperand(options.bias);
+    utils.validateOptionalOperand(options.recurrentBias);
     return GruCell.buildWithOptions(
         builder, input, weight, recurrentWeight, hiddenState, hiddenSize,
         options.bias, options.recurrentBias, options.resetAfter, options.layout,

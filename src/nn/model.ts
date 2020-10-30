@@ -66,7 +66,7 @@ export class Model {
   }
 
   private handleOperation(operation: Operation): void {
-    for (const operand of operation.inputs) {
+    for (const operand of operation.inputs()) {
       if (operand instanceof InputOperand) {
         if (this.inputs_.has(operand.name)) {
           if (this.inputs_.get(operand.name) !== operand) {

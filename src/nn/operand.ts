@@ -1,3 +1,6 @@
+import * as tf from '@tensorflow/tfjs-core';
+
+import {ExecutionContext} from './compilation';
 import {ModelBuilder} from './model_builder';
 import {Operation} from './operation';
 import {ArrayBufferView} from './types';
@@ -90,8 +93,12 @@ export class ConstantOperand extends Operand {
 export class OutputOperand extends Operand {
   readonly operation: Operation;
 
-  constructor(operation: Operation, builder: ModelBuilder) {
-    super(builder);
+  constructor(operation: Operation) {
+    super(operation.builder);
     this.operation = operation;
+  }
+
+  getTensor(context: ExecutionContext): tf.Tensor {
+    return this.operation.compute(context).get(this);
   }
 }
