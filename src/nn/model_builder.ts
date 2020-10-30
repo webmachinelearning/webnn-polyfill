@@ -2,6 +2,7 @@ import {Model} from './model';
 import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OperandType} from './operand';
 import {BatchNormalization} from './ops/batch_norm';
 import {Add, Div, Max, Min, Mul, Sub} from './ops/binary';
+import {Clamp} from './ops/clamp';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gru, GruCell} from './ops/gru';
@@ -165,6 +166,14 @@ export interface TransposeOptions {
 }
 
 /**
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-clampoptions)
+ */
+export interface ClampOptions {
+  minValue?: Operand;
+  maxValue?: Operand;
+}
+
+/**
  * [API
  * spec](https://webmachinelearning.github.io/webnn/#typedefdef-namedoperands)
  */
@@ -319,6 +328,15 @@ export class ModelBuilder {
     this.validateOperandBuilder(
         [input, mean, variance, options.scale, options.bias]);
     return (new BatchNormalization(input, mean, variance, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-clamp)
+   */
+  clamp(x: Operand, options: ClampOptions = {}): Operand {
+    this.validateOperandBuilder([x, options.minValue, options.maxValue]);
+    return (new Clamp(x, options)).output;
   }
 
   /**
