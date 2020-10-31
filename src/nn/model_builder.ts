@@ -179,6 +179,7 @@ export interface SqueezeOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-transposeoptions)
  */
 export interface TransposeOptions {
+  /** */
   permutation?: number[];
 }
 
@@ -186,7 +187,9 @@ export interface TransposeOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-clampoptions)
  */
 export interface ClampOptions {
+  /** */
   minValue?: Operand;
+  /** */
   maxValue?: Operand;
 }
 
@@ -194,6 +197,7 @@ export interface ClampOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-splitoptions)
  */
 export interface SplitOptions {
+  /** */
   axis?: number;
 }
 
@@ -488,6 +492,10 @@ export class ModelBuilder {
     return (new Softmax(x)).output;
   }
 
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-split)
+   */
   split(input: Operand, splits: number|number[], options: SplitOptions = {}):
       Operand[] {
     this.validateOperandBuilder([input]);
