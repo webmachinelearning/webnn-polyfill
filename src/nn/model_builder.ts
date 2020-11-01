@@ -7,6 +7,7 @@ import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
+import {LeakyRelu} from './ops/leaky_relu';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
@@ -139,6 +140,15 @@ export interface GruCellOptions {
   layout?: RecurrentNetworkWeightLayout;
   /** */
   activations?: RecurrentNetworkActivation[];
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-leakyreluoptions)
+ */
+export interface LeakyReluOptions {
+  /** */
+  alpha?: number;
 }
 
 /**
@@ -423,6 +433,15 @@ export class ModelBuilder {
     ]);
     return GruCell.build(
         this, input, weight, recurrentWeight, hiddenState, hiddenSize, options);
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-leakyrelu)
+   */
+  leakyRelu(x: Operand, options: LeakyReluOptions = {}): Operand {
+    this.validateOperandBuilder([x]);
+    return (new LeakyRelu(x, options.alpha)).output;
   }
 
   /**
