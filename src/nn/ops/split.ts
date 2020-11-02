@@ -3,7 +3,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import {ExecutionContext} from '../compilation';
 import {SplitOptions} from '../model_builder';
 import {Operand, OutputOperand} from '../operand';
-import {Operation, Results} from '../operation';
+import {Operation} from '../operation';
 import * as utils from '../utils';
 
 export class Split extends Operation {
@@ -37,13 +37,11 @@ export class Split extends Operation {
     return [this.input_];
   }
 
-  compute(context: ExecutionContext): Results {
+  compute(context: ExecutionContext): void {
     const input: tf.Tensor = context.getTensor(this.input_);
     const tensors = tf.split(input, this.splits_, this.axis_);
-    const results = new Map();
     for (let i = 0; i < tensors.length; ++i) {
-      results.set(this.outputs[i], tensors[i]);
+      context.setOutputTensor(this.outputs[i], tensors[i]);
     }
-    return results;
   }
 }

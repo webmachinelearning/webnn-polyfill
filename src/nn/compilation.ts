@@ -43,14 +43,19 @@ export type NamedOutputs = Record<string, Output>;
 export class ExecutionContext {
   private inputTensors_: Map<InputOperand, tf.Tensor>;
   private constantTenosrs_: Map<ConstantOperand, tf.Tensor>;
+  private outputTensors_: Map<OutputOperand, tf.Tensor>;
 
-  constructor(constantTensors: Map<ConstantOperand, tf.Tensor>) {
+  constructor(
+      constantTensors: Map<ConstantOperand, tf.Tensor>,
+      inputOperands: Map<string, InputOperand>, inputs: NamedInputs) {
     this.constantTenosrs_ = constantTensors;
-    this.inputTensors_ = new Map();
+    this.allocateInputTensors(inputOperands, inputs);
+    this.outputTensors_ = new Map();
   }
 
-  allocateInputTensors(
-      inputs: NamedInputs, inputOperands: Map<string, InputOperand>): void {
+  private allocateInputTensors(
+      inputOperands: Map<string, InputOperand>, inputs: NamedInputs) {
+    this.inputTensors_ = new Map();
     for (const inputName in inputs) {
       const input = inputs[inputName];
       const inputOperand = inputOperands.get(inputName);
@@ -66,10 +71,18 @@ export class ExecutionContext {
     }
   }
 
-  releaseInputTensors(): void {
-    for (const tensor of this.inputTensors_.values()) {
-      tf.dispose(tensor);
+  compute(outputs: Map<string, OutputOperand>): tf.TensorContainerObject {
+    const outputTensors: tf.TensorContainerObject = {};
+    for (const outputName of outputs.keys()) {
+      outputTensors[outputName] = this.getTensor(outputs.get(outputName));
     }
+    return outputTensors;
+  }
+
+  setOutputTensor(output: OutputOperand, tensor: tf.Tensor): void {
+    utils.assert(
+        !this.outputTensors_.has(output), 'Output already has tensor.');
+    this.outputTensors_.set(output, tensor);
   }
 
   getTensor(operand: Operand): tf.Tensor {
@@ -78,7 +91,13 @@ export class ExecutionContext {
     } else if (operand instanceof InputOperand) {
       return this.inputTensors_.get(operand);
     } else if (operand instanceof OutputOperand) {
-      return operand.getTensor(this);
+      if (this.outputTensors_.has(operand)) {
+        return this.outputTensors_.get(operand);
+      } else {
+        operand.operation.compute(this);
+        utils.assert(this.outputTensors_.has(operand), 'No output is set.');
+        return this.outputTensors_.get(operand);
+      }
     } else {
       throw new Error('The operand is invalid.');
     }
@@ -97,28 +116,34 @@ export class Compilation {
   async compute(inputs: NamedInputs, outputs: NamedOutputs = {}):
       Promise<NamedOutputs> {
     this.validateInputs(inputs);
-    const context = new ExecutionContext(this.constantTensors_);
-    context.allocateInputTensors(inputs, this.inputOperands_);
 
-    const outputNames: string[] = [];
+    // Filter the required output operands.
+    let outputOperands: Map<string, OutputOperand>;
     if (Object.keys(outputs).length !== 0) {
+      outputOperands = new Map();
       for (const outputName in outputs) {
         utils.assert(
             typeof outputName === 'string' &&
                 this.outputOperands_.has(outputName),
             'The name of the output is invalid.');
-        outputNames.push(outputName);
+        outputOperands.set(outputName, this.outputOperands_.get(outputName));
       }
     } else {
-      for (const outputName of this.outputOperands_.keys()) {
-        outputNames.push(outputName);
-      }
+      outputOperands = this.outputOperands_;
     }
 
+    // Compute the output tensors.
+    const outputTensors: tf.TensorContainerObject = tf.tidy(() => {
+      const context = new ExecutionContext(
+          this.constantTensors_, this.inputOperands_, inputs);
+      // The input and immediate tensors will be cleaned up.
+      return context.compute(outputOperands);
+    });
+
+    // Setup the results.
     const results: NamedOutputs = {};
-    for (const outputName of outputNames) {
-      const outputOperand = this.outputOperands_.get(outputName);
-      const tensor: tf.Tensor = tf.tidy(() => outputOperand.getTensor(context));
+    for (const outputName of Object.keys(outputTensors)) {
+      const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
       const data = await tensor.data();
       tf.dispose(tensor);
@@ -131,8 +156,6 @@ export class Compilation {
         outputs[outputName].buffer.set(data);
       }
     }
-
-    context.releaseInputTensors();
 
     return results;
   }

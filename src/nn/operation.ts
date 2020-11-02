@@ -4,8 +4,6 @@ import {ExecutionContext} from './compilation';
 import {ModelBuilder} from './model_builder';
 import {Operand, OutputOperand} from './operand';
 
-export type Results = Map<OutputOperand, tf.Tensor>;
-
 export abstract class Operation {
   protected readonly builder_: ModelBuilder;
   protected outputs_: OutputOperand[] = [];
@@ -23,7 +21,7 @@ export abstract class Operation {
   }
 
   abstract inputs(): Operand[];
-  abstract compute(context: ExecutionContext): Results;
+  abstract compute(context: ExecutionContext): void;
 }
 
 export abstract class SingleOutputOperation extends Operation {
@@ -37,8 +35,8 @@ export abstract class SingleOutputOperation extends Operation {
     return this.outputs_[0];
   }
 
-  compute(context: ExecutionContext): Results {
-    return new Map([[this.output, this.run(context)]]);
+  compute(context: ExecutionContext): void {
+    context.setOutputTensor(this.output, this.run(context));
   }
 
   abstract run(context: ExecutionContext): tf.Tensor;
