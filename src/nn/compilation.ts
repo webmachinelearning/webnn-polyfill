@@ -262,4 +262,11 @@ export class Compilation {
     }
     await this.compute(inputs);
   }
+
+  // For memory leak testing.
+  dispose(): void {
+    for (const tensor of this.constantTensors_.values()) {
+      tf.dispose(tensor);
+    }
+  }
 }

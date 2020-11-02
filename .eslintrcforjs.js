@@ -11,6 +11,7 @@ module.exports = {
     'Model': 'readonly',
     'Compilation': 'readonly',
     'Operand': 'readonly',
+    '_tfengine': 'readonly',
   },
   rules: {
     'semi': 'error',
