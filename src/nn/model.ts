@@ -29,7 +29,7 @@ export interface CompilationOptions {
 export class Model {
   private inputs_: Map<string, InputOperand> = new Map();
   private outputs_: Map<string, OutputOperand> = new Map();
-  private constants_: ConstantOperand[] = [];
+  private constants_: Set<ConstantOperand> = new Set();
 
   get inputs(): Map<string, InputOperand> {
     return this.inputs_;
@@ -38,7 +38,7 @@ export class Model {
     return this.outputs_;
   }
   get constants(): ConstantOperand[] {
-    return this.constants_;
+    return Array.from(this.constants_.values());
   }
 
   constructor(outputs?: NamedOperands) {
@@ -77,7 +77,9 @@ export class Model {
         }
         this.inputs_.set(operand.name, operand);
       } else if (operand instanceof ConstantOperand) {
-        this.constants_.push(operand);
+        if (!this.constants_.has(operand)) {
+          this.constants_.add(operand);
+        }
       } else if (operand instanceof OutputOperand) {
         this.handleOperation(operand.operation);
       }
