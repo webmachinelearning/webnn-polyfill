@@ -12,7 +12,7 @@ describe('test conv2d', function() {
         {type: 'float32', dimensions: [1, 1, 3, 3]},
         new Float32Array(9).fill(1));
     const padding = [1, 1, 1, 1];
-    const output = builder.conv2d(input, filter, padding);
+    const output = builder.conv2d(input, filter, {padding});
     const model = builder.createModel({output});
     const compiledModel = await model.compile();
     const inputs = {
@@ -65,7 +65,7 @@ describe('test conv2d', function() {
         new Float32Array(9).fill(1));
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
-    const output = builder.conv2d(input, filter, padding, strides);
+    const output = builder.conv2d(input, filter, {padding, strides});
     const model = builder.createModel({output});
     const compiledModel = await model.compile();
     const inputs = {

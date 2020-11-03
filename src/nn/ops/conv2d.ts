@@ -1,25 +1,35 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../execution_context';
-import {Operand} from '../operand_impl';
-import {OperandLayout} from '../operand_layout';
-import {Operation} from '../operation';
+import {ExecutionContext} from '../compilation';
+import {Conv2dOptions, OperandLayout} from '../model_builder';
+import {Operand} from '../operand';
+import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class Conv2d extends Operation {
-  private padding_: [number, number, number, number];
-  private strides_: [number, number];
-  private dilations_: [number, number];
-  private groups_: number;
-  private layout_: OperandLayout;
+export class Conv2d extends SingleOutputOperation {
+  private input_: Operand;
+  private filter_: Operand;
+  private padding_?: [number, number, number, number];
+  private strides_?: [number, number];
+  private dilations_?: [number, number];
+  private groups_?: number;
+  private layout_?: OperandLayout;
 
-  constructor(
-      input: Operand, filter: Operand,
+  constructor(input: Operand, filter: Operand, options: Conv2dOptions = {}) {
+    super(input.builder);
+    utils.validateOperand(input);
+    this.input_ = input;
+    utils.validateOperand(filter);
+    this.filter_ = filter;
+    this.initOptions(
+        options.padding, options.strides, options.dilations, options.groups,
+        options.layout);
+  }
+
+  private initOptions(
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       groups = 1, layout: OperandLayout = OperandLayout.nchw) {
-    super([input, filter]);
-
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
@@ -42,11 +52,13 @@ export class Conv2d extends Operation {
     this.layout_ = layout;
   }
 
+  inputs(): Operand[] {
+    return [this.input_, this.filter_];
+  }
+
   run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D =
-        this.getTensor(this.inputs[0], context) as tf.Tensor4D;
-    let filter: tf.Tensor4D =
-        this.getTensor(this.inputs[1], context) as tf.Tensor4D;
+    let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
+    let filter: tf.Tensor4D = context.getTensor(this.filter_) as tf.Tensor4D;
     utils.assert(
         this.padding_.every(v => v === this.padding_[0]),
         'The tf.conv2d only supports the same padding value.');

@@ -1,18 +1,11 @@
 import {ModelBuilder} from './model_builder';
-import {NeuralNetworkContext as NeuralNetworkContextImpl} from './neural_network_context_impl';
-
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#api-neuralnetworkcontext)
+ * [API spec](https://webmachinelearning.github.io/webnn/#neuralnetworkcontext)
  */
-export interface NeuralNetworkContext {
+export class NeuralNetworkContext {
   /** */
-  createModelBuilder(): ModelBuilder;
+  createModelBuilder(): ModelBuilder {
+    return new ModelBuilder();
+  }
 }
-
-interface NeuralNetworkContextConstructor {
-  new(): NeuralNetworkContext;
-}
-// eslint-disable-next-line no-redeclare
-export const NeuralNetworkContext: NeuralNetworkContextConstructor =
-    NeuralNetworkContextImpl;

@@ -5,18 +5,20 @@ import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class Reshape extends SingleOutputOperation {
+export class Squeeze extends SingleOutputOperation {
   private input_: Operand;
-  private newShape_: number[];
+  private axes_?: number[];
 
-  constructor(input: Operand, newShape: number[]) {
+  constructor(input: Operand, axes?: number[]) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
-    utils.assert(
-        utils.isIntegerArray(newShape) && newShape.length !== 0,
-        'The newShape parameter is invalid.');
-    this.newShape_ = newShape;
+    if (axes !== undefined) {
+      utils.assert(
+          utils.isIntegerArray(axes) && axes.length !== 0,
+          'The axes parameter is invalid.');
+    }
+    this.axes_ = axes;
   }
 
   inputs(): Operand[] {
@@ -25,6 +27,6 @@ export class Reshape extends SingleOutputOperation {
 
   run(context: ExecutionContext): tf.Tensor {
     const input: tf.Tensor = context.getTensor(this.input_);
-    return tf.reshape(input, this.newShape_);
+    return tf.squeeze(input, this.axes_);
   }
 }

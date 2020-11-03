@@ -1,13 +1,16 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {OperandDescriptor} from './operand_descriptor';
-import {OperandType} from './operand_type';
+import {Operand, OperandDescriptor, OperandType} from './operand';
 import {ArrayBufferView as TypedArray} from './types';
 
 export function assert(expr: boolean, msg: string): void {
   if (!expr) {
     throw new Error(msg);
   }
+}
+
+export function isBoolean(value: unknown): boolean {
+  return typeof value === 'boolean';
 }
 
 export function isInteger(value: unknown): boolean {
@@ -153,4 +156,14 @@ export function sizeFromDimensions(dim: number[]): number {
             currentValue > 0 ? accumulator * currentValue : accumulator,
         1);
   }
+}
+
+export function validateOperand(input: Operand, name = ''): void {
+  assert(input instanceof Operand, `The parameter ${name} is not an operand.`);
+}
+
+export function validateOptionalOperand(input: Operand, name = ''): void {
+  assert(
+      input === undefined || input instanceof Operand,
+      `The parameter ${name} is not an optional operand.`);
 }

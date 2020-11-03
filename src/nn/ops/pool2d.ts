@@ -1,26 +1,36 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../execution_context';
-import {Operand} from '../operand_impl';
-import {OperandLayout} from '../operand_layout';
-import {Operation} from '../operation';
+import {ExecutionContext} from '../compilation';
+import {OperandLayout, Pooling2dOptions} from '../model_builder';
+import {Operand} from '../operand';
+import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export abstract class Pool extends Operation {
-  protected windowDimensions_: [number, number];
-  protected padding_: [number, number, number, number];
-  protected strides_: [number, number];
-  protected dilations_: [number, number];
-  protected groups_: number;
-  protected layout_: OperandLayout;
+type PoolingType = 'avg'|'max';
 
-  constructor(
-      input: Operand, windowDimensions: [number, number] = [-1, -1],
+export abstract class Pool extends SingleOutputOperation {
+  protected input_: Operand;
+  protected windowDimensions_?: [number, number];
+  protected padding_?: [number, number, number, number];
+  protected strides_?: [number, number];
+  protected dilations_?: [number, number];
+  protected groups_?: number;
+  protected layout_?: OperandLayout;
+
+  constructor(input: Operand, options: Pooling2dOptions = {}) {
+    super(input.builder);
+    utils.validateOperand(input);
+    this.input_ = input;
+    this.initOptions(
+        options.windowDimensions, options.padding, options.strides,
+        options.dilations, options.layout);
+  }
+
+  private initOptions(
+      windowDimensions: [number, number] = [-1, -1],
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       layout: OperandLayout = OperandLayout.nchw) {
-    super([input]);
-
     utils.assert(
         utils.isIntegerArray(windowDimensions) && windowDimensions.length === 2,
         'The padding parameter is invalid.');
@@ -45,9 +55,12 @@ export abstract class Pool extends Operation {
     this.layout_ = layout;
   }
 
+  inputs(): Operand[] {
+    return [this.input_];
+  }
+
   run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D =
-        this.getTensor(this.inputs[0], context) as tf.Tensor4D;
+    let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
     utils.assert(
         this.padding_.every(v => v === this.padding_[0]),
         'The tf.conv2d only supports the same padding value.');
@@ -72,5 +85,17 @@ export abstract class Pool extends Operation {
     return output;
   }
 
-  abstract getPoolingType(): 'avg'|'max';
+  abstract getPoolingType(): PoolingType;
+}
+
+export class AveragePool2d extends Pool {
+  getPoolingType(): PoolingType {
+    return 'avg';
+  }
+}
+
+export class MaxPool2d extends Pool {
+  getPoolingType(): PoolingType {
+    return 'max';
+  }
 }

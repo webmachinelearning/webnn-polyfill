@@ -5,13 +5,16 @@ import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class Softmax extends SingleOutputOperation {
+export class LeakyRelu extends SingleOutputOperation {
   private x_: Operand;
+  private alpha_?: number;
 
-  constructor(x: Operand) {
+  constructor(x: Operand, alpha = 0.01) {
     super(x.builder);
     utils.validateOperand(x);
     this.x_ = x;
+    utils.assert(typeof alpha === 'number', 'The alpha parameter is invalid.');
+    this.alpha_ = alpha;
   }
 
   inputs(): Operand[] {
@@ -20,9 +23,6 @@ export class Softmax extends SingleOutputOperation {
 
   run(context: ExecutionContext): tf.Tensor {
     const x: tf.Tensor = context.getTensor(this.x_);
-    if (x.rank !== 2) {
-      throw new Error('The rank of x parameter should be 2.');
-    }
-    return tf.softmax(x);
+    return tf.leakyRelu(x, this.alpha_);
   }
 }
