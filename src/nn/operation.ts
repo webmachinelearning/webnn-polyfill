@@ -1,38 +1,42 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Constant} from './constant';
-import {ExecutionContext} from './execution_context';
-import {Input} from './input';
-import {Operand} from './operand_impl';
-import {Output} from './output';
-import * as utils from './utils';
+import {ExecutionContext} from './compilation';
+import {ModelBuilder} from './model_builder';
+import {Operand, OutputOperand} from './operand';
 
 export abstract class Operation {
-  inputs: Operand[] = [];
-  outputs: Output[] = [];
+  protected readonly builder_: ModelBuilder;
+  protected outputs_: OutputOperand[] = [];
 
-  constructor(inputs: Operand[]) {
-    utils.assert(
-        inputs.every(input => input instanceof Operand),
-        'The inputs parameter is invalid.');
-    this.inputs = inputs;
-    this.outputs.push(new Output(this));
+  get builder(): ModelBuilder {
+    return this.builder_;
   }
 
-  get output(): Output {
-    return this.outputs[0];
+  get outputs(): OutputOperand[] {
+    return this.outputs_;
   }
 
-  protected getTensor(operand: Operand, context: ExecutionContext): tf.Tensor {
-    if (operand instanceof Constant) {
-      return context.constantTenosrs.get(operand);
-    } else if (operand instanceof Input) {
-      return context.inputTensors.get(operand);
-    } else if (operand instanceof Output) {
-      return operand.operation.run(context);
-    } else {
-      throw new Error('The operand is invalid.');
-    }
+  constructor(builder: ModelBuilder) {
+    this.builder_ = builder;
+  }
+
+  abstract inputs(): Operand[];
+  abstract compute(context: ExecutionContext): void;
+}
+
+export abstract class SingleOutputOperation extends Operation {
+  constructor(builder: ModelBuilder) {
+    super(builder);
+    // Operation produces 1 output operand by default.
+    this.outputs_.push(new OutputOperand(this));
+  }
+
+  get output(): OutputOperand {
+    return this.outputs_[0];
+  }
+
+  compute(context: ExecutionContext): void {
+    context.setOutputTensor(this.output, this.run(context));
   }
 
   abstract run(context: ExecutionContext): tf.Tensor;

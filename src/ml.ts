@@ -1,16 +1,16 @@
-import {ML as MLImpl} from './ml_impl';
 import {NeuralNetworkContext} from './nn/neural_network_context';
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#api-ml)
+ * [API spec](https://webmachinelearning.github.io/webnn/#ml)
  */
-export interface ML {
-  /** */
-  getNeuralNetworkContext(): NeuralNetworkContext;
-}
+export class ML {
+  private nnContext: NeuralNetworkContext = null;
 
-interface MLConstructor {
-  new(): ML;
+  /** */
+  getNeuralNetworkContext(): NeuralNetworkContext {
+    if (!this.nnContext) {
+      this.nnContext = new NeuralNetworkContext();
+    }
+    return this.nnContext;
+  }
 }
-// eslint-disable-next-line no-redeclare
-export const ML: MLConstructor = MLImpl;

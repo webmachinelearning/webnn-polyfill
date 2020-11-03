@@ -4,9 +4,14 @@ module.exports = {
   env: { 'es6': true, 'browser': true, 'node': true, 'mocha': true},
   parserOptions: { ecmaVersion: 2017, sourceType: 'module'},
   globals: {
-    'assert': 'readonly',
     'chai': 'readonly',
-    'checkOutput': 'readonly'
+    'ML': 'readonly',
+    'NeuralNetworkContext': 'readonly',
+    'ModelBuilder': 'readonly',
+    'Model': 'readonly',
+    'Compilation': 'readonly',
+    'Operand': 'readonly',
+    '_tfengine': 'readonly',
   },
   rules: {
     'semi': 'error',

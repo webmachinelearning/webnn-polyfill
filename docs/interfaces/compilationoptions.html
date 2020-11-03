@@ -65,7 +65,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p><a href="https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions">spec</a></p>
+						<p><a href="https://webmachinelearning.github.io/webnn/#dictdef-compilationoptions">API
+						spec</a></p>
 					</div>
 				</div>
 			</section>
@@ -98,7 +99,7 @@
 					<div class="tsd-signature tsd-kind-icon">power<wbr>Preference<span class="tsd-signature-symbol">:</span> <a href="../enums/powerpreference.html" class="tsd-signature-type">PowerPreference</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/e9a3799/src/nn/compilation_options.ts#L8">nn/compilation_options.ts:8</a></li>
+							<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d4c5df3/src/nn/model.ts#L23">nn/model.ts:23</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -123,8 +124,38 @@
 					<li class=" tsd-kind-enum">
 						<a href="../enums/powerpreference.html" class="tsd-kind-icon">Power<wbr>Preference</a>
 					</li>
+					<li class=" tsd-kind-enum">
+						<a href="../enums/recurrentnetworkactivation.html" class="tsd-kind-icon">Recurrent<wbr>Network<wbr>Activation</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="../enums/recurrentnetworkdirection.html" class="tsd-kind-icon">Recurrent<wbr>Network<wbr>Direction</a>
+					</li>
+					<li class=" tsd-kind-enum">
+						<a href="../enums/recurrentnetworkweightlayout.html" class="tsd-kind-icon">Recurrent<wbr>Network<wbr>Weight<wbr>Layout</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/compilation.html" class="tsd-kind-icon">Compilation</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/ml.html" class="tsd-kind-icon">ML</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/model.html" class="tsd-kind-icon">Model</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/modelbuilder.html" class="tsd-kind-icon">Model<wbr>Builder</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/neuralnetworkcontext.html" class="tsd-kind-icon">Neural<wbr>Network<wbr>Context</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="../classes/operand.html" class="tsd-kind-icon">Operand</a>
+					</li>
 					<li class=" tsd-kind-interface">
-						<a href="compilation.html" class="tsd-kind-icon">Compilation</a>
+						<a href="batchnormalizationoptions.html" class="tsd-kind-icon">Batch<wbr>Normalization<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="clampoptions.html" class="tsd-kind-icon">Clamp<wbr>Options</a>
 					</li>
 				</ul>
 				<ul class="current">
@@ -139,28 +170,55 @@
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface">
-						<a href="execution.html" class="tsd-kind-icon">Execution</a>
+						<a href="conv2doptions.html" class="tsd-kind-icon">Conv2d<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="ml.html" class="tsd-kind-icon">ML</a>
+						<a href="gemmoptions.html" class="tsd-kind-icon">Gemm<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="model.html" class="tsd-kind-icon">Model</a>
+						<a href="grucelloptions.html" class="tsd-kind-icon">Gru<wbr>Cell<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="namedoperand.html" class="tsd-kind-icon">Named<wbr>Operand</a>
+						<a href="gruoptions.html" class="tsd-kind-icon">Gru<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="neuralnetworkcontext.html" class="tsd-kind-icon">Neural<wbr>Network<wbr>Context</a>
+						<a href="input.html" class="tsd-kind-icon">Input</a>
 					</li>
 					<li class=" tsd-kind-interface">
-						<a href="operand.html" class="tsd-kind-icon">Operand</a>
+						<a href="leakyreluoptions.html" class="tsd-kind-icon">Leaky<wbr>Relu<wbr>Options</a>
 					</li>
 					<li class=" tsd-kind-interface">
 						<a href="operanddescriptor.html" class="tsd-kind-icon">Operand<wbr>Descriptor</a>
 					</li>
+					<li class=" tsd-kind-interface">
+						<a href="output.html" class="tsd-kind-icon">Output</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="pooling2doptions.html" class="tsd-kind-icon">Pooling2d<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="sliceoptions.html" class="tsd-kind-icon">Slice<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="splitoptions.html" class="tsd-kind-icon">Split<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="squeezeoptions.html" class="tsd-kind-icon">Squeeze<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface">
+						<a href="transposeoptions.html" class="tsd-kind-icon">Transpose<wbr>Options</a>
+					</li>
 					<li class=" tsd-kind-type-alias">
 						<a href="../index.html#arraybufferview" class="tsd-kind-icon">Array<wbr>Buffer<wbr>View</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../index.html#namedinputs" class="tsd-kind-icon">Named<wbr>Inputs</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../index.html#namedoperands" class="tsd-kind-icon">Named<wbr>Operands</a>
+					</li>
+					<li class=" tsd-kind-type-alias">
+						<a href="../index.html#namedoutputs" class="tsd-kind-icon">Named<wbr>Outputs</a>
 					</li>
 				</ul>
 			</nav>
@@ -173,7 +231,9 @@
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
-				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 		</div>
 	</div>
