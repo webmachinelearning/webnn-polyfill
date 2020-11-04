@@ -60,7 +60,7 @@ export class Gru {
         (direction === RecurrentNetworkDirection.both ? 2 : 1);
     let hiddenState = initialHiddenState;
 
-    if (hiddenState !== undefined) {
+    if (hiddenState === undefined) {
       const desc = {
         type: OperandType.float32,
         dimensions: [numDirections, 1, hiddenSize]
