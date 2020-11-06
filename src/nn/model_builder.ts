@@ -415,8 +415,8 @@ export class ModelBuilder {
       input, weight, recurrentWeight, options.bias, options.recurrentBias,
       options.initialHiddenState
     ]);
-    return Gru.build(
-        this, input, weight, recurrentWeight, steps, hiddenSize, options);
+    return (new Gru(input, weight, recurrentWeight, steps, hiddenSize, options))
+        .outputs;
   }
 
   /**
@@ -431,8 +431,10 @@ export class ModelBuilder {
       input, weight, recurrentWeight, hiddenState, options.bias,
       options.recurrentBias
     ]);
-    return GruCell.build(
-        this, input, weight, recurrentWeight, hiddenState, hiddenSize, options);
+    return (new GruCell(
+                input, weight, recurrentWeight, hiddenState, hiddenSize,
+                options))
+        .output;
   }
 
   /**
