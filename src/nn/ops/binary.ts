@@ -71,7 +71,13 @@ export class MatMul extends Binary {
     if (a.rank === 1 || b.rank === 1) {
       return tf.dot(a, b);
     } else {
-      return tf.matMul(a, b);
+      const rank = a.rank > b.rank ? a.rank : b.rank;
+      let c = tf.matMul(a, b);
+      // workaround https://github.com/tensorflow/tfjs/issues/4192
+      if (c.rank !== rank) {
+        c = tf.reshape(c, [1].concat(c.shape));
+      }
+      return c;
     }
   }
 }
