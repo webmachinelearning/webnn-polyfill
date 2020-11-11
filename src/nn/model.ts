@@ -60,12 +60,19 @@ export class Model {
   }
 
   private initialize(): void {
+    const visitedOps: Set<Operation> = new Set();
     for (const output of this.outputs_.values()) {
-      this.handleOperation(output.operation);
+      this.handleOperation(output.operation, visitedOps);
     }
   }
 
-  private handleOperation(operation: Operation): void {
+  private handleOperation(operation: Operation, visitedOps: Set<Operation>):
+      void {
+    if (visitedOps.has(operation)) {
+      return;
+    } else {
+      visitedOps.add(operation);
+    }
     for (const operand of operation.inputs()) {
       if (operand instanceof InputOperand) {
         if (this.inputs_.has(operand.name)) {
@@ -81,7 +88,7 @@ export class Model {
           this.constants_.add(operand);
         }
       } else if (operand instanceof OutputOperand) {
-        this.handleOperation(operand.operation);
+        this.handleOperation(operand.operation, visitedOps);
       }
     }
   }
