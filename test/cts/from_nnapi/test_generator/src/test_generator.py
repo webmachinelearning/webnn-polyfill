@@ -14,13 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""NN model compiler
-
-Contain classes definition and utilify functions for compiling models and
-examples into NDK-based CTS and VTS unit tests.
-
-Used by cts_generator.py, vts_generator.py, and slicing.py
-"""
 
 from __future__ import absolute_import
 from __future__ import division
@@ -41,13 +34,12 @@ import numpy as np
 def GetJointStr(l, sep=", ", method=str):
     return sep.join([method(i) for i in l])
 
-# Print in C float literal format
 def PrettyPrintAsFloat(x):
     s = str(float(x))
     if s.find(".") >= 0 or s.find("e") >= 0:
-        return s + "f"
+        return s
     else:
-        return s + ".0f"
+        return s + ".0"
 
 # Transform from original type to float32
 def Dequantize(v, ty):
@@ -163,12 +155,40 @@ class Type(NamedVariable):
 #     "OEM_SCALAR": this is service-defined.
         "TENSOR_OEM_BYTE": "uint8_t",
     }
+    typeLookupWebnn = {
+        "INT32": "int32",
+        "UINT32": "uint32",
+        "FLOAT32": "float32",
+        "FLOAT16": "float16",
+        "TENSOR_INT32": "int32",
+        "TENSOR_FLOAT16": "float16",
+        "TENSOR_FLOAT32": "float32",
+        "TENSOR_QUANT8_ASYMM": "uint8",
+        "TENSOR_QUANT8_SYMM": "int8",
+        "BOOL": "bool8",
+        "TENSOR_QUANT16_ASYMM": "uint16",
+        "TENSOR_QUANT16_SYMM": "int16",
+        "TENSOR_QUANT8_SYMM_PER_CHANNEL": "int8",
+        "TENSOR_OEM_BYTE": "uint8",
+    }
+    typedArrayLookupWebnn = {
+        "FLOAT32": "Float32Array",
+        "INT32": "Int32Array",
+        "TENSOR_FLOAT32": "Float32Array",
+        "TENSOR_INT32": "Int32Array",
+        "TENSOR_QUANT8_ASYMM": "Uint8Array",
+        "TENSOR_QUANT8_SYMM": "Int8Array",
+        "TENSOR_QUANT8_SYMM_PER_CHANNEL": "Int8Array",
+        "TENSOR_OEM_BYTE": "Uint8Array",
+    }
 
     # types are named as "type0", "type1", ...
     def __init__(self, vt, dimensions, scale, zeroPoint, name="type", skipRenaming=False,
                  extraParams=None):
         NamedVariable.__init__(self, name, sep="", showZero=True, skipRenaming=skipRenaming)
         self.type = vt
+        self.mappingType = self.typeLookupWebnn.get(vt, None)
+        self.mappingTypedArrayType = self.typedArrayLookupWebnn.get(vt, None)
         self.dimensions = dimensions
         self.scale = float(scale)
         self.zeroPoint = int(zeroPoint)
@@ -227,30 +247,8 @@ class Type(NamedVariable):
     def IsBool(self):
         return self.GetCppTypeString() == "bool8"
 
-    def GetElementByteSize(self):
-        cppTypeString = self.GetCppTypeString()
-        if cppTypeString in ["uint8_t", "int8_t", "bool8"]:
-            return 1
-        elif cppTypeString in ["int16_t", "uint16_t", "_Float16"]:
-            return 2
-        else:
-            return 4
-
-    def GetByteSize(self):
-        return self.GetElementByteSize() * self.GetNumberOfElements()
-
-    def GetDimensionsString(self):
-        return "{" + GetJointStr(self.dimensions) + "}"
-
     def GetSignatureTuple(self):
         return (self.type, self.dimensions, self.scale, self.zeroPoint)
-
-    # For backward-compatibility with slicing.py
-    def GetRawShape(self):
-        if self.scale == 0 and self.zeroPoint == 0:
-            return self.GetDimensionsString()
-        else:
-            return GetJointStr([self.GetDimensionsString(), self.scale, self.zeroPoint])
 
     def ToUnspecifiedDim(self):
         return Type.GetType(self.type, [0] * len(self.dimensions), self.scale, self.zeroPoint)
@@ -265,7 +263,6 @@ class ImplicitParameter():
             if implicitType.IsCompatible(value):
                 return implicitType("param", value)
         assert False, "%s not supported for implicit parameter"%value
-
 
 # ExtraParams with per-channel quantization.
 class SymmPerChannelQuantParams():
@@ -290,11 +287,9 @@ class SymmPerChannelQuantParams():
     return "SymmPerChannelQuantParams{.scales={%s}, .channelDim=%d}" % (
         ", ".join(str(x) + "f" for x in self.scales), self.channelDim)
 
-
 # An operand that can be fed into operations. Also, an operand is always
 # declared before operations.
 class Operand(NamedVariable):
-
     def __init__(self, name, opType, value, backward=None, skipRenaming=False, extraParams=None):
         NamedVariable.__init__(self, name, sep="", skipRenaming=skipRenaming)
         if type(opType) is str:
@@ -532,6 +527,9 @@ class Model:
 
     def GetTypes(self):
         return sorted(list(set(op.type for op in self.operands)))
+
+    def GetMappedOperandTypes(self):
+        return sorted(list(set(Type.typeLookupWebnn[op.type.type] for op in self.operands)))
 
     def GetInputs(self):
         return [i for i in self.operands if isinstance(i, Input)]
@@ -1002,12 +1000,10 @@ class Example:
 
     # Main entrance of test generator
     @staticmethod
-    def DumpAllExamples(DumpModel=None, model_fd=None,
-                        DumpExample=None, example_fd=None,
-                        DumpTest=None, test_fd=None):
+    def DumpAllExamples(DumpTest=None, test=None):
         Example.CombineAllExamples()
         for example in Example.examples:
-            example.Dump(DumpModel, model_fd, DumpExample, example_fd, DumpTest, test_fd)
+            example.Dump(DumpTest, test)
 
     # Combine examples with the same model, same name, and same set of variations
     @staticmethod
@@ -1015,6 +1011,8 @@ class Example:
         modelMap = {}
         newExamples = []
         for example in Example.examples:
+            if example.model.name in ["zero_sized"]:
+                continue
             key = (example.model, example.name, tuple(tuple(e) for e in example.variations))
             if key in modelMap:
                 modelMap[key].Combine(example)
@@ -1128,7 +1126,7 @@ class Example:
         self.feedDicts.extend(other.feedDicts)
         return self
 
-    def Dump(self, DumpModel, model_fd, DumpExample, example_fd, DumpTest, test_fd):
+    def Dump(self, DumpTest, test):
         [v.SetToDefaultName() for vs in self.variations for v in vs if v.name is None]
         for variationList in itertools.product(*self.variations):
             # Apply variations
@@ -1139,17 +1137,13 @@ class Example:
             # Concat names for test and examples
             varNames = [v.name for v in variationList]
             self.testName = NamedTest(FileNames.specName, self.model.name, self.name, *varNames)
-            self.examplesName = GlobalVariable("examples", self.model.name, self.name, *varNames)
+            # self.examplesName = GlobalVariable("examples", self.model.name, self.name, *varNames)
             if str(self.testName) in Example.versionOverrides:
                 self.model.IntroducedIn(Example.versionOverrides[str(self.testName)])
             self.model.WithSuffix(*varNames).Compile()
             # Dump files
-            if DumpModel is not None and model_fd is not None:
-                DumpModel(self.model, model_fd)
-            if DumpExample is not None and example_fd is not None:
-                DumpExample(self, example_fd)
-            if DumpTest is not None and test_fd is not None:
-                DumpTest(self, test_fd)
+            if DumpTest is not None and test is not None:
+                DumpTest(self, test)
             # Restore model and feedDicts before variation
             self.model = modelOrigin
             self.feedDicts = feedDictsOrigin
@@ -1162,71 +1156,19 @@ class Example:
       self.expectedMultinomialDistributionTolerance = expectedTolerance
       return self
 
-    # For backward-compatibility with slicing.py
-    # Similar to dump_dict, but in python. Used by the slicing tool
-    # if referenced is not None, only print operands that are present there
-    @staticmethod
-    def py_dump_dict(d, referenced):
-        ret = []
-        for k, v in d.items():
-            if referenced != None and k not in referenced:
-                continue
-            key = str(k)
-            init = pprint.pformat(v)
-            ret.append("%s: %s" % (key, init))
-        return ", ".join(ret)
-
-    # For backward-compatibility with slicing.py
-    # similar to dump, but in python. Used by the slicing tool
-    # if referenced is not None, only print operands that are present there
-    @staticmethod
-    def py_dump(example_file, override, referenced):
-        Example.CombineAllExamples()
-        if len(Example.examples[0].feedDicts) > 0:
-            example_no = 0
-            example_template = """\
-input{no} = {{{inputs}}}
-# Only executed during data collection phase
-if collecting_data is True:
-  Example((input{no}, {{{outputs}}}))
-"""
-        for i, o in Example.examples[0].feedDicts:
-            print ('# Begin of an example', file = example_file)
-            inputs = Example.py_dump_dict(i, referenced)
-            output_list = []
-            for k, v in override.items():
-                output_list.append("%s: [0] * %d" % (k, v))
-            outputs = ",".join(output_list)
-
-            # TODO: handle >1 outputs
-            for k, v in o.items():
-                assert k.index == 0
-            example_contents = {
-                'no': example_no,
-                'inputs': inputs,
-                'outputs': outputs
-            }
-            print (example_template.format(**example_contents), file = example_file)
-
 class FileNames:
     specFiles = []
     specNames = []
-    modelFiles = []
-    exampleFiles = []
     testFiles = []
     specFile = ""
     specName = ""
-    modelFile = ""
-    exampleFile = ""
     testFile = ""
-    ctsFile = ""
-    logFile = ""
     version = ""
     fileIndex = 0
 
     @staticmethod
-    def InitializeFileLists(spec, model, example, test, cts="-", log=""):
-        # get all spec files and target files
+    def InitializeFileLists(spec, test):
+        # get all spec files
         if os.path.isfile(spec):
             FileNames.specFiles = [os.path.abspath(spec)]
         elif os.path.isdir(spec):
@@ -1236,15 +1178,12 @@ class FileNames:
             assert False, "%s is neither a file or a directory"%spec
         FileNames.specNames = [re.sub(r"\..*", "", os.path.basename(f))
             for f in FileNames.specFiles]
-        FileNames.modelFiles = FileNames.ParseTargetFiles(model, ".model.cpp")
-        FileNames.exampleFiles = FileNames.ParseTargetFiles(example, ".example.cpp")
-        FileNames.testFiles = FileNames.ParseTargetFiles(test, ".mod.py.cpp")
-        FileNames.ctsFile = os.path.abspath(cts) if cts != "-" else "-"
-        FileNames.logFile = ", \"%s\""%log if log != "" else ""
+        FileNames.testFiles = FileNames.ParseTargetFiles(test, ".js")
 
     @staticmethod
     def ParseTargetFiles(arg, ext):
         numFiles = len(FileNames.specFiles)
+        # print('%d FileNames.specFiles %s' % (numFiles, FileNames.specFiles))
         absPath = os.path.abspath(arg)
         if os.path.isdir(arg):
             target = [os.path.join(absPath, f + ext) for f in FileNames.specNames]
@@ -1260,8 +1199,6 @@ class FileNames:
             return False
         FileNames.specFile = FileNames.specFiles[FileNames.fileIndex]
         FileNames.specName = FileNames.specNames[FileNames.fileIndex]
-        FileNames.modelFile = FileNames.modelFiles[FileNames.fileIndex]
-        FileNames.exampleFile = FileNames.exampleFiles[FileNames.fileIndex]
         FileNames.testFile = FileNames.testFiles[FileNames.fileIndex]
         FileNames.fileIndex += 1
         NamedObject.existingNames = set()
@@ -1283,8 +1220,23 @@ class FileNames:
 class Configuration:
     use_shm_for_weights = False
     force_regenerate = False
-    test_dynamic_output_shape = True
+    test_dynamic_output_shape = False
+    mappingWebNNOp = []
+    successedCounter = 0
+    saveAllInOneCts = True
 
     @staticmethod
     def useSHM():
         return Configuration.use_shm_for_weights
+
+def IndentedPrint(s, indent=0, *args, **kwargs):
+    print('\n'.join([" " * indent + i for i in s.split('\n')]), *args, **kwargs)
+
+def InitializeCtsTestFile(test, detph):
+    testFileHeader = """\
+'use strict';
+import * as utils from '%sutils.js';\n""" % ''.join(['../']*detph)
+    print(testFileHeader,  file=test)
+    print("describe('CTS converted from NNAPI CTS', function() {", file=test)
+    IndentedPrint("const nn = navigator.ml.getNeuralNetworkContext();",
+                  indent=2, file=test)

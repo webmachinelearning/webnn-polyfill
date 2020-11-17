@@ -14,22 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""CTS testcase generator
-
-Implements CTS test backend. Invoked by ml/nn/runtime/test/specs/generate_tests.sh;
-See that script for details on how this script is used.
-
-"""
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 import argparse
+import copy
 import math
 import os
-import re
 import sys
-import traceback
+import numpy as np
 
 # Stuff from test generator
 import test_generator as tg
@@ -42,7 +35,6 @@ from test_generator import Example
 from test_generator import Float16Scalar
 from test_generator import Float32Scalar
 from test_generator import Float32Vector
-from test_generator import GetJointStr
 from test_generator import IgnoredOutput
 from test_generator import Input
 from test_generator import Int32Scalar
@@ -56,251 +48,584 @@ from test_generator import ParameterAsInputConverter
 from test_generator import RelaxedModeConverter
 from test_generator import SmartOpen
 from test_generator import SymmPerChannelQuantParams
+from test_generator import IndentedPrint
+from test_generator import InitializeCtsTestFile
 
-def IndentedPrint(s, indent=2, *args, **kwargs):
-    print('\n'.join([" " * indent + i for i in s.split('\n')]), *args, **kwargs)
+import mapping_dict as md
 
-# Take a model from command line
+msgTemplate = 'Unsupported convert "%s" test due to "%s"'
+
 def ParseCmdLine():
     parser = argparse.ArgumentParser()
     parser.add_argument("spec", help="the spec file/directory")
     parser.add_argument(
-        "-m", "--model", help="the output model file/directory", default="-")
-    parser.add_argument(
-        "-e", "--example", help="the output example file/directory", default="-")
-    parser.add_argument(
-        "-t", "--test", help="the output test file/directory", default="-")
-    parser.add_argument(
-        "-c", "--cts", help="the CTS TestGeneratedOneFile.cpp", default="-")
-    parser.add_argument(
-        "-f", "--force", help="force to regenerate all spec files", action="store_true")
-    # for slicing tool
-    parser.add_argument(
-        "-l", "--log", help="the optional log file", default="")
+        "-t", "--test", help="the generated test file/directory", default="-")
     args = parser.parse_args()
-    tg.FileNames.InitializeFileLists(
-        args.spec, args.model, args.example, args.test, args.cts, args.log)
-    Configuration.force_regenerate = args.force
+    tg.FileNames.InitializeFileLists(args.spec, args.test)
 
-def NeedRegenerate():
-    if not all(os.path.exists(f) for f in \
-        [tg.FileNames.modelFile, tg.FileNames.exampleFile, tg.FileNames.testFile]):
-        return True
-    specTime = os.path.getmtime(tg.FileNames.specFile) + 10
-    modelTime = os.path.getmtime(tg.FileNames.modelFile)
-    exampleTime = os.path.getmtime(tg.FileNames.exampleFile)
-    testTime = os.path.getmtime(tg.FileNames.testFile)
-    if all(t > specTime for t in [modelTime, exampleTime, testTime]):
-        return False
-    return True
+def CheckOperationWithImplicitPadding(nnapiOp, curOpInsList, nnapiOpInsList,
+                                      nnapiOpOptionalInsLen):
+    flag = False
+    curOpInsLen = len(curOpInsList)
+    nnapiOpInsLen = len(nnapiOpInsList)
 
-# Write headers for generated files, which are boilerplate codes only related to filenames
-def InitializeFiles(model_fd, example_fd, test_fd):
-    fileHeader = "// clang-format off\n// Generated file (from: {spec_file}). Do not edit"
-    testFileHeader = """\
-#include "../../TestGenerated.h"\n
-namespace {spec_name} {{
-// Generated {spec_name} test
-#include "{example_file}"
-// Generated model constructor
-#include "{model_file}"
-}} // namespace {spec_name}\n"""
-    # This regex is to remove prefix and get relative path for #include
-    pathRegex = r".*((frameworks/ml/nn/(runtime/test/)?)|(vendor/google/[a-z]*/test/))"
-    specFileBase = os.path.basename(tg.FileNames.specFile)
-    print(fileHeader.format(spec_file=specFileBase), file=model_fd)
-    print(fileHeader.format(spec_file=specFileBase), file=example_fd)
-    print(fileHeader.format(spec_file=specFileBase), file=test_fd)
-    print(testFileHeader.format(
-        model_file=re.sub(pathRegex, "", tg.FileNames.modelFile),
-        example_file=re.sub(pathRegex, "", tg.FileNames.exampleFile),
-        spec_name=tg.FileNames.specName), file=test_fd)
+    if nnapiOp in ['AVERAGE_POOL_2D', 'MAX_POOL_2D']:
+        if curOpInsLen < nnapiOpInsLen:
+            msg = msgTemplate % (nnapiOp, "implicit padding")
+            # print(msg, file=sys.stderr)
+            flag = True
+    elif nnapiOp != 'CONCATENATION':
+        if nnapiOpOptionalInsLen != 0:
+            if curOpInsLen == nnapiOpInsLen:
+                if nnapiOp == 'CONV_2D':
+                    # Layout param index of inputs with implicit padding is 7
+                    if curOpInsList[7].type.type == 'BOOL':
+                        msg = msgTemplate % (nnapiOp, "implicit padding")
+                        # print(msg, file=sys.stderr)
+                        flag = True
+                elif nnapiOp == 'DEPTHWISE_CONV_2D':
+                    # Layout param index of inputs with implicit padding is 8
+                    if curOpInsList[8].type.type == 'BOOL':
+                        msg = msgTemplate % (nnapiOp, "implicit padding")
+                        # print(msg, file=sys.stderr)
+                        flag = True
+            elif curOpInsLen < nnapiOpInsLen:
+                msg = msgTemplate % (nnapiOp, "implicit padding")
+                # print(msg, file=sys.stderr)
+                flag = True
 
-# Dump is_ignored function for IgnoredOutput
-def DumpCtsIsIgnored(model, model_fd):
-    isIgnoredTemplate = """\
-inline bool {is_ignored_name}(int i) {{
-  static std::set<int> ignore = {{{ignored_index}}};
-  return ignore.find(i) != ignore.end();\n}}\n"""
-    print(isIgnoredTemplate.format(
-        ignored_index=tg.GetJointStr(model.GetIgnoredOutputs(), method=lambda x: str(x.index)),
-        is_ignored_name=str(model.isIgnoredFunctionName)), file=model_fd)
+    return flag
 
-# Dump Model file for Cts tests
-def DumpCtsModel(model, model_fd):
-    assert model.compiled
-    if model.dumped:
-        return
-    print("void %s(Model *model) {"%(model.createFunctionName), file=model_fd)
+def SupportedConvertConv2D(operation, inOprand, outOprand, filterOprand,
+                           layout):
+    flag = True
+    inDimensions = inOprand.type.dimensions
+    outDimensions = outOprand.type.dimensions
+    filterDimensions = filterOprand.type.dimensions
 
-    # Phase 0: types
-    for t in model.GetTypes():
-        if t.scale == 0.0 and t.zeroPoint == 0 and t.extraParams is None:
-            typeDef = "OperandType %s(Type::%s, %s);"%(t, t.type, t.GetDimensionsString())
+    if operation == 'CONV_2D':
+        if layout:
+            flag = (inDimensions[1] == filterDimensions[-1] and
+                    filterDimensions[0] == outDimensions[1])
         else:
-            if t.extraParams is None or t.extraParams.hide:
-                typeDef = "OperandType %s(Type::%s, %s, %s, %d);"%(
-                    t, t.type, t.GetDimensionsString(), tg.PrettyPrintAsFloat(t.scale), t.zeroPoint)
-            else:
-                typeDef = "OperandType %s(Type::%s, %s, %s, %d, %s);"%(
-                    t, t.type, t.GetDimensionsString(), tg.PrettyPrintAsFloat(t.scale), t.zeroPoint,
-                    t.extraParams.GetConstructor())
+            flag = (inDimensions[3] == filterDimensions[-1] and
+                    filterDimensions[0] == outDimensions[3])
+    elif operation == 'DEPTHWISE_CONV_2D':
+        if layout:
+            flag = (filterDimensions[0] == 1 and
+                    inDimensions[1] == outDimensions[1])
+        else:
+            flag = (filterDimensions[0] == 1 and
+                    inDimensions[3] == outDimensions[3])
 
-        IndentedPrint(typeDef, file=model_fd)
+    return flag
 
-    # Phase 1: add operands
-    print("  // Phase 1, operands", file=model_fd)
-    for op in model.operands:
-        IndentedPrint("auto %s = model->addOperand(&%s);"%(op, op.type), file=model_fd)
+def GetOperandIndex(opInfoList, opName):
+    index = 0
+    found = False
 
-    # Phase 2: operations
-    print("  // Phase 2, operations", file=model_fd)
-    for p in model.GetParameters():
-        paramDef = "static %s %s[] = %s;\nmodel->setOperandValue(%s, %s, sizeof(%s) * %d);"%(
-            p.type.GetCppTypeString(), p.initializer, p.GetListInitialization(), p,
-            p.initializer, p.type.GetCppTypeString(), p.type.GetNumberOfElements())
-        IndentedPrint(paramDef, file=model_fd)
-    for op in model.operations:
-        IndentedPrint("model->addOperation(ANEURALNETWORKS_%s, {%s}, {%s});"%(
-            op.optype, tg.GetJointStr(op.ins), tg.GetJointStr(op.outs)), file=model_fd)
+    for opInfo in opInfoList:
+        if opInfo['name'] == opName:
+            found = True
+            break
+        index += 1
 
-    # Phase 3: add inputs and outputs
-    print ("  // Phase 3, inputs and outputs", file=model_fd)
-    IndentedPrint("model->identifyInputsAndOutputs(\n  {%s},\n  {%s});"%(
-        tg.GetJointStr(model.GetInputs()), tg.GetJointStr(model.GetOutputs())), file=model_fd)
+    return index if found else -1
 
-    # Phase 4: set relaxed execution if needed
-    if (model.isRelaxed):
-        print ("  // Phase 4: set relaxed execution", file=model_fd)
-        print ("  model->relaxComputationFloat32toFloat16(true);", file=model_fd)
+def GetParamOperandValue(paramsList, insList, index):
+    status = False
+    value = None
 
-    print ("  assert(model->isValid());", file=model_fd)
-    print ("}\n", file=model_fd)
-    DumpCtsIsIgnored(model, model_fd)
-    model.dumped = True
+    if index != -1:
+        if index < len(insList):
+            inOp = insList[index]
+            if inOp in paramsList:
+                status = True
+                value = paramsList[paramsList.index(inOp)].value
 
-def DumpMixedType(operands, feedDict):
-    supportedTensors = [
-        "DIMENSIONS",
-        "TENSOR_FLOAT32",
-        "TENSOR_INT32",
-        "TENSOR_QUANT8_ASYMM",
-        "TENSOR_OEM_BYTE",
-        "TENSOR_QUANT16_SYMM",
-        "TENSOR_FLOAT16",
-        "TENSOR_BOOL8",
-        "TENSOR_QUANT8_SYMM_PER_CHANNEL",
-        "TENSOR_QUANT16_ASYMM",
-        "TENSOR_QUANT8_SYMM",
-    ]
-    typedMap = {t: [] for t in supportedTensors}
-    FeedAndGet = lambda op, d: op.Feed(d).GetListInitialization()
-    # group the operands by type
-    for operand in operands:
-        try:
-            typedMap[operand.type.type].append(FeedAndGet(operand, feedDict))
-            typedMap["DIMENSIONS"].append("{%d, {%s}}"%(
-                operand.index, GetJointStr(operand.dimensions)))
-        except KeyError as e:
-            traceback.print_exc()
-            sys.exit("Cannot dump tensor of type {}".format(operand.type.type))
-    mixedTypeTemplate = """\
-{{ // See tools/test_generator/include/TestHarness.h:MixedTyped
-  // int -> Dimensions map
-  .operandDimensions = {{{dimensions_map}}},
-  // int -> FLOAT32 map
-  .float32Operands = {{{float32_map}}},
-  // int -> INT32 map
-  .int32Operands = {{{int32_map}}},
-  // int -> QUANT8_ASYMM map
-  .quant8AsymmOperands = {{{uint8_map}}},
-  // int -> QUANT16_SYMM map
-  .quant16SymmOperands = {{{int16_map}}},
-  // int -> FLOAT16 map
-  .float16Operands = {{{float16_map}}},
-  // int -> BOOL8 map
-  .bool8Operands = {{{bool8_map}}},
-  // int -> QUANT8_SYMM_PER_CHANNEL map
-  .quant8ChannelOperands = {{{int8_map}}},
-  // int -> QUANT16_ASYMM map
-  .quant16AsymmOperands = {{{uint16_map}}},
-  // int -> QUANT8_SYMM map
-  .quant8SymmOperands = {{{quant8_symm_map}}},
-}}"""
-    return mixedTypeTemplate.format(
-        dimensions_map=tg.GetJointStr(typedMap.get("DIMENSIONS", [])),
-        float32_map=tg.GetJointStr(typedMap.get("TENSOR_FLOAT32", [])),
-        int32_map=tg.GetJointStr(typedMap.get("TENSOR_INT32", [])),
-        uint8_map=tg.GetJointStr(typedMap.get("TENSOR_QUANT8_ASYMM", []) +
-                                 typedMap.get("TENSOR_OEM_BYTE", [])),
-        int16_map=tg.GetJointStr(typedMap.get("TENSOR_QUANT16_SYMM", [])),
-        float16_map=tg.GetJointStr(typedMap.get("TENSOR_FLOAT16", [])),
-        int8_map=tg.GetJointStr(typedMap.get("TENSOR_QUANT8_SYMM_PER_CHANNEL", [])),
-        bool8_map=tg.GetJointStr(typedMap.get("TENSOR_BOOL8", [])),
-        uint16_map=tg.GetJointStr(typedMap.get("TENSOR_QUANT16_ASYMM", [])),
-        quant8_symm_map=tg.GetJointStr(typedMap.get("TENSOR_QUANT8_SYMM", []))
-    )
+    return (status, value)
 
-# Dump Example file for Cts tests
-def DumpCtsExample(example, example_fd):
-    print("std::vector<MixedTypedExample>& get_%s() {" % (example.examplesName), file=example_fd)
-    print("static std::vector<MixedTypedExample> %s = {" % (example.examplesName), file=example_fd)
-    for inputFeedDict, outputFeedDict in example.feedDicts:
-        print ('// Begin of an example', file = example_fd)
-        print ('{\n.operands = {', file = example_fd)
-        inputs = DumpMixedType(example.model.GetInputs(), inputFeedDict)
-        outputs = DumpMixedType(example.model.GetOutputs(), outputFeedDict)
-        print ('//Input(s)\n%s,' % inputs , file = example_fd)
-        print ('//Output(s)\n%s' % outputs, file = example_fd)
-        print ('},', file = example_fd)
-        if example.expectedMultinomialDistributionTolerance is not None:
-          print ('.expectedMultinomialDistributionTolerance = %f' %
-                 example.expectedMultinomialDistributionTolerance, file = example_fd)
-        print ('}, // End of an example', file = example_fd)
-    print("};", file=example_fd)
-    print("return %s;" % (example.examplesName), file=example_fd)
-    print("};\n", file=example_fd)
+def GetInputOperandValue(inputsDict, insList, index):
+    status = False
+    value = None
+
+    if index != -1:
+        inOp = insList[index]
+        if inOp in inputsDict.keys():
+            status = True
+            value = inputsDict[inOp]
+
+    return (status, value)
+
+def UpdateMappingWebNNOpList(actValue):
+    if Configuration.successedCounter == 0:
+        if actValue == 1:
+            Configuration.mappingWebNNOp.append('relu')
+        else:
+            Configuration.mappingWebNNOp.append('clamp')
+
+def GetFusedReluMappedInfo(actValue):
+    info = None
+
+    if actValue == 1:
+        info = {
+            'name': 'relu'
+        }
+    else:
+        info = {
+            'name': 'clamp'
+        }
+        options = \
+            "{minValue: builder.constant(%d), maxValue: builder.constant(%d)}"
+        if actValue == 2:
+            # relu1
+            info['options'] = options % (-1, 1)
+        elif actValue == 3:
+            # relu6
+            info['options'] = options % (0, 6)
+
+    return info
+
+def ReorderFilterValue(operation, dimensions, values, layout):
+    valueArray = np.array(values).reshape(dimensions)
+    axes = (0, 3, 1, 2) if layout else (1, 2, 3, 0)
+
+    if operation == 'DEPTHWISE_CONV_2D':
+        axes = (3, 0, 1, 2) if layout else (1, 2, 0, 3)
+
+    return list(np.transpose(valueArray, axes).ravel())
+
+def GetWebNNFilterDimensions(operation, dimensions, layout):
+    # https://webmachinelearning.github.io/webnn/#api-modelbuilder-conv2d
+    # filter tensor:
+    #   "nchw": [output_channels, input_channels/groups, height, width]
+    #   "nhwc": [height, width, input_channels/groups, output_channels]
+    if operation == 'CONV_2D':
+        if layout:
+            outputChannels = dimensions[-1]
+            dimensions = dimensions[:-1]
+            dimensions.insert(1, outputChannels)
+        else:
+            outputChannels = dimensions[0]
+            dimensions = dimensions[1:]
+            dimensions.append(outputChannels)
+    elif operation == 'DEPTHWISE_CONV_2D':
+        if layout:
+            outputChannels = dimensions[-1]
+            dimensions = dimensions[:-1]
+            dimensions.insert(0, outputChannels)
+        else:
+            intputChannels = dimensions[0]
+            dimensions = dimensions[1:]
+            dimensions.insert(2, intputChannels)
+
+    return dimensions
+
+def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout):
+    operandType = oprand.type.mappingType
+    operandDims = oprand.type.dimensions
+
+    if opInsInfoList[opInsList.index(oprand)]['name'] == 'filter':
+        operandDims = GetWebNNFilterDimensions(operation, operandDims, layout)
+
+    operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
+    return operandDesc
+
+def PrintInputOperand(oprand, operation, opInsList, opInsInfoList, layout,
+                      test):
+    opDesc = GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList,
+                                 layout)
+    operand = "const %s = builder.input('%s', %s);" % (oprand, oprand, opDesc)
+    IndentedPrint(operand, indent=4, file=test)
+
+def GetOperandValue(oprand, operation, name, layout, value=None):
+    opValue = oprand.value
+
+    if value is not None:
+        opValue = value
+
+    if name == 'filter':
+        opValue = ReorderFilterValue(operation, oprand.type.dimensions, opValue,
+                                     layout)
+
+    return opValue
+
+def PrintInputBuffer(oprand, operation, name, value, layout, test):
+    typedArray = oprand.type.mappingTypedArrayType
+    opValue = GetOperandValue(oprand, operation, name, layout, value)
+    IndentedPrint('const %sBuffer = new %s(%s);' % (oprand, typedArray, opValue),
+                  indent=4, file=test)
+
+def PrintConstant(oprand, operation, opInsList, opInsInfoList, name, layout,
+                  test):
+    opDesc = GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList,
+                                 layout)
+    opValue = GetOperandValue(oprand, operation, name, layout)
+    operand = "const %s = builder.constant(%s, new %s(%s));" % \
+              (oprand, opDesc, oprand.type.mappingTypedArrayType, opValue)
+    IndentedPrint(operand, indent=4, file=test)
+
+def CheckDefaultParameterValue(op, inputFeedDict, paramsList):
+    flag = False
+    value = None
+
+    if op in paramsList:
+        value = paramsList[paramsList.index(op)].value
+    else:
+        value = inputFeedDict[op]
+
+    if isinstance(value, list) and (len(value) == 0 or value[0] is None):
+        flag = True
+
+    return flag
+
+def GetWebNNOperationParamsList(opInsInfoList, opInsList, inputFeedDict,
+                                paramsList, operation):
+    d = {}
+    length = len(opInsList)
+
+    if operation != 'CONCATENATION':
+        counter = 0
+        for nnOpInsInfo in opInsInfoList:
+            index = nnOpInsInfo['mappingParamIndex']
+            if index != -1:
+                paramName = opInsList[counter]
+                if paramName is None:
+                    break
+                value = d.get(index, None)
+                if value is None:
+                    key = nnOpInsInfo.get('optionsDictKey', None)
+                    if key is None:
+                        value = paramName
+                    else:
+                        if CheckDefaultParameterValue(paramName,
+                                                      inputFeedDict,
+                                                      paramsList):
+                            continue
+                        value = {}
+                        value[key] = paramName
+                    d[index] = value
+                else:
+                    sequenceIndex = nnOpInsInfo.get('sequenceIndex', -1)
+                    if sequenceIndex != -1:
+                        itemValue = value.get(nnOpInsInfo['optionsDictKey'],
+                                              None)
+                        if itemValue is None:
+                            itemValue = paramName
+                        else:
+                            if isinstance(itemValue, list):
+                                itemValue.append(paramName)
+                            else:
+                                itemValue = [itemValue, paramName]
+                        value[nnOpInsInfo['optionsDictKey']] = itemValue
+                    else:
+                        value[nnOpInsInfo['optionsDictKey']] = paramName
+            counter += 1
+            if counter == length:
+                break
+    else:
+        # Refer to
+        #   https://webmachinelearning.github.io/webnn/#api-modelbuilder-concat
+        # WebNN API concat Op has sequence<Operand> inputs
+        d[0] = []
+        for ins in opInsList[:-1]:
+            d[0].append(ins)
+        d[1] = opInsList[-1]
+
+    paramsList = sorted(d.items(), key = lambda item:item[0])
+    lastParam = paramsList[-1][1]
+
+    if isinstance(lastParam, dict):
+        keyList = lastParam.keys()
+        if 'padding' in keyList:
+            leftRight = lastParam['padding'][:2]
+            topBottom = lastParam['padding'][2:]
+            lastParam['padding'] = topBottom + leftRight
+        if 'strides' in keyList:
+            lastParam['strides'].reverse()
+        if 'windowDimensions' in keyList:
+            lastParam['windowDimensions'].reverse()
+        if 'dilations' in keyList:
+            lastParam['dilations'].reverse()
+    return paramsList
+
+def UpdateWebNNOperationOptionalParamValue(targetValue, kvList):
+    if isinstance(targetValue, dict):
+        for key, value in kvList:
+            if targetValue.get(key, None) is None:
+                targetValue[key] = value
+                if key == 'layout':
+                    targetValue[key] = 'nchw' if value else 'nhwc'
+
+def GetWebNNParamsString(params):
+    paramsList = [p[1] for p in params]
+    paramsStr = '%s' % paramsList
+    return paramsStr[1:-1]
+
+def PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, operandName):
+        mappedWebNNOpName = fusedReluMappedInfo['name']
+        options = fusedReluMappedInfo.get('options', None)
+
+        if options is None:
+            IndentedPrint("const %s = builder.%s(%s);" % \
+                          (outputOp, mappedWebNNOpName, operandName),
+                          indent=4, file=test)
+        else:
+            IndentedPrint("const %s = builder.%s(%s, %s);" % \
+                          (outputOp, mappedWebNNOpName, operandName, options),
+                          indent=4, file=test)
+
+def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
+                   outputOp, test):
+    if biasOp is not None:
+        IndentedPrint("const interOut0 = builder.%s(%s);" % \
+                      (webnnOpType, webnnParamsStr),
+                      indent=4, file=test)
+        if fusedReluMappedInfo is not None:
+            # Add 'add' operation
+            IndentedPrint("const interOut1 = builder.add(interOut0, %s);" % \
+                          biasOp, indent=4, file=test)
+            # Add 'relu' or 'clamp' operation
+            PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, 'interOut1')
+        else:
+            # Add 'add' operation
+            IndentedPrint("const %s = builder.add(interOut0, %s);" % \
+                          (outputOp, biasOp), indent=4, file=test)
+    else:
+        if fusedReluMappedInfo is not None:
+            IndentedPrint("const interOut0 = builder.%s(%s);" % \
+                          (webnnOpType, webnnParamsStr), indent=4, file=test)
+            # Add 'relu' or 'clamp' operation
+            PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, 'interOut0')
+        else:
+            IndentedPrint("const %s = builder.%s(%s);" % \
+                          (outputOp, webnnOpType, webnnParamsStr),
+                          indent=4, file=test)
 
 # Dump Test file for Cts tests
-def DumpCtsTest(example, test_fd):
-    testTemplate = """\
-TEST_F({test_case_name}, {test_name}) {{
-    execute({namespace}::{create_model_name},
-            {namespace}::{is_ignored_name},
-            {namespace}::get_{examples_name}(){log_file});\n}}\n"""
-    if example.model.version is not None:
-        testTemplate += """\
-TEST_AVAILABLE_SINCE({version}, {test_name}, {namespace}::{create_model_name})\n"""
-    print(testTemplate.format(
-        test_case_name="DynamicOutputShapeTest" if example.model.hasDynamicOutputShape \
-                       else "GeneratedTests",
-        test_name=str(example.testName),
-        namespace=tg.FileNames.specName,
-        create_model_name=str(example.model.createFunctionName),
-        is_ignored_name=str(example.model.isIgnoredFunctionName),
-        examples_name=str(example.examplesName),
-        version=example.model.version,
-        log_file=tg.FileNames.logFile), file=test_fd)
+def DumpCtsTest(example, test):
+    model = example.model
+
+    if len(model.operations) > 1:
+        msg = 'Not convert complicated tests with multi-operations'
+        # print(msg, file=sys.stderr)
+        return
+
+    nnapiOp = model.operations[0].optype
+
+    if nnapiOp not in md.MappingDict.keys():
+        msg = msgTemplate % (nnapiOp, 'none mapped WebNN Opeartion')
+        # print(msg, file=sys.stderr)
+        return
+
+    # WebNN polyfill API cur supports 'int32' and 'float32'
+    unSupportedTypesList = ['int8', 'uint8', 'float16']
+    operandTypeList = model.GetMappedOperandTypes()
+    usedUnsupportedType = list(set(unSupportedTypesList) & set(operandTypeList))
+
+    if len(usedUnsupportedType) > 0:
+        msg = msgTemplate % \
+              (nnapiOp, 'unsupported %s Operand Type' % usedUnsupportedType)
+        # print(msg, file=sys.stderr)
+        return
+
+    mappingOpDict = md.MappingDict[nnapiOp]
+    mappedWebNNOp = mappingOpDict['webnnOperation']
+
+    if Configuration.successedCounter == 0:
+        # Update mappingWebNNOp by first time
+        Configuration.mappingWebNNOp.append(mappedWebNNOp)
+
+    nnapiOpInsList = copy.deepcopy(mappingOpDict['insList'])
+    nnapiOpOptionalInsList = mappingOpDict.get('optionalInsList', [])
+    curOpInsList = model.operations[0].ins
+
+    if CheckOperationWithImplicitPadding(nnapiOp, curOpInsList,
+                                         nnapiOpInsList,
+                                         len(nnapiOpOptionalInsList)):
+        if Configuration.successedCounter == 0:
+            Configuration.mappingWebNNOp.clear()
+        return
+
+    if GetOperandIndex(nnapiOpInsList, 'bias') != -1:
+        if Configuration.successedCounter == 0:
+            Configuration.mappingWebNNOp.append('add')
+
+    curInputsList = example.model.GetInputs()
+    curOutputsList = example.model.GetOutputs()
+    curParamsList = example.model.GetParameters()
+
+    fusedReluMappedInfo = None
+    actIndex = GetOperandIndex(nnapiOpInsList, 'activation')
+    actStatus, actValue = GetParamOperandValue(curParamsList, curOpInsList,
+                                               actIndex)
+
+    if actStatus:
+        UpdateMappingWebNNOpList(actValue[0])
+        fusedReluMappedInfo = GetFusedReluMappedInfo(actValue[0])
+
+    if nnapiOp == 'RELU1':
+        fusedReluMappedInfo = GetFusedReluMappedInfo(2)
+
+    if nnapiOp == 'RELU6':
+        fusedReluMappedInfo = GetFusedReluMappedInfo(3)
+
+    nnapiOpInsList.extend(nnapiOpOptionalInsList)
+    layoutIndex = GetOperandIndex(nnapiOpInsList, 'layout')
+    layoutStatus, layoutValue = GetParamOperandValue(curParamsList,
+                                                     curOpInsList,
+                                                     layoutIndex)
+    # True: 'nchw', False: 'nhwc'
+    layout = False if not layoutStatus else layoutValue[0]
+
+    if nnapiOp in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
+        if not SupportedConvertConv2D(nnapiOp, curInputsList[0],
+                                      curOutputsList[0], curOpInsList[1],
+                                      layout):
+            if Configuration.successedCounter == 0:
+                Configuration.mappingWebNNOp.clear()
+            return
+
+    biasOp = None
+    testIndex = 1 if len(example.feedDicts)>1 else 0
+
+    for inputFeedDict, outputFeedDict in example.feedDicts:
+        IndentedPrint("", file=test) # Add blank line
+        testPurpose = 'test %s converted from %s test' % \
+                      (' + '.join(Configuration.mappingWebNNOp),
+                       str(example.testName))
+        if testIndex > 0:
+            testPurpose = "%s/%d" % (testPurpose, testIndex)
+        IndentedPrint("it('%s', async function() {" % testPurpose,
+                      indent=2, file=test)
+        IndentedPrint("// Converted test case (from: %s/%s)" % \
+                      (tg.FileNames.version,
+                       os.path.basename(tg.FileNames.specFile)),
+                      indent=4, file=test)
+        IndentedPrint("const builder = nn.createModelBuilder();",
+                      indent=4, file=test)
+        computeParamsList = []
+        # Create operand(s) by ModelBuilder.input
+        for op in curInputsList:
+            opInsDict = nnapiOpInsList[curOpInsList.index(op)]
+            mappingParamIndex = opInsDict['mappingParamIndex']
+            if mappingParamIndex != -1:
+                rule = md.MappingRule(opInsDict['mappingRuleType'])
+                if rule == md.MappingRule.OPERAND_OPERAND:
+                    PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
+                                      layout, test)
+                    PrintInputBuffer(op, nnapiOp, opInsDict['name'],
+                                     inputFeedDict[op], layout, test)
+                    computeParamsList.append("'%s': {buffer: %sBuffer}" % \
+                                             (op, op))
+                elif rule == md.MappingRule.OPERAND_VARIABLE:
+                    varValue = inputFeedDict[op]
+                    if len(varValue) != 0 and varValue[0] is not None:
+                        IndentedPrint('const %s = %s;' % (op, varValue),
+                                      indent=4, file=test)
+            else:
+                if opInsDict['name'] == 'bias':
+                    biasOp = op
+                    PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
+                                      layout, test)
+                    PrintInputBuffer(op, nnapiOp, opInsDict['name'],
+                                     inputFeedDict[op], layout, test)
+                    computeParamsList.append("'%s': {buffer: %sBuffer}" % \
+                                             (op, op))
+        # Create operand(s) by ModelBuilder.constant, or define variable(s)
+        for op in curParamsList:
+            opInsDict = nnapiOpInsList[curOpInsList.index(op)]
+            mappingParamIndex = opInsDict['mappingParamIndex']
+            if mappingParamIndex != -1:
+                rule = md.MappingRule(opInsDict['mappingRuleType'])
+                if rule == md.MappingRule.OPERAND_OPERAND:
+                    PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
+                                  opInsDict['name'], layout, test)
+                elif rule == md.MappingRule.VARIABLE_VARIABLE:
+                    varValue = curParamsList[curParamsList.index(op)].value[0]
+                    if opInsDict['name'] == 'layout':
+                        if varValue:
+                            varValue = "'nchw'"
+                        else:
+                            varValue = "'nhwc'"
+                    IndentedPrint('const %s = %s;' % (op, varValue), indent=4,
+                                  file=test)
+                elif rule == md.MappingRule.OPERAND_VARIABLE:
+                    varValue = curParamsList[curParamsList.index(op)].value
+                    if len(varValue) != 0 and varValue[0] is not None:
+                        IndentedPrint('const %s = %s;' % (op, varValue),
+                                      indent=4, file=test)
+            else:
+                if opInsDict['name'] == 'bias':
+                    biasOp = op
+                    PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
+                                  opInsDict['name'], layout, test)
+        outputOp = curOutputsList[0]
+        IndentedPrint("const expected = %s;" % outputFeedDict[outputOp],
+                      indent=4, file=test)
+        # Update optional parameter value
+        optionsKeyValueList = []
+        hasLayoutOption = False
+        for optionalIns in nnapiOpOptionalInsList:
+            if optionalIns['name'] == 'layout':
+                hasLayoutOption = True
+                break
+        if hasLayoutOption:
+            if not layout:
+                # Default 'nchw' layout with WebNN API
+                optionsKeyValueList.append(('layout', False))
+        if nnapiOp == 'DEPTHWISE_CONV_2D':
+            # True: 'nchw' False: 'nhwc'
+            chanelIndex = 1 if layout else 3
+            groups = outputOp.type.dimensions[chanelIndex]
+            optionsKeyValueList.append(('groups', groups))
+        mappingParams = GetWebNNOperationParamsList(nnapiOpInsList,
+                                                    curOpInsList,
+                                                    inputFeedDict,
+                                                    curParamsList,
+                                                    nnapiOp)
+        UpdateWebNNOperationOptionalParamValue(mappingParams[-1][1],
+                                               optionsKeyValueList)
+        webnnParamsStr = GetWebNNParamsString(mappingParams)
+        PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
+                        fusedReluMappedInfo, outputOp, test)
+        IndentedPrint("const model = builder.createModel({%s});" % outputOp,
+                      indent=4, file=test)
+        IndentedPrint("const compilation = await model.compile();", indent=4,
+                      file=test)
+        IndentedPrint("const outputs = await compilation.compute({%s});" % \
+                      ', '.join(computeParamsList), indent=4, file=test)
+        # Check compute output
+        atol = '5.0 * 0.0009765625' if model.isRelaxed else '1e-5'
+        rtol = '5.0 * 0.0009765625' if model.isRelaxed else \
+               '5.0 * 1.1920928955078125e-7'
+        IndentedPrint("utils.checkValue(outputs.%s.buffer, expected, %s, %s);" \
+                      % (outputOp, atol, rtol), indent=4, file=test)
+        IndentedPrint("});", indent=2, file=test)
+        testIndex += 1
+
+    Configuration.successedCounter += 1
 
 if __name__ == '__main__':
     ParseCmdLine()
     while tg.FileNames.NextFile():
-        if Configuration.force_regenerate or NeedRegenerate():
-            print("Generating test(s) from spec: %s" % tg.FileNames.specFile, file=sys.stderr)
-            exec(open(tg.FileNames.specFile, "r").read())
-            print("Output CTS model: %s" % tg.FileNames.modelFile, file=sys.stderr)
-            print("Output example:%s" % tg.FileNames.exampleFile, file=sys.stderr)
-            print("Output CTS test: %s" % tg.FileNames.testFile, file=sys.stderr)
-            with SmartOpen(tg.FileNames.modelFile) as model_fd, \
-                 SmartOpen(tg.FileNames.exampleFile) as example_fd, \
-                 SmartOpen(tg.FileNames.testFile) as test_fd:
-                InitializeFiles(model_fd, example_fd, test_fd)
-                Example.DumpAllExamples(
-                    DumpModel=DumpCtsModel, model_fd=model_fd,
-                    DumpExample=DumpCtsExample, example_fd=example_fd,
-                    DumpTest=DumpCtsTest, test_fd=test_fd)
+        Configuration.mappingWebNNOp = []
+        Configuration.successedCounter = 0
+        # print("Generating test(s) from spec: %s" % tg.FileNames.specFile,
+        #       file=sys.stderr)
+        exec(open(tg.FileNames.specFile, "r").read())
+        testFile = tg.FileNames.testFile
+        with SmartOpen(testFile) as test:
+            InitializeCtsTestFile(test, 4)
+            Example.DumpAllExamples(DumpTest=DumpCtsTest, test=test)
+            IndentedPrint("});", file=test)
+        if Configuration.successedCounter == 0:
+            os.remove(testFile)
         else:
-            print("Skip file: %s" % tg.FileNames.specFile, file=sys.stderr)
-        with SmartOpen(tg.FileNames.ctsFile, mode="a") as cts_fd:
-            print("#include \"../generated/tests/%s.cpp\""%os.path.basename(tg.FileNames.specFile),
-                file=cts_fd)
+            newName = 'test_%s_converted_from_%s' % \
+                      ('_'.join(Configuration.mappingWebNNOp),
+                       os.path.basename(testFile))
+            renamedFile = os.path.join(os.path.dirname(testFile), newName)
+            os.rename(testFile, renamedFile)
+            # print("Successfully generated CTS test: %s" % renamedFile,
+            #       file=sys.stderr)

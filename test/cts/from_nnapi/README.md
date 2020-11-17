@@ -76,7 +76,24 @@ environments, so such NNAPI CTS with Float16 wouldn't be convertted.
   npm start
   ```
 
-Generated CTS would be in 
-[./test/V1_0](./test/V1_0) [./test/V1_1](./test/V1_1) [./test/V1_2](./test/V1_2)
-folders, and these tests could also be in all-in-one 
+ Generated tests would be in following three folders  
+[./tests/V1_0](./test/V1_0)  
+[./tests/V1_1](./test/V1_1)  
+[./tests/V1_2](./test/V1_2)  
+and these tests could also be in all-in-one 
 [./tests/cts.js](./tests/cts.js) file.
+
+
+### Accuracy for Generated Tests
+The converted tests follow these [reference accuracy](https://android.googlesource.com/platform/frameworks/ml/+/refs/tags/android-cts-10.0_r5/nn/runtime/test/TestGenerated.cpp#117):
+```javascript
+  float fpAtol = 1e-5f;
+  float fpRtol = 5.0f * 1.1920928955078125e-7f;
+```
+And for relaxed tests
+```javascript
+  // If in relaxed mode, set the absolute tolerance to be 5ULP of FP16.
+  fpAtol = 5.0f * 0.0009765625f;
+  // Set the relative tolerance to be 5ULP of the corresponding FP precision.
+  fpRtol = 5.0f * 0.0009765625f;
+```
