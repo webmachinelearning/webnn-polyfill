@@ -66,8 +66,8 @@ export class Conv2d extends SingleOutputOperation {
     let inputChannels: number;
     if (this.layout_ === OperandLayout.nchw) {
       // nchw -> nhwc
-      input = input.transpose([0, 2, 3, 1]);
       inputChannels = input.shape[1];
+      input = input.transpose([0, 2, 3, 1]);
       // nchw filter: [output_channels, input_channels/groups, height, width]
       // nhwc filter: [height, width, input_channels/groups, output_channels]
       filter = filter.transpose([2, 3, 1, 0]);
