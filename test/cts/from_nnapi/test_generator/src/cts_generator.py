@@ -224,9 +224,14 @@ def GetWebNNFilterDimensions(operation, dimensions, layout):
 def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout):
     operandType = oprand.type.mappingType
     operandDims = oprand.type.dimensions
+    oprandName = opInsInfoList[opInsList.index(oprand)]['name']
 
-    if opInsInfoList[opInsList.index(oprand)]['name'] == 'filter':
+    if oprandName == 'filter':
         operandDims = GetWebNNFilterDimensions(operation, operandDims, layout)
+    elif oprandName == 'bias':
+        if layout and len(operandDims) == 1:
+            # Update operandDims likes [x] -> [1, x, 1, 1]
+            operandDims = [1, operandDims[0], 1, 1]
 
     operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
     return operandDesc
