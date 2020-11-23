@@ -102,93 +102,91 @@ export class Gru extends Operation {
   }
 
   computeImpl(context: ExecutionContext): tf.Tensor[] {
-    return tf.tidy(() => {
-      const input = context.getTensor(this.input_);
-      const weight = context.getTensor(this.weight_);
-      const recurrentWeight = context.getTensor(this.recurrentWeight_);
-      const bias = this.bias_ ? context.getTensor(this.bias_) : undefined;
-      const recurrentBias = this.recurrentWeight_ ?
-          context.getTensor(this.recurrentBias_) :
-          undefined;
-      const initialHiddenState = this.initialHiddenState_ ?
-          context.getTensor(this.initialHiddenState_) :
-          undefined;
-      const steps = this.steps_;
-      const hiddenSize = this.hiddenSize_;
-      const resetAfter = this.resetAfter_;
-      const returnSequence = this.returnSequence_;
-      const layout = this.layout_;
-      const activations = this.activations_;
-      const direction = this.direction_;
+    const input = context.getTensor(this.input_);
+    const weight = context.getTensor(this.weight_);
+    const recurrentWeight = context.getTensor(this.recurrentWeight_);
+    const bias = this.bias_ ? context.getTensor(this.bias_) : undefined;
+    const recurrentBias = this.recurrentWeight_ ?
+        context.getTensor(this.recurrentBias_) :
+        undefined;
+    const initialHiddenState = this.initialHiddenState_ ?
+        context.getTensor(this.initialHiddenState_) :
+        undefined;
+    const steps = this.steps_;
+    const hiddenSize = this.hiddenSize_;
+    const resetAfter = this.resetAfter_;
+    const returnSequence = this.returnSequence_;
+    const layout = this.layout_;
+    const activations = this.activations_;
+    const direction = this.direction_;
 
-      const numDirections =
-          (direction === RecurrentNetworkDirection.both ? 2 : 1);
-      let hiddenState = initialHiddenState;
+    const numDirections =
+        (direction === RecurrentNetworkDirection.both ? 2 : 1);
+    let hiddenState = initialHiddenState;
 
-      if (hiddenState === undefined) {
-        hiddenState = tf.zeros([numDirections, 1, hiddenSize]);
-      }
+    if (hiddenState === undefined) {
+      hiddenState = tf.zeros([numDirections, 1, hiddenSize]);
+    }
 
-      let sequence: tf.Tensor;
-      const cellWeight: tf.Tensor[] = [];
-      const cellRecurrentWeight: tf.Tensor[] = [];
-      const cellBias: tf.Tensor[] = [];
-      const cellRecurrentBias: tf.Tensor[] = [];
+    let sequence: tf.Tensor;
+    const cellWeight: tf.Tensor[] = [];
+    const cellRecurrentWeight: tf.Tensor[] = [];
+    const cellBias: tf.Tensor[] = [];
+    const cellRecurrentBias: tf.Tensor[] = [];
+
+    for (let slot = 0; slot < numDirections; ++slot) {
+      cellWeight.push(
+          tf.squeeze(tf.slice(weight, [slot, 0, 0], [1, -1, -1]), [0]));
+      cellRecurrentWeight.push(tf.squeeze(
+          tf.slice(recurrentWeight, [slot, 0, 0], [1, -1, -1]), [0]));
+      cellBias.push(
+          bias ? (tf.squeeze(tf.slice(bias, [slot, 0], [1, -1]), [0])) :
+                  undefined);
+      cellRecurrentBias.push(
+          recurrentBias ?
+              (tf.squeeze(tf.slice(recurrentBias, [slot, 0], [1, -1]), [0])) :
+              undefined);
+    }
+
+    for (let step = 0; step < steps; ++step) {
+      const cellHidden: tf.Tensor[] = [];
+      let cellOutput: tf.Tensor;
 
       for (let slot = 0; slot < numDirections; ++slot) {
-        cellWeight.push(
-            tf.squeeze(tf.slice(weight, [slot, 0, 0], [1, -1, -1]), [0]));
-        cellRecurrentWeight.push(tf.squeeze(
-            tf.slice(recurrentWeight, [slot, 0, 0], [1, -1, -1]), [0]));
-        cellBias.push(
-            bias ? (tf.squeeze(tf.slice(bias, [slot, 0], [1, -1]), [0])) :
-                   undefined);
-        cellRecurrentBias.push(
-            recurrentBias ?
-                (tf.squeeze(tf.slice(recurrentBias, [slot, 0], [1, -1]), [0])) :
-                undefined);
+        cellHidden.push(tf.squeeze(
+            tf.slice(hiddenState, [slot, 0, 0], [1, -1, -1]), [0]));
       }
 
-      for (let step = 0; step < steps; ++step) {
-        const cellHidden: tf.Tensor[] = [];
-        let cellOutput: tf.Tensor;
+      for (let slot = 0; slot < numDirections; ++slot) {
+        const slice =
+            (slot === 1 || direction === RecurrentNetworkDirection.backward ?
+                  steps - step - 1 :
+                  step);
+        const cellInput =
+            tf.squeeze(tf.slice(input, [slice, 0, 0], [1, -1, -1]), [0]);
 
-        for (let slot = 0; slot < numDirections; ++slot) {
-          cellHidden.push(tf.squeeze(
-              tf.slice(hiddenState, [slot, 0, 0], [1, -1, -1]), [0]));
-        }
+        const result = tf.reshape(
+            GruCell.compute(
+                cellInput, cellWeight[slot], cellRecurrentWeight[slot],
+                cellHidden[slot], hiddenSize, cellBias[slot],
+                cellRecurrentBias[slot], resetAfter, layout, activations),
+            [1, -1, hiddenSize]);
 
-        for (let slot = 0; slot < numDirections; ++slot) {
-          const slice =
-              (slot === 1 || direction === RecurrentNetworkDirection.backward ?
-                   steps - step - 1 :
-                   step);
-          const cellInput =
-              tf.squeeze(tf.slice(input, [slice, 0, 0], [1, -1, -1]), [0]);
-
-          const result = tf.reshape(
-              GruCell.compute(
-                  cellInput, cellWeight[slot], cellRecurrentWeight[slot],
-                  cellHidden[slot], hiddenSize, cellBias[slot],
-                  cellRecurrentBias[slot], resetAfter, layout, activations),
-              [1, -1, hiddenSize]);
-
-          cellOutput =
-              (cellOutput ? tf.concat([cellOutput, result], 0) : result);
-        }
-
-        hiddenState = cellOutput;
-
-        if (returnSequence) {
-          cellOutput =
-              tf.reshape(cellOutput, [1, numDirections, -1, hiddenSize]);
-          sequence =
-              (sequence ? tf.concat([sequence, cellOutput], 0) : cellOutput);
-        }
+        cellOutput =
+            (cellOutput ? tf.concat([cellOutput, result], 0) : result);
       }
 
-      return [hiddenState, sequence];
-    });
+      hiddenState = cellOutput;
+
+      if (returnSequence) {
+        cellOutput =
+            tf.reshape(cellOutput, [1, numDirections, -1, hiddenSize]);
+        sequence =
+            (sequence ? tf.concat([sequence, cellOutput], 0) : cellOutput);
+      }
+    }
+
+    return [hiddenState, sequence];
   }
 
   compute(context: ExecutionContext): void {
@@ -278,85 +276,83 @@ export class GruCell extends SingleOutputOperation {
       activations: RecurrentNetworkActivation[] = [
         RecurrentNetworkActivation.sigmoid, RecurrentNetworkActivation.tanh
       ]): tf.Tensor {
-    return tf.tidy(() => {
-      const one = tf.scalar(1);
-      const zero = tf.scalar(0);
-      const starts = layout === RecurrentNetworkWeightLayout.zrn ?
-          {z: 0, r: hiddenSize, n: 2 * hiddenSize} :
-          /*rzn*/ {r: 0, z: hiddenSize, n: 2 * hiddenSize};
-      // update gate
-      const z = tf[activations[0]](tf.add(
-          tf.add(
-              (bias ? tf.slice(bias, [starts.z], [hiddenSize]) : zero),
-              (recurrentBias ?
-                   tf.slice(recurrentBias, [starts.z], [hiddenSize]) :
-                   zero)),
+    const one = tf.scalar(1);
+    const zero = tf.scalar(0);
+    const starts = layout === RecurrentNetworkWeightLayout.zrn ?
+        {z: 0, r: hiddenSize, n: 2 * hiddenSize} :
+        /*rzn*/ {r: 0, z: hiddenSize, n: 2 * hiddenSize};
+    // update gate
+    const z = tf[activations[0]](tf.add(
+        tf.add(
+            (bias ? tf.slice(bias, [starts.z], [hiddenSize]) : zero),
+            (recurrentBias ?
+                  tf.slice(recurrentBias, [starts.z], [hiddenSize]) :
+                  zero)),
+        tf.add(
+            tf.matMul(
+                input,
+                tf.transpose(
+                    tf.slice(weight, [starts.z, 0], [hiddenSize, -1]))),
+            tf.matMul(
+                hiddenState,
+                tf.transpose(tf.slice(
+                    recurrentWeight, [starts.z, 0], [hiddenSize, -1]))))));
+    // reset gate
+    const r = tf[activations[0]](tf.add(
+        tf.add(
+            (bias ? tf.slice(bias, [starts.r], [hiddenSize]) : zero),
+            (recurrentBias ?
+                  tf.slice(recurrentBias, [starts.r], [hiddenSize]) :
+                  zero)),
+        tf.add(
+            tf.matMul(
+                input,
+                tf.transpose(
+                    tf.slice(weight, [starts.r, 0], [hiddenSize, -1]))),
+            tf.matMul(
+                hiddenState,
+                tf.transpose(tf.slice(
+                    recurrentWeight, [starts.r, 0], [hiddenSize, -1]))))));
+    // new gate
+    let n;
+    if (resetAfter) {
+      n = tf[activations[1]](tf.add(
+          (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
           tf.add(
               tf.matMul(
                   input,
                   tf.transpose(
-                      tf.slice(weight, [starts.z, 0], [hiddenSize, -1]))),
-              tf.matMul(
-                  hiddenState,
-                  tf.transpose(tf.slice(
-                      recurrentWeight, [starts.z, 0], [hiddenSize, -1]))))));
-      // reset gate
-      const r = tf[activations[0]](tf.add(
+                      tf.slice(weight, [starts.n, 0], [hiddenSize, -1]))),
+              tf.mul(
+                  r,
+                  tf.add(
+                      (recurrentBias ?
+                            tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
+                            zero),
+                      tf.matMul(
+                          hiddenState,
+                          tf.transpose(tf.slice(
+                              recurrentWeight, [starts.n, 0],
+                              [hiddenSize, -1]))))))));
+    } else {
+      n = tf[activations[1]](tf.add(
           tf.add(
-              (bias ? tf.slice(bias, [starts.r], [hiddenSize]) : zero),
+              (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
               (recurrentBias ?
-                   tf.slice(recurrentBias, [starts.r], [hiddenSize]) :
-                   zero)),
+                    tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
+                    zero)),
           tf.add(
               tf.matMul(
                   input,
                   tf.transpose(
-                      tf.slice(weight, [starts.r, 0], [hiddenSize, -1]))),
+                      tf.slice(weight, [starts.n, 0], [hiddenSize, -1]))),
               tf.matMul(
-                  hiddenState,
+                  tf.mul(r, hiddenState),
                   tf.transpose(tf.slice(
-                      recurrentWeight, [starts.r, 0], [hiddenSize, -1]))))));
-      // new gate
-      let n;
-      if (resetAfter) {
-        n = tf[activations[1]](tf.add(
-            (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
-            tf.add(
-                tf.matMul(
-                    input,
-                    tf.transpose(
-                        tf.slice(weight, [starts.n, 0], [hiddenSize, -1]))),
-                tf.mul(
-                    r,
-                    tf.add(
-                        (recurrentBias ?
-                             tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
-                             zero),
-                        tf.matMul(
-                            hiddenState,
-                            tf.transpose(tf.slice(
-                                recurrentWeight, [starts.n, 0],
-                                [hiddenSize, -1]))))))));
-      } else {
-        n = tf[activations[1]](tf.add(
-            tf.add(
-                (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
-                (recurrentBias ?
-                     tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
-                     zero)),
-            tf.add(
-                tf.matMul(
-                    input,
-                    tf.transpose(
-                        tf.slice(weight, [starts.n, 0], [hiddenSize, -1]))),
-                tf.matMul(
-                    tf.mul(r, hiddenState),
-                    tf.transpose(tf.slice(
-                        recurrentWeight, [starts.n, 0], [hiddenSize, -1]))))));
-      }
-      // compute the new hidden state
-      return tf.add(tf.mul(z, hiddenState), tf.mul(n, tf.sub(one, z)));
-    });
+                      recurrentWeight, [starts.n, 0], [hiddenSize, -1]))))));
+    }
+    // compute the new hidden state
+    return tf.add(tf.mul(z, hiddenState), tf.mul(n, tf.sub(one, z)));
   }
 
   run(context: ExecutionContext): tf.Tensor {
