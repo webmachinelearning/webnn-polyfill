@@ -18,8 +18,8 @@
     "lintjs": "eslint . --no-eslintrc --config .eslintrcforjs.js --ext .js",
     "lint": "npm run lintts && npm run lintjs",
     "format": "clang-format --glob=\"{{src,test}/**/*.ts,{src,test}/**/*.js}\" --style=file -i",
-    "test": "cross-env NODE_ENV=test mocha --require ./test/node_setup.js --exit test/*/*.js",
-    "cts": "cross-env NODE_ENV=test NODE_OPTIONS='--max-old-space-size=8192' mocha --require ./test/node_setup.js --exit test/cts/from_nnapi/tests/cts.js"
+    "test": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/*/*.js",
+    "cts": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/cts/from_nnapi/tests/cts.js"
   },
   "repository": {
     "type": "git",
