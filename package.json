@@ -19,7 +19,8 @@
     "lint": "npm run lintts && npm run lintjs",
     "format": "clang-format --glob=\"{{src,test}/**/*.ts,{src,test}/**/*.js}\" --style=file -i",
     "test": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/*/*.js test/cts/from_nnapi/tests/cts.js",
-    "cts": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/cts/from_nnapi/tests/cts.js"
+    "cts": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/cts/from_nnapi/tests/cts.js",
+    "test-models": "cross-env NODE_ENV=test mocha --require ./test/node_setup.js --exit ./test/models/**/*.js"
   },
   "repository": {
     "type": "git",
