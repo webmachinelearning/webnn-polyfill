@@ -106,21 +106,26 @@ MappingDict = {
             }
         ]
     },
-    # 'CONCATENATION': {
-    #     'webnnOperation': 'concat',
-    #     'insList': [
-    #         {
-    #             'name': 'inputN', # inputN represents input0, input1, ..., inputn
-    #             'mappingParamIndex': 0,
-    #             'mappingRuleType': 0
-    #         },
-    #         {
-    #             'name': 'axis',
-    #             'mappingParamIndex': 1,
-    #             'mappingRuleType': 1
-    #         }
-    #     ]
-    # },
+    'CONCATENATION': {
+        'webnnOperation': 'concat',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'axis',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 1
+            }
+        ]
+    },
     'CONV_2D': {
         'webnnOperation': 'conv2d',
         'insList': [ # only support for explicit paddings
