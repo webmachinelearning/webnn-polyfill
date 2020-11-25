@@ -5,7 +5,7 @@ describe('test squeezenet1.1 nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
   const dirName = typeof __dirname !== 'undefined' ? __dirname :
-      './models/squeezenet1.1';
+      './models/squeezenet1.1_nchw';
   let compiledModel;
   before(async () => {
     const nn = navigator.ml.getNeuralNetworkContext();
