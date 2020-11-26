@@ -565,9 +565,15 @@ def DumpCtsTest(example, test):
                     biasOp = op
                     PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
                                   opInsDict['name'], layout, test)
-        outputOp = curOutputsList[0]
-        IndentedPrint("const expected = %s;" % outputFeedDict[outputOp],
-                      indent=4, file=test)
+        if len(curOutputsList) == 1:
+            outputOp = curOutputsList[0]
+            IndentedPrint("const expected = %s;" % outputFeedDict[outputOp],
+                          indent=4, file=test)
+        elif len(curOutputsList) > 1:
+            outputOp = curOutputsList
+            expectedValueList = [outputFeedDict[k] for k in outputOp]
+            IndentedPrint("const expected = %s;" % expectedValueList, indent=4,
+                          file=test)
         # Update optional parameter value
         optionsKeyValueList = []
         hasLayoutOption = False
@@ -594,8 +600,13 @@ def DumpCtsTest(example, test):
         webnnParamsStr = GetWebNNParamsString(mappingParams)
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
                         fusedReluMappedInfo, outputOp, test)
-        IndentedPrint("const model = builder.createModel({%s});" % outputOp,
-                      indent=4, file=test)
+        if len(curOutputsList) == 1:
+            IndentedPrint("const model = builder.createModel({%s});" % outputOp,
+                          indent=4, file=test)
+        elif len(curOutputsList) > 1:
+            outputOpNameList = [item.name for item in outputOp]
+            IndentedPrint("const model = builder.createModel({%s});" % \
+                          ', '.join(outputOpNameList), indent=4, file=test)
         IndentedPrint("const compilation = await model.compile();", indent=4,
                       file=test)
         IndentedPrint("const outputs = await compilation.compute({%s});" % \
@@ -604,8 +615,18 @@ def DumpCtsTest(example, test):
         atol = '5.0 * 0.0009765625' if model.isRelaxed else '1e-5'
         rtol = '5.0 * 0.0009765625' if model.isRelaxed else \
                '5.0 * 1.1920928955078125e-7'
-        IndentedPrint("utils.checkValue(outputs.%s.buffer, expected, %s, %s);" \
-                      % (outputOp, atol, rtol), indent=4, file=test)
+        if len(curOutputsList) == 1:
+            IndentedPrint(
+                "utils.checkValue(outputs.%s.buffer, expected, %s, %s);" % \
+                (outputOp, atol, rtol), indent=4, file=test)
+        elif len(curOutputsList) > 1:
+            IndentedPrint('for (let i = 0; i < %d; i++) {' % \
+                          len(curOutputsList), indent=4, file=test)
+            bufferStr = 'outputs[%s[i]].buffer' % ['%s' % k for k in outputOp]
+            IndentedPrint(
+                "utils.checkValue(%s, expected[i], %s, %s);" % \
+                (bufferStr, atol, rtol), indent=6, file=test)
+            IndentedPrint("}", indent=4, file=test)
         IndentedPrint("});", indent=2, file=test)
         testIndex += 1
 

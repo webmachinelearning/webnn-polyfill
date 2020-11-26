@@ -517,27 +517,27 @@ MappingDict = {
             }
         ]
     },
-    # 'SPLIT': {
-    #     'webnnOperation': 'split',
-    #     'insList': [
-    #         {
-    #             'name': 'input',
-    #             'mappingParamIndex': 0,
-    #             'mappingRuleType': 0
-    #         },
-    #         {
-    #             'name': 'axis',
-    #             'mappingParamIndex': 2,
-    #             'optionsDictKey': 'axis',
-    #             'mappingRuleType': 1
-    #         },
-    #         {
-    #             'name': 'splitsNumber',
-    #             'mappingParamIndex': 1,
-    #             'mappingRuleType': 1
-    #         }
-    #     ]
-    # },
+    'SPLIT': {
+        'webnnOperation': 'split',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'axis',
+                'mappingParamIndex': 2,
+                'optionsDictKey': 'axis',
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'splitsNumber',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 1
+            }
+        ]
+    },
     'SQRT': {
         'webnnOperation': 'sqrt',
         'insList': [
