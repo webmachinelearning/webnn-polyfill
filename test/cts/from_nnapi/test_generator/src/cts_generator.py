@@ -96,6 +96,10 @@ def CheckOperationWithImplicitPadding(nnapiOp, curOpInsList, nnapiOpInsList,
 
     return flag
 
+def ClearMappingWebNNOpConfiguration():
+    if Configuration.successedCounter == 0:
+        Configuration.mappingWebNNOp.clear()
+
 def SupportedConvertConv2D(operation, inOprand, outOprand, filterOprand,
                            layout):
     flag = True
@@ -156,6 +160,32 @@ def GetInputOperandValue(inputsDict, insList, index):
             value = inputsDict[inOp]
 
     return (status, value)
+
+
+def SupportedConvertSoftmax(opInfoList, inOperand, paramsList, insList):
+    flag = True
+    dimLen = len(inOperand.dimensions)
+
+    if dimLen != 2:
+        flag = False
+        return flag
+
+    betaIndex = GetOperandIndex(opInfoList, 'beta')
+    status, beta = GetParamOperandValue(paramsList, insList, betaIndex)
+
+    if int(beta[0]) != 1:
+        flag = False
+        return flag
+
+    if len(insList) == 3:
+        # using optional axis parameter
+        axisIndex = GetOperandIndex(opInfoList, 'axis')
+        status, axis = GetParamOperandValue(paramsList, insList, axisIndex)
+        if axis[0] not in [-1, 1]:
+            flag = False
+            return flag
+
+    return flag
 
 def UpdateMappingWebNNOpList(actValue):
     if Configuration.successedCounter == 0:
@@ -448,8 +478,7 @@ def DumpCtsTest(example, test):
     if CheckOperationWithImplicitPadding(nnapiOp, curOpInsList,
                                          nnapiOpInsList,
                                          len(nnapiOpOptionalInsList)):
-        if Configuration.successedCounter == 0:
-            Configuration.mappingWebNNOp.clear()
+        ClearMappingWebNNOpConfiguration()
         return
 
     if GetOperandIndex(nnapiOpInsList, 'bias') != -1:
@@ -487,14 +516,18 @@ def DumpCtsTest(example, test):
         if not SupportedConvertConv2D(nnapiOp, curInputsList[0],
                                       curOutputsList[0], curOpInsList[1],
                                       layout):
-            if Configuration.successedCounter == 0:
-                Configuration.mappingWebNNOp.clear()
+            ClearMappingWebNNOpConfiguration()
             return
 
     biasOp = None
     testIndex = 1 if len(example.feedDicts)>1 else 0
 
     for inputFeedDict, outputFeedDict in example.feedDicts:
+        if nnapiOp == 'SOFTMAX':
+            if not SupportedConvertSoftmax(nnapiOpInsList, curInputsList[0],
+                                           curParamsList, curOpInsList):
+                ClearMappingWebNNOpConfiguration()
+                return
         IndentedPrint("", file=test) # Add blank line
         testPurpose = 'test %s converted from %s test' % \
                       (' + '.join(Configuration.mappingWebNNOp),

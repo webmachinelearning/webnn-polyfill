@@ -538,6 +538,26 @@ MappingDict = {
             }
         ]
     },
+    'SOFTMAX': {
+        'webnnOperation': 'softmax',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'beta',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'axis',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 1
+            }
+        ]
+    },
     'SPLIT': {
         'webnnOperation': 'split',
         'insList': [
