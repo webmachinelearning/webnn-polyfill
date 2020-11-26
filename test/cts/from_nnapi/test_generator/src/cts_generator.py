@@ -528,6 +528,11 @@ def DumpCtsTest(example, test):
                     if len(varValue) != 0 and varValue[0] is not None:
                         IndentedPrint('const %s = %s;' % (op, varValue),
                                       indent=4, file=test)
+                elif rule == md.MappingRule.OPERAND_ARRAY:
+                    varValue = inputFeedDict[op]
+                    if len(varValue) != 0:
+                        IndentedPrint('const %s = %s;' % (op, varValue),
+                                      indent=4, file=test)
             else:
                 if opInsDict['name'] == 'bias':
                     biasOp = op
@@ -558,6 +563,11 @@ def DumpCtsTest(example, test):
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
                     varValue = curParamsList[curParamsList.index(op)].value
                     if len(varValue) != 0 and varValue[0] is not None:
+                        IndentedPrint('const %s = %s;' % (op, varValue),
+                                      indent=4, file=test)
+                elif rule == md.MappingRule.OPERAND_ARRAY:
+                    varValue = curParamsList[curParamsList.index(op)].value
+                    if len(varValue) != 0:
                         IndentedPrint('const %s = %s;' % (op, varValue),
                                       indent=4, file=test)
             else:

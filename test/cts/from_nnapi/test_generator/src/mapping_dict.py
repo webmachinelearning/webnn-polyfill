@@ -6,6 +6,7 @@ class MappingRule(IntEnum):
     OPERAND_OPERAND = 0
     VARIABLE_VARIABLE = 1
     OPERAND_VARIABLE = 2
+    OPERAND_ARRAY = 3
 
 # NN-API Operations mapping WebNN API Operations
 MappingDict = {
@@ -514,6 +515,26 @@ MappingDict = {
                 'name': 'shape',
                 'mappingParamIndex': 1,
                 'mappingRuleType': 2
+            }
+        ]
+    },
+    'SLICE': {
+        'webnnOperation': 'slice',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'starts',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 3
+            },
+            {
+                'name': 'sizes',
+                'mappingParamIndex': 2,
+                'mappingRuleType': 3
             }
         ]
     },
