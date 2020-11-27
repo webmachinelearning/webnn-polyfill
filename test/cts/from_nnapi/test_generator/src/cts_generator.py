@@ -251,17 +251,32 @@ def GetWebNNFilterDimensions(operation, dimensions, layout):
 
     return dimensions
 
+def FlattenedTo2D(in0Dims, in1Dims):
+    inputSize = in1Dims[1]
+    batchSize = int(np.product(in0Dims) / inputSize)
+    return [batchSize, inputSize]
+
 def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout):
     operandType = oprand.type.mappingType
     operandDims = oprand.type.dimensions
-    oprandName = opInsInfoList[opInsList.index(oprand)]['name']
 
-    if oprandName == 'filter':
-        operandDims = GetWebNNFilterDimensions(operation, operandDims, layout)
-    elif oprandName == 'bias':
-        if layout and len(operandDims) == 1:
-            # Update operandDims likes [x] -> [1, x, 1, 1]
-            operandDims = [1, operandDims[0], 1, 1]
+    if operation == 'FULLY_CONNECTED':
+        if opInsList.index(oprand) == 0:
+            # input0
+            if len(operandDims) > 2:
+                input1Dims = opInsList[1].dimensions
+                operandDims = FlattenedTo2D(operandDims, input1Dims)
+        elif opInsList.index(oprand) == 1:
+            operandDims = [operandDims[1], operandDims[0]]
+    else:
+        oprandName = opInsInfoList[opInsList.index(oprand)]['name']
+
+        if oprandName == 'filter':
+            operandDims = GetWebNNFilterDimensions(operation, operandDims, layout)
+        elif oprandName == 'bias':
+            if layout and len(operandDims) == 1:
+                # Update operandDims likes [x] -> [1, x, 1, 1]
+                operandDims = [1, operandDims[0], 1, 1]
 
     operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
     return operandDesc
@@ -273,7 +288,7 @@ def PrintInputOperand(oprand, operation, opInsList, opInsInfoList, layout,
     operand = "const %s = builder.input('%s', %s);" % (oprand, oprand, opDesc)
     IndentedPrint(operand, indent=4, file=test)
 
-def GetOperandValue(oprand, operation, name, layout, value=None):
+def GetOperandValue(oprand, operation, opInsList, name, layout, value=None):
     opValue = oprand.value
 
     if value is not None:
@@ -283,11 +298,17 @@ def GetOperandValue(oprand, operation, name, layout, value=None):
         opValue = ReorderFilterValue(operation, oprand.type.dimensions, opValue,
                                      layout)
 
+    if operation == 'FULLY_CONNECTED':
+        if opInsList.index(oprand) == 1:
+            # input1
+            arrayValue = np.array(opValue).reshape(oprand.type.dimensions)
+            opValue = list(np.transpose(arrayValue, (1,0)).ravel())
+
     return opValue
 
-def PrintInputBuffer(oprand, operation, name, value, layout, test):
+def PrintInputBuffer(oprand, operation, opInsList, name, value, layout, test):
     typedArray = oprand.type.mappingTypedArrayType
-    opValue = GetOperandValue(oprand, operation, name, layout, value)
+    opValue = GetOperandValue(oprand, operation, opInsList, name, layout, value)
     IndentedPrint('const %sBuffer = new %s(%s);' % (oprand, typedArray, opValue),
                   indent=4, file=test)
 
@@ -295,7 +316,7 @@ def PrintConstant(oprand, operation, opInsList, opInsInfoList, name, layout,
                   test):
     opDesc = GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList,
                                  layout)
-    opValue = GetOperandValue(oprand, operation, name, layout)
+    opValue = GetOperandValue(oprand, operation, opInsList, name, layout)
     operand = "const %s = builder.constant(%s, new %s(%s));" % \
               (oprand, opDesc, oprand.type.mappingTypedArrayType, opValue)
     IndentedPrint(operand, indent=4, file=test)
@@ -552,8 +573,9 @@ def DumpCtsTest(example, test):
                 if rule == md.MappingRule.OPERAND_OPERAND:
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
                                       layout, test)
-                    PrintInputBuffer(op, nnapiOp, opInsDict['name'],
-                                     inputFeedDict[op], layout, test)
+                    PrintInputBuffer(op, nnapiOp, curOpInsList,
+                                     opInsDict['name'], inputFeedDict[op],
+                                     layout, test)
                     computeParamsList.append("'%s': {buffer: %sBuffer}" % \
                                              (op, op))
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
@@ -571,8 +593,9 @@ def DumpCtsTest(example, test):
                     biasOp = op
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
                                       layout, test)
-                    PrintInputBuffer(op, nnapiOp, opInsDict['name'],
-                                     inputFeedDict[op], layout, test)
+                    PrintInputBuffer(op, nnapiOp, curOpInsList,
+                                     opInsDict['name'], inputFeedDict[op],
+                                     layout, test)
                     computeParamsList.append("'%s': {buffer: %sBuffer}" % \
                                              (op, op))
         # Create operand(s) by ModelBuilder.constant, or define variable(s)

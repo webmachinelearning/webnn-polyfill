@@ -336,6 +336,30 @@ MappingDict = {
             }
         ]
     },
+    'FULLY_CONNECTED': {
+        'webnnOperation': 'matmul',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'bias',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'activation',
+                'mappingParamIndex': -1
+            }
+        ]
+    },
     'LOGISTIC': {
         'webnnOperation': 'sigmoid',
         'insList': [
