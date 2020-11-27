@@ -96,13 +96,15 @@ export async function buildConstantFromNpy(builder, fileName) {
       data.buffer);
 }
 
+// Refer to Implicit padding algorithms of Android NNAPI:
+// https://developer.android.com/ndk/reference/group/neural-networks#group___neural_networks_1gab72e9e6263fd5b015bb7f41ec18ce220
 export function computeExplicitPadding(
-    input_size, stride, filter_size, dilation = 1) {
-  const out_size = Math.ceil(input_size / stride);
-  const effective_filter_size = (filter_size - 1) * dilation + 1;
-  const needed_input = (out_size - 1) * stride + effective_filter_size;
-  const total_padding = Math.max(0, needed_input - input_size);
-  const padding_to_beginning = Math.floor(total_padding / 2);
-  const padding_to_end = Math.floor((total_padding + 1)/2);
-  return [padding_to_beginning, padding_to_end];
+    inputSize, stride, filterSize, dilation = 1) {
+  const outSize = Math.ceil(inputSize / stride);
+  const effectiveFilterSize = (filterSize - 1) * dilation + 1;
+  const neededInput = (outSize - 1) * stride + effectiveFilterSize;
+  const totalPadding = Math.max(0, neededInput - inputSize);
+  const paddingToBeginning = Math.floor(totalPadding / 2);
+  const paddingToEnd = Math.floor((totalPadding + 1)/2);
+  return [paddingToBeginning, paddingToEnd];
 }

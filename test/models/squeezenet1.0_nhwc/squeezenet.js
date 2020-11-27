@@ -37,15 +37,15 @@ describe('test squeezenet1.0 nhwc', function() {
 
     const placeholder = builder.input('placeholder', {type: 'float32',
         dimensions: [1, 224, 224, 3]});
-    const [beginning_height, ending_height] =
+    const [beginningHeight, endingHeight] =
         utils.computeExplicitPadding(224, 2, 7);
-    const [beginning_width, ending_width] =
+    const [beginningWidth, endingWidth] =
         utils.computeExplicitPadding(224, 2, 7);
     const conv1 = await buildConv(
         placeholder, 'conv1', {
           strides: [2, 2],
-          padding: [beginning_height, ending_height,
-                    beginning_width, ending_width]});
+          padding: [beginningHeight, endingHeight,
+                    beginningWidth, endingWidth]});
     const maxpool1 = builder.maxPool2d(
         conv1, {windowDimensions: [3, 3], strides: [2, 2], layout: 'nhwc'});
     const fire2 = await buildFire(maxpool1, 'fire2');
@@ -74,7 +74,8 @@ describe('test squeezenet1.0 nhwc', function() {
       dirName + inputFile);
     const expected = await utils.createTypedArrayFromNpy(
         dirName + expectedFile);
-    const outputs = await compiledModel.compute({'placeholder': {buffer: input}});
+    const outputs = await compiledModel.compute(
+        {'placeholder': {buffer: input}});
     utils.checkShape(outputs.softmax.dimensions, [1, 1001]);
     utils.checkValue(outputs.softmax.buffer, expected, 1e-5, 5.0*0.0009765625);
   }
