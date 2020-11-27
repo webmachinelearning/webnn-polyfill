@@ -1,4 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
+import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
 import {ExecutionContext} from '../compilation';
 import {Conv2dOptions, OperandLayout} from '../model_builder';
@@ -59,10 +60,6 @@ export class Conv2d extends SingleOutputOperation {
   run(context: ExecutionContext): tf.Tensor {
     let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
     let filter: tf.Tensor4D = context.getTensor(this.filter_) as tf.Tensor4D;
-    utils.assert(
-        this.padding_.every(v => v === this.padding_[0]),
-        'The tf.conv2d only supports the same padding value.');
-    const padding = this.padding_[0];
     let inputChannels: number;
     if (this.layout_ === OperandLayout.nchw) {
       // nchw -> nhwc
@@ -77,11 +74,26 @@ export class Conv2d extends SingleOutputOperation {
     }
     let output;
     if (this.groups_ === 1) {
+      let padding: 'valid' | 'same' | number | ExplicitPadding;
+      if (this.padding_.every(v => v === 0)) {
+        padding = 'valid' ;
+      } else {
+        // WebNN padding:
+        //   [beginning_height, ending_height, beginning_width, ending_width]
+        // tf.conv2d NHWC should be in the following form:
+        //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
+        padding = [[0, 0], [this.padding_[0], this.padding_[1]],
+            [this.padding_[2], this.padding_[3]], [0, 0]] as ExplicitPadding;
+      }
       // tf.conv2d filter: [filterHeight, filterWidth, inDepth, outDepth].
       output = tf.conv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
     } else if (
         this.groups_ === inputChannels && this.groups_ === filter.shape[3]) {
+      utils.assert(
+          this.padding_.every(v => v === this.padding_[0]),
+          'The tf.depthwiseConv2d only supports the same padding value.');
+      const padding = this.padding_[0];
       // webnn filter: [height, width, input_channels/groups, output_channels]
       // tf.depthwiseConv2d filter: [filterHeight, filterWidth, inChannels,
       // channelMultiplier].
