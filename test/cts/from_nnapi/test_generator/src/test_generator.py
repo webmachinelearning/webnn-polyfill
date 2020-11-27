@@ -31,6 +31,10 @@ import contextlib
 import pprint
 import numpy as np
 
+def CamelCaseStr(s):
+    sList = s.split('_')
+    return sList[0] + ''.join([i.capitalize() for i in sList[1:]])
+
 def GetJointStr(l, sep=", ", method=str):
     return sep.join([method(i) for i in l])
 
@@ -291,7 +295,7 @@ class SymmPerChannelQuantParams():
 # declared before operations.
 class Operand(NamedVariable):
     def __init__(self, name, opType, value, backward=None, skipRenaming=False, extraParams=None):
-        NamedVariable.__init__(self, name, sep="", skipRenaming=skipRenaming)
+        NamedVariable.__init__(self, CamelCaseStr(name), sep="", skipRenaming=skipRenaming)
         if type(opType) is str:
             self.type = Type.GetTypeFromString(opType, value, extraParams)
             value = backward
