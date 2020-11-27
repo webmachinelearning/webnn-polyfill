@@ -1,0 +1,1150 @@
+[
+  {'name': 'Placeholder', 'index': 0, 'shape': array([
+      1,
+      224,
+      224,
+      3
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      224,
+      224,
+      3
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'average_pooling2d/AvgPool', 'index': 1, 'shape': array([
+      1,
+      1,
+      1,
+      1001
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      1,
+      1,
+      1001
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'conv1/Conv2D_bias', 'index': 2, 'shape': array([
+      96
+    ], dtype=int32), 'shape_signature': array([
+      96
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'conv1/Relu', 'index': 3, 'shape': array([
+      1,
+      112,
+      112,
+      96
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      112,
+      112,
+      96
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'conv1/kernel', 'index': 4, 'shape': array([
+      96,
+      7,
+      7,
+      3
+    ], dtype=int32), 'shape_signature': array([
+      96,
+      7,
+      7,
+      3
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'conv10/Conv2D_bias', 'index': 5, 'shape': array([
+      1001
+    ], dtype=int32), 'shape_signature': array([
+      1001
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'conv10/Relu', 'index': 6, 'shape': array([
+      1,
+      13,
+      13,
+      1001
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      13,
+      13,
+      1001
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'conv10/kernel', 'index': 7, 'shape': array([
+      1001,
+      1,
+      1,
+      512
+    ], dtype=int32), 'shape_signature': array([
+      1001,
+      1,
+      1,
+      512
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/concat', 'index': 8, 'shape': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/e1x1/Conv2D_bias', 'index': 9, 'shape': array([
+      64
+    ], dtype=int32), 'shape_signature': array([
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/e1x1/Relu', 'index': 10, 'shape': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/e1x1/kernel', 'index': 11, 'shape': array([
+      64,
+      1,
+      1,
+      16
+    ], dtype=int32), 'shape_signature': array([
+      64,
+      1,
+      1,
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/e3x3/Conv2D_bias', 'index': 12, 'shape': array([
+      64
+    ], dtype=int32), 'shape_signature': array([
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/e3x3/Relu', 'index': 13, 'shape': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/e3x3/kernel', 'index': 14, 'shape': array([
+      64,
+      3,
+      3,
+      16
+    ], dtype=int32), 'shape_signature': array([
+      64,
+      3,
+      3,
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/squeeze/Conv2D_bias', 'index': 15, 'shape': array([
+      16
+    ], dtype=int32), 'shape_signature': array([
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/squeeze/Relu', 'index': 16, 'shape': array([
+      1,
+      55,
+      55,
+      16
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire2/squeeze/kernel', 'index': 17, 'shape': array([
+      16,
+      1,
+      1,
+      96
+    ], dtype=int32), 'shape_signature': array([
+      16,
+      1,
+      1,
+      96
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/concat', 'index': 18, 'shape': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/e1x1/Conv2D_bias', 'index': 19, 'shape': array([
+      64
+    ], dtype=int32), 'shape_signature': array([
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/e1x1/Relu', 'index': 20, 'shape': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/e1x1/kernel', 'index': 21, 'shape': array([
+      64,
+      1,
+      1,
+      16
+    ], dtype=int32), 'shape_signature': array([
+      64,
+      1,
+      1,
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/e3x3/Conv2D_bias', 'index': 22, 'shape': array([
+      64
+    ], dtype=int32), 'shape_signature': array([
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/e3x3/Relu', 'index': 23, 'shape': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/e3x3/kernel', 'index': 24, 'shape': array([
+      64,
+      3,
+      3,
+      16
+    ], dtype=int32), 'shape_signature': array([
+      64,
+      3,
+      3,
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/squeeze/Conv2D_bias', 'index': 25, 'shape': array([
+      16
+    ], dtype=int32), 'shape_signature': array([
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/squeeze/Relu', 'index': 26, 'shape': array([
+      1,
+      55,
+      55,
+      16
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      16
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire3/squeeze/kernel', 'index': 27, 'shape': array([
+      16,
+      1,
+      1,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      16,
+      1,
+      1,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/concat', 'index': 28, 'shape': array([
+      1,
+      55,
+      55,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/e1x1/Conv2D_bias', 'index': 29, 'shape': array([
+      128
+    ], dtype=int32), 'shape_signature': array([
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/e1x1/Relu', 'index': 30, 'shape': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/e1x1/kernel', 'index': 31, 'shape': array([
+      128,
+      1,
+      1,
+      32
+    ], dtype=int32), 'shape_signature': array([
+      128,
+      1,
+      1,
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/e3x3/Conv2D_bias', 'index': 32, 'shape': array([
+      128
+    ], dtype=int32), 'shape_signature': array([
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/e3x3/Relu', 'index': 33, 'shape': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/e3x3/kernel', 'index': 34, 'shape': array([
+      128,
+      3,
+      3,
+      32
+    ], dtype=int32), 'shape_signature': array([
+      128,
+      3,
+      3,
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/squeeze/Conv2D_bias', 'index': 35, 'shape': array([
+      32
+    ], dtype=int32), 'shape_signature': array([
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/squeeze/Relu', 'index': 36, 'shape': array([
+      1,
+      55,
+      55,
+      32
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire4/squeeze/kernel', 'index': 37, 'shape': array([
+      32,
+      1,
+      1,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      32,
+      1,
+      1,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/concat', 'index': 38, 'shape': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/e1x1/Conv2D_bias', 'index': 39, 'shape': array([
+      128
+    ], dtype=int32), 'shape_signature': array([
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/e1x1/Relu', 'index': 40, 'shape': array([
+      1,
+      27,
+      27,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/e1x1/kernel', 'index': 41, 'shape': array([
+      128,
+      1,
+      1,
+      32
+    ], dtype=int32), 'shape_signature': array([
+      128,
+      1,
+      1,
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/e3x3/Conv2D_bias', 'index': 42, 'shape': array([
+      128
+    ], dtype=int32), 'shape_signature': array([
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/e3x3/Relu', 'index': 43, 'shape': array([
+      1,
+      27,
+      27,
+      128
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      128
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/e3x3/kernel', 'index': 44, 'shape': array([
+      128,
+      3,
+      3,
+      32
+    ], dtype=int32), 'shape_signature': array([
+      128,
+      3,
+      3,
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/squeeze/Conv2D_bias', 'index': 45, 'shape': array([
+      32
+    ], dtype=int32), 'shape_signature': array([
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/squeeze/Relu', 'index': 46, 'shape': array([
+      1,
+      27,
+      27,
+      32
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      32
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire5/squeeze/kernel', 'index': 47, 'shape': array([
+      32,
+      1,
+      1,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      32,
+      1,
+      1,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/concat', 'index': 48, 'shape': array([
+      1,
+      27,
+      27,
+      384
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      384
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/e1x1/Conv2D_bias', 'index': 49, 'shape': array([
+      192
+    ], dtype=int32), 'shape_signature': array([
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/e1x1/Relu', 'index': 50, 'shape': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/e1x1/kernel', 'index': 51, 'shape': array([
+      192,
+      1,
+      1,
+      48
+    ], dtype=int32), 'shape_signature': array([
+      192,
+      1,
+      1,
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/e3x3/Conv2D_bias', 'index': 52, 'shape': array([
+      192
+    ], dtype=int32), 'shape_signature': array([
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/e3x3/Relu', 'index': 53, 'shape': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/e3x3/kernel', 'index': 54, 'shape': array([
+      192,
+      3,
+      3,
+      48
+    ], dtype=int32), 'shape_signature': array([
+      192,
+      3,
+      3,
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/squeeze/Conv2D_bias', 'index': 55, 'shape': array([
+      48
+    ], dtype=int32), 'shape_signature': array([
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/squeeze/Relu', 'index': 56, 'shape': array([
+      1,
+      27,
+      27,
+      48
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire6/squeeze/kernel', 'index': 57, 'shape': array([
+      48,
+      1,
+      1,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      48,
+      1,
+      1,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/concat', 'index': 58, 'shape': array([
+      1,
+      27,
+      27,
+      384
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      384
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/e1x1/Conv2D_bias', 'index': 59, 'shape': array([
+      192
+    ], dtype=int32), 'shape_signature': array([
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/e1x1/Relu', 'index': 60, 'shape': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/e1x1/kernel', 'index': 61, 'shape': array([
+      192,
+      1,
+      1,
+      48
+    ], dtype=int32), 'shape_signature': array([
+      192,
+      1,
+      1,
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/e3x3/Conv2D_bias', 'index': 62, 'shape': array([
+      192
+    ], dtype=int32), 'shape_signature': array([
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/e3x3/Relu', 'index': 63, 'shape': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      192
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/e3x3/kernel', 'index': 64, 'shape': array([
+      192,
+      3,
+      3,
+      48
+    ], dtype=int32), 'shape_signature': array([
+      192,
+      3,
+      3,
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/squeeze/Conv2D_bias', 'index': 65, 'shape': array([
+      48
+    ], dtype=int32), 'shape_signature': array([
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/squeeze/Relu', 'index': 66, 'shape': array([
+      1,
+      27,
+      27,
+      48
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      48
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire7/squeeze/kernel', 'index': 67, 'shape': array([
+      48,
+      1,
+      1,
+      384
+    ], dtype=int32), 'shape_signature': array([
+      48,
+      1,
+      1,
+      384
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/concat', 'index': 68, 'shape': array([
+      1,
+      27,
+      27,
+      512
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      512
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/e1x1/Conv2D_bias', 'index': 69, 'shape': array([
+      256
+    ], dtype=int32), 'shape_signature': array([
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/e1x1/Relu', 'index': 70, 'shape': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/e1x1/kernel', 'index': 71, 'shape': array([
+      256,
+      1,
+      1,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      256,
+      1,
+      1,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/e3x3/Conv2D_bias', 'index': 72, 'shape': array([
+      256
+    ], dtype=int32), 'shape_signature': array([
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/e3x3/Relu', 'index': 73, 'shape': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/e3x3/kernel', 'index': 74, 'shape': array([
+      256,
+      3,
+      3,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      256,
+      3,
+      3,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/squeeze/Conv2D_bias', 'index': 75, 'shape': array([
+      64
+    ], dtype=int32), 'shape_signature': array([
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/squeeze/Relu', 'index': 76, 'shape': array([
+      1,
+      27,
+      27,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire8/squeeze/kernel', 'index': 77, 'shape': array([
+      64,
+      1,
+      1,
+      384
+    ], dtype=int32), 'shape_signature': array([
+      64,
+      1,
+      1,
+      384
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/concat', 'index': 78, 'shape': array([
+      1,
+      13,
+      13,
+      512
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      13,
+      13,
+      512
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/e1x1/Conv2D_bias', 'index': 79, 'shape': array([
+      256
+    ], dtype=int32), 'shape_signature': array([
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/e1x1/Relu', 'index': 80, 'shape': array([
+      1,
+      13,
+      13,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      13,
+      13,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/e1x1/kernel', 'index': 81, 'shape': array([
+      256,
+      1,
+      1,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      256,
+      1,
+      1,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/e3x3/Conv2D_bias', 'index': 82, 'shape': array([
+      256
+    ], dtype=int32), 'shape_signature': array([
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/e3x3/Relu', 'index': 83, 'shape': array([
+      1,
+      13,
+      13,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      13,
+      13,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/e3x3/kernel', 'index': 84, 'shape': array([
+      256,
+      3,
+      3,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      256,
+      3,
+      3,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/squeeze/Conv2D_bias', 'index': 85, 'shape': array([
+      64
+    ], dtype=int32), 'shape_signature': array([
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/squeeze/Relu', 'index': 86, 'shape': array([
+      1,
+      13,
+      13,
+      64
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      13,
+      13,
+      64
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'fire9/squeeze/kernel', 'index': 87, 'shape': array([
+      64,
+      1,
+      1,
+      512
+    ], dtype=int32), 'shape_signature': array([
+      64,
+      1,
+      1,
+      512
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'flatten/Reshape', 'index': 88, 'shape': array([
+      1,
+      1001
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      1001
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'flatten/Reshape/shape', 'index': 89, 'shape': array([
+      2,
+      1
+    ], dtype=int32), 'shape_signature': array([
+      2,
+      1
+    ], dtype=int32), 'dtype': <class 'numpy.int32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'maxpool1/MaxPool', 'index': 90, 'shape': array([
+      1,
+      55,
+      55,
+      96
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      55,
+      55,
+      96
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'maxpool4/MaxPool', 'index': 91, 'shape': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      27,
+      27,
+      256
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'maxpool8/MaxPool', 'index': 92, 'shape': array([
+      1,
+      13,
+      13,
+      512
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      13,
+      13,
+      512
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  },
+  {'name': 'softmax_tensor', 'index': 93, 'shape': array([
+      1,
+      1001
+    ], dtype=int32), 'shape_signature': array([
+      1,
+      1001
+    ], dtype=int32), 'dtype': <class 'numpy.float32'>, 'quantization': (0.0,
+    0), 'quantization_parameters': {'scales': array([], dtype=float32), 'zero_points': array([], dtype=int32), 'quantized_dimension': 0
+    }, 'sparsity_parameters': {}
+  }
+]

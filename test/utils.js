@@ -95,3 +95,14 @@ export async function buildConstantFromNpy(builder, fileName) {
   return builder.constant({type: data.type, dimensions: data.dimensions},
       data.buffer);
 }
+
+export function computeExplicitPadding(
+    input_size, stride, filter_size, dilation = 1) {
+  const out_size = Math.ceil(input_size / stride);
+  const effective_filter_size = (filter_size - 1) * dilation + 1;
+  const needed_input = (out_size - 1) * stride + effective_filter_size;
+  const total_padding = Math.max(0, needed_input - input_size);
+  const padding_to_beginning = Math.floor(total_padding / 2);
+  const padding_to_end = Math.floor((total_padding + 1)/2);
+  return [padding_to_beginning, padding_to_end];
+}
