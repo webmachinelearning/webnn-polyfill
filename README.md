@@ -44,6 +44,20 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 
 Open the web browser and navigate to http://localhost:8080/test
 
+#### Run only CTS tests in node.js.
+
+```sh
+> npm run cts
+```
+
+#### Run only CTS tests in web browser.
+
+```sh
+> npm start
+```
+
+Open the web browser and navigate to http://localhost:8080/test/cts.html
+
 ## Other scripts
 ### Build docs
 
