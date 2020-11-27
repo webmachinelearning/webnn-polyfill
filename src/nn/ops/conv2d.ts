@@ -87,8 +87,7 @@ export class Conv2d extends SingleOutputOperation {
       }
       // tf.conv2d filter: [filterHeight, filterWidth, inDepth, outDepth].
       output = tf.conv2d(
-          input, filter, this.strides_, padding, 'NHWC', this.dilations_,
-          'floor');
+          input, filter, this.strides_, padding, 'NHWC', this.dilations_);
     } else if (
         this.groups_ === inputChannels && this.groups_ === filter.shape[3]) {
       utils.assert(
