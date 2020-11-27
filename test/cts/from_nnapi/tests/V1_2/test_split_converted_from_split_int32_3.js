@@ -10,9 +10,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const input0 = builder.input('input0', {type: 'int32', dimensions: [2, 3]});
     const input0Buffer = new Int32Array([1, 2, 3, 4, 5, 6]);
     const axis = 1;
-    const num_splits = 3;
+    const numSplits = 3;
     const expected = [[1, 4], [2, 5], [3, 6]];
-    const [output0, output1, output2] = builder.split(input0, num_splits, {'axis': axis});
+    const [output0, output1, output2] = builder.split(input0, numSplits, {'axis': axis});
     const model = builder.createModel({output0, output1, output2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}});
@@ -27,9 +27,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const input0 = builder.input('input0', {type: 'int32', dimensions: [2, 3]});
     const input0Buffer = new Int32Array([1, 2, 3, 4, 5, 6]);
     const axis = 1;
-    const num_splits = 3;
+    const numSplits = 3;
     const expected = [[1, 4], [2, 5], [3, 6]];
-    const [output0, output1, output2] = builder.split(input0, num_splits, {'axis': axis});
+    const [output0, output1, output2] = builder.split(input0, numSplits, {'axis': axis});
     const model = builder.createModel({output0, output1, output2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}});
