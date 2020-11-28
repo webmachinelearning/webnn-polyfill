@@ -108,3 +108,20 @@ export function computeExplicitPadding(
   const paddingToEnd = Math.floor((totalPadding + 1)/2);
   return [paddingToBeginning, paddingToEnd];
 }
+
+export async function setPolyfillBackend(backend) {
+  const tf = navigator.ml.getNeuralNetworkContext().tf;
+  if (tf) {
+    const backends = ['webgl', 'cpu'];
+    if (!backends.includes(backend)) {
+      console.warn(`webnn-polyfill doesn't support ${backend} backend.`);
+    } else {
+      if (!(await tf.setBackend(backend))) {
+        console.error(`Failed to set tf.js backend ${backend}.`);
+      }
+    }
+    await tf.ready();
+    console.info(`webnn-polyfill uses tf.js ${tf.version_core}` +
+        ` ${tf.getBackend()} backend.`);
+  }
+}

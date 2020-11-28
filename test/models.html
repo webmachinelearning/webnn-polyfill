@@ -19,7 +19,11 @@
   <script type="module" src="./models/squeezenet1.0_nhwc/squeezenet.js"></script>
   <script type="module" src="./models/squeezenet1.1_nchw/squeezenet.js"></script>
   <script class="mocha-exec" type="module">
-    mocha.run();
+    import {setPolyfillBackend} from './utils.js';
+    const backend = (new URLSearchParams(location.search)).get('backend');
+    setPolyfillBackend(backend).then(() => {
+      mocha.run();
+    });
   </script>
 </body>
 </html>
