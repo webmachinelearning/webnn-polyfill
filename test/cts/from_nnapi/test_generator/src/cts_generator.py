@@ -65,6 +65,8 @@ def ParseCmdLine():
 
 def CheckOperationWithImplicitPadding(nnapiOp, curOpInsList, nnapiOpInsList,
                                       nnapiOpOptionalInsLen):
+    # Current this convert tool doesn't involve padding compute function for
+    # 'VALID', 'SAME' implicit padding, this would be an enhancement feature.
     flag = False
     curOpInsLen = len(curOpInsList)
     nnapiOpInsLen = len(nnapiOpInsList)
@@ -100,27 +102,17 @@ def ClearMappingWebNNOpConfiguration():
     if Configuration.successedCounter == 0:
         Configuration.mappingWebNNOp.clear()
 
-def SupportedConvertConv2D(operation, inOprand, outOprand, filterOprand,
-                           layout):
+def SupportedConvertDepthwiseConv2D(inOprand, outOprand, layout):
+    # Unsupport to convert DEPTHWISE_CONV_2D test with depth_multiplier not
+    # being equal to 1, that is, input_channels != output_channels
     flag = True
     inDimensions = inOprand.type.dimensions
     outDimensions = outOprand.type.dimensions
-    filterDimensions = filterOprand.type.dimensions
 
-    if operation == 'CONV_2D':
-        if layout:
-            flag = (inDimensions[1] == filterDimensions[-1] and
-                    filterDimensions[0] == outDimensions[1])
-        else:
-            flag = (inDimensions[3] == filterDimensions[-1] and
-                    filterDimensions[0] == outDimensions[3])
-    elif operation == 'DEPTHWISE_CONV_2D':
-        if layout:
-            flag = (filterDimensions[0] == 1 and
-                    inDimensions[1] == outDimensions[1])
-        else:
-            flag = (filterDimensions[0] == 1 and
-                    inDimensions[3] == outDimensions[3])
+    if layout:
+        flag = inDimensions[1] == outDimensions[1]
+    else:
+        flag = inDimensions[3] == outDimensions[3]
 
     return flag
 
@@ -163,6 +155,10 @@ def GetInputOperandValue(inputsDict, insList, index):
 
 
 def SupportedConvertSoftmax(opInfoList, inOperand, paramsList, insList):
+    # Unsupport to convert SOFTMAX tests with rank of input is greater than 2,
+    # or SOFTMAX tests used 2D input with input1 as scaling factor for the
+    # exponent being not equal to 1.0 or optional inupt2 as axis being not equal
+    # to 1 or -1.
     flag = True
     dimLen = len(inOperand.dimensions)
 
@@ -533,10 +529,10 @@ def DumpCtsTest(example, test):
     # True: 'nchw', False: 'nhwc'
     layout = False if not layoutStatus else layoutValue[0]
 
-    if nnapiOp in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
-        if not SupportedConvertConv2D(nnapiOp, curInputsList[0],
-                                      curOutputsList[0], curOpInsList[1],
-                                      layout):
+    if nnapiOp == 'DEPTHWISE_CONV_2D':
+        if not SupportedConvertDepthwiseConv2D(curInputsList[0],
+                                               curOutputsList[0],
+                                               layout):
             ClearMappingWebNNOpConfiguration()
             return
 
