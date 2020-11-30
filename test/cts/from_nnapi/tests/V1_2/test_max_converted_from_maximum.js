@@ -16,7 +16,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test max converted from maximum_simple_relaxed test', async function() {
@@ -31,7 +31,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test max converted from maximum_simple_int32 test', async function() {
@@ -46,7 +46,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test max converted from maximum_broadcast test', async function() {
@@ -61,7 +61,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output01});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input01': {buffer: input01Buffer}, 'input11': {buffer: input11Buffer}});
-    utils.checkValue(outputs.output01.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output01.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test max converted from maximum_broadcast_relaxed test', async function() {
@@ -76,7 +76,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output01});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input01': {buffer: input01Buffer}, 'input11': {buffer: input11Buffer}});
-    utils.checkValue(outputs.output01.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output01.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test max converted from maximum_broadcast_int32 test', async function() {
@@ -91,6 +91,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output01});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input01': {buffer: input01Buffer}, 'input11': {buffer: input11Buffer}});
-    utils.checkValue(outputs.output01.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output01.buffer, expected, utils.atol, utils.rtol);
   });
 });

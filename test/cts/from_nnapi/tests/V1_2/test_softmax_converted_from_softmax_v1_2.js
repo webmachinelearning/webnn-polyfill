@@ -14,7 +14,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op2.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op2.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test softmax converted from softmax_v1_2_axis_dim2_axis1_neg test', async function() {
@@ -27,7 +27,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op2.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op2.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1 test', async function() {
@@ -40,7 +40,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op2.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op2.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1_neg test', async function() {
@@ -53,6 +53,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op2.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op2.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 });

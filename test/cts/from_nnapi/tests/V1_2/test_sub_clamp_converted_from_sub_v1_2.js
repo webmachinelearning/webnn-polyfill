@@ -17,7 +17,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test sub + clamp converted from sub_v1_2_relu test', async function() {
@@ -33,7 +33,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test sub + clamp converted from sub_v1_2_relu1 test', async function() {
@@ -49,7 +49,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test sub + clamp converted from sub_v1_2_relu6 test', async function() {
@@ -65,6 +65,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}, 'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
   });
 });

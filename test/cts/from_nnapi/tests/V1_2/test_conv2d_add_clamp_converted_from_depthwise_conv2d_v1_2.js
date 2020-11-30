@@ -25,7 +25,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_relaxed test', async function() {
@@ -49,7 +49,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input test', async function() {
@@ -75,7 +75,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}, 'op22': {buffer: op22Buffer}, 'op32': {buffer: op32Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed test', async function() {
@@ -101,7 +101,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}, 'op22': {buffer: op22Buffer}, 'op32': {buffer: op32Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw test', async function() {
@@ -125,7 +125,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_relaxed test', async function() {
@@ -149,7 +149,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input test', async function() {
@@ -175,7 +175,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}, 'op22': {buffer: op22Buffer}, 'op32': {buffer: op32Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed test', async function() {
@@ -201,7 +201,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}, 'op22': {buffer: op22Buffer}, 'op32': {buffer: op32Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_2 test', async function() {
@@ -225,7 +225,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_relaxed_2 test', async function() {
@@ -249,7 +249,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_2 test', async function() {
@@ -275,7 +275,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}, 'op23': {buffer: op23Buffer}, 'op33': {buffer: op33Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed_2 test', async function() {
@@ -301,7 +301,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}, 'op23': {buffer: op23Buffer}, 'op33': {buffer: op33Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_2 test', async function() {
@@ -325,7 +325,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_relaxed_2 test', async function() {
@@ -349,7 +349,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_2 test', async function() {
@@ -375,7 +375,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}, 'op23': {buffer: op23Buffer}, 'op33': {buffer: op33Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed_2 test', async function() {
@@ -401,6 +401,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op43});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op13': {buffer: op13Buffer}, 'op23': {buffer: op23Buffer}, 'op33': {buffer: op33Buffer}});
-    utils.checkValue(outputs.op43.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op43.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 });

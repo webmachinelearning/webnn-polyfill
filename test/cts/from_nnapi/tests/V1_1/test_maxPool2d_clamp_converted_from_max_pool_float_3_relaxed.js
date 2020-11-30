@@ -18,6 +18,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'i0': {buffer: i0Buffer}});
-    utils.checkValue(outputs.output.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 });

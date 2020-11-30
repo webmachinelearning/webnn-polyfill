@@ -16,7 +16,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input': {buffer: inputBuffer}});
-    utils.checkValue(outputs.output.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed test', async function() {
@@ -31,7 +31,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input': {buffer: inputBuffer}});
-    utils.checkValue(outputs.output.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_2 test', async function() {
@@ -46,7 +46,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output1});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output1.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output1.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed_2 test', async function() {
@@ -61,7 +61,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output1});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input1': {buffer: input1Buffer}});
-    utils.checkValue(outputs.output1.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output1.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_3 test', async function() {
@@ -76,7 +76,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input2': {buffer: input2Buffer}});
-    utils.checkValue(outputs.output2.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output2.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed_3 test', async function() {
@@ -91,7 +91,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output2});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input2': {buffer: input2Buffer}});
-    utils.checkValue(outputs.output2.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output2.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_4 test', async function() {
@@ -106,7 +106,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output3});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input3': {buffer: input3Buffer}});
-    utils.checkValue(outputs.output3.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output3.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed_4 test', async function() {
@@ -121,7 +121,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output3});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input3': {buffer: input3Buffer}});
-    utils.checkValue(outputs.output3.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output3.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_5 test', async function() {
@@ -136,7 +136,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input4': {buffer: input4Buffer}});
-    utils.checkValue(outputs.output4.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output4.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed_5 test', async function() {
@@ -151,7 +151,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input4': {buffer: input4Buffer}});
-    utils.checkValue(outputs.output4.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output4.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_float16_5 test', async function() {
@@ -166,7 +166,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input4': {buffer: input4Buffer}});
-    utils.checkValue(outputs.output4.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output4.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_6 test', async function() {
@@ -181,7 +181,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output5});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input5': {buffer: input5Buffer}});
-    utils.checkValue(outputs.output5.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output5.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed_6 test', async function() {
@@ -196,7 +196,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output5});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input5': {buffer: input5Buffer}});
-    utils.checkValue(outputs.output5.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output5.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_float16_6 test', async function() {
@@ -211,7 +211,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output5});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input5': {buffer: input5Buffer}});
-    utils.checkValue(outputs.output5.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output5.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_8 test', async function() {
@@ -226,7 +226,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output7});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input7': {buffer: input7Buffer}});
-    utils.checkValue(outputs.output7.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output7.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test slice converted from slice_relaxed_8 test', async function() {
@@ -241,7 +241,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output7});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input7': {buffer: input7Buffer}});
-    utils.checkValue(outputs.output7.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.output7.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test slice converted from slice_float16_8 test', async function() {
@@ -256,6 +256,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output7});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input7': {buffer: input7Buffer}});
-    utils.checkValue(outputs.output7.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.output7.buffer, expected, utils.atol, utils.rtol);
   });
 });

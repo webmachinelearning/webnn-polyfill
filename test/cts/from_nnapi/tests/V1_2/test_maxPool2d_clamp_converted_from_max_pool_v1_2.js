@@ -24,7 +24,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op4.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op4.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nhwc_relaxed test', async function() {
@@ -47,7 +47,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op4.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op4.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nchw test', async function() {
@@ -70,7 +70,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op4.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op4.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nchw_relaxed test', async function() {
@@ -93,7 +93,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}});
-    utils.checkValue(outputs.op4.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op4.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nhwc_2 test', async function() {
@@ -116,7 +116,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op41});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op11': {buffer: op11Buffer}});
-    utils.checkValue(outputs.op41.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op41.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nhwc_relaxed_2 test', async function() {
@@ -139,7 +139,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op41});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op11': {buffer: op11Buffer}});
-    utils.checkValue(outputs.op41.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op41.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nchw_2 test', async function() {
@@ -162,7 +162,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op41});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op11': {buffer: op11Buffer}});
-    utils.checkValue(outputs.op41.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op41.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nchw_relaxed_2 test', async function() {
@@ -185,7 +185,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op41});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op11': {buffer: op11Buffer}});
-    utils.checkValue(outputs.op41.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op41.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nhwc_3 test', async function() {
@@ -208,7 +208,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nhwc_relaxed_3 test', async function() {
@@ -231,7 +231,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nchw_3 test', async function() {
@@ -254,7 +254,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atol, utils.rtol);
   });
 
   it('test maxPool2d + clamp converted from max_pool_v1_2_nchw_relaxed_3 test', async function() {
@@ -277,6 +277,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op42});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op12': {buffer: op12Buffer}});
-    utils.checkValue(outputs.op42.buffer, expected, 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+    utils.checkValue(outputs.op42.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
   });
 });

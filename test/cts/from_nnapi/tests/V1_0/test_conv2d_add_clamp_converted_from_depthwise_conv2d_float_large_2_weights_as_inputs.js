@@ -22,6 +22,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({op4});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'op1': {buffer: op1Buffer}, 'op2': {buffer: op2Buffer}, 'op3': {buffer: op3Buffer}});
-    utils.checkValue(outputs.op4.buffer, expected, 1e-5, 5.0 * 1.1920928955078125e-7);
+    utils.checkValue(outputs.op4.buffer, expected, utils.atol, utils.rtol);
   });
 });

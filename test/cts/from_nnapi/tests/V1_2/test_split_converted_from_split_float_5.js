@@ -17,7 +17,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}});
     for (let i = 0; i < 2; i++) {
-      utils.checkValue(outputs[['output0', 'output1'][i]].buffer, expected[i], 1e-5, 5.0 * 1.1920928955078125e-7);
+      utils.checkValue(outputs[['output0', 'output1'][i]].buffer, expected[i], utils.atol, utils.rtol);
     }
   });
 
@@ -34,7 +34,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}});
     for (let i = 0; i < 2; i++) {
-      utils.checkValue(outputs[['output0', 'output1'][i]].buffer, expected[i], 5.0 * 0.0009765625, 5.0 * 0.0009765625);
+      utils.checkValue(outputs[['output0', 'output1'][i]].buffer, expected[i], utils.atolRelaxed, utils.rtolRelaxed);
     }
   });
 });
