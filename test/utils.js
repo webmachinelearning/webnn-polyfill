@@ -1,6 +1,12 @@
 'use strict';
 const assert = chai.assert;
 
+// The following 4 constants were used for converted tests from NNAPI CTS
+const atol = 1e-5;
+const rtol = 5.0 * 1.1920928955078125e-7;
+const atolRelaxed = 5.0 * 0.0009765625;
+const rtolRelaxed = 5.0 * 0.0009765625;
+
 export function almostEqual(a, b, episilon, rtol) {
   const delta = Math.abs(a - b);
   if (delta <= episilon + rtol * Math.abs(b)) {

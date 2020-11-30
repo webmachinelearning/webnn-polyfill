@@ -678,9 +678,8 @@ def DumpCtsTest(example, test):
         IndentedPrint("const outputs = await compilation.compute({%s});" % \
                       ', '.join(computeParamsList), indent=4, file=test)
         # Check compute output
-        atol = '5.0 * 0.0009765625' if model.isRelaxed else '1e-5'
-        rtol = '5.0 * 0.0009765625' if model.isRelaxed else \
-               '5.0 * 1.1920928955078125e-7'
+        atol = 'utils.atolRelaxed' if model.isRelaxed else 'utils.atol'
+        rtol = 'utils.rtolRelaxed' if model.isRelaxed else 'utils.rtol'
         if len(curOutputsList) == 1:
             IndentedPrint(
                 "utils.checkValue(outputs.%s.buffer, expected, %s, %s);" % \
