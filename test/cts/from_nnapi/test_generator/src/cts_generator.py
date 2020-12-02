@@ -674,19 +674,20 @@ def DumpCtsTest(example, test):
         IndentedPrint("const outputs = await compilation.compute({%s});" % \
                       ', '.join(computeParamsList), indent=4, file=test)
         # Check compute output
-        atol = 'utils.atolRelaxed' if model.isRelaxed else 'utils.atol'
-        rtol = 'utils.rtolRelaxed' if model.isRelaxed else 'utils.rtol'
+        criteria = 'utils.ctsFp32RestrictAccuracyCriteria'
+        if model.isRelaxed:
+            criteria = 'utils.ctsFp32RelaxedAccuracyCriteria'
         if len(curOutputsList) == 1:
             IndentedPrint(
-                "utils.checkValue(outputs.%s.buffer, expected, %s, %s);" % \
-                (outputOp, atol, rtol), indent=4, file=test)
+                "utils.checkValue(outputs.%s.buffer, expected, %s);" % \
+                (outputOp, criteria), indent=4, file=test)
         elif len(curOutputsList) > 1:
             IndentedPrint('for (let i = 0; i < %d; i++) {' % \
                           len(curOutputsList), indent=4, file=test)
             bufferStr = 'outputs[%s[i]].buffer' % ['%s' % k for k in outputOp]
             IndentedPrint(
-                "utils.checkValue(%s, expected[i], %s, %s);" % \
-                (bufferStr, atol, rtol), indent=6, file=test)
+                "utils.checkValue(%s, expected[i], %s);" % \
+                (bufferStr, criteria), indent=6, file=test)
             IndentedPrint("}", indent=4, file=test)
         IndentedPrint("});", indent=2, file=test)
         testIndex += 1
