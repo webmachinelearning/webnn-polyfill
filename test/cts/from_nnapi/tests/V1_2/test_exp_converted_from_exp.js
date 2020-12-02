@@ -14,7 +14,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, utils.atol, utils.rtol);
+    utils.checkValue(outputs.output0.buffer, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test exp converted from exp_relaxed test', async function() {
@@ -27,6 +27,6 @@ describe('CTS converted from NNAPI CTS', function() {
     const model = builder.createModel({output0});
     const compilation = await model.compile();
     const outputs = await compilation.compute({'input0': {buffer: input0Buffer}});
-    utils.checkValue(outputs.output0.buffer, expected, utils.atolRelaxed, utils.rtolRelaxed);
+    utils.checkValue(outputs.output0.buffer, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
