@@ -190,7 +190,7 @@ def UpdateMappingWebNNOpList(actValue):
         else:
             Configuration.mappingWebNNOp.append('clamp')
 
-def GetFusedReluMappedInfo(actValue):
+def GetReluMappedInfo(actValue):
     info = None
 
     if actValue == 1:
@@ -428,7 +428,7 @@ def PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, operandName):
                           indent=4, file=test)
 
 def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
-                   outputOp, test):
+                    outputOp, test):
     if biasOp is not None:
         IndentedPrint("const interOut0 = builder.%s(%s);" % \
                       (webnnOpType, webnnParamsStr),
@@ -438,17 +438,24 @@ def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
             IndentedPrint("const interOut1 = builder.add(interOut0, %s);" % \
                           biasOp, indent=4, file=test)
             # Add 'relu' or 'clamp' operation
-            PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, 'interOut1')
+            PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
+                                     'interOut1')
         else:
             # Add 'add' operation
             IndentedPrint("const %s = builder.add(interOut0, %s);" % \
                           (outputOp, biasOp), indent=4, file=test)
     else:
         if fusedReluMappedInfo is not None:
-            IndentedPrint("const interOut0 = builder.%s(%s);" % \
-                          (webnnOpType, webnnParamsStr), indent=4, file=test)
-            # Add 'relu' or 'clamp' operation
-            PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, 'interOut0')
+            if fusedReluMappedInfo[0]:
+                IndentedPrint("const interOut0 = builder.%s(%s);" % \
+                              (webnnOpType, webnnParamsStr), indent=4,
+                              file=test)
+                # Add 'relu' or 'clamp' operation
+                PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
+                                         'interOut0')
+            else:
+                PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
+                                         webnnParamsStr)
         else:
             IndentedPrint("const %s = builder.%s(%s);" % \
                           (outputOp, webnnOpType, webnnParamsStr),
@@ -513,13 +520,13 @@ def DumpCtsTest(example, test):
 
     if actStatus:
         UpdateMappingWebNNOpList(actValue[0])
-        fusedReluMappedInfo = GetFusedReluMappedInfo(actValue[0])
+        fusedReluMappedInfo = (True, GetReluMappedInfo(actValue[0]))
 
     if nnapiOp == 'RELU1':
-        fusedReluMappedInfo = GetFusedReluMappedInfo(2)
+        fusedReluMappedInfo = (False, GetReluMappedInfo(2))
 
     if nnapiOp == 'RELU6':
-        fusedReluMappedInfo = GetFusedReluMappedInfo(3)
+        fusedReluMappedInfo = (False, GetReluMappedInfo(3))
 
     nnapiOpInsList.extend(nnapiOpOptionalInsList)
     layoutIndex = GetOperandIndex(nnapiOpInsList, 'layout')
