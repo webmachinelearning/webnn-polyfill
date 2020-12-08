@@ -8,11 +8,14 @@ class AccuracyCriterion {
   }
 }
 
-export const opFp32AccuracyCriteria = new AccuracyCriterion(1e-6, 5.0 * 1.1920928955078125e-7);
+export const opFp32AccuracyCriteria =
+  new AccuracyCriterion(1e-6, 5.0 * 1.1920928955078125e-7);
 
 // The following 2 constants were used for converted tests from NNAPI CTS
-export const ctsFp32RestrictAccuracyCriteria = new AccuracyCriterion(1e-5, 5.0 * 1.1920928955078125e-7);
-export const ctsFp32RelaxedAccuracyCriteria = new AccuracyCriterion(5.0 * 0.0009765625, 5.0 * 0.0009765625);
+export const ctsFp32RestrictAccuracyCriteria =
+  new AccuracyCriterion(1e-5, 5.0 * 1.1920928955078125e-7);
+export const ctsFp32RelaxedAccuracyCriteria =
+  new AccuracyCriterion(5.0 * 0.0009765625, 5.0 * 0.0009765625);
 
 export function almostEqual(a, b, criteria) {
   const delta = Math.abs(a - b);

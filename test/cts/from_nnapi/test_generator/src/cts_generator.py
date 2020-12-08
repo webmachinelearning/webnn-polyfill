@@ -714,6 +714,7 @@ if __name__ == '__main__':
             InitializeCtsTestFile(test, 4)
             Example.DumpAllExamples(DumpTest=DumpCtsTest, test=test)
             IndentedPrint("});", file=test)
+            IndentedPrint("/* eslint-disable max-len */", file=test)
         if Configuration.successedCounter == 0:
             os.remove(testFile)
         else:

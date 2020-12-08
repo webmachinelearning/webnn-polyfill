@@ -15,7 +15,6 @@ module.exports = {
   },
   rules: {
     'semi': 'error',
-    'max-len': 'off',
     'no-multi-spaces': ['error', { 'exceptions': { 'ArrayExpression': true } }],
     'indent': 'off',
     'require-jsdoc': 'off',

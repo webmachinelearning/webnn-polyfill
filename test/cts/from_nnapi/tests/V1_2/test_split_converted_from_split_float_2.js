@@ -1,6 +1,7 @@
 'use strict';
 import * as utils from '../../../../utils.js';
 
+/* eslint-disable max-len */
 describe('CTS converted from NNAPI CTS', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
 
@@ -38,3 +39,4 @@ describe('CTS converted from NNAPI CTS', function() {
     }
   });
 });
+/* eslint-disable max-len */
