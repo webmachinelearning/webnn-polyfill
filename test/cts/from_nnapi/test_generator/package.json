@@ -1,0 +1,18 @@
+{
+  "name": "test_generator",
+  "version": "0.0.1",
+  "description": "Convert native NNAPI CTS tests to WebNN API tests",
+  "license": "Apache 2.0",
+  "main": "./src/main.py",
+  "directories": {
+    "src": "src files"
+  },
+  "scripts": {
+    "start": "python3 ./src/main.py ./specs -t ../tests -c ../tests/cts.js"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "authors": [
+    "Bruce Dai <feng.dai@intel.com>"
+  ]
+}
