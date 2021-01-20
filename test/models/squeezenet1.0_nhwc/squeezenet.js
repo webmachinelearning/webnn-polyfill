@@ -1,22 +1,24 @@
 'use strict';
 import * as utils from '../../utils.js';
 
+const url = import.meta.url;
+
 describe('test squeezenet1.0 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
-  const dirName = typeof __dirname !== 'undefined' ? __dirname :
-      './models/squeezenet1.0_nhwc';
   let compiledModel;
   before(async () => {
     const nn = navigator.ml.getNeuralNetworkContext();
     const builder = nn.createModelBuilder();
 
     async function buildConv(input, name, options = undefined) {
-      const prefix = dirName + '/weights/' + name;
+      const prefix = './weights/' + name;
+      const weightsName = prefix + '_kernel.npy';
       const weights = await utils.buildConstantFromNpy(
-          builder, prefix + '_kernel.npy');
+          builder, new URL(weightsName, url));
+      const biasName = prefix + '_bias.npy';
       const bias = await utils.buildConstantFromNpy(
-          builder, prefix + '_bias.npy');
+          builder, new URL(biasName, url));
       if (options !== undefined) {
         options.layout = 'nhwc';
       } else {
@@ -71,27 +73,27 @@ describe('test squeezenet1.0 nhwc', function() {
 
   async function testSqueezeNet(inputFile, expectedFile) {
     const input = await utils.createTypedArrayFromNpy(
-      dirName + inputFile);
+        new URL(inputFile, url));
     const expected = await utils.createTypedArrayFromNpy(
-        dirName + expectedFile);
+        new URL(expectedFile, url));
     const outputs = await compiledModel.compute(
         {'placeholder': {buffer: input}});
     utils.checkShape(outputs.softmax.dimensions, [1, 1001]);
-    utils.checkValue(outputs.softmax.buffer, expected, 1e-5, 5.0*0.0009765625);
+    utils.checkValue(outputs.softmax.buffer, expected);
   }
 
   it('test_data_set_0', async function() {
-    await testSqueezeNet('/test_data_set_0/input_0.npy',
-                         '/test_data_set_0/output_0.npy');
+    await testSqueezeNet('./test_data_set_0/input_0.npy',
+                         './test_data_set_0/output_0.npy');
   });
 
   it('test_data_set_1', async function() {
-    await testSqueezeNet('/test_data_set_1/input_0.npy',
-                         '/test_data_set_1/output_0.npy');
+    await testSqueezeNet('./test_data_set_1/input_0.npy',
+                         './test_data_set_1/output_0.npy');
   });
 
   it('test_data_set_2', async function() {
-    await testSqueezeNet('/test_data_set_2/input_0.npy',
-                         '/test_data_set_2/output_0.npy');
+    await testSqueezeNet('./test_data_set_2/input_0.npy',
+                         './test_data_set_2/output_0.npy');
   });
 });

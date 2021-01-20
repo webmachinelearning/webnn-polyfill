@@ -20,7 +20,7 @@
     "format": "clang-format --glob=\"{{src,test}/**/*.ts,{src,test}/**/*.js}\" --style=file -i",
     "test": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/*/*.js test/cts/from_nnapi/tests/cts.js",
     "cts": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit test/cts/from_nnapi/tests/cts.js",
-    "test-models": "cross-env NODE_ENV=test mocha --require ./test/node_setup.js --exit ./test/models/**/*.js"
+    "test-models": "cross-env NODE_ENV=test mocha --require ./node_setup.js --exit ./test/models/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -56,7 +56,7 @@
     "chai": "^4.2.0",
     "clang-format": "^1.4.0",
     "cross-env": "^7.0.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.18.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsdoc": "^30.3.1",

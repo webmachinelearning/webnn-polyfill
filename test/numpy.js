@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 
-var numpy = numpy || {};
+export var numpy = numpy || {};
 
 numpy.Array = class {
 
@@ -293,7 +293,3 @@ numpy.Error = class extends Error {
         this.name = 'NumPy Error';
     }
 };
-
-if (typeof module !== 'undefined' && typeof module.exports === 'object') {
-    module.exports.Array = numpy.Array;
-}

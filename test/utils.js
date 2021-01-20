@@ -1,4 +1,7 @@
 'use strict';
+
+import {numpy} from './numpy.js';
+
 const assert = chai.assert;
 
 class AccuracyCriterion {
