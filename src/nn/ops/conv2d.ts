@@ -74,16 +74,18 @@ export class Conv2d extends SingleOutputOperation {
     }
     let output;
     if (this.groups_ === 1) {
-      let padding: 'valid' | 'same' | number | ExplicitPadding;
+      let padding: 'valid'|'same'|number|ExplicitPadding;
       if (this.padding_.every(v => v === 0)) {
-        padding = 'valid' ;
+        padding = 'valid';
       } else {
         // WebNN padding:
         //   [beginning_height, ending_height, beginning_width, ending_width]
         // tf.conv2d NHWC should be in the following form:
         //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
-        padding = [[0, 0], [this.padding_[0], this.padding_[1]],
-            [this.padding_[2], this.padding_[3]], [0, 0]] as ExplicitPadding;
+        padding = [
+          [0, 0], [this.padding_[0], this.padding_[1]],
+          [this.padding_[2], this.padding_[3]], [0, 0]
+        ] as ExplicitPadding;
       }
       // tf.conv2d filter: [filterHeight, filterWidth, inDepth, outDepth].
       output = tf.conv2d(

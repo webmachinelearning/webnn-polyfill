@@ -14,11 +14,11 @@ describe('test squeezenet1.0 nhwc', function() {
     async function buildConv(input, name, options = undefined) {
       const prefix = './weights/' + name;
       const weightsName = prefix + '_kernel.npy';
-      const weights = await utils.buildConstantFromNpy(
-          builder, new URL(weightsName, url));
+      const weights =
+          await utils.buildConstantFromNpy(builder, new URL(weightsName, url));
       const biasName = prefix + '_bias.npy';
-      const bias = await utils.buildConstantFromNpy(
-          builder, new URL(biasName, url));
+      const bias =
+          await utils.buildConstantFromNpy(builder, new URL(biasName, url));
       if (options !== undefined) {
         options.layout = 'nhwc';
       } else {
@@ -32,22 +32,21 @@ describe('test squeezenet1.0 nhwc', function() {
     async function buildFire(input, name) {
       const convSqueeze = await buildConv(input, name + '_squeeze');
       const convE1x1 = await buildConv(convSqueeze, name + '_e1x1');
-      const convE3x3 = await buildConv(
-          convSqueeze, name + '_e3x3', {padding: [1, 1, 1, 1]});
+      const convE3x3 =
+          await buildConv(convSqueeze, name + '_e3x3', {padding: [1, 1, 1, 1]});
       return builder.concat([convE1x1, convE3x3], 3);
     }
 
-    const placeholder = builder.input('placeholder', {type: 'float32',
-        dimensions: [1, 224, 224, 3]});
+    const placeholder = builder.input(
+        'placeholder', {type: 'float32', dimensions: [1, 224, 224, 3]});
     const [beginningHeight, endingHeight] =
         utils.computeExplicitPadding(224, 2, 7);
     const [beginningWidth, endingWidth] =
         utils.computeExplicitPadding(224, 2, 7);
-    const conv1 = await buildConv(
-        placeholder, 'conv1', {
-          strides: [2, 2],
-          padding: [beginningHeight, endingHeight,
-                    beginningWidth, endingWidth]});
+    const conv1 = await buildConv(placeholder, 'conv1', {
+      strides: [2, 2],
+      padding: [beginningHeight, endingHeight, beginningWidth, endingWidth],
+    });
     const maxpool1 = builder.maxPool2d(
         conv1, {windowDimensions: [3, 3], strides: [2, 2], layout: 'nhwc'});
     const fire2 = await buildFire(maxpool1, 'fire2');
@@ -72,28 +71,27 @@ describe('test squeezenet1.0 nhwc', function() {
   });
 
   async function testSqueezeNet(inputFile, expectedFile) {
-    const input = await utils.createTypedArrayFromNpy(
-        new URL(inputFile, url));
-    const expected = await utils.createTypedArrayFromNpy(
-        new URL(expectedFile, url));
-    const outputs = await compiledModel.compute(
-        {'placeholder': {buffer: input}});
+    const input = await utils.createTypedArrayFromNpy(new URL(inputFile, url));
+    const expected =
+        await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
+    const outputs =
+        await compiledModel.compute({'placeholder': {buffer: input}});
     utils.checkShape(outputs.softmax.dimensions, [1, 1001]);
     utils.checkValue(outputs.softmax.buffer, expected);
   }
 
   it('test_data_set_0', async function() {
-    await testSqueezeNet('./test_data_set_0/input_0.npy',
-                         './test_data_set_0/output_0.npy');
+    await testSqueezeNet(
+        './test_data_set_0/input_0.npy', './test_data_set_0/output_0.npy');
   });
 
   it('test_data_set_1', async function() {
-    await testSqueezeNet('./test_data_set_1/input_0.npy',
-                         './test_data_set_1/output_0.npy');
+    await testSqueezeNet(
+        './test_data_set_1/input_0.npy', './test_data_set_1/output_0.npy');
   });
 
   it('test_data_set_2', async function() {
-    await testSqueezeNet('./test_data_set_2/input_0.npy',
-                         './test_data_set_2/output_0.npy');
+    await testSqueezeNet(
+        './test_data_set_2/input_0.npy', './test_data_set_2/output_0.npy');
   });
 });

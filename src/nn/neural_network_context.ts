@@ -1,9 +1,9 @@
-import {ModelBuilder} from './model_builder';
-
 import '@tensorflow/tfjs-backend-webgl';
 import '@tensorflow/tfjs-backend-cpu';
 
 import * as tf from '@tensorflow/tfjs-core';
+
+import {ModelBuilder} from './model_builder';
 
 /**
  * [API spec](https://webmachinelearning.github.io/webnn/#neuralnetworkcontext)
