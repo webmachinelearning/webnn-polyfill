@@ -77,7 +77,9 @@ describe('test squeezenet1.0 nhwc', function() {
     const outputs =
         await compiledModel.compute({'placeholder': {buffer: input}});
     utils.checkShape(outputs.softmax.dimensions, [1, 1001]);
-    utils.checkValue(outputs.softmax.buffer, expected);
+    utils.checkValue(
+        outputs.softmax.buffer, expected,
+        utils.ctsFp32RestrictAccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {

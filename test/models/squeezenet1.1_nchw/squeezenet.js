@@ -65,7 +65,7 @@ describe('test squeezenet1.1 nchw', function() {
     utils.checkShape(outputs.reshape0.dimensions, [1, 1000]);
     utils.checkValue(
         outputs.reshape0.buffer, expected,
-        new utils.AccuracyCriterion(1e-5, 5.0 * 0.0009765625));
+        utils.ctsFp32RestrictAccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {
