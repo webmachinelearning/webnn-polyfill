@@ -65,7 +65,9 @@ describe('test squeezenet1.1 nchw', function() {
     utils.checkShape(outputs.reshape0.dimensions, [1, 1000]);
     utils.checkValue(
         outputs.reshape0.buffer, expected,
-        utils.ctsFp32RestrictAccuracyCriteria);
+        // refer to onnx
+        // https://github.com/onnx/onnx/blob/master/onnx/backend/test/case/model/__init__.py#L58
+        new utils.AccuracyCriterion(1e-7, 1e-3));
   }
 
   it('test_data_set_0', async function() {
