@@ -117,7 +117,9 @@ export async function setPolyfillBackend(backend) {
   if (tf) {
     const backends = ['webgl', 'cpu'];
     if (!backends.includes(backend)) {
-      console.warn(`webnn-polyfill doesn't support ${backend} backend.`);
+      if (backend) {
+        console.warn(`webnn-polyfill doesn't support ${backend} backend.`);
+      }
     } else {
       if (!(await tf.setBackend(backend))) {
         console.error(`Failed to set tf.js backend ${backend}.`);
