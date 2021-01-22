@@ -19,7 +19,12 @@
   <script type="module" src="./models/squeezenet1.1_nchw/squeezenet.js"></script>
   <script class="mocha-exec" type="module">
     import {setPolyfillBackend} from './utils.js';
-    const backend = (new URLSearchParams(location.search)).get('backend');
+    let backend = (new URLSearchParams(location.search)).get('backend');
+    if (!backend) {
+      // Use cpu by default for accuracy reason
+      // See more details at: https://github.com/webmachinelearning/webnn-polyfill/pull/32#issuecomment-763825323
+      backend = 'cpu';
+    }
     setPolyfillBackend(backend).then(() => {
       mocha.run();
     });
