@@ -141,7 +141,7 @@ export class Gru extends Operation {
           tf.slice(recurrentWeight, [slot, 0, 0], [1, -1, -1]), [0]));
       cellBias.push(
           bias ? (tf.squeeze(tf.slice(bias, [slot, 0], [1, -1]), [0])) :
-                  undefined);
+                 undefined);
       cellRecurrentBias.push(
           recurrentBias ?
               (tf.squeeze(tf.slice(recurrentBias, [slot, 0], [1, -1]), [0])) :
@@ -153,15 +153,15 @@ export class Gru extends Operation {
       let cellOutput: tf.Tensor;
 
       for (let slot = 0; slot < numDirections; ++slot) {
-        cellHidden.push(tf.squeeze(
-            tf.slice(hiddenState, [slot, 0, 0], [1, -1, -1]), [0]));
+        cellHidden.push(
+            tf.squeeze(tf.slice(hiddenState, [slot, 0, 0], [1, -1, -1]), [0]));
       }
 
       for (let slot = 0; slot < numDirections; ++slot) {
         const slice =
             (slot === 1 || direction === RecurrentNetworkDirection.backward ?
-                  steps - step - 1 :
-                  step);
+                 steps - step - 1 :
+                 step);
         const cellInput =
             tf.squeeze(tf.slice(input, [slice, 0, 0], [1, -1, -1]), [0]);
 
@@ -172,15 +172,13 @@ export class Gru extends Operation {
                 cellRecurrentBias[slot], resetAfter, layout, activations),
             [1, -1, hiddenSize]);
 
-        cellOutput =
-            (cellOutput ? tf.concat([cellOutput, result], 0) : result);
+        cellOutput = (cellOutput ? tf.concat([cellOutput, result], 0) : result);
       }
 
       hiddenState = cellOutput;
 
       if (returnSequence) {
-        cellOutput =
-            tf.reshape(cellOutput, [1, numDirections, -1, hiddenSize]);
+        cellOutput = tf.reshape(cellOutput, [1, numDirections, -1, hiddenSize]);
         sequence =
             (sequence ? tf.concat([sequence, cellOutput], 0) : cellOutput);
       }
@@ -285,9 +283,8 @@ export class GruCell extends SingleOutputOperation {
     const z = tf[activations[0]](tf.add(
         tf.add(
             (bias ? tf.slice(bias, [starts.z], [hiddenSize]) : zero),
-            (recurrentBias ?
-                  tf.slice(recurrentBias, [starts.z], [hiddenSize]) :
-                  zero)),
+            (recurrentBias ? tf.slice(recurrentBias, [starts.z], [hiddenSize]) :
+                             zero)),
         tf.add(
             tf.matMul(
                 input,
@@ -301,9 +298,8 @@ export class GruCell extends SingleOutputOperation {
     const r = tf[activations[0]](tf.add(
         tf.add(
             (bias ? tf.slice(bias, [starts.r], [hiddenSize]) : zero),
-            (recurrentBias ?
-                  tf.slice(recurrentBias, [starts.r], [hiddenSize]) :
-                  zero)),
+            (recurrentBias ? tf.slice(recurrentBias, [starts.r], [hiddenSize]) :
+                             zero)),
         tf.add(
             tf.matMul(
                 input,
@@ -327,8 +323,8 @@ export class GruCell extends SingleOutputOperation {
                   r,
                   tf.add(
                       (recurrentBias ?
-                            tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
-                            zero),
+                           tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
+                           zero),
                       tf.matMul(
                           hiddenState,
                           tf.transpose(tf.slice(
@@ -339,8 +335,8 @@ export class GruCell extends SingleOutputOperation {
           tf.add(
               (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
               (recurrentBias ?
-                    tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
-                    zero)),
+                   tf.slice(recurrentBias, [starts.n], [hiddenSize]) :
+                   zero)),
           tf.add(
               tf.matMul(
                   input,

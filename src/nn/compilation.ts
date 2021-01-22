@@ -221,20 +221,6 @@ export class Compilation {
   }
 
   private async compile(model: Model): Promise<void> {
-    try {
-      if (!(await tf.setBackend('webgl'))) {
-        console.warn(
-            'Failed to set tf.js webgl backend, fallback to cpu backend.');
-        if (!(await tf.setBackend('cpu'))) {
-          throw new Error('Failed to set tf.js cpu backend.');
-        }
-      }
-    } catch (error) {
-      // webgl backend is not registered for node.js
-      if (!(await tf.setBackend('cpu'))) {
-        throw new Error('Failed to set tf.js cpu backend.');
-      }
-    }
     await tf.ready();
     this.allocateConstants(model);
     this.inputOperands_ = model.inputs;
