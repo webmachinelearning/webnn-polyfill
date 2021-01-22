@@ -1,8 +1,8 @@
 module.exports = {
   root: true,
-  ignorePatterns: ['**/*.ts', 'node_modules/', 'dist/', 'docs/', 'webpack.config.js'],
-  env: { 'es6': true, 'browser': true, 'node': true, 'mocha': true},
-  parserOptions: { ecmaVersion: 2017, sourceType: 'module'},
+  ignorePatterns: ['**/*.ts', 'node_modules/', 'dist/', 'docs/', 'webpack.config.js', 'test/lib/', '.eslintrc.js'],
+  env: { 'es6': true, 'browser': true, 'node': true, 'mocha': true },
+  parserOptions: { ecmaVersion: 2020, sourceType: 'module'},
   globals: {
     'chai': 'readonly',
     'ML': 'readonly',
@@ -12,6 +12,10 @@ module.exports = {
     'Compilation': 'readonly',
     'Operand': 'readonly',
     '_tfengine': 'readonly',
+    'BigInt64Array': 'readonly',
+    'BigUint64Array': 'readonly',
+    'fs': 'readonly',
+    'numpy': 'readonly'
   },
   rules: {
     'semi': 'error',
