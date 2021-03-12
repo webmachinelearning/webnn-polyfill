@@ -2,7 +2,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
 import {ExecutionContext} from '../compilation';
-import {Conv2dOptions, InputOperandLayout, FilterOperandLayout} from '../model_builder';
+import {AutoPad, Conv2dOptions, FilterOperandLayout, InputOperandLayout} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -16,6 +16,7 @@ export class Conv2d extends SingleOutputOperation {
   private groups_?: number;
   private inputLayout_?: InputOperandLayout;
   private filterLayout_?: FilterOperandLayout;
+  private autoPad_?: AutoPad;
 
   constructor(input: Operand, filter: Operand, options: Conv2dOptions = {}) {
     super(input.builder);
@@ -25,14 +26,15 @@ export class Conv2d extends SingleOutputOperation {
     this.filter_ = filter;
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
-        options.inputLayout, options.filterLayout);
+        options.inputLayout, options.filterLayout, options.autoPad);
   }
 
   private initOptions(
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       groups = 1, inputLayout: InputOperandLayout = InputOperandLayout.nchw,
-      filterLayout: FilterOperandLayout = FilterOperandLayout.oihw) {
+      filterLayout: FilterOperandLayout = FilterOperandLayout.oihw,
+      autoPad: AutoPad = AutoPad.explicit) {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
@@ -51,13 +53,18 @@ export class Conv2d extends SingleOutputOperation {
     utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
     this.groups_ = groups;
 
-    utils.assert(inputLayout in InputOperandLayout,
+    utils.assert(
+        inputLayout in InputOperandLayout,
         'The input layout parameter is invalid.');
     this.inputLayout_ = inputLayout;
 
-    utils.assert(filterLayout in FilterOperandLayout,
+    utils.assert(
+        filterLayout in FilterOperandLayout,
         'The filter layout parameter is invalid.');
     this.filterLayout_ = filterLayout;
+
+    utils.assert(autoPad in AutoPad, 'The autoPad parameter is invalid.');
+    this.autoPad_ = autoPad;
   }
 
   inputs(): Operand[] {
@@ -85,17 +92,23 @@ export class Conv2d extends SingleOutputOperation {
     let output;
     if (this.groups_ === 1) {
       let padding: 'valid'|'same'|number|ExplicitPadding;
-      if (this.padding_.every(v => v === 0)) {
-        padding = 'valid';
-      } else {
-        // WebNN padding:
-        //   [beginning_height, ending_height, beginning_width, ending_width]
-        // tf.conv2d NHWC should be in the following form:
-        //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
-        padding = [
-          [0, 0], [this.padding_[0], this.padding_[1]],
-          [this.padding_[2], this.padding_[3]], [0, 0]
-        ] as ExplicitPadding;
+      if (this.autoPad_ === AutoPad.explicit) {
+        if (this.padding_.every(v => v === 0)) {
+          padding = 'valid';
+        } else {
+          // WebNN padding:
+          //   [beginning_height, ending_height, beginning_width, ending_width]
+          // tf.conv2d NHWC should be in the following form:
+          //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
+          padding = [
+            [0, 0], [this.padding_[0], this.padding_[1]],
+            [this.padding_[2], this.padding_[3]], [0, 0]
+          ] as ExplicitPadding;
+        }
+      } else if (
+          this.autoPad_ === AutoPad['same-lower'] ||
+          this.autoPad_ === AutoPad['same-upper']) {
+        padding = 'same';
       }
       output = tf.conv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);

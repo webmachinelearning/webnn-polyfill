@@ -1,7 +1,8 @@
 import * as tf from '@tensorflow/tfjs-core';
+import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
 import {ExecutionContext} from '../compilation';
-import {InputOperandLayout, Pooling2dOptions} from '../model_builder';
+import {AutoPad, InputOperandLayout, Pooling2dOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -16,6 +17,7 @@ export abstract class Pool extends SingleOutputOperation {
   protected dilations_?: [number, number];
   protected groups_?: number;
   protected layout_?: InputOperandLayout;
+  private autoPad_?: AutoPad;
 
   constructor(input: Operand, options: Pooling2dOptions = {}) {
     super(input.builder);
@@ -23,14 +25,15 @@ export abstract class Pool extends SingleOutputOperation {
     this.input_ = input;
     this.initOptions(
         options.windowDimensions, options.padding, options.strides,
-        options.dilations, options.layout);
+        options.dilations, options.layout, options.autoPad);
   }
 
   private initOptions(
       windowDimensions: [number, number] = [-1, -1],
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      layout: InputOperandLayout = InputOperandLayout.nchw) {
+      layout: InputOperandLayout = InputOperandLayout.nchw,
+      autoPad: AutoPad = AutoPad.explicit) {
     utils.assert(
         utils.isIntegerArray(windowDimensions) && windowDimensions.length === 2,
         'The padding parameter is invalid.');
@@ -51,9 +54,12 @@ export abstract class Pool extends SingleOutputOperation {
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 
-    utils.assert(layout in InputOperandLayout,
-        'The layout parameter is invalid.');
+    utils.assert(
+        layout in InputOperandLayout, 'The layout parameter is invalid.');
     this.layout_ = layout;
+
+    utils.assert(autoPad in AutoPad, 'The autoPad parameter is invalid.');
+    this.autoPad_ = autoPad;
   }
 
   inputs(): Operand[] {
@@ -62,10 +68,17 @@ export abstract class Pool extends SingleOutputOperation {
 
   run(context: ExecutionContext): tf.Tensor {
     let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
-    utils.assert(
-        this.padding_.every(v => v === this.padding_[0]),
-        'The tf.conv2d only supports the same padding value.');
-    const padding = this.padding_[0];
+    let padding: 'valid'|'same'|number|ExplicitPadding = 'valid';
+    if (this.autoPad_ === AutoPad.explicit) {
+      padding = this.padding_[0];
+      utils.assert(
+          this.padding_.every(v => v === this.padding_[0]),
+          'The tf.pool only supports the same padding value.');
+    } else if (
+        this.autoPad_ === AutoPad['same-lower'] ||
+        this.autoPad_ === AutoPad['same-upper']) {
+      padding = 'same';
+    }
     const poolingType = this.getPoolingType();
     if (this.layout_ === InputOperandLayout.nchw) {
       // nchw -> nhwc

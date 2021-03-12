@@ -186,6 +186,8 @@ export interface Pooling2dOptions {
   /** */
   dilations?: [number, number];
   /** */
+  autoPad?: AutoPad;
+  /** */
   layout?: InputOperandLayout;
 }
 

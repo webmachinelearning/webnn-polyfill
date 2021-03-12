@@ -110,6 +110,42 @@ describe('test conv2d', function() {
     utils.checkValue(outputs.output.buffer, expected);
   });
 
+  it('conv2d with autopad same', async function() {
+    const builder = nn.createModelBuilder();
+    const input =
+        builder.input('input', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const filter = builder.constant(
+        {type: 'float32', dimensions: [1, 1, 3, 3]},
+        new Float32Array(9).fill(1));
+    const autoPad = 'same-lower';
+    const strides = [2, 2];
+    const output = builder.conv2d(input, filter, {autoPad, strides});
+    const model = builder.createModel({output});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'input': {
+        buffer: new Float32Array([
+          0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
+          13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+        ]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.output.dimensions, [1, 1, 3, 3]);
+    const expected = [
+      12.,
+      27.,
+      24.,
+      63.,
+      108.,
+      81.,
+      72.,
+      117.,
+      84.,
+    ];
+    utils.checkValue(outputs.output.buffer, expected);
+  });
+
   it('conv2d depthwise nhwc', async function() {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const builder = nn.createModelBuilder();
@@ -140,7 +176,8 @@ describe('test conv2d', function() {
         {type: 'float32', dimensions: [4]},
         new Float32Array([6000, 7000, 8000, 9000]));
     const expected = [6010, 7046, 11000, 9000];
-    const conv = builder.conv2d(input, filter, {inputLayout: 'nhwc', filterLayout: 'hwio', groups: 4});
+    const conv = builder.conv2d(
+        input, filter, {inputLayout: 'nhwc', filterLayout: 'hwio', groups: 4});
     const output = builder.add(conv, bias);
     const model = builder.createModel({output});
     const compilation = await model.compile();
