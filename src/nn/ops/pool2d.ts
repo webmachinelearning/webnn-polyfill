@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {ExecutionContext} from '../compilation';
-import {OperandLayout, Pooling2dOptions} from '../model_builder';
+import {InputOperandLayout, Pooling2dOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -15,7 +15,7 @@ export abstract class Pool extends SingleOutputOperation {
   protected strides_?: [number, number];
   protected dilations_?: [number, number];
   protected groups_?: number;
-  protected layout_?: OperandLayout;
+  protected layout_?: InputOperandLayout;
 
   constructor(input: Operand, options: Pooling2dOptions = {}) {
     super(input.builder);
@@ -30,7 +30,7 @@ export abstract class Pool extends SingleOutputOperation {
       windowDimensions: [number, number] = [-1, -1],
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      layout: OperandLayout = OperandLayout.nchw) {
+      layout: InputOperandLayout = InputOperandLayout.nchw) {
     utils.assert(
         utils.isIntegerArray(windowDimensions) && windowDimensions.length === 2,
         'The padding parameter is invalid.');
@@ -51,7 +51,8 @@ export abstract class Pool extends SingleOutputOperation {
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
 
-    utils.assert(layout in OperandLayout, 'The layout parameter is invalid.');
+    utils.assert(layout in InputOperandLayout,
+        'The layout parameter is invalid.');
     this.layout_ = layout;
   }
 
@@ -66,7 +67,7 @@ export abstract class Pool extends SingleOutputOperation {
         'The tf.conv2d only supports the same padding value.');
     const padding = this.padding_[0];
     const poolingType = this.getPoolingType();
-    if (this.layout_ === OperandLayout.nchw) {
+    if (this.layout_ === InputOperandLayout.nchw) {
       // nchw -> nhwc
       input = input.transpose([0, 2, 3, 1]);
     }
@@ -78,7 +79,7 @@ export abstract class Pool extends SingleOutputOperation {
     let output = tf.pool(
         input, this.windowDimensions_, poolingType, padding, this.dilations_,
         this.strides_);
-    if (this.layout_ === OperandLayout.nchw) {
+    if (this.layout_ === InputOperandLayout.nchw) {
       // nhwc -> nchw
       output = output.transpose([0, 3, 1, 2]);
     }

@@ -22,9 +22,21 @@ import * as utils from './utils';
 /**
  * [API spec](https://webmachinelearning.github.io/webnn/#enumdef-operandlayout)
  */
-export enum OperandLayout {
+export enum InputOperandLayout {
   'nchw' = 'nchw',
   'nhwc' = 'nhwc'
+}
+
+export enum FilterOperandLayout {
+  'oihw' = 'oihw',
+  'hwio' = 'hwio',
+  'ohwi' = 'ohwi',
+}
+
+export enum AutoPad {
+  'explicit' = 'explicit',
+  'same-upper' = 'same-upper',
+  'same-lower' = 'same-lower',
 }
 
 /**
@@ -53,9 +65,19 @@ export interface Conv2dOptions {
   /** */
   dilations?: [number, number];
   /** */
+  outputPadding?: [number, number];
+  /** */
+  outputSizes?: [number, number];
+  /** */
+  autoPad?: AutoPad;
+  /** */
+  transpose?: boolean;
+  /** */
   groups?: number;
   /** */
-  layout?: OperandLayout;
+  inputLayout?: InputOperandLayout;
+  /** */
+  filterLayout?: FilterOperandLayout;
 }
 
 /**
@@ -164,7 +186,7 @@ export interface Pooling2dOptions {
   /** */
   dilations?: [number, number];
   /** */
-  layout?: OperandLayout;
+  layout?: InputOperandLayout;
 }
 
 /**

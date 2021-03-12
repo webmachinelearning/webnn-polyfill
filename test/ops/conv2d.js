@@ -140,7 +140,7 @@ describe('test conv2d', function() {
         {type: 'float32', dimensions: [4]},
         new Float32Array([6000, 7000, 8000, 9000]));
     const expected = [6010, 7046, 11000, 9000];
-    const conv = builder.conv2d(input, filter, {layout: 'nhwc', groups: 4});
+    const conv = builder.conv2d(input, filter, {inputLayout: 'nhwc', filterLayout: 'hwio', groups: 4});
     const output = builder.add(conv, bias);
     const model = builder.createModel({output});
     const compilation = await model.compile();

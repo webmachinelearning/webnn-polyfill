@@ -2,7 +2,7 @@ import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
 import {ExecutionContext} from '../compilation';
-import {Conv2dOptions, OperandLayout} from '../model_builder';
+import {Conv2dOptions, InputOperandLayout, FilterOperandLayout} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -14,7 +14,8 @@ export class Conv2d extends SingleOutputOperation {
   private strides_?: [number, number];
   private dilations_?: [number, number];
   private groups_?: number;
-  private layout_?: OperandLayout;
+  private inputLayout_?: InputOperandLayout;
+  private filterLayout_?: FilterOperandLayout;
 
   constructor(input: Operand, filter: Operand, options: Conv2dOptions = {}) {
     super(input.builder);
@@ -24,13 +25,14 @@ export class Conv2d extends SingleOutputOperation {
     this.filter_ = filter;
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
-        options.layout);
+        options.inputLayout, options.filterLayout);
   }
 
   private initOptions(
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      groups = 1, layout: OperandLayout = OperandLayout.nchw) {
+      groups = 1, inputLayout: InputOperandLayout = InputOperandLayout.nchw,
+      filterLayout: FilterOperandLayout = FilterOperandLayout.oihw) {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
@@ -49,8 +51,13 @@ export class Conv2d extends SingleOutputOperation {
     utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
     this.groups_ = groups;
 
-    utils.assert(layout in OperandLayout, 'The layout parameter is invalid.');
-    this.layout_ = layout;
+    utils.assert(inputLayout in InputOperandLayout,
+        'The input layout parameter is invalid.');
+    this.inputLayout_ = inputLayout;
+
+    utils.assert(filterLayout in FilterOperandLayout,
+        'The filter layout parameter is invalid.');
+    this.filterLayout_ = filterLayout;
   }
 
   inputs(): Operand[] {
@@ -61,16 +68,19 @@ export class Conv2d extends SingleOutputOperation {
     let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
     let filter: tf.Tensor4D = context.getTensor(this.filter_) as tf.Tensor4D;
     let inputChannels: number;
-    if (this.layout_ === OperandLayout.nchw) {
+    if (this.inputLayout_ === InputOperandLayout.nchw) {
       // nchw -> nhwc
       inputChannels = input.shape[1];
       input = input.transpose([0, 2, 3, 1]);
-      // nchw filter: [output_channels, input_channels/groups, height, width]
-      // nhwc filter: [height, width, input_channels/groups, output_channels]
-      filter = filter.transpose([2, 3, 1, 0]);
     } else {
       // 'NHWC'
       inputChannels = input.shape[3];
+    }
+    // tf.conv2d filter layout: [filterHeight, filterWidth, inDepth, outDepth]
+    if (this.filterLayout_ === FilterOperandLayout.oihw) {
+      filter = filter.transpose([2, 3, 1, 0]);
+    } else if (this.filterLayout_ === FilterOperandLayout.ohwi) {
+      filter = filter.transpose([1, 2, 3, 0]);
     }
     let output;
     if (this.groups_ === 1) {
@@ -87,7 +97,6 @@ export class Conv2d extends SingleOutputOperation {
           [this.padding_[2], this.padding_[3]], [0, 0]
         ] as ExplicitPadding;
       }
-      // tf.conv2d filter: [filterHeight, filterWidth, inDepth, outDepth].
       output = tf.conv2d(
           input, filter, this.strides_, padding, 'NHWC', this.dilations_);
     } else if (
@@ -108,7 +117,7 @@ export class Conv2d extends SingleOutputOperation {
           'The tf.js convolution doesn\'t support groups parameter' +
           ` ${this.groups_}`);
     }
-    if (this.layout_ === OperandLayout.nchw) {
+    if (this.inputLayout_ === InputOperandLayout.nchw) {
       // nhwc -> nchw
       output = output.transpose([0, 3, 1, 2]);
     }
