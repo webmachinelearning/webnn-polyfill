@@ -1,5 +1,4 @@
 import * as tf from '@tensorflow/tfjs-core';
-import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
 import {ExecutionContext} from '../compilation';
 import {AutoPad, InputOperandLayout, Pooling2dOptions} from '../model_builder';
@@ -68,21 +67,23 @@ export abstract class Pool extends SingleOutputOperation {
 
   run(context: ExecutionContext): tf.Tensor {
     let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
-    let padding: 'valid'|'same'|number|ExplicitPadding = 'valid';
+    let padding: 'valid'|'same'|number;
     if (this.autoPad_ === AutoPad.explicit) {
-      padding = this.padding_[0];
       utils.assert(
           this.padding_.every(v => v === this.padding_[0]),
-          'The tf.pool only supports the same padding value.');
-    } else if (
-        this.autoPad_ === AutoPad['same-lower'] ||
-        this.autoPad_ === AutoPad['same-upper']) {
-      padding = 'same';
+          'tf.pool only supports the same padding value.');
+      padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
+    } else {
+      if (this.autoPad_ === AutoPad['same-lower']) {
+        padding = 'same';
+      } else {
+        throw new Error('tf.pool only supports the same-lower auto pad.');
+      }
     }
     const poolingType = this.getPoolingType();
     if (this.layout_ === InputOperandLayout.nchw) {
       // nchw -> nhwc
-      input = input.transpose([0, 2, 3, 1]);
+      input = tf.transpose(input, [0, 2, 3, 1]);
     }
     const windowDimensions = this.windowDimensions_;
     if (windowDimensions[0] === -1 && windowDimensions[1] === -1) {
@@ -94,7 +95,7 @@ export abstract class Pool extends SingleOutputOperation {
         this.strides_);
     if (this.layout_ === InputOperandLayout.nchw) {
       // nhwc -> nchw
-      output = output.transpose([0, 3, 1, 2]);
+      output = tf.transpose(output, [0, 3, 1, 2]);
     }
     return output;
   }

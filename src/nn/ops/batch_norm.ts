@@ -81,10 +81,10 @@ export class BatchNormalization extends SingleOutputOperation {
     const permutation = Array.from(Array(input.rank).keys());
     permutation[axis] = input.rank - 1;
     permutation[input.rank - 1] = axis;
-    return tf
-        .batchNorm(
+    return tf.transpose(
+        tf.batchNorm(
             tf.transpose(input, permutation), mean, variance, bias, scale,
-            this.epsilon_)
-        .transpose(permutation);
+            this.epsilon_),
+        permutation);
   }
 }

@@ -20,9 +20,10 @@ describe('test squeezenet1.0 nhwc', function() {
       const bias =
           await utils.buildConstantFromNpy(builder, new URL(biasName, url));
       if (options !== undefined) {
-        options.layout = 'nhwc';
+        options.inputLayout = 'nhwc';
+        options.filterLayout = 'hwio';
       } else {
-        options = {layout: 'nhwc'};
+        options = {inputLayout: 'nhwc', filterLayout: 'hwio'};
       }
       return builder.relu(builder.add(
           builder.conv2d(input, weights, options),

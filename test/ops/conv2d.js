@@ -224,4 +224,133 @@ describe('test conv2d', function() {
     utils.checkShape(outputs.output.dimensions, [1, 4, 1, 1]);
     utils.checkValue(outputs.output.buffer, expected);
   });
+
+  it('conv2d transpose', async function() {
+    const builder = nn.createModelBuilder();
+    const input =
+        builder.input('input', {type: 'float32', dimensions: [1, 1, 3, 3]});
+    const filter = builder.constant(
+        {type: 'float32', dimensions: [1, 2, 3, 3]},
+        new Float32Array(18).fill(1));
+    const transpose = true;
+    const output = builder.conv2d(input, filter, {transpose});
+    const model = builder.createModel({output});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'input': {
+        buffer: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.output.dimensions, [1, 2, 5, 5]);
+    const expected = [
+      0.,  1.,  3.,  3.,  2.,  3.,  8.,  15., 12., 7.,  9.,  21., 36.,
+      27., 15., 9.,  20., 33., 24., 13., 6.,  13., 21., 15., 8.,  0.,
+      1.,  3.,  3.,  2.,  3.,  8.,  15., 12., 7.,  9.,  21., 36., 27.,
+      15., 9.,  20., 33., 24., 13., 6.,  13., 21., 15., 8.,
+    ];
+    utils.checkValue(outputs.output.buffer, expected);
+  });
+
+  it('conv2d transpose output shape', async function() {
+    const builder = nn.createModelBuilder();
+    const input =
+        builder.input('input', {type: 'float32', dimensions: [1, 1, 3, 3]});
+    const filter = builder.constant(
+        {type: 'float32', dimensions: [1, 2, 3, 3]},
+        new Float32Array(18).fill(1));
+    const strides = [3, 2];
+    const outputSizes = [10, 8];
+    const transpose = true;
+    const output =
+        builder.conv2d(input, filter, {strides, outputSizes, transpose});
+    const model = builder.createModel({output});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'input': {
+        buffer: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.output.dimensions, [1, 2, 10, 8]);
+    const expected = [
+      0., 0., 1.,  1., 3.,  2., 2., 0., 0., 0., 1.,  1., 3.,  2., 2., 0.,
+      0., 0., 1.,  1., 3.,  2., 2., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      3., 3., 7.,  4., 9.,  5., 5., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 6., 6., 13., 7., 15., 8., 8., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 0., 0., 0.,  0., 0.,  0., 0., 0.,
+      0., 0., 1.,  1., 3.,  2., 2., 0., 0., 0., 1.,  1., 3.,  2., 2., 0.,
+      0., 0., 1.,  1., 3.,  2., 2., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      3., 3., 7.,  4., 9.,  5., 5., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 6., 6., 13., 7., 15., 8., 8., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 0., 0., 0.,  0., 0.,  0., 0., 0.,
+    ];
+    utils.checkValue(outputs.output.buffer, expected);
+  });
+
+  it('conv2d transpose out pad', async function() {
+    const builder = nn.createModelBuilder();
+    const input =
+        builder.input('input', {type: 'float32', dimensions: [1, 1, 3, 3]});
+    const filter = builder.constant(
+        {type: 'float32', dimensions: [1, 2, 3, 3]},
+        new Float32Array(18).fill(1));
+    const strides = [3, 2];
+    const outputPadding = [1, 1];
+    const transpose = true;
+    const output =
+        builder.conv2d(input, filter, {strides, outputPadding, transpose});
+    const model = builder.createModel({output});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'input': {
+        buffer: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.output.dimensions, [1, 2, 10, 8]);
+    const expected = [
+      0., 0., 1.,  1., 3.,  2., 2., 0., 0., 0., 1.,  1., 3.,  2., 2., 0.,
+      0., 0., 1.,  1., 3.,  2., 2., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      3., 3., 7.,  4., 9.,  5., 5., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 6., 6., 13., 7., 15., 8., 8., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 0., 0., 0.,  0., 0.,  0., 0., 0.,
+      0., 0., 1.,  1., 3.,  2., 2., 0., 0., 0., 1.,  1., 3.,  2., 2., 0.,
+      0., 0., 1.,  1., 3.,  2., 2., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      3., 3., 7.,  4., 9.,  5., 5., 0., 3., 3., 7.,  4., 9.,  5., 5., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 6., 6., 13., 7., 15., 8., 8., 0.,
+      6., 6., 13., 7., 15., 8., 8., 0., 0., 0., 0.,  0., 0.,  0., 0., 0.,
+    ];
+    utils.checkValue(outputs.output.buffer, expected);
+  });
+
+  it('conv2d transpose autopad same', async function() {
+    const builder = nn.createModelBuilder();
+    const input =
+        builder.input('input', {type: 'float32', dimensions: [1, 1, 3, 3]});
+    const filter = builder.constant(
+        {type: 'float32', dimensions: [1, 2, 3, 3]},
+        new Float32Array(18).fill(1));
+    const autoPad = 'same-lower';
+    const strides = [2, 2];
+    const transpose = true;
+    const output = builder.conv2d(input, filter, {autoPad, strides, transpose});
+    const model = builder.createModel({output});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'input': {
+        buffer: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.output.dimensions, [1, 2, 6, 6]);
+    const expected = [
+      0., 0.,  1.,  1.,  3.,  2.,  0., 0.,  1.,  1., 3.,  2.,  3.,  3.,  8.,
+      5., 12., 7.,  3.,  3.,  7.,  4., 9.,  5.,  9., 9.,  20., 11., 24., 13.,
+      6., 6.,  13., 7.,  15., 8.,  0., 0.,  1.,  1., 3.,  2.,  0.,  0.,  1.,
+      1., 3.,  2.,  3.,  3.,  8.,  5., 12., 7.,  3., 3.,  7.,  4.,  9.,  5.,
+      9., 9.,  20., 11., 24., 13., 6., 6.,  13., 7., 15., 8.,
+    ];
+    utils.checkValue(outputs.output.buffer, expected);
+  });
 });
