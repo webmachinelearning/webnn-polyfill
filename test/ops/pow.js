@@ -1,18 +1,20 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test sqrt', function() {
+describe('test pow', function() {
   const nn = navigator.ml.getNeuralNetworkContext();
   async function testSqrt(input, expected, shape) {
     const builder = nn.createModelBuilder();
     const x = builder.input('x', {type: 'float32', dimensions: shape});
-    const y = builder.sqrt(x);
-    const model = builder.createModel({y});
+    const y = builder.constant(
+        {type: 'float32', dimensions: [1]}, new Float32Array([0.5]));
+    const z = builder.pow(x, y);
+    const model = builder.createModel({z});
     const compiledModel = await model.compile();
     const inputs = {'x': {buffer: new Float32Array(input)}};
     const outputs = await compiledModel.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, shape);
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkShape(outputs.z.dimensions, shape);
+    utils.checkValue(outputs.z.buffer, expected);
   }
   it('sqrt 1d', async function() {
     await testSqrt([1, 4, 9], [1, 2, 3], [3]);
@@ -49,5 +51,47 @@ describe('test sqrt', function() {
           0.8404645,  0.9067471,  0.7915811,  0.9441901,  0.60463035,
         ],
         [3, 4, 5]);
+  });
+
+  it('pow 1d', async function() {
+    const builder = nn.createModelBuilder();
+    const x = builder.input('x', {type: 'float32', dimensions: [3]});
+    const y = builder.constant(
+        {type: 'float32', dimensions: [3]}, new Float32Array([4, 5, 6]));
+    const z = builder.pow(x, y);
+    const model = builder.createModel({z});
+    const compiledModel = await model.compile();
+    const inputs = {'x': {buffer: new Float32Array([1, 2, 3])}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.z.dimensions, [3]);
+    utils.checkValue(outputs.z.buffer, [1., 32., 729.]);
+  });
+
+  it('pow broadcast scalar', async function() {
+    const builder = nn.createModelBuilder();
+    const x = builder.input('x', {type: 'float32', dimensions: [3]});
+    const y = builder.constant(
+        {type: 'float32', dimensions: [1]}, new Float32Array([2]));
+    const z = builder.pow(x, y);
+    const model = builder.createModel({z});
+    const compiledModel = await model.compile();
+    const inputs = {'x': {buffer: new Float32Array([1, 2, 3])}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.z.dimensions, [3]);
+    utils.checkValue(outputs.z.buffer, [1., 4., 9.]);
+  });
+
+  it('pow broadcast scalar', async function() {
+    const builder = nn.createModelBuilder();
+    const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
+    const y = builder.constant(
+        {type: 'float32', dimensions: [3]}, new Float32Array([1, 2, 3]));
+    const z = builder.pow(x, y);
+    const model = builder.createModel({z});
+    const compiledModel = await model.compile();
+    const inputs = {'x': {buffer: new Float32Array([1, 2, 3, 4, 5, 6])}};
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.z.dimensions, [2, 3]);
+    utils.checkValue(outputs.z.buffer, [1., 4., 27., 4., 25., 216.]);
   });
 });

@@ -66,6 +66,12 @@ export class Min extends Binary {
   }
 }
 
+export class Pow extends Binary {
+  runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
+    return tf.pow(a, b);
+  }
+}
+
 export class MatMul extends Binary {
   runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
     if (a.rank === 1 || b.rank === 1) {

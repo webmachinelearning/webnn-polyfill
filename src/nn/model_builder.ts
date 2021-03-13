@@ -1,7 +1,7 @@
 import {Model} from './model';
 import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OperandType} from './operand';
 import {BatchNormalization} from './ops/batch_norm';
-import {Add, Div, MatMul, Max, Min, Mul, Sub} from './ops/binary';
+import {Add, Div, MatMul, Max, Min, Mul, Pow, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
@@ -15,7 +15,7 @@ import {Softmax} from './ops/softmax';
 import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
-import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
+import {Exp, Relu, Sigmoid, Tanh} from './ops/unary';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 
@@ -342,6 +342,16 @@ export class ModelBuilder {
     return (new Min(a, b)).output;
   }
 
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-pow)
+   *
+   */
+  pow(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Pow(a, b)).output;
+  }
+
   // element-wise unary operations
   // https://webmachinelearning.github.io/webnn/#dom-modelbuilder-unary
   /**
@@ -360,15 +370,6 @@ export class ModelBuilder {
   sigmoid(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Sigmoid(x)).output;
-  }
-
-  /**
-   * [API
-   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-sqrt)
-   */
-  sqrt(x: Operand): Operand {
-    this.validateOperandBuilder([x]);
-    return (new Sqrt(x)).output;
   }
 
   /**
