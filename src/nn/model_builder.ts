@@ -7,6 +7,7 @@ import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
+import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
@@ -163,6 +164,21 @@ export interface GruCellOptions {
   layout?: RecurrentNetworkWeightLayout;
   /** */
   activations?: RecurrentNetworkActivation[];
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-instancenormalizationoptions)
+ */
+export interface InstanceNormalizationOptions {
+  /** */
+  scale?: Operand;
+  /** */
+  bias?: Operand;
+  /** */
+  epsilon?: number;
+  /** */
+  layout?: InputOperandLayout;
 }
 
 /**
@@ -471,6 +487,12 @@ export class ModelBuilder {
                 input, weight, recurrentWeight, hiddenState, hiddenSize,
                 options))
         .output;
+  }
+
+  instanceNormalization(
+      input: Operand, options: InstanceNormalizationOptions = {}): Operand {
+    this.validateOperandBuilder([input, options.bias, options.scale]);
+    return (new InstanceNormalization(input, options)).output;
   }
 
   /**
