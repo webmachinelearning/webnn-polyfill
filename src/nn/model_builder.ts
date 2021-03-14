@@ -9,6 +9,7 @@ import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
 import {LeakyRelu} from './ops/leaky_relu';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
+import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
@@ -233,6 +234,16 @@ export interface ClampOptions {
 export interface SplitOptions {
   /** */
   axis?: number;
+}
+
+/**
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-reduceoptions)
+ */
+export interface ReduceOptions {
+  /** */
+  axes?: number[];
+  /** */
+  keepDimensions?: boolean;
 }
 
 /**
@@ -498,6 +509,63 @@ export class ModelBuilder {
   maxPool2d(input: Operand, options: Pooling2dOptions = {}): Operand {
     this.validateOperandBuilder([input]);
     return (new MaxPool2d(input, options)).output;
+  }
+
+  // reduction operations
+  // https://webmachinelearning.github.io/webnn/#api-modelbuilder-reduce
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducelogsumexp)
+   */
+  reduceLogSumExp(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceLogSumExp(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemax)
+   */
+  reduceMax(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceMax(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemean)
+   */
+  reduceMean(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceMean(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemin)
+   */
+  reduceMin(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceMin(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reduceproduct)
+   */
+  reduceProduct(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceProduct(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducesum)
+   */
+  reduceSum(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceSum(input, options)).output;
   }
 
   /**
