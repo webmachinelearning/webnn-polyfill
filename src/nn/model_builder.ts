@@ -9,6 +9,7 @@ import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
 import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
+import {Pad} from './ops/pad';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
 import {Reshape} from './ops/reshape';
@@ -29,12 +30,20 @@ export enum InputOperandLayout {
   'nhwc' = 'nhwc'
 }
 
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-filteroperandlayout)
+ */
 export enum FilterOperandLayout {
   'oihw' = 'oihw',
   'hwio' = 'hwio',
   'ohwi' = 'ohwi',
 }
 
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-autopad)
+ */
 export enum AutoPad {
   'explicit' = 'explicit',
   'same-upper' = 'same-upper',
@@ -188,6 +197,28 @@ export interface InstanceNormalizationOptions {
 export interface LeakyReluOptions {
   /** */
   alpha?: number;
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-paddingmode)
+ */
+export enum PaddingMode {
+  'constant' = 'constant',
+  'edge' = 'edge',
+  'reflection' = 'reflection',
+  'symmetric' = 'symmetric'
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-padoptions)
+ */
+export interface PadOptions {
+  /** */
+  mode?: PaddingMode;
+  /** */
+  value?: number;
 }
 
 /**
@@ -511,6 +542,15 @@ export class ModelBuilder {
   matmul(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new MatMul(a, b)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pad)
+   */
+  pad(input: Operand, padding: Operand, options: PadOptions = {}): Operand {
+    this.validateOperandBuilder([input, padding]);
+    return (new Pad(input, padding, options)).output;
   }
 
   // pooling operations

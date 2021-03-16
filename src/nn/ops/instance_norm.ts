@@ -68,7 +68,7 @@ export class InstanceNormalization extends SingleOutputOperation {
       utils.assert(
           scale.shape[0] === inputChannels,
           'The length of scale is not equal to the size of the feature ' +
-          'dimension of the input.');
+              'dimension of the input.');
     } else {
     }
     let bias: tf.Tensor;
@@ -78,7 +78,7 @@ export class InstanceNormalization extends SingleOutputOperation {
       utils.assert(
           bias.shape[0] === inputChannels,
           'The length of bias is not equal to the size of the feature ' +
-          'dimension of the input.');
+              'dimension of the input.');
     }
 
     const mean = tf.mean(input, axes, true);
