@@ -56,13 +56,9 @@ export enum AutoPad {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-batchnormalizationoptions)
  */
 export interface BatchNormalizationOptions {
-  /** */
   scale?: Operand;
-  /** */
   bias?: Operand;
-  /** */
   axis?: number;
-  /** */
   epsilon?: number;
 }
 
@@ -70,25 +66,15 @@ export interface BatchNormalizationOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-conv2doptions)
  */
 export interface Conv2dOptions {
-  /** */
   padding?: [number, number, number, number];
-  /** */
   strides?: [number, number];
-  /** */
   dilations?: [number, number];
-  /** */
   outputPadding?: [number, number];
-  /** */
   outputSizes?: [number, number];
-  /** */
   autoPad?: AutoPad;
-  /** */
   transpose?: boolean;
-  /** */
   groups?: number;
-  /** */
   inputLayout?: InputOperandLayout;
-  /** */
   filterLayout?: FilterOperandLayout;
 }
 
@@ -96,15 +82,10 @@ export interface Conv2dOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-gemmoptions)
  */
 export interface GemmOptions {
-  /** */
   c?: Operand;
-  /** */
   alpha?: number;
-  /** */
   beta?: number;
-  /** */
   aTranspose?: boolean;
-  /** */
   bTranspose?: boolean;
 }
 
@@ -141,21 +122,13 @@ export enum RecurrentNetworkDirection {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-gruoptions)
  */
 export interface GruOptions {
-  /** */
   bias?: Operand;
-  /** */
   recurrentBias?: Operand;
-  /** */
   initialHiddenState?: Operand;
-  /** */
   resetAfter?: boolean;
-  /** */
   returnSequence?: boolean;
-  /** */
   direction?: RecurrentNetworkDirection;
-  /** */
   layout?: RecurrentNetworkWeightLayout;
-  /** */
   activations?: RecurrentNetworkActivation[];
 }
 
@@ -164,15 +137,10 @@ export interface GruOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-grucelloptions)
  */
 export interface GruCellOptions {
-  /** */
   bias?: Operand;
-  /** */
   recurrentBias?: Operand;
-  /** */
   resetAfter?: boolean;
-  /** */
   layout?: RecurrentNetworkWeightLayout;
-  /** */
   activations?: RecurrentNetworkActivation[];
 }
 
@@ -181,13 +149,9 @@ export interface GruCellOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-instancenormalizationoptions)
  */
 export interface InstanceNormalizationOptions {
-  /** */
   scale?: Operand;
-  /** */
   bias?: Operand;
-  /** */
   epsilon?: number;
-  /** */
   layout?: InputOperandLayout;
 }
 
@@ -196,7 +160,6 @@ export interface InstanceNormalizationOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-leakyreluoptions)
  */
 export interface LeakyReluOptions {
-  /** */
   alpha?: number;
 }
 
@@ -216,9 +179,7 @@ export enum PaddingMode {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-padoptions)
  */
 export interface PadOptions {
-  /** */
   mode?: PaddingMode;
-  /** */
   value?: number;
 }
 
@@ -226,17 +187,11 @@ export interface PadOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-pool2doptions)
  */
 export interface Pooling2dOptions {
-  /** */
   windowDimensions?: [number, number];
-  /** */
   padding?: [number, number, number, number];
-  /** */
   strides?: [number, number];
-  /** */
   dilations?: [number, number];
-  /** */
   autoPad?: AutoPad;
-  /** */
   layout?: InputOperandLayout;
 }
 
@@ -254,11 +209,8 @@ export enum InterpolationMode {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-resampleoptions)
  */
 export interface ResampleOptions {
-  /** */
   mode?: InterpolationMode;
-  /** */
   scales?: [number, number, number, number];
-  /** */
   sizes?: [number, number, number, number];
 }
 
@@ -266,7 +218,6 @@ export interface ResampleOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-sliceoptions)
  */
 export interface SliceOptions {
-  /** */
   axes?: number[];
 }
 
@@ -275,7 +226,6 @@ export interface SliceOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-squeezeoptions)
  */
 export interface SqueezeOptions {
-  /** */
   axes?: number[];
 }
 
@@ -284,7 +234,6 @@ export interface SqueezeOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-transposeoptions)
  */
 export interface TransposeOptions {
-  /** */
   permutation?: number[];
 }
 
@@ -292,9 +241,7 @@ export interface TransposeOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-clampoptions)
  */
 export interface ClampOptions {
-  /** */
   minValue?: Operand;
-  /** */
   maxValue?: Operand;
 }
 
@@ -302,7 +249,6 @@ export interface ClampOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-splitoptions)
  */
 export interface SplitOptions {
-  /** */
   axis?: number;
 }
 
@@ -310,9 +256,7 @@ export interface SplitOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-reduceoptions)
  */
 export interface ReduceOptions {
-  /** */
   axes?: number[];
-  /** */
   keepDimensions?: boolean;
 }
 
@@ -326,6 +270,10 @@ export type NamedOperands = Record<string, Operand>;
  * [API spec](https://webmachinelearning.github.io/webnn/#modelbuilder)
  */
 export class ModelBuilder {
+  /** @ignore */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
+
   /**
    * [API
    * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-createmodel)
