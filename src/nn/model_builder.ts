@@ -12,6 +12,7 @@ import {LeakyRelu} from './ops/leaky_relu';
 import {Pad} from './ops/pad';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
 import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
+import {Resample} from './ops/resample';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
@@ -237,6 +238,28 @@ export interface Pooling2dOptions {
   autoPad?: AutoPad;
   /** */
   layout?: InputOperandLayout;
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-interpolationmode)
+ */
+export enum InterpolationMode {
+  'nearest-neighbor' = 'nearest-neighbor',
+  'linear' = 'linear'
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-resampleoptions)
+ */
+export interface ResampleOptions {
+  /** */
+  mode?: InterpolationMode;
+  /** */
+  scales?: [number, number, number, number];
+  /** */
+  sizes?: [number, number, number, number];
 }
 
 /**
@@ -637,6 +660,11 @@ export class ModelBuilder {
   relu(input: Operand): Operand {
     this.validateOperandBuilder([input]);
     return (new Relu(input)).output;
+  }
+
+  resample(input: Operand, options: ResampleOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new Resample(input, options)).output;
   }
 
   /**
