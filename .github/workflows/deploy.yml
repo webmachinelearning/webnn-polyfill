@@ -12,9 +12,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          persist-credentials: false
+        uses: actions/checkout@v2.3.4
 
       - name: Install and Build
         run: |
@@ -22,10 +20,8 @@ jobs:
           npm run build-production --if-present
           npm run build-docs
 
-      - name: Deploy to gh-pages
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          BRANCH: gh-pages
-          FOLDER: .
-          CLEAN: true
+          branch: gh-pages
+          folder: .
