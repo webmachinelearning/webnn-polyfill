@@ -667,6 +667,11 @@ def DumpCtsTest(example, test):
         UpdateWebNNOperationOptionalParamValue(mappingParams[-1][1],
                                                optionsKeyValueList)
         webnnParamsStr = GetWebNNParamsString(mappingParams)
+        if nnapiOp == 'SQRT':
+            exponent = "const exponent = builder.constant({type: 'float32'," + \
+                " dimensions: [1]}, new Float32Array([0.5]));"
+            IndentedPrint(exponent, indent=4, file=test)
+            webnnParamsStr = ', '.join([webnnParamsStr, 'exponent'])
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
                         fusedReluMappedInfo, outputOp, test)
         if len(curOutputsList) == 1:

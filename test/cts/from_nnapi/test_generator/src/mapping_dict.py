@@ -604,7 +604,7 @@ MappingDict = {
         ]
     },
     'SQRT': {
-        'webnnOperation': 'sqrt',
+        'webnnOperation': 'pow',
         'insList': [
             {
                 'name': 'input',
