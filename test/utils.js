@@ -115,7 +115,8 @@ export function computeExplicitPadding(
 export async function setPolyfillBackend(backend) {
   if (!backend) {
     // Use cpu by default for accuracy reason
-    // See more details at: https://github.com/webmachinelearning/webnn-polyfill/pull/32#issuecomment-763825323
+    // See more details at:
+    // https://github.com/webmachinelearning/webnn-polyfill/pull/32#issuecomment-763825323
     backend = 'cpu';
   }
   const tf = navigator.ml.getNeuralNetworkContext().tf;

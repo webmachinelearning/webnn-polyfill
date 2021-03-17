@@ -12,9 +12,7 @@ import * as utils from './utils';
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-input)
  */
 export interface Input {
-  /** */
   buffer: ArrayBufferView;
-  /** */
   dimensions?: number[];
 }
 
@@ -22,9 +20,7 @@ export interface Input {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-output)
  */
 export interface Output {
-  /** */
   buffer?: ArrayBufferView;
-  /** */
   dimensions?: number[];
 }
 
@@ -40,6 +36,7 @@ export type NamedInputs = Record<string, Input>;
  */
 export type NamedOutputs = Record<string, Output>;
 
+/** @ignore */
 export class ExecutionContext {
   private inputTensors_: Map<InputOperand, tf.Tensor>;
   private constantTenosrs_: Map<ConstantOperand, tf.Tensor>;
@@ -112,7 +109,6 @@ export class Compilation {
   private outputOperands_: Map<string, OutputOperand> = new Map();
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
-  /** */
   async compute(inputs: NamedInputs, outputs: NamedOutputs = {}):
       Promise<NamedOutputs> {
     this.validateInputs(inputs);
@@ -160,6 +156,7 @@ export class Compilation {
     return results;
   }
 
+  /** @ignore */
   static async createAndCompile(options: CompilationOptions, model: Model):
       Promise<Compilation> {
     const compilation = new Compilation(options);
@@ -167,6 +164,7 @@ export class Compilation {
     return compilation;
   }
 
+  /** @ignore */
   constructor(options: CompilationOptions = {}) {
     this.validateOptions(options);
   }
@@ -249,6 +247,7 @@ export class Compilation {
     await this.compute(inputs);
   }
 
+  /** @ignore */
   // For memory leak testing.
   dispose(): void {
     for (const tensor of this.constantTensors_.values()) {

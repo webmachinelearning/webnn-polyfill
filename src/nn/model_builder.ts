@@ -1,30 +1,54 @@
 import {Model} from './model';
 import {ConstantOperand, InputOperand, Operand, OperandDescriptor, OperandType} from './operand';
 import {BatchNormalization} from './ops/batch_norm';
-import {Add, Div, MatMul, Max, Min, Mul, Sub} from './ops/binary';
+import {Add, Div, MatMul, Max, Min, Mul, Pow, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
+import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
+import {Pad} from './ops/pad';
 import {AveragePool2d, MaxPool2d} from './ops/pool2d';
+import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
+import {Resample} from './ops/resample';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
 import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
-import {Exp, Relu, Sigmoid, Sqrt, Tanh} from './ops/unary';
+import {Exp, Relu, Sigmoid, Tanh} from './ops/unary';
 import {ArrayBufferView as TypedArray} from './types';
 import * as utils from './utils';
 
 /**
  * [API spec](https://webmachinelearning.github.io/webnn/#enumdef-operandlayout)
  */
-export enum OperandLayout {
+export enum InputOperandLayout {
   'nchw' = 'nchw',
   'nhwc' = 'nhwc'
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-filteroperandlayout)
+ */
+export enum FilterOperandLayout {
+  'oihw' = 'oihw',
+  'hwio' = 'hwio',
+  'ohwi' = 'ohwi',
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-autopad)
+ */
+export enum AutoPad {
+  'explicit' = 'explicit',
+  'same-upper' = 'same-upper',
+  'same-lower' = 'same-lower',
 }
 
 /**
@@ -32,13 +56,9 @@ export enum OperandLayout {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-batchnormalizationoptions)
  */
 export interface BatchNormalizationOptions {
-  /** */
   scale?: Operand;
-  /** */
   bias?: Operand;
-  /** */
   axis?: number;
-  /** */
   epsilon?: number;
 }
 
@@ -46,31 +66,26 @@ export interface BatchNormalizationOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-conv2doptions)
  */
 export interface Conv2dOptions {
-  /** */
   padding?: [number, number, number, number];
-  /** */
   strides?: [number, number];
-  /** */
   dilations?: [number, number];
-  /** */
+  outputPadding?: [number, number];
+  outputSizes?: [number, number];
+  autoPad?: AutoPad;
+  transpose?: boolean;
   groups?: number;
-  /** */
-  layout?: OperandLayout;
+  inputLayout?: InputOperandLayout;
+  filterLayout?: FilterOperandLayout;
 }
 
 /**
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-gemmoptions)
  */
 export interface GemmOptions {
-  /** */
   c?: Operand;
-  /** */
   alpha?: number;
-  /** */
   beta?: number;
-  /** */
   aTranspose?: boolean;
-  /** */
   bTranspose?: boolean;
 }
 
@@ -107,21 +122,13 @@ export enum RecurrentNetworkDirection {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-gruoptions)
  */
 export interface GruOptions {
-  /** */
   bias?: Operand;
-  /** */
   recurrentBias?: Operand;
-  /** */
   initialHiddenState?: Operand;
-  /** */
   resetAfter?: boolean;
-  /** */
   returnSequence?: boolean;
-  /** */
   direction?: RecurrentNetworkDirection;
-  /** */
   layout?: RecurrentNetworkWeightLayout;
-  /** */
   activations?: RecurrentNetworkActivation[];
 }
 
@@ -130,16 +137,22 @@ export interface GruOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-grucelloptions)
  */
 export interface GruCellOptions {
-  /** */
   bias?: Operand;
-  /** */
   recurrentBias?: Operand;
-  /** */
   resetAfter?: boolean;
-  /** */
   layout?: RecurrentNetworkWeightLayout;
-  /** */
   activations?: RecurrentNetworkActivation[];
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-instancenormalizationoptions)
+ */
+export interface InstanceNormalizationOptions {
+  scale?: Operand;
+  bias?: Operand;
+  epsilon?: number;
+  layout?: InputOperandLayout;
 }
 
 /**
@@ -147,31 +160,64 @@ export interface GruCellOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-leakyreluoptions)
  */
 export interface LeakyReluOptions {
-  /** */
   alpha?: number;
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-paddingmode)
+ */
+export enum PaddingMode {
+  'constant' = 'constant',
+  'edge' = 'edge',
+  'reflection' = 'reflection',
+  'symmetric' = 'symmetric'
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-padoptions)
+ */
+export interface PadOptions {
+  mode?: PaddingMode;
+  value?: number;
 }
 
 /**
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-pool2doptions)
  */
 export interface Pooling2dOptions {
-  /** */
   windowDimensions?: [number, number];
-  /** */
   padding?: [number, number, number, number];
-  /** */
   strides?: [number, number];
-  /** */
   dilations?: [number, number];
-  /** */
-  layout?: OperandLayout;
+  autoPad?: AutoPad;
+  layout?: InputOperandLayout;
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#enumdef-interpolationmode)
+ */
+export enum InterpolationMode {
+  'nearest-neighbor' = 'nearest-neighbor',
+  'linear' = 'linear'
+}
+
+/**
+ * [API
+ * spec](https://webmachinelearning.github.io/webnn/#dictdef-resampleoptions)
+ */
+export interface ResampleOptions {
+  mode?: InterpolationMode;
+  scales?: [number, number, number, number];
+  sizes?: [number, number, number, number];
 }
 
 /**
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-sliceoptions)
  */
 export interface SliceOptions {
-  /** */
   axes?: number[];
 }
 
@@ -180,7 +226,6 @@ export interface SliceOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-squeezeoptions)
  */
 export interface SqueezeOptions {
-  /** */
   axes?: number[];
 }
 
@@ -189,7 +234,6 @@ export interface SqueezeOptions {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-transposeoptions)
  */
 export interface TransposeOptions {
-  /** */
   permutation?: number[];
 }
 
@@ -197,9 +241,7 @@ export interface TransposeOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-clampoptions)
  */
 export interface ClampOptions {
-  /** */
   minValue?: Operand;
-  /** */
   maxValue?: Operand;
 }
 
@@ -207,8 +249,15 @@ export interface ClampOptions {
  * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-splitoptions)
  */
 export interface SplitOptions {
-  /** */
   axis?: number;
+}
+
+/**
+ * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-reduceoptions)
+ */
+export interface ReduceOptions {
+  axes?: number[];
+  keepDimensions?: boolean;
 }
 
 /**
@@ -221,6 +270,10 @@ export type NamedOperands = Record<string, Operand>;
  * [API spec](https://webmachinelearning.github.io/webnn/#modelbuilder)
  */
 export class ModelBuilder {
+  /** @ignore */
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor() {}
+
   /**
    * [API
    * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-createmodel)
@@ -318,6 +371,16 @@ export class ModelBuilder {
     return (new Min(a, b)).output;
   }
 
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-pow)
+   *
+   */
+  pow(a: Operand, b: Operand): Operand {
+    this.validateOperandBuilder([a, b]);
+    return (new Pow(a, b)).output;
+  }
+
   // element-wise unary operations
   // https://webmachinelearning.github.io/webnn/#dom-modelbuilder-unary
   /**
@@ -336,15 +399,6 @@ export class ModelBuilder {
   sigmoid(x: Operand): Operand {
     this.validateOperandBuilder([x]);
     return (new Sigmoid(x)).output;
-  }
-
-  /**
-   * [API
-   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-sqrt)
-   */
-  sqrt(x: Operand): Operand {
-    this.validateOperandBuilder([x]);
-    return (new Sqrt(x)).output;
   }
 
   /**
@@ -437,6 +491,12 @@ export class ModelBuilder {
         .output;
   }
 
+  instanceNormalization(
+      input: Operand, options: InstanceNormalizationOptions = {}): Operand {
+    this.validateOperandBuilder([input, options.bias, options.scale]);
+    return (new InstanceNormalization(input, options)).output;
+  }
+
   /**
    * [API
    * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-leakyrelu)
@@ -453,6 +513,15 @@ export class ModelBuilder {
   matmul(a: Operand, b: Operand): Operand {
     this.validateOperandBuilder([a, b]);
     return (new MatMul(a, b)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#api-modelbuilder-pad)
+   */
+  pad(input: Operand, padding: Operand, options: PadOptions = {}): Operand {
+    this.validateOperandBuilder([input, padding]);
+    return (new Pad(input, padding, options)).output;
   }
 
   // pooling operations
@@ -475,6 +544,63 @@ export class ModelBuilder {
     return (new MaxPool2d(input, options)).output;
   }
 
+  // reduction operations
+  // https://webmachinelearning.github.io/webnn/#api-modelbuilder-reduce
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducelogsumexp)
+   */
+  reduceLogSumExp(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceLogSumExp(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemax)
+   */
+  reduceMax(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceMax(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemean)
+   */
+  reduceMean(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceMean(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemin)
+   */
+  reduceMin(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceMin(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reduceproduct)
+   */
+  reduceProduct(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceProduct(input, options)).output;
+  }
+
+  /**
+   * [API
+   * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducesum)
+   */
+  reduceSum(input: Operand, options: ReduceOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceSum(input, options)).output;
+  }
+
   /**
    * [API
    * spec](https://webmachinelearning.github.io/webnn/#dom-modelbuilder-relu)
@@ -482,6 +608,11 @@ export class ModelBuilder {
   relu(input: Operand): Operand {
     this.validateOperandBuilder([input]);
     return (new Relu(input)).output;
+  }
+
+  resample(input: Operand, options: ResampleOptions = {}): Operand {
+    this.validateOperandBuilder([input]);
+    return (new Resample(input, options)).output;
   }
 
   /**

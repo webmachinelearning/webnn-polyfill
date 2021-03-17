@@ -68,6 +68,31 @@ describe('test pool2d', function() {
     utils.checkValue(outputs.y.buffer, expected);
   });
 
+  it('maxPool2d autoPad same', async function() {
+    const builder = nn.createModelBuilder();
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const windowDimensions = [5, 5];
+    const autoPad = 'same-lower';
+    const y = builder.maxPool2d(x, {windowDimensions, autoPad});
+    const model = builder.createModel({y});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'x': {
+        buffer: new Float32Array([
+          1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+          14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+        ]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.y.dimensions, [1, 1, 5, 5]);
+    const expected = [
+      13, 14, 15, 15, 15, 18, 19, 20, 20, 20, 23, 24, 25,
+      25, 25, 23, 24, 25, 25, 25, 23, 24, 25, 25, 25,
+    ];
+    utils.checkValue(outputs.y.buffer, expected);
+  });
+
   it('maxPool2d strides', async function() {
     const builder = nn.createModelBuilder();
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
@@ -115,6 +140,31 @@ describe('test pool2d', function() {
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
     const y = builder.averagePool2d(x, {windowDimensions, padding});
+    const model = builder.createModel({y});
+    const compiledModel = await model.compile();
+    const inputs = {
+      'x': {
+        buffer: new Float32Array([
+          1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+          14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+        ]),
+      },
+    };
+    const outputs = await compiledModel.compute(inputs);
+    utils.checkShape(outputs.y.dimensions, [1, 1, 5, 5]);
+    const expected = [
+      7,    7.5, 8,    8.5, 9,    9.5, 10,   10.5, 11,   11.5, 12,   12.5, 13,
+      13.5, 14,  14.5, 15,  15.5, 16,  16.5, 17,   17.5, 18,   18.5, 19,
+    ];
+    utils.checkValue(outputs.y.buffer, expected);
+  });
+
+  it('averagePool2d autoPad same', async function() {
+    const builder = nn.createModelBuilder();
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const windowDimensions = [5, 5];
+    const autoPad = 'same-lower';
+    const y = builder.averagePool2d(x, {windowDimensions, autoPad});
     const model = builder.createModel({y});
     const compiledModel = await model.compile();
     const inputs = {

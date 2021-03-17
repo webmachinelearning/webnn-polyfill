@@ -20,9 +20,7 @@ export enum OperandType {
  * spec](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
  */
 export interface OperandDescriptor {
-  /** */
   type: OperandType;
-  /** */
   dimensions: number[];
 }
 
@@ -32,15 +30,18 @@ export interface OperandDescriptor {
 export class Operand {
   private readonly builder_: ModelBuilder;
 
+  /** @ignore */
   get builder(): ModelBuilder {
     return this.builder_;
   }
 
+  /** @ignore */
   constructor(builder: ModelBuilder) {
     this.builder_ = builder;
   }
 }
 
+/** @ignore */
 export class InputOperand extends Operand {
   readonly name: string;
   readonly desc: OperandDescriptor;
@@ -54,6 +55,7 @@ export class InputOperand extends Operand {
   }
 }
 
+/** @ignore */
 export class ConstantOperand extends Operand {
   readonly desc: OperandDescriptor;
   readonly value: number|ArrayBufferView;
@@ -87,6 +89,7 @@ export class ConstantOperand extends Operand {
   }
 }
 
+/** @ignore */
 export class OutputOperand extends Operand {
   readonly operation: Operation;
 

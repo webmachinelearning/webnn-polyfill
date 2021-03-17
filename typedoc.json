@@ -1,14 +1,16 @@
 {
   "out": "./docs/",
   "readme": "none",
-  "includes": "./src",
-  "exclude": [
-    "**/node_modules/**"
+  "entryPoints": [
+    "src/ml.ts",
+    "src/nn/compilation.ts",
+    "src/nn/model_builder.ts",
+    "src/nn/model.ts",
+    "src/nn/neural_network_context.ts",
+    "src/nn/operand.ts",
+    "src/nn/types.ts"
   ],
-  "mode": "file",
-  "excludeExternals": true,
-  "excludeNotExported": true,
   "excludePrivate": true,
-  "ignoreCompilerErrors": true,
-  "excludeNotDocumented": true
+  "excludeInternal": true,
+  "excludeExternals": true
 }

@@ -333,7 +333,7 @@ describe('test ModelBuilder', function() {
       strides: [1, 1],
       dilations: [1, 1],
       groups: 1,
-      layout: 'abcd',
+      inputLayout: 'abcd',
     })).to.throw(Error);
   });
 
