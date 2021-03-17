@@ -31,16 +31,20 @@ export class Model {
   private outputs_: Map<string, OutputOperand> = new Map();
   private constants_: Set<ConstantOperand> = new Set();
 
+  /** @ignore */
   get inputs(): Map<string, InputOperand> {
     return this.inputs_;
   }
+  /** @ignore */
   get outputs(): Map<string, OutputOperand> {
     return this.outputs_;
   }
+  /** @ignore */
   get constants(): ConstantOperand[] {
     return Array.from(this.constants_.values());
   }
 
+  /** @ignore */
   constructor(outputs?: NamedOperands) {
     utils.assert(outputs !== undefined, 'Invalid argument');
     for (const name in outputs) {
@@ -53,7 +57,6 @@ export class Model {
     this.initialize();
   }
 
-  /** */
   async compile(options: CompilationOptions): Promise<Compilation> {
     const compilation = await Compilation.createAndCompile(options, this);
     return compilation;

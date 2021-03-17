@@ -1,0 +1,1728 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ModelBuilder | webnn-polyfill</title>
+	<meta name="description" content="Documentation for webnn-polyfill">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">webnn-polyfill</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../index.html">webnn-polyfill</a>
+				</li>
+				<li>
+					<a href="../modules/nn_model_builder.html">nn/model_builder</a>
+				</li>
+				<li>
+					<a href="nn_model_builder.modelbuilder.html">ModelBuilder</a>
+				</li>
+			</ul>
+			<h1>Class ModelBuilder</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p><a href="https://webmachinelearning.github.io/webnn/#modelbuilder">API spec</a></p>
+					</div>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="target">ModelBuilder</span>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#averagepool2d" class="tsd-kind-icon">average<wbr>Pool2d</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#batchnormalization" class="tsd-kind-icon">batch<wbr>Normalization</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#clamp" class="tsd-kind-icon">clamp</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#concat" class="tsd-kind-icon">concat</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#constant" class="tsd-kind-icon">constant</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#conv2d" class="tsd-kind-icon">conv2d</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#createmodel" class="tsd-kind-icon">create<wbr>Model</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#div" class="tsd-kind-icon">div</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#exp" class="tsd-kind-icon">exp</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#gemm" class="tsd-kind-icon">gemm</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#gru" class="tsd-kind-icon">gru</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#grucell" class="tsd-kind-icon">gru<wbr>Cell</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#input" class="tsd-kind-icon">input</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#instancenormalization" class="tsd-kind-icon">instance<wbr>Normalization</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#leakyrelu" class="tsd-kind-icon">leaky<wbr>Relu</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#matmul" class="tsd-kind-icon">matmul</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#max" class="tsd-kind-icon">max</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#maxpool2d" class="tsd-kind-icon">max<wbr>Pool2d</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#min" class="tsd-kind-icon">min</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#mul" class="tsd-kind-icon">mul</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#pad" class="tsd-kind-icon">pad</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#pow" class="tsd-kind-icon">pow</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reducelogsumexp" class="tsd-kind-icon">reduce<wbr>Log<wbr>Sum<wbr>Exp</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reducemax" class="tsd-kind-icon">reduce<wbr>Max</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reducemean" class="tsd-kind-icon">reduce<wbr>Mean</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reducemin" class="tsd-kind-icon">reduce<wbr>Min</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reduceproduct" class="tsd-kind-icon">reduce<wbr>Product</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reducesum" class="tsd-kind-icon">reduce<wbr>Sum</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#relu" class="tsd-kind-icon">relu</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#resample" class="tsd-kind-icon">resample</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#reshape" class="tsd-kind-icon">reshape</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#sigmoid" class="tsd-kind-icon">sigmoid</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#slice" class="tsd-kind-icon">slice</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#softmax" class="tsd-kind-icon">softmax</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#split" class="tsd-kind-icon">split</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#squeeze" class="tsd-kind-icon">squeeze</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#sub" class="tsd-kind-icon">sub</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#tanh" class="tsd-kind-icon">tanh</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_model_builder.modelbuilder.html#transpose" class="tsd-kind-icon">transpose</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="add" class="tsd-anchor"></a>
+					<h3>add</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L324">nn/model_builder.ts:324</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-add">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="averagepool2d" class="tsd-anchor"></a>
+					<h3>average<wbr>Pool2d</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">average<wbr>Pool2d<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.pooling2doptions.html" class="tsd-signature-type" data-tsd-kind="Interface">Pooling2dOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L533">nn/model_builder.ts:533</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-averagepool2d">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.pooling2doptions.html" class="tsd-signature-type" data-tsd-kind="Interface">Pooling2dOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="batchnormalization" class="tsd-anchor"></a>
+					<h3>batch<wbr>Normalization</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">batch<wbr>Normalization<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, mean<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, variance<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.batchnormalizationoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">BatchNormalizationOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L417">nn/model_builder.ts:417</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-batchnormalization">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>mean: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>variance: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.batchnormalizationoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">BatchNormalizationOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="clamp" class="tsd-anchor"></a>
+					<h3>clamp</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">clamp<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.clampoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClampOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L429">nn/model_builder.ts:429</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-clamp">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.clampoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ClampOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="concat" class="tsd-anchor"></a>
+					<h3>concat</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">concat<span class="tsd-signature-symbol">(</span>inputs<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">[]</span>, axis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L438">nn/model_builder.ts:438</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-concat">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>inputs: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>axis: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="constant" class="tsd-anchor"></a>
+					<h3>constant</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">constant<span class="tsd-signature-symbol">(</span>desc<span class="tsd-signature-symbol">: </span><a href="../interfaces/nn_operand.operanddescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">OperandDescriptor</a>, value<span class="tsd-signature-symbol">: </span><a href="../modules/nn_types.html#arraybufferview" class="tsd-signature-type" data-tsd-kind="Type alias">ArrayBufferView</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+						<li class="tsd-signature tsd-kind-icon">constant<span class="tsd-signature-symbol">(</span>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, type<span class="tsd-signature-symbol">?: </span><a href="../enums/nn_operand.operandtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">OperandType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L297">nn/model_builder.ts:297</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-constant">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>desc: <a href="../interfaces/nn_operand.operanddescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">OperandDescriptor</a></h5>
+								</li>
+								<li>
+									<h5>value: <a href="../modules/nn_types.html#arraybufferview" class="tsd-signature-type" data-tsd-kind="Type alias">ArrayBufferView</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L302">nn/model_builder.ts:302</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-constant-value-type">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>value: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> type: <a href="../enums/nn_operand.operandtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">OperandType</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="conv2d" class="tsd-anchor"></a>
+					<h3>conv2d</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">conv2d<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, filter<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.conv2doptions.html" class="tsd-signature-type" data-tsd-kind="Interface">Conv2dOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L447">nn/model_builder.ts:447</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-conv2d">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>filter: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.conv2doptions.html" class="tsd-signature-type" data-tsd-kind="Interface">Conv2dOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createmodel" class="tsd-anchor"></a>
+					<h3>create<wbr>Model</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Model<span class="tsd-signature-symbol">(</span>outputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_model.model.html" class="tsd-signature-type" data-tsd-kind="Class">Model</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L281">nn/model_builder.ts:281</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-createmodel">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>outputs: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_model.model.html" class="tsd-signature-type" data-tsd-kind="Class">Model</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="div" class="tsd-anchor"></a>
+					<h3>div</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">div<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L351">nn/model_builder.ts:351</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-div">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="exp" class="tsd-anchor"></a>
+					<h3>exp</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">exp<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L390">nn/model_builder.ts:390</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-exp">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="gemm" class="tsd-anchor"></a>
+					<h3>gemm</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">gemm<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.gemmoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GemmOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L457">nn/model_builder.ts:457</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-gemm">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.gemmoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GemmOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="gru" class="tsd-anchor"></a>
+					<h3>gru</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">gru<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, weight<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, recurrentWeight<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, steps<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, hiddenSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.gruoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GruOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L466">nn/model_builder.ts:466</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-gru">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>weight: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>recurrentWeight: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>steps: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>hiddenSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.gruoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GruOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="grucell" class="tsd-anchor"></a>
+					<h3>gru<wbr>Cell</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">gru<wbr>Cell<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, weight<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, recurrentWeight<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, hiddenState<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, hiddenSize<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.grucelloptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GruCellOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L480">nn/model_builder.ts:480</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-grucell">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>weight: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>recurrentWeight: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>hiddenState: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>hiddenSize: <span class="tsd-signature-type">number</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.grucelloptions.html" class="tsd-signature-type" data-tsd-kind="Interface">GruCellOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="input" class="tsd-anchor"></a>
+					<h3>input</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">(</span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, desc<span class="tsd-signature-symbol">: </span><a href="../interfaces/nn_operand.operanddescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">OperandDescriptor</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L289">nn/model_builder.ts:289</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-input">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>name: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>desc: <a href="../interfaces/nn_operand.operanddescriptor.html" class="tsd-signature-type" data-tsd-kind="Interface">OperandDescriptor</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="instancenormalization" class="tsd-anchor"></a>
+					<h3>instance<wbr>Normalization</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">instance<wbr>Normalization<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.instancenormalizationoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">InstanceNormalizationOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L494">nn/model_builder.ts:494</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.instancenormalizationoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">InstanceNormalizationOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="leakyrelu" class="tsd-anchor"></a>
+					<h3>leaky<wbr>Relu</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">leaky<wbr>Relu<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.leakyreluoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">LeakyReluOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L504">nn/model_builder.ts:504</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-leakyrelu">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.leakyreluoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">LeakyReluOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="matmul" class="tsd-anchor"></a>
+					<h3>matmul</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">matmul<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L513">nn/model_builder.ts:513</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-matmul">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="max" class="tsd-anchor"></a>
+					<h3>max</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">max<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L360">nn/model_builder.ts:360</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-max">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="maxpool2d" class="tsd-anchor"></a>
+					<h3>max<wbr>Pool2d</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">max<wbr>Pool2d<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.pooling2doptions.html" class="tsd-signature-type" data-tsd-kind="Interface">Pooling2dOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L542">nn/model_builder.ts:542</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-maxpool2d">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.pooling2doptions.html" class="tsd-signature-type" data-tsd-kind="Interface">Pooling2dOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="min" class="tsd-anchor"></a>
+					<h3>min</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">min<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L369">nn/model_builder.ts:369</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-min">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="mul" class="tsd-anchor"></a>
+					<h3>mul</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">mul<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L342">nn/model_builder.ts:342</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-mul">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="pad" class="tsd-anchor"></a>
+					<h3>pad</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">pad<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, padding<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.padoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PadOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L522">nn/model_builder.ts:522</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#api-modelbuilder-pad">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>padding: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.padoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">PadOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="pow" class="tsd-anchor"></a>
+					<h3>pow</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">pow<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L379">nn/model_builder.ts:379</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-pow">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reducelogsumexp" class="tsd-anchor"></a>
+					<h3>reduce<wbr>Log<wbr>Sum<wbr>Exp</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reduce<wbr>Log<wbr>Sum<wbr>Exp<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L554">nn/model_builder.ts:554</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducelogsumexp">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reducemax" class="tsd-anchor"></a>
+					<h3>reduce<wbr>Max</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reduce<wbr>Max<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L563">nn/model_builder.ts:563</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemax">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reducemean" class="tsd-anchor"></a>
+					<h3>reduce<wbr>Mean</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reduce<wbr>Mean<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L572">nn/model_builder.ts:572</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemean">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reducemin" class="tsd-anchor"></a>
+					<h3>reduce<wbr>Min</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reduce<wbr>Min<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L581">nn/model_builder.ts:581</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducemin">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reduceproduct" class="tsd-anchor"></a>
+					<h3>reduce<wbr>Product</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reduce<wbr>Product<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L590">nn/model_builder.ts:590</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reduceproduct">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reducesum" class="tsd-anchor"></a>
+					<h3>reduce<wbr>Sum</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reduce<wbr>Sum<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L599">nn/model_builder.ts:599</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reducesum">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ReduceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="relu" class="tsd-anchor"></a>
+					<h3>relu</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">relu<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L608">nn/model_builder.ts:608</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-relu">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="resample" class="tsd-anchor"></a>
+					<h3>resample</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">resample<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.resampleoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ResampleOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L613">nn/model_builder.ts:613</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.resampleoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ResampleOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="reshape" class="tsd-anchor"></a>
+					<h3>reshape</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">reshape<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, newShape<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L622">nn/model_builder.ts:622</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-reshape">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>newShape: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="sigmoid" class="tsd-anchor"></a>
+					<h3>sigmoid</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sigmoid<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L399">nn/model_builder.ts:399</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-sigmoid">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="slice" class="tsd-anchor"></a>
+					<h3>slice</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">slice<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, starts<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, sizes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.sliceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SliceOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L631">nn/model_builder.ts:631</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-slice">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>starts: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>sizes: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.sliceoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SliceOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="softmax" class="tsd-anchor"></a>
+					<h3>softmax</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">softmax<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L642">nn/model_builder.ts:642</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-softmax">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="split" class="tsd-anchor"></a>
+					<h3>split</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">split<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, splits<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.splitoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SplitOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L651">nn/model_builder.ts:651</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-split">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>splits: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.splitoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SplitOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="squeeze" class="tsd-anchor"></a>
+					<h3>squeeze</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">squeeze<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.squeezeoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SqueezeOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L661">nn/model_builder.ts:661</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-squeeze">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.squeezeoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">SqueezeOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="sub" class="tsd-anchor"></a>
+					<h3>sub</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">sub<span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, b<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L333">nn/model_builder.ts:333</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-sub">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>a: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>b: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="tanh" class="tsd-anchor"></a>
+					<h3>tanh</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">tanh<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L408">nn/model_builder.ts:408</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-tanh">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="transpose" class="tsd-anchor"></a>
+					<h3>transpose</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">transpose<span class="tsd-signature-symbol">(</span>input<span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_model_builder.transposeoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">TransposeOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/9a965df/src/nn/model_builder.ts#L670">nn/model_builder.ts:670</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-modelbuilder-transpose">API
+									spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>input: <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h5>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/nn_model_builder.transposeoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">TransposeOptions</a><span class="tsd-signature-symbol"> = ...</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="nn_operand.operand.html" class="tsd-signature-type" data-tsd-kind="Class">Operand</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../index.html">Modules</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/ml.html">ml</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/nn_compilation.html">nn/compilation</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/nn_model.html">nn/model</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/nn_model_builder.html">nn/model_<wbr>builder</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/nn_neural_network_context.html">nn/neural_<wbr>network_<wbr>context</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/nn_operand.html">nn/operand</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/nn_types.html">nn/types</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.autopad.html" class="tsd-kind-icon">Auto<wbr>Pad</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.filteroperandlayout.html" class="tsd-kind-icon">Filter<wbr>Operand<wbr>Layout</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.inputoperandlayout.html" class="tsd-kind-icon">Input<wbr>Operand<wbr>Layout</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.interpolationmode.html" class="tsd-kind-icon">Interpolation<wbr>Mode</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.paddingmode.html" class="tsd-kind-icon">Padding<wbr>Mode</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.recurrentnetworkactivation.html" class="tsd-kind-icon">Recurrent<wbr>Network<wbr>Activation</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.recurrentnetworkdirection.html" class="tsd-kind-icon">Recurrent<wbr>Network<wbr>Direction</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/nn_model_builder.recurrentnetworkweightlayout.html" class="tsd-kind-icon">Recurrent<wbr>Network<wbr>Weight<wbr>Layout</a>
+					</li>
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="nn_model_builder.modelbuilder.html" class="tsd-kind-icon">Model<wbr>Builder</a>
+						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#averagepool2d" class="tsd-kind-icon">average<wbr>Pool2d</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#batchnormalization" class="tsd-kind-icon">batch<wbr>Normalization</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#clamp" class="tsd-kind-icon">clamp</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#concat" class="tsd-kind-icon">concat</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#constant" class="tsd-kind-icon">constant</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#conv2d" class="tsd-kind-icon">conv2d</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#createmodel" class="tsd-kind-icon">create<wbr>Model</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#div" class="tsd-kind-icon">div</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#exp" class="tsd-kind-icon">exp</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#gemm" class="tsd-kind-icon">gemm</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#gru" class="tsd-kind-icon">gru</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#grucell" class="tsd-kind-icon">gru<wbr>Cell</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#input" class="tsd-kind-icon">input</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#instancenormalization" class="tsd-kind-icon">instance<wbr>Normalization</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#leakyrelu" class="tsd-kind-icon">leaky<wbr>Relu</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#matmul" class="tsd-kind-icon">matmul</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#max" class="tsd-kind-icon">max</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#maxpool2d" class="tsd-kind-icon">max<wbr>Pool2d</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#min" class="tsd-kind-icon">min</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#mul" class="tsd-kind-icon">mul</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#pad" class="tsd-kind-icon">pad</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#pow" class="tsd-kind-icon">pow</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reducelogsumexp" class="tsd-kind-icon">reduce<wbr>Log<wbr>Sum<wbr>Exp</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reducemax" class="tsd-kind-icon">reduce<wbr>Max</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reducemean" class="tsd-kind-icon">reduce<wbr>Mean</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reducemin" class="tsd-kind-icon">reduce<wbr>Min</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reduceproduct" class="tsd-kind-icon">reduce<wbr>Product</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reducesum" class="tsd-kind-icon">reduce<wbr>Sum</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#relu" class="tsd-kind-icon">relu</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#resample" class="tsd-kind-icon">resample</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#reshape" class="tsd-kind-icon">reshape</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#sigmoid" class="tsd-kind-icon">sigmoid</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#slice" class="tsd-kind-icon">slice</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#softmax" class="tsd-kind-icon">softmax</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#split" class="tsd-kind-icon">split</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#squeeze" class="tsd-kind-icon">squeeze</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#sub" class="tsd-kind-icon">sub</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#tanh" class="tsd-kind-icon">tanh</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_model_builder.modelbuilder.html#transpose" class="tsd-kind-icon">transpose</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.batchnormalizationoptions.html" class="tsd-kind-icon">Batch<wbr>Normalization<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.clampoptions.html" class="tsd-kind-icon">Clamp<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.conv2doptions.html" class="tsd-kind-icon">Conv2d<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.gemmoptions.html" class="tsd-kind-icon">Gemm<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.grucelloptions.html" class="tsd-kind-icon">Gru<wbr>Cell<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.gruoptions.html" class="tsd-kind-icon">Gru<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.instancenormalizationoptions.html" class="tsd-kind-icon">Instance<wbr>Normalization<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.leakyreluoptions.html" class="tsd-kind-icon">Leaky<wbr>Relu<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.padoptions.html" class="tsd-kind-icon">Pad<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.pooling2doptions.html" class="tsd-kind-icon">Pooling2d<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.reduceoptions.html" class="tsd-kind-icon">Reduce<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.resampleoptions.html" class="tsd-kind-icon">Resample<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.sliceoptions.html" class="tsd-kind-icon">Slice<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.splitoptions.html" class="tsd-kind-icon">Split<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.squeezeoptions.html" class="tsd-kind-icon">Squeeze<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="../interfaces/nn_model_builder.transposeoptions.html" class="tsd-kind-icon">Transpose<wbr>Options</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="../modules/nn_model_builder.html#namedoperands" class="tsd-kind-icon">Named<wbr>Operands</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
