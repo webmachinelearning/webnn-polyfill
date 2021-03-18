@@ -20,7 +20,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nhwc';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -44,7 +44,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nhwc';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -70,7 +70,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nhwc';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -96,7 +96,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nhwc';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -120,7 +120,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nchw';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -144,7 +144,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nchw';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -170,7 +170,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nchw';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -196,7 +196,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param5 = 1;
     const layout = 'nchw';
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'layout': layout});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});
@@ -220,7 +220,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nhwc';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -244,7 +244,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nhwc';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -270,7 +270,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nhwc';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -296,7 +296,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nhwc';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -320,7 +320,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nchw';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -344,7 +344,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nchw';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -370,7 +370,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nchw';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -396,7 +396,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 1;
     const layout = 'nchw';
     const expected = [15.0, 37.5, 60.0];
-    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'layout': layout});
+    const interOut0 = builder.conv2d(op12, op22, {'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
     const model = builder.createModel({op42});
@@ -420,7 +420,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nhwc';
     const expected = [30.0, 36.0, 42.0, 66.0, 81.0, 96.0, 102.0, 126.0, 150.0, 138.0, 171.0, 204.0, 174.0, 216.0, 258.0, 210.0, 261.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -444,7 +444,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nhwc';
     const expected = [30.0, 36.0, 42.0, 66.0, 81.0, 96.0, 102.0, 126.0, 150.0, 138.0, 171.0, 204.0, 174.0, 216.0, 258.0, 210.0, 261.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -470,7 +470,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nhwc';
     const expected = [30.0, 36.0, 42.0, 66.0, 81.0, 96.0, 102.0, 126.0, 150.0, 138.0, 171.0, 204.0, 174.0, 216.0, 258.0, 210.0, 261.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -496,7 +496,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nhwc';
     const expected = [30.0, 36.0, 42.0, 66.0, 81.0, 96.0, 102.0, 126.0, 150.0, 138.0, 171.0, 204.0, 174.0, 216.0, 258.0, 210.0, 261.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -520,7 +520,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nchw';
     const expected = [30.0, 66.0, 102.0, 138.0, 174.0, 210.0, 36.0, 81.0, 126.0, 171.0, 216.0, 261.0, 42.0, 96.0, 150.0, 204.0, 258.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -544,7 +544,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nchw';
     const expected = [30.0, 66.0, 102.0, 138.0, 174.0, 210.0, 36.0, 81.0, 126.0, 171.0, 216.0, 261.0, 42.0, 96.0, 150.0, 204.0, 258.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -570,7 +570,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nchw';
     const expected = [30.0, 66.0, 102.0, 138.0, 174.0, 210.0, 36.0, 81.0, 126.0, 171.0, 216.0, 261.0, 42.0, 96.0, 150.0, 204.0, 258.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
@@ -596,7 +596,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param23 = 1;
     const layout = 'nchw';
     const expected = [30.0, 66.0, 102.0, 138.0, 174.0, 210.0, 36.0, 81.0, 126.0, 171.0, 216.0, 261.0, 42.0, 96.0, 150.0, 204.0, 258.0, 312.0];
-    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'layout': layout});
+    const interOut0 = builder.conv2d(op13, op23, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
     const model = builder.createModel({op43});
