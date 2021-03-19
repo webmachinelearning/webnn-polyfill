@@ -15,7 +15,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const pad0 = 0;
     const stride = 1;
     const expected = [30.0, 36.0, 42.0, 66.0, 81.0, 96.0, 102.0, 126.0, 150.0, 138.0, 171.0, 204.0, 174.0, 216.0, 258.0, 210.0, 261.0, 312.0];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [pad0, pad0, pad0, pad0], 'strides': [stride, stride], 'layout': 'nhwc'});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [pad0, pad0, pad0, pad0], 'strides': [stride, stride], 'inputLayout': 'nhwc', 'filterLayout': 'hwio'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const model = builder.createModel({op4});

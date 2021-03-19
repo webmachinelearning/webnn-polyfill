@@ -401,13 +401,21 @@ def GetWebNNOperationParamsList(opInsInfoList, opInsList, inputFeedDict,
             lastParam['dilations'].reverse()
     return paramsList
 
-def UpdateWebNNOperationOptionalParamValue(targetValue, kvList):
+def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList,
+                                           layout):
     if isinstance(targetValue, dict):
         for key, value in kvList:
             if targetValue.get(key, None) is None:
                 targetValue[key] = value
                 if key == 'layout':
                     targetValue[key] = 'nchw' if value else 'nhwc'
+                    if operation in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
+                        if not value:
+                            targetValue['filterLayout'] = 'hwio'
+        if operation in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
+            if targetValue.get('filterLayout', None) == None:
+                if not layout:
+                    targetValue['filterLayout'] = 'hwio'
 
 def GetWebNNParamsString(params):
     paramsList = [p[1] for p in params]
@@ -664,9 +672,16 @@ def DumpCtsTest(example, test):
                                                     inputFeedDict,
                                                     curParamsList,
                                                     nnapiOp)
-        UpdateWebNNOperationOptionalParamValue(mappingParams[-1][1],
-                                               optionsKeyValueList)
+        UpdateWebNNOperationOptionalParamValue(nnapiOp, mappingParams[-1][1],
+                                               optionsKeyValueList, layout)
         webnnParamsStr = GetWebNNParamsString(mappingParams)
+        if nnapiOp == 'SQRT':
+            exponent = "const exponent = builder.constant({type: 'float32'," + \
+                " dimensions: [1]}, new Float32Array([0.5]));"
+            IndentedPrint(exponent, indent=4, file=test)
+            webnnParamsStr = ', '.join([webnnParamsStr, 'exponent'])
+        if nnapiOp in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
+            webnnParamsStr = webnnParamsStr.replace("'layout'", "'inputLayout'")
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
                         fusedReluMappedInfo, outputOp, test)
         if len(curOutputsList) == 1:

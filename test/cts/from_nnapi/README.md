@@ -23,7 +23,7 @@ NNAPI operations to the tests for such WebNN API operations of first wave.
 | MINIMUM                       | min                           |
 | EXP                           | exp                           |
 | LOGISTIC                      | sigmoid                       |
-| SQRT                          | sqrt                          |
+| SQRT                          | pow                           |
 | TANH                          | tanh                          |
 | FULLY_CONNECTED               | matmul [+ add+ relu/clamp]    |
 | AVERAGE_POOL_2D               | averagePool2d [+ relu/clamp]  |
