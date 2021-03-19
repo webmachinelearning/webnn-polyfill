@@ -317,6 +317,7 @@ describe('test Compilation', function() {
   it('Compilation should not leak memory', async () => {
     // Only run this test for polyfill.
     if (typeof _tfengine !== 'undefined') {
+      const beforeNumBytes = _tfengine.memory().numBytes;
       const beforeNumTensors = _tfengine.memory().numTensors;
 
       // Run gru modele which is a complex graph
@@ -388,9 +389,13 @@ describe('test Compilation', function() {
       // Check memory leaks.
       compiledModel.dispose();
       const afterNumTensors = _tfengine.memory().numTensors;
+      const afterNumBytes = _tfengine.memory().numBytes;
       assert(
           beforeNumTensors === afterNumTensors,
           `${afterNumTensors - beforeNumTensors} tensors are leaked.`);
+      assert(
+          beforeNumBytes === afterNumBytes,
+          `${afterNumBytes - beforeNumBytes} bytes are leaked.`);
     }
   });
 });

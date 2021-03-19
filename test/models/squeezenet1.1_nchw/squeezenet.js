@@ -2,12 +2,19 @@
 import * as utils from '../../utils.js';
 
 const url = import.meta.url;
+const assert = chai.assert;
 
 describe('test squeezenet1.1 nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
   let compiledModel;
+  let beforeNumBytes;
+  let beforeNumTensors;
   before(async () => {
+    if (typeof _tfengine !== 'undefined') {
+      beforeNumBytes = _tfengine.memory().numBytes;
+      beforeNumTensors = _tfengine.memory().numTensors;
+    }
     const nn = navigator.ml.getNeuralNetworkContext();
     const builder = nn.createModelBuilder();
 
@@ -55,6 +62,21 @@ describe('test squeezenet1.1 nchw', function() {
     const reshape0 = builder.reshape(pool3, [1, -1]);
     const model = builder.createModel({reshape0});
     compiledModel = await model.compile();
+  });
+
+  after(async () => {
+    if (typeof _tfengine !== 'undefined') {
+      // Check memory leaks.
+      compiledModel.dispose();
+      const afterNumTensors = _tfengine.memory().numTensors;
+      const afterNumBytes = _tfengine.memory().numBytes;
+      assert(
+          beforeNumTensors === afterNumTensors,
+          `${afterNumTensors - beforeNumTensors} tensors are leaked.`);
+      assert(
+          beforeNumBytes === afterNumBytes,
+          `${afterNumBytes - beforeNumBytes} bytes are leaked.`);
+    }
   });
 
   async function testSqueezeNet(inputFile, expectedFile) {
