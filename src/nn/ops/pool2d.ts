@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {AutoPad, InputOperandLayout, Pooling2dOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -65,8 +64,8 @@ export abstract class Pool extends SingleOutputOperation {
     return [this.input_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     let padding: 'valid'|'same'|number;
     if (this.autoPad_ === AutoPad.explicit) {
       utils.assert(

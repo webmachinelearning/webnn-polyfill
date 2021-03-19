@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -40,8 +39,8 @@ export class Slice extends SingleOutputOperation {
     return [this.input_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     const rank = input.shape.length;
     if (this.axes_ === undefined) {
       // assume axes is [0, 1,...r-1] if it is not defined.

@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {GruCellOptions, GruOptions, RecurrentNetworkActivation, RecurrentNetworkDirection, RecurrentNetworkWeightLayout} from '../model_builder';
 import {Operand, OutputOperand} from '../operand';
 import {Operation, SingleOutputOperation} from '../operation';
@@ -101,16 +100,16 @@ export class Gru extends Operation {
     return inputs;
   }
 
-  computeImpl(context: ExecutionContext): tf.Tensor[] {
-    const input = context.getTensor(this.input_);
-    const weight = context.getTensor(this.weight_);
-    const recurrentWeight = context.getTensor(this.recurrentWeight_);
-    const bias = this.bias_ ? context.getTensor(this.bias_) : undefined;
+  computeImpl(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor[] {
+    const input = inputTensors.get(this.input_);
+    const weight = inputTensors.get(this.weight_);
+    const recurrentWeight = inputTensors.get(this.recurrentWeight_);
+    const bias = this.bias_ ? inputTensors.get(this.bias_) : undefined;
     const recurrentBias = this.recurrentWeight_ ?
-        context.getTensor(this.recurrentBias_) :
+        inputTensors.get(this.recurrentBias_) :
         undefined;
     const initialHiddenState = this.initialHiddenState_ ?
-        context.getTensor(this.initialHiddenState_) :
+        inputTensors.get(this.initialHiddenState_) :
         undefined;
     const steps = this.steps_;
     const hiddenSize = this.hiddenSize_;
@@ -185,14 +184,6 @@ export class Gru extends Operation {
     }
 
     return [hiddenState, sequence];
-  }
-
-  compute(context: ExecutionContext): void {
-    const outputTensors = this.computeImpl(context);
-    context.setOutputTensor(this.outputs[0], outputTensors[0]);
-    if (this.returnSequence_) {
-      context.setOutputTensor(this.outputs[1], outputTensors[1]);
-    }
   }
 }
 
@@ -351,14 +342,13 @@ export class GruCell extends SingleOutputOperation {
     return tf.add(tf.mul(z, hiddenState), tf.mul(n, tf.sub(one, z)));
   }
 
-  run(context: ExecutionContext): tf.Tensor {
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
     return GruCell.compute(
-        context.getTensor(this.input_), context.getTensor(this.weight_),
-        context.getTensor(this.recurrentWeight_),
-        context.getTensor(this.hiddenState_), this.hiddenSize_,
-        this.bias_ ? context.getTensor(this.bias_) : undefined,
-        this.recurrentBias_ ? context.getTensor(this.recurrentBias_) :
-                              undefined,
+        inputTensors.get(this.input_), inputTensors.get(this.weight_),
+        inputTensors.get(this.recurrentWeight_),
+        inputTensors.get(this.hiddenState_), this.hiddenSize_,
+        this.bias_ ? inputTensors.get(this.bias_) : undefined,
+        this.recurrentBias_ ? inputTensors.get(this.recurrentBias_) : undefined,
         this.resetAfter_, this.layout_, this.activations_);
   }
 }

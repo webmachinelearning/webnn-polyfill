@@ -36,18 +36,31 @@ export type NamedInputs = Record<string, Input>;
  */
 export type NamedOutputs = Record<string, Output>;
 
+/** @internal */
+class OperandTensor {
+  ref: number;
+  tensor: tf.Tensor;
+}
+
 /** @ignore */
 export class ExecutionContext {
-  private inputTensors_: Map<InputOperand, tf.Tensor>;
   private constantTenosrs_: Map<ConstantOperand, tf.Tensor>;
-  private outputTensors_: Map<OutputOperand, tf.Tensor>;
+  private inputTensors_: Map<InputOperand, OperandTensor>;
+  private outputTensors_: Map<OutputOperand, OperandTensor>;
+  private operandRefs_: Map<Operand, number>;
+  private outputOperands_: Set<OutputOperand>;
 
   constructor(
       constantTensors: Map<ConstantOperand, tf.Tensor>,
-      inputOperands: Map<string, InputOperand>, inputs: NamedInputs) {
+      inputOperands: Map<string, InputOperand>,
+      inputs: NamedInputs,
+      operandRefs: Map<Operand, number>,
+  ) {
     this.constantTenosrs_ = constantTensors;
+    this.operandRefs_ = operandRefs;
     this.allocateInputTensors(inputOperands, inputs);
     this.outputTensors_ = new Map();
+    this.outputOperands_ = new Set();
   }
 
   private allocateInputTensors(
@@ -63,12 +76,17 @@ export class ExecutionContext {
       } else {
         desc = inputOperand.desc;
       }
-      this.inputTensors_.set(
-          inputOperand, utils.createTensor(desc, input.buffer));
+      this.inputTensors_.set(inputOperand, {
+        ref: this.operandRefs_.get(inputOperand),
+        tensor: utils.createTensor(desc, input.buffer)
+      });
     }
   }
 
   compute(outputs: Map<string, OutputOperand>): tf.TensorContainerObject {
+    for (const output of outputs.values()) {
+      this.outputOperands_.add(output);
+    }
     const outputTensors: tf.TensorContainerObject = {};
     for (const outputName of outputs.keys()) {
       outputTensors[outputName] = this.getTensor(outputs.get(outputName));
@@ -79,21 +97,43 @@ export class ExecutionContext {
   setOutputTensor(output: OutputOperand, tensor: tf.Tensor): void {
     utils.assert(
         !this.outputTensors_.has(output), 'Output already has tensor.');
-    this.outputTensors_.set(output, tensor);
+    this.outputTensors_.set(
+        output, {ref: this.operandRefs_.get(output), tensor});
+  }
+
+  releaseTensor(operand: Operand): void {
+    let operandTensorMap: Map<Operand, OperandTensor>;
+    if (operand instanceof InputOperand) {
+      operandTensorMap = this.inputTensors_;
+    } else if (operand instanceof OutputOperand) {
+      if (this.outputOperands_.has(operand)) {
+        return;
+      }
+      operandTensorMap = this.outputTensors_;
+    } else {
+      return;
+    }
+    const operandTensor: OperandTensor = operandTensorMap.get(operand);
+    utils.assert(operandTensor !== undefined, 'No tensor found for operand.');
+    operandTensor.ref--;
+    if (operandTensor.ref === 0) {
+      tf.dispose(operandTensor.tensor);
+      operandTensorMap.delete(operand);
+    }
   }
 
   getTensor(operand: Operand): tf.Tensor {
     if (operand instanceof ConstantOperand) {
       return this.constantTenosrs_.get(operand);
     } else if (operand instanceof InputOperand) {
-      return this.inputTensors_.get(operand);
+      return this.inputTensors_.get(operand).tensor;
     } else if (operand instanceof OutputOperand) {
       if (this.outputTensors_.has(operand)) {
-        return this.outputTensors_.get(operand);
+        return this.outputTensors_.get(operand).tensor;
       } else {
         operand.operation.compute(this);
         utils.assert(this.outputTensors_.has(operand), 'No output is set.');
-        return this.outputTensors_.get(operand);
+        return this.outputTensors_.get(operand).tensor;
       }
     } else {
       throw new Error('The operand is invalid.');
@@ -105,9 +145,8 @@ export class ExecutionContext {
  * [API spec](https://webmachinelearning.github.io/webnn/#compilation)
  */
 export class Compilation {
-  private inputOperands_: Map<string, InputOperand> = new Map();
-  private outputOperands_: Map<string, OutputOperand> = new Map();
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
+  private model_: Model;
 
   async compute(inputs: NamedInputs, outputs: NamedOutputs = {}):
       Promise<NamedOutputs> {
@@ -120,18 +159,19 @@ export class Compilation {
       for (const outputName in outputs) {
         utils.assert(
             typeof outputName === 'string' &&
-                this.outputOperands_.has(outputName),
+                this.model_.outputs.has(outputName),
             'The name of the output is invalid.');
-        outputOperands.set(outputName, this.outputOperands_.get(outputName));
+        outputOperands.set(outputName, this.model_.outputs.get(outputName));
       }
     } else {
-      outputOperands = this.outputOperands_;
+      outputOperands = this.model_.outputs;
     }
 
     // Compute the output tensors.
     const outputTensors: tf.TensorContainerObject = tf.tidy(() => {
       const context = new ExecutionContext(
-          this.constantTensors_, this.inputOperands_, inputs);
+          this.constantTensors_, this.model_.inputs, inputs,
+          this.model_.operandRefs);
       // The input and immediate tensors will be cleaned up.
       return context.compute(outputOperands);
     });
@@ -181,10 +221,10 @@ export class Compilation {
   private validateInputs(inputs: NamedInputs) {
     for (const name in inputs) {
       utils.assert(
-          typeof name === 'string' && this.inputOperands_.has(name),
+          typeof name === 'string' && this.model_.inputs.has(name),
           'The name of the input is invalid.');
       const input = inputs[name];
-      const inputOperand = this.inputOperands_.get(name);
+      const inputOperand = this.model_.inputs.get(name);
       utils.assert(
           input.buffer !== undefined, 'The buffer of the input is undefined.');
       let dimensions;
@@ -221,8 +261,7 @@ export class Compilation {
   private async compile(model: Model): Promise<void> {
     await tf.ready();
     this.allocateConstants(model);
-    this.inputOperands_ = model.inputs;
-    this.outputOperands_ = model.outputs;
+    this.model_ = model;
     await this.inferOnce();
   }
 
@@ -235,8 +274,8 @@ export class Compilation {
 
   private async inferOnce(): Promise<void> {
     const inputs: NamedInputs = {};
-    for (const inputName of this.inputOperands_.keys()) {
-      const inputOperand = this.inputOperands_.get(inputName);
+    for (const inputName of this.model_.inputs.keys()) {
+      const inputOperand = this.model_.inputs.get(inputName);
       // assume 1 for negative dim value.
       const shape = inputOperand.desc.dimensions.map(x => x < 0 ? 1 : x);
       const typedArrayConstructor = utils.getTypedArray(inputOperand.desc.type);
