@@ -47,7 +47,7 @@ Open the web browser and navigate to http://localhost:8080/test
 #### Run only CTS tests in node.js.
 
 ```sh
-> npm run cts
+> npm run test-cts
 ```
 
 #### Run only CTS tests in web browser.
