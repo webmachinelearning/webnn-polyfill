@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -21,8 +20,8 @@ export class LeakyRelu extends SingleOutputOperation {
     return [this.x_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const x: tf.Tensor = context.getTensor(this.x_);
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const x: tf.Tensor = inputTensors.get(this.x_);
     return tf.leakyRelu(x, this.alpha_);
   }
 }

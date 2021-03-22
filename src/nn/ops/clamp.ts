@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {ClampOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -32,21 +31,21 @@ export class Clamp extends SingleOutputOperation {
     return inputs;
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const x: tf.Tensor = context.getTensor(this.x_);
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const x: tf.Tensor = inputTensors.get(this.x_);
     if (this.minValue_) {
       if (this.maxValue_) {
         return tf.minimum(
-            tf.maximum(x, context.getTensor(this.minValue_)),
-            context.getTensor(this.maxValue_));
+            tf.maximum(x, inputTensors.get(this.minValue_)),
+            inputTensors.get(this.maxValue_));
       } else {
-        return tf.maximum(x, context.getTensor(this.minValue_));
+        return tf.maximum(x, inputTensors.get(this.minValue_));
       }
     } else {
       if (this.maxValue_) {
-        return tf.minimum(x, context.getTensor(this.maxValue_));
+        return tf.minimum(x, inputTensors.get(this.maxValue_));
       } else {
-        return x;
+        return tf.clone(x);
       }
     }
   }

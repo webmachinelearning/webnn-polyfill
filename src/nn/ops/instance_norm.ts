@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {InputOperandLayout, InstanceNormalizationOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -50,8 +49,8 @@ export class InstanceNormalization extends SingleOutputOperation {
     return inputs;
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const input: tf.Tensor = context.getTensor(this.input_);
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const input: tf.Tensor = inputTensors.get(this.input_);
     utils.assert(input.rank === 4, 'The input operand is not 4-D.');
     let axes = [2, 3];
     let shape = [1, -1, 1, 1];
@@ -63,7 +62,7 @@ export class InstanceNormalization extends SingleOutputOperation {
     }
     let scale: tf.Tensor;
     if (this.scale_) {
-      scale = context.getTensor(this.scale_);
+      scale = inputTensors.get(this.scale_);
       utils.assert(scale.rank === 1, 'The scale operand is not 1-D.');
       utils.assert(
           scale.shape[0] === inputChannels,
@@ -73,7 +72,7 @@ export class InstanceNormalization extends SingleOutputOperation {
     }
     let bias: tf.Tensor;
     if (this.bias_) {
-      bias = context.getTensor(this.bias_);
+      bias = inputTensors.get(this.bias_);
       utils.assert(bias.rank === 1, 'The bias operand is not 1-D.');
       utils.assert(
           bias.shape[0] === inputChannels,

@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -23,10 +22,10 @@ export class Concat extends SingleOutputOperation {
     return this.inputs_;
   }
 
-  run(context: ExecutionContext): tf.Tensor {
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
     const inputs: tf.Tensor[] = [];
     for (const input of this.inputs()) {
-      inputs.push(context.getTensor(input));
+      inputs.push(inputTensors.get(input));
     }
     return tf.concat(inputs, this.axis_);
   }

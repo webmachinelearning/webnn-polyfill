@@ -1,7 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
-import {ExecutionContext} from '../compilation';
 import {AutoPad, Conv2dOptions, FilterOperandLayout, InputOperandLayout} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -95,9 +94,9 @@ export class Conv2d extends SingleOutputOperation {
     return [this.input_, this.filter_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
-    let filter: tf.Tensor4D = context.getTensor(this.filter_) as tf.Tensor4D;
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
+    let filter: tf.Tensor4D = inputTensors.get(this.filter_) as tf.Tensor4D;
 
     // tf.conv2d input layout (nhwc): [batch, height, width, inDepth]
     if (this.inputLayout_ === InputOperandLayout.nchw) {
