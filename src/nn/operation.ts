@@ -21,7 +21,22 @@ export abstract class Operation {
   }
 
   abstract inputs(): Operand[];
-  abstract compute(context: ExecutionContext): void;
+
+  compute(context: ExecutionContext): void {
+    const inputTensors: Map<Operand, tf.Tensor> = new Map();
+    for (const inputOperand of this.inputs()) {
+      inputTensors.set(inputOperand, context.getTensor(inputOperand));
+    }
+    const outputTensors = tf.tidy(() => this.computeImpl(inputTensors));
+    for (let i = 0; i < this.outputs_.length; ++i) {
+      context.setOutputTensor(this.outputs_[i], outputTensors[i]);
+    }
+    for (const inputOperand of this.inputs()) {
+      context.releaseTensor(inputOperand);
+    }
+  }
+
+  abstract computeImpl(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor[];
 }
 
 export abstract class SingleOutputOperation extends Operation {
@@ -35,9 +50,9 @@ export abstract class SingleOutputOperation extends Operation {
     return this.outputs_[0];
   }
 
-  compute(context: ExecutionContext): void {
-    context.setOutputTensor(this.output, this.run(context));
+  computeImpl(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor[] {
+    return [this.run(inputTensors)];
   }
 
-  abstract run(context: ExecutionContext): tf.Tensor;
+  abstract run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor;
 }

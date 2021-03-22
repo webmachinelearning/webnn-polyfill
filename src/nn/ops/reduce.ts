@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {ReduceOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -38,8 +37,8 @@ abstract class Reduce extends SingleOutputOperation {
     return [this.input_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const input: tf.Tensor = context.getTensor(this.input_);
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const input: tf.Tensor = inputTensors.get(this.input_);
     // tf.mean accepts axis range [-r, r)
     return this.runOp(input, this.axes_, this.keepDimensions_);
   }

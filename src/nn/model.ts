@@ -1,6 +1,6 @@
 import {Compilation} from './compilation';
 import {NamedOperands} from './model_builder';
-import {ConstantOperand, InputOperand, OutputOperand} from './operand';
+import {ConstantOperand, InputOperand, Operand, OutputOperand} from './operand';
 import {Operation} from './operation';
 import * as utils from './utils';
 
@@ -30,6 +30,7 @@ export class Model {
   private inputs_: Map<string, InputOperand> = new Map();
   private outputs_: Map<string, OutputOperand> = new Map();
   private constants_: Set<ConstantOperand> = new Set();
+  private operandRefs_: Map<Operand, number> = new Map();
 
   /** @ignore */
   get inputs(): Map<string, InputOperand> {
@@ -42,6 +43,10 @@ export class Model {
   /** @ignore */
   get constants(): ConstantOperand[] {
     return Array.from(this.constants_.values());
+  }
+  /** @ignore */
+  get operandRefs(): Map<Operand, number> {
+    return this.operandRefs_;
   }
 
   /** @ignore */
@@ -77,6 +82,13 @@ export class Model {
       visitedOps.add(operation);
     }
     for (const operand of operation.inputs()) {
+      if (!this.operandRefs_.has(operand)) {
+        this.operandRefs_.set(operand, 1);
+      } else {
+        let ref = this.operandRefs_.get(operand);
+        ref++;
+        this.operandRefs_.set(operand, ref);
+      }
       if (operand instanceof InputOperand) {
         if (this.inputs_.has(operand.name)) {
           if (this.inputs_.get(operand.name) !== operand) {

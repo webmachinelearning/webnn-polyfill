@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {InterpolationMode, ResampleOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -45,8 +44,8 @@ export class Resample extends SingleOutputOperation {
     return [this.input_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    let input: tf.Tensor4D = context.getTensor(this.input_) as tf.Tensor4D;
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     utils.assert(input.rank === 4, 'The input tensor is not 4-D.');
     const sizes: [number, number] = [0, 0];
     let transposed = false;

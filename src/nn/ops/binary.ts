@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -21,9 +20,9 @@ export abstract class Binary extends SingleOutputOperation {
     return [this.a_, this.b_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const a: tf.Tensor = context.getTensor(this.a_);
-    const b: tf.Tensor = context.getTensor(this.b_);
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const a: tf.Tensor = inputTensors.get(this.a_);
+    const b: tf.Tensor = inputTensors.get(this.b_);
     return this.runOp(a, b);
   }
 

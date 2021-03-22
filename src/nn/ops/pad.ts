@@ -1,6 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from '../compilation';
 import {PaddingMode, PadOptions} from '../model_builder';
 import {Operand} from '../operand';
 import {SingleOutputOperation} from '../operation';
@@ -32,9 +31,9 @@ export class Pad extends SingleOutputOperation {
     return [this.input_, this.padding_];
   }
 
-  run(context: ExecutionContext): tf.Tensor {
-    const input: tf.Tensor = context.getTensor(this.input_);
-    const padding: tf.Tensor = context.getTensor(this.padding_);
+  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+    const input: tf.Tensor = inputTensors.get(this.input_);
+    const padding: tf.Tensor = inputTensors.get(this.padding_);
     utils.assert(
         padding.rank === 2 && padding.dtype === 'int32' &&
             padding.shape[0] === input.rank,
