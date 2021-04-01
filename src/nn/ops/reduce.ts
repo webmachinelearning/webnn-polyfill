@@ -15,10 +15,8 @@ abstract class Reduce extends SingleOutputOperation {
     utils.validateOperand(input);
     this.input_ = input;
     if (options.axes !== undefined) {
-      utils.assert(
-          utils.isIntegerArray(options.axes) &&
-              options.axes.every(v => v > 0 || v === -1),
-          'The starts parameter is invalid.');
+      utils.assert(utils.isIntegerArray(options.axes),
+          'The axes parameter is invalid.');
       this.axes_ = options.axes;
     } else {
       this.axes_ = undefined;

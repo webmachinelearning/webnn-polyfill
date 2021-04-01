@@ -20,14 +20,14 @@ export class Slice extends SingleOutputOperation {
     this.starts_ = starts;
     utils.assert(
         utils.isIntegerArray(sizes) && sizes.every(v => v > 0 || v === -1),
-        'The starts parameter is invalid.');
+        'The sizes parameter is invalid.');
     this.sizes_ = sizes;
     utils.assert(
         sizes.length === sizes.length,
         'The length of sizes is not equal to the length of sizes.))');
     utils.assert(
         axes === undefined || utils.isIntegerArray(axes),
-        'The starts parameter is invalid.');
+        'The axes parameter is invalid.');
     if (axes !== undefined) {
       utils.assert(
           sizes.length === axes.length, 'The length of axes is invalid.))');

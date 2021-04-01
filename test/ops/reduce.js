@@ -25,7 +25,16 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [18.25]});
   });
 
-  it('reduceMean do not keep dims', async function() {
+  it('reduceMean axes0 do not keep dims', async function() {
+    await testReduce(
+        'Mean', {axes: [0], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
+        },
+        {shape: [2, 2], values: [30., 1., 40., 2.]});
+  });
+
+  it('reduceMean axes1 do not keep dims', async function() {
     await testReduce(
         'Mean', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
@@ -34,7 +43,16 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [12.5, 1.5, 35., 1.5, 57.5, 1.5]});
   });
 
-  it('reduceMean keep dims', async function() {
+  it('reduceMean axes0 keep dims', async function() {
+    await testReduce(
+        'Mean', {axes: [0], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
+        },
+        {shape: [1, 2, 2], values: [30., 1., 40., 2.]});
+  });
+
+  it('reduceMean axes1 keep dims', async function() {
     await testReduce(
         'Mean', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
