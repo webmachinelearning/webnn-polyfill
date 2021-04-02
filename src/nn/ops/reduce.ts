@@ -37,7 +37,9 @@ abstract class Reduce extends SingleOutputOperation {
 
   run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    // tf.mean accepts axis range [-r, r)
+    // accepts axis range [-r, r)
+    utils.assert(utils.validateAxes(this.axes_, input.rank),
+        `The axes must be in range [-${input.rank}, ${input.rank})`);
     return this.runOp(input, this.axes_, this.keepDimensions_);
   }
 
