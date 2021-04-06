@@ -2,10 +2,10 @@
 import * as utils from '../utils.js';
 
 describe('test mul', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   it('mul input and constant', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.constant(
         {type: 'float32', dimensions: [3, 4, 5]}, new Float32Array([
@@ -23,11 +23,10 @@ describe('test mul', function() {
           -0.5558823, 0.18417479,  -0.93904793, -0.00859687, 0.5034271,
         ]));
     const c = builder.mul(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           5.6232101e-01,  1.3117781e-01,  -1.4161869e+00, 2.0386910e-02,
           9.1077393e-01,  7.4952751e-01,  -2.8509337e-01, -1.6272701e+00,
           1.0271618e+00,  4.2815253e-01,  -7.7895027e-01, 9.7542489e-01,
@@ -46,7 +45,7 @@ describe('test mul', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       1.1491189e+00,  9.4631165e-03,  1.6490275e+00,  -2.4890469e-02,
@@ -65,19 +64,18 @@ describe('test mul', function() {
       1.2045124e+00,  -4.8655939e-01, 6.5835893e-01,  -3.1707945e-01,
       5.6562103e-02,  -8.3017206e-01, 1.8555066e-02,  2.1769990e-01,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 
   it('mul two inputs', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.mul(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           2.0435283,  0.07213961,  -1.1644137,  -1.2209045,  0.8982674,
           0.21796915, 0.27658972,  0.7744382,   -0.52159035, -0.969913,
           0.6081186,  -0.04225572, 0.3275312,   -0.06443629, -2.257355,
@@ -93,7 +91,7 @@ describe('test mul', function() {
         ]),
       },
       'b': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           5.6232101e-01,  1.3117781e-01,  -1.4161869e+00, 2.0386910e-02,
           9.1077393e-01,  7.4952751e-01,  -2.8509337e-01, -1.6272701e+00,
           1.0271618e+00,  4.2815253e-01,  -7.7895027e-01, 9.7542489e-01,
@@ -112,7 +110,7 @@ describe('test mul', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       1.1491189e+00,  9.4631165e-03,  1.6490275e+00,  -2.4890469e-02,
@@ -131,19 +129,18 @@ describe('test mul', function() {
       1.2045124e+00,  -4.8655939e-01, 6.5835893e-01,  -3.1707945e-01,
       5.6562103e-02,  -8.3017206e-01, 1.8555066e-02,  2.1769990e-01,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 
   it('mul broadcast', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.mul(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           -0.08539673, 0.11800674,  -1.2358714,  0.30089188,  -0.73443925,
           1.4894297,   0.16823359,  -2.2034893,  1.0740992,   -0.35457978,
           0.61524934,  0.462153,    0.5992003,   -0.81047946, -2.2757835,
@@ -159,7 +156,7 @@ describe('test mul', function() {
         ]),
       },
       'b': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.6338172,
           1.630534,
           -1.3819867,
@@ -168,7 +165,7 @@ describe('test mul', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.05412592, 0.192414,    1.707958,    -0.31375682, -0.7771366,
@@ -184,6 +181,6 @@ describe('test mul', function() {
       -0.5392565,  -2.1754124,  -0.7557713,  0.15043499,  -0.16643268,
       0.20531811,  1.9038703,   -0.04174223, -0.9528061,  1.129644,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 });

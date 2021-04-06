@@ -2,19 +2,18 @@
 import * as utils from '../utils.js';
 
 describe('test transpose', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function checkTranspose(
       inputShape, inputData, expectedShape, expected, permutation = undefined) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: inputShape});
     const y = builder.transpose(x, {permutation});
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(inputData)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(inputData)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, expectedShape);
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   }
 
   it('transpose default', async function() {

@@ -2,18 +2,17 @@
 import * as utils from '../utils.js';
 
 describe('test resample', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testResample(input, options, expected) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const y = builder.resample(x, options);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(input.values)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(input.values)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, expected.shape);
-    utils.checkValue(outputs.y.buffer, expected.values);
+    utils.checkValue(outputs.y.data, expected.values);
   }
 
   it('resample upsample scales linear', async function() {

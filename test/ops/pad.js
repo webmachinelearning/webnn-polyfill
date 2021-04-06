@@ -2,21 +2,20 @@
 import * as utils from '../utils.js';
 
 describe('test pad', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testPad(input, paddings, options, expected) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const padding = builder.constant(
         {type: 'int32', dimensions: paddings.shape},
         new Int32Array(paddings.values));
     const y = builder.pad(x, padding, options);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(input.values)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(input.values)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, expected.shape);
-    utils.checkValue(outputs.y.buffer, expected.values);
+    utils.checkValue(outputs.y.data, expected.values);
   }
 
   it('pad default', async function() {

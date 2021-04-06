@@ -2,17 +2,16 @@
 import * as utils from '../utils.js';
 
 describe('test exp', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
   async function testExp(input, expected, shape) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.exp(x);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(input)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(input)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, shape);
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   }
   it('exp 1d', async function() {
     await testExp([-1, 0, 1], [0.36787945, 1., 2.71828175], [3]);

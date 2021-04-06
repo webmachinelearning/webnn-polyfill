@@ -2,10 +2,10 @@
 import * as utils from '../utils.js';
 
 describe('test clamp', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testClamp(inputShape, inputValue, expected, limits = {}) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: inputShape});
 
     const options = {};
@@ -16,12 +16,11 @@ describe('test clamp', function() {
       options.maxValue = builder.constant(limits.max);
     }
     const y = builder.clamp(x, options);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(inputValue)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(inputValue)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, inputShape);
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   }
 
   it('clamp', async function() {

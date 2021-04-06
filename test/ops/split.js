@@ -2,11 +2,11 @@
 import * as utils from '../utils.js';
 
 describe('test split', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testSplit(
       inputShape, inputValue, expectedArray, splits, axis = undefined) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const input =
         builder.input('input', {type: 'float32', dimensions: inputShape});
     const splittedOperands = builder.split(input, splits, {axis});
@@ -14,14 +14,13 @@ describe('test split', function() {
     for (let i = 0; i < splittedOperands.length; ++i) {
       namedOperands[`split${i}`] = splittedOperands[i];
     }
-    const model = builder.createModel(namedOperands);
-    const compiledModel = await model.compile();
-    const inputs = {'input': {buffer: new Float32Array(inputValue)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build(namedOperands);
+    const inputs = {'input': {data: new Float32Array(inputValue)}};
+    const outputs = await graph.compute(inputs);
     let i = 0;
     for (const output of Object.keys(outputs)) {
       utils.checkShape(outputs[output].dimensions, expectedArray[i].shape);
-      utils.checkValue(outputs[output].buffer, expectedArray[i].value);
+      utils.checkValue(outputs[output].data, expectedArray[i].value);
       i++;
     }
   }

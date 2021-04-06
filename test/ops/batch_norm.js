@@ -2,10 +2,10 @@
 import * as utils from '../utils.js';
 
 describe('test batchNormalization', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   it('batchNormalization', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
         builder.input('input', {type: 'float32', dimensions: inputShape});
@@ -16,17 +16,16 @@ describe('test batchNormalization', function() {
     const bias = builder.constant(desc, new Float32Array([0, 1]));
     const output =
         builder.batchNormalization(input, mean, variance, {scale, bias});
-    const model = builder.createModel({output});
-    const compiledModel = await model.compile();
-    const inputs = {'input': {buffer: new Float32Array([-1, 0, 1, 2, 3, 4])}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({output});
+    const inputs = {'input': {data: new Float32Array([-1, 0, 1, 2, 3, 4])}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.output.dimensions, inputShape);
     const expected = [-0.999995, 0., 0.999995, -0.22474074, 1., 2.2247407];
-    utils.checkValue(outputs.output.buffer, expected);
+    utils.checkValue(outputs.output.data, expected);
   });
 
   it('batchNormalization with epsilon', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
         builder.input('input', {type: 'float32', dimensions: inputShape});
@@ -42,11 +41,10 @@ describe('test batchNormalization', function() {
     const epsilon = 1e-2;
     const output = builder.batchNormalization(
         input, mean, variance, {scale, bias, epsilon});
-    const model = builder.createModel({output});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({output});
     const inputs = {
       'input': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           2.6973534,   -1.1874187,  -0.18637535, -1.7081367,  0.03293341,
           1.4802791,   -0.68332213, 1.618039,    -1.6412221,  -0.52998835,
           1.5229957,   -0.92798537, -0.35554567, 0.717948,    0.50108916,
@@ -74,7 +72,7 @@ describe('test batchNormalization', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.output.dimensions, inputShape);
     const expected = [
       1.0461562e+00,  1.9116578e-01,  4.1148305e-01,  7.6562166e-02,
@@ -108,6 +106,6 @@ describe('test batchNormalization', function() {
       -5.8637255e-01, -3.0367374e-01, -2.7111509e-01, -3.7675196e-01,
       -3.5137540e-01, -1.3970569e-02, 3.7042797e-04,  -3.5802066e-01,
     ];
-    utils.checkValue(outputs.output.buffer, expected);
+    utils.checkValue(outputs.output.data, expected);
   });
 });
