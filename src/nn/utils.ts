@@ -167,3 +167,14 @@ export function validateOptionalOperand(input: Operand, name = ''): void {
       input === undefined || input instanceof Operand,
       `The parameter ${name} is not an optional operand.`);
 }
+
+export function validateAxes(axes: number[], rank: number): boolean {
+  if (typeof axes !== 'undefined' && axes.length > 0) {
+    for (let i = 0; i < axes.length; ++i) {
+      if (axes[i] >= rank || axes[i] < -rank) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
