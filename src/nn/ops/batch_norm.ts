@@ -1,22 +1,22 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {BatchNormalizationOptions} from '../model_builder';
-import {Operand} from '../operand';
+import {MLBatchNormalizationOptions} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class BatchNormalization extends SingleOutputOperation {
-  private input_: Operand;
-  private mean_: Operand;
-  private variance_: Operand;
-  private scale_?: Operand;
-  private bias_?: Operand;
+  private input_: MLOperand;
+  private mean_: MLOperand;
+  private variance_: MLOperand;
+  private scale_?: MLOperand;
+  private bias_?: MLOperand;
   private axis_?: number;
   private epsilon_?: number;
 
   constructor(
-      input: Operand, mean: Operand, variance: Operand,
-      options: BatchNormalizationOptions = {}) {
+      input: MLOperand, mean: MLOperand, variance: MLOperand,
+      options: MLBatchNormalizationOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -45,8 +45,8 @@ export class BatchNormalization extends SingleOutputOperation {
     }
   }
 
-  inputs(): Operand[] {
-    const inputs: Operand[] = [this.input_, this.mean_, this.variance_];
+  inputs(): MLOperand[] {
+    const inputs: MLOperand[] = [this.input_, this.mean_, this.variance_];
     if (this.scale_) {
       inputs.push(this.scale_);
     }
@@ -56,7 +56,7 @@ export class BatchNormalization extends SingleOutputOperation {
     return inputs;
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
     utils.assert(
         this.axis_ < input.rank && this.axis_ >= -input.rank,

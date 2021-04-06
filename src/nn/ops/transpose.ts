@@ -1,14 +1,14 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Operand} from '../operand';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class Transpose extends SingleOutputOperation {
-  private input_: Operand;
+  private input_: MLOperand;
   private permutation_?: number[];
 
-  constructor(input: Operand, permutation?: number[]) {
+  constructor(input: MLOperand, permutation?: number[]) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -20,11 +20,11 @@ export class Transpose extends SingleOutputOperation {
     this.permutation_ = permutation;
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.input_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
     return tf.transpose(input, this.permutation_);
   }

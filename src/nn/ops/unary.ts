@@ -1,23 +1,23 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Operand} from '../operand';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export abstract class Unary extends SingleOutputOperation {
-  private x_: Operand;
+  private x_: MLOperand;
 
-  constructor(x: Operand) {
+  constructor(x: MLOperand) {
     super(x.builder);
     utils.validateOperand(x);
     this.x_ = x;
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.x_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const x: tf.Tensor = inputTensors.get(this.x_);
     return this.runOp(x);
   }

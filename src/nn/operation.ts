@@ -1,14 +1,14 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ExecutionContext} from './compilation';
-import {ModelBuilder} from './model_builder';
-import {Operand, OutputOperand} from './operand';
+import {ExecutionContext} from './graph';
+import {MLGraphBuilder} from './graph_builder';
+import {MLOperand, OutputOperand} from './operand';
 
 export abstract class Operation {
-  protected readonly builder_: ModelBuilder;
+  protected readonly builder_: MLGraphBuilder;
   protected outputs_: OutputOperand[] = [];
 
-  get builder(): ModelBuilder {
+  get builder(): MLGraphBuilder {
     return this.builder_;
   }
 
@@ -16,14 +16,14 @@ export abstract class Operation {
     return this.outputs_;
   }
 
-  constructor(builder: ModelBuilder) {
+  constructor(builder: MLGraphBuilder) {
     this.builder_ = builder;
   }
 
-  abstract inputs(): Operand[];
+  abstract inputs(): MLOperand[];
 
   compute(context: ExecutionContext): void {
-    const inputTensors: Map<Operand, tf.Tensor> = new Map();
+    const inputTensors: Map<MLOperand, tf.Tensor> = new Map();
     for (const inputOperand of this.inputs()) {
       inputTensors.set(inputOperand, context.getTensor(inputOperand));
     }
@@ -36,11 +36,11 @@ export abstract class Operation {
     }
   }
 
-  abstract computeImpl(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor[];
+  abstract computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[];
 }
 
 export abstract class SingleOutputOperation extends Operation {
-  constructor(builder: ModelBuilder) {
+  constructor(builder: MLGraphBuilder) {
     super(builder);
     // Operation produces 1 output operand by default.
     this.outputs_.push(new OutputOperand(this));
@@ -50,9 +50,9 @@ export abstract class SingleOutputOperation extends Operation {
     return this.outputs_[0];
   }
 
-  computeImpl(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor[] {
+  computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[] {
     return [this.run(inputTensors)];
   }
 
-  abstract run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor;
+  abstract run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor;
 }

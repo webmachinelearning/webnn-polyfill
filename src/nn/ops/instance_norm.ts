@@ -1,18 +1,18 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {InputOperandLayout, InstanceNormalizationOptions} from '../model_builder';
-import {Operand} from '../operand';
+import {MLInputOperandLayout, MLInstanceNormalizationOptions} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class InstanceNormalization extends SingleOutputOperation {
-  private input_: Operand;
-  private scale_?: Operand;
-  private bias_?: Operand;
+  private input_: MLOperand;
+  private scale_?: MLOperand;
+  private bias_?: MLOperand;
   private epsilon_?: number;
-  private layout_: InputOperandLayout;
+  private layout_: MLInputOperandLayout;
 
-  constructor(input: Operand, options: InstanceNormalizationOptions = {}) {
+  constructor(input: MLOperand, options: MLInstanceNormalizationOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -30,16 +30,16 @@ export class InstanceNormalization extends SingleOutputOperation {
     }
     if (options.layout !== undefined) {
       utils.assert(
-          options.layout in InputOperandLayout,
+          options.layout in MLInputOperandLayout,
           'The layout parameter is invalid.');
       this.layout_ = options.layout;
     } else {
-      this.layout_ = InputOperandLayout.nchw;
+      this.layout_ = MLInputOperandLayout.nchw;
     }
   }
 
-  inputs(): Operand[] {
-    const inputs: Operand[] = [this.input_];
+  inputs(): MLOperand[] {
+    const inputs: MLOperand[] = [this.input_];
     if (this.scale_) {
       inputs.push(this.scale_);
     }
@@ -49,13 +49,13 @@ export class InstanceNormalization extends SingleOutputOperation {
     return inputs;
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
     utils.assert(input.rank === 4, 'The input operand is not 4-D.');
     let axes = [2, 3];
     let shape = [1, -1, 1, 1];
     let inputChannels = input.shape[1];
-    if (this.layout_ === InputOperandLayout.nhwc) {
+    if (this.layout_ === MLInputOperandLayout.nhwc) {
       axes = [1, 2];
       shape = [1, 1, 1, -1];
       inputChannels = input.shape[3];

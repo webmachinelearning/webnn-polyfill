@@ -1,26 +1,27 @@
 import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
-import {AutoPad, Conv2dOptions, FilterOperandLayout, InputOperandLayout} from '../model_builder';
-import {Operand} from '../operand';
+import {MLAutoPad, MLConv2dOptions, MLFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class Conv2d extends SingleOutputOperation {
-  private input_: Operand;
-  private filter_: Operand;
+  private input_: MLOperand;
+  private filter_: MLOperand;
   private padding_?: [number, number, number, number];
   private strides_?: [number, number];
   private dilations_?: [number, number];
   private groups_?: number;
-  private inputLayout_?: InputOperandLayout;
-  private filterLayout_?: FilterOperandLayout;
-  private autoPad_?: AutoPad;
+  private inputLayout_?: MLInputOperandLayout;
+  private filterLayout_?: MLFilterOperandLayout;
+  private autoPad_?: MLAutoPad;
   private outputPadding_?: [number, number];
   private outputSizes_?: [number, number];
   private transpose_?: boolean;
 
-  constructor(input: Operand, filter: Operand, options: Conv2dOptions = {}) {
+  constructor(
+      input: MLOperand, filter: MLOperand, options: MLConv2dOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -35,9 +36,9 @@ export class Conv2d extends SingleOutputOperation {
   private initOptions(
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
-      groups = 1, inputLayout: InputOperandLayout = InputOperandLayout.nchw,
-      filterLayout: FilterOperandLayout = FilterOperandLayout.oihw,
-      autoPad: AutoPad = AutoPad.explicit, transpose = false,
+      groups = 1, inputLayout: MLInputOperandLayout = MLInputOperandLayout.nchw,
+      filterLayout: MLFilterOperandLayout = MLFilterOperandLayout.oihw,
+      autoPad: MLAutoPad = MLAutoPad.explicit, transpose = false,
       outputPadding: [number, number] = [0, 0],
       outputSizes: [number, number] = undefined) {
     utils.assert(
@@ -59,16 +60,16 @@ export class Conv2d extends SingleOutputOperation {
     this.groups_ = groups;
 
     utils.assert(
-        inputLayout in InputOperandLayout,
+        inputLayout in MLInputOperandLayout,
         'The input layout parameter is invalid.');
     this.inputLayout_ = inputLayout;
 
     utils.assert(
-        filterLayout in FilterOperandLayout,
+        filterLayout in MLFilterOperandLayout,
         'The filter layout parameter is invalid.');
     this.filterLayout_ = filterLayout;
 
-    utils.assert(autoPad in AutoPad, 'The autoPad parameter is invalid.');
+    utils.assert(autoPad in MLAutoPad, 'The autoPad parameter is invalid.');
     this.autoPad_ = autoPad;
 
     this.transpose_ = transpose;
@@ -90,25 +91,25 @@ export class Conv2d extends SingleOutputOperation {
     }
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.input_, this.filter_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     let filter: tf.Tensor4D = inputTensors.get(this.filter_) as tf.Tensor4D;
 
     // tf.conv2d input layout (nhwc): [batch, height, width, inDepth]
-    if (this.inputLayout_ === InputOperandLayout.nchw) {
+    if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nchw -> nhwc
       input = tf.transpose(input, [0, 2, 3, 1]);
     }
     const inputChannels = input.shape[3];
     // tf.conv2d filter layout (hwio): [filterHeight, filterWidth, inDepth,
     // outDepth]
-    if (this.filterLayout_ === FilterOperandLayout.oihw) {
+    if (this.filterLayout_ === MLFilterOperandLayout.oihw) {
       filter = tf.transpose(filter, [2, 3, 1, 0]);
-    } else if (this.filterLayout_ === FilterOperandLayout.ohwi) {
+    } else if (this.filterLayout_ === MLFilterOperandLayout.ohwi) {
       filter = tf.transpose(filter, [1, 2, 3, 0]);
     }
 
@@ -120,7 +121,7 @@ export class Conv2d extends SingleOutputOperation {
         // tf.conv2d NHWC should be in the following form:
         //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
         let padding: 'valid'|'same'|ExplicitPadding;
-        if (this.autoPad_ === AutoPad.explicit) {
+        if (this.autoPad_ === MLAutoPad.explicit) {
           if (this.padding_.every(v => v === 0)) {
             padding = 'valid';
           } else {
@@ -131,7 +132,7 @@ export class Conv2d extends SingleOutputOperation {
           }
         } else {
           // Calculate the explicit paddings for 'same-upper'
-          if (this.autoPad_ === AutoPad['same-upper']) {
+          if (this.autoPad_ === MLAutoPad['same-upper']) {
             padding = [[0, 0], [0, 0], [0, 0], [0, 0]];
             const outputSizes = [0, 0];
             for (let i = 0; i < 2; ++i) {
@@ -159,13 +160,13 @@ export class Conv2d extends SingleOutputOperation {
       } else if (
           this.groups_ === inputChannels && this.groups_ === filter.shape[3]) {
         let padding: 'valid'|'same'|number;
-        if (this.autoPad_ === AutoPad.explicit) {
+        if (this.autoPad_ === MLAutoPad.explicit) {
           utils.assert(
               this.padding_.every(v => v === this.padding_[0]),
               'tf.depthwiseConv2d only supports the same padding value.');
           padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
         } else {
-          if (this.autoPad_ === AutoPad['same-lower']) {
+          if (this.autoPad_ === MLAutoPad['same-lower']) {
             padding = 'same';
           } else {
             throw new Error(
@@ -189,13 +190,13 @@ export class Conv2d extends SingleOutputOperation {
           this.dilations_.every(v => v === 1),
           'tf.conv2dTranspose only supports dilation 1.');
       let padding: 'valid'|'same'|number;
-      if (this.autoPad_ === AutoPad.explicit) {
+      if (this.autoPad_ === MLAutoPad.explicit) {
         utils.assert(
             this.padding_.every(v => v === this.padding_[0]),
             'tf.conv2dTranspose only supports the same padding value.');
         padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
       } else {
-        if (this.autoPad_ === AutoPad['same-lower']) {
+        if (this.autoPad_ === MLAutoPad['same-lower']) {
           padding = 'same';
           this.outputSizes_ = [
             input.shape[1] * this.strides_[0],
@@ -223,7 +224,7 @@ export class Conv2d extends SingleOutputOperation {
       output = tf.conv2dTranspose(
           input, filter, outputShape, this.strides_, padding);
     }
-    if (this.inputLayout_ === InputOperandLayout.nchw) {
+    if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
     }
