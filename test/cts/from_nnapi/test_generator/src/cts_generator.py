@@ -302,10 +302,10 @@ def GetOperandValue(oprand, operation, opInsList, name, layout, value=None):
 
     return opValue
 
-def PrintInputBuffer(oprand, operation, opInsList, name, value, layout, test):
+def PrintInputData(oprand, operation, opInsList, name, value, layout, test):
     typedArray = oprand.type.mappingTypedArrayType
     opValue = GetOperandValue(oprand, operation, opInsList, name, layout, value)
-    IndentedPrint('const %sBuffer = new %s(%s);' % (oprand, typedArray, opValue),
+    IndentedPrint('const %sData = new %s(%s);' % (oprand, typedArray, opValue),
                   indent=4, file=test)
 
 def PrintConstant(oprand, operation, opInsList, opInsInfoList, name, layout,
@@ -572,7 +572,7 @@ def DumpCtsTest(example, test):
                       (tg.FileNames.version,
                        os.path.basename(tg.FileNames.specFile)),
                       indent=4, file=test)
-        IndentedPrint("const builder = nn.createModelBuilder();",
+        IndentedPrint("const builder = new MLGraphBuilder(context);",
                       indent=4, file=test)
         computeParamsList = []
         # Create operand(s) by ModelBuilder.input
@@ -584,10 +584,10 @@ def DumpCtsTest(example, test):
                 if rule == md.MappingRule.OPERAND_OPERAND:
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
                                       layout, test)
-                    PrintInputBuffer(op, nnapiOp, curOpInsList,
-                                     opInsDict['name'], inputFeedDict[op],
-                                     layout, test)
-                    computeParamsList.append("'%s': {buffer: %sBuffer}" % \
+                    PrintInputData(op, nnapiOp, curOpInsList,
+                                   opInsDict['name'], inputFeedDict[op],
+                                   layout, test)
+                    computeParamsList.append("'%s': {data: %sData}" % \
                                              (op, op))
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
                     varValue = inputFeedDict[op]
@@ -604,10 +604,10 @@ def DumpCtsTest(example, test):
                     biasOp = op
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
                                       layout, test)
-                    PrintInputBuffer(op, nnapiOp, curOpInsList,
-                                     opInsDict['name'], inputFeedDict[op],
-                                     layout, test)
-                    computeParamsList.append("'%s': {buffer: %sBuffer}" % \
+                    PrintInputData(op, nnapiOp, curOpInsList,
+                                   opInsDict['name'], inputFeedDict[op],
+                                   layout, test)
+                    computeParamsList.append("'%s': {data: %sData}" % \
                                              (op, op))
         # Create operand(s) by ModelBuilder.constant, or define variable(s)
         for op in curParamsList:
@@ -685,15 +685,13 @@ def DumpCtsTest(example, test):
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
                         fusedReluMappedInfo, outputOp, test)
         if len(curOutputsList) == 1:
-            IndentedPrint("const model = builder.createModel({%s});" % outputOp,
+            IndentedPrint("const graph = await builder.build({%s});" % outputOp,
                           indent=4, file=test)
         elif len(curOutputsList) > 1:
             outputOpNameList = [item.name for item in outputOp]
-            IndentedPrint("const model = builder.createModel({%s});" % \
+            IndentedPrint("const graph = await builder.build({%s});" % \
                           ', '.join(outputOpNameList), indent=4, file=test)
-        IndentedPrint("const compilation = await model.compile();", indent=4,
-                      file=test)
-        IndentedPrint("const outputs = await compilation.compute({%s});" % \
+        IndentedPrint("const outputs = await graph.compute({%s});" % \
                       ', '.join(computeParamsList), indent=4, file=test)
         # Check compute output
         criteria = 'utils.ctsFp32RestrictAccuracyCriteria'
@@ -701,15 +699,15 @@ def DumpCtsTest(example, test):
             criteria = 'utils.ctsFp32RelaxedAccuracyCriteria'
         if len(curOutputsList) == 1:
             IndentedPrint(
-                "utils.checkValue(outputs.%s.buffer, expected, %s);" % \
+                "utils.checkValue(outputs.%s.data, expected, %s);" % \
                 (outputOp, criteria), indent=4, file=test)
         elif len(curOutputsList) > 1:
             IndentedPrint('for (let i = 0; i < %d; i++) {' % \
                           len(curOutputsList), indent=4, file=test)
-            bufferStr = 'outputs[%s[i]].buffer' % ['%s' % k for k in outputOp]
+            dataStr = 'outputs[%s[i]].data' % ['%s' % k for k in outputOp]
             IndentedPrint(
                 "utils.checkValue(%s, expected[i], %s);" % \
-                (bufferStr, criteria), indent=6, file=test)
+                (dataStr, criteria), indent=6, file=test)
             IndentedPrint("}", indent=4, file=test)
         IndentedPrint("});", indent=2, file=test)
         testIndex += 1
