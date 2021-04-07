@@ -1,16 +1,16 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ClampOptions} from '../model_builder';
-import {Operand} from '../operand';
+import {MLClampOptions} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class Clamp extends SingleOutputOperation {
-  private x_: Operand;
-  private minValue_?: Operand;
-  private maxValue_?: Operand;
+  private x_: MLOperand;
+  private minValue_?: MLOperand;
+  private maxValue_?: MLOperand;
 
-  constructor(x: Operand, options: ClampOptions = {}) {
+  constructor(x: MLOperand, options: MLClampOptions = {}) {
     super(x.builder);
     utils.validateOperand(x);
     this.x_ = x;
@@ -20,7 +20,7 @@ export class Clamp extends SingleOutputOperation {
     this.maxValue_ = options.maxValue;
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     const inputs = [this.x_];
     if (this.minValue_) {
       inputs.push(this.minValue_);
@@ -31,7 +31,7 @@ export class Clamp extends SingleOutputOperation {
     return inputs;
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const x: tf.Tensor = inputTensors.get(this.x_);
     if (this.minValue_) {
       if (this.maxValue_) {

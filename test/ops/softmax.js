@@ -2,17 +2,16 @@
 import * as utils from '../utils.js';
 
 describe('test softmax', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   it('softmax', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3, 4]});
     const y = builder.softmax(x);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({y});
     const inputs = {
       'x': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.4301911,
           0.54719144,
           -1.1637765,
@@ -28,7 +27,7 @@ describe('test softmax', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, [3, 4]);
     const expected = [
       0.32165375,
@@ -44,6 +43,6 @@ describe('test softmax', function() {
       0.35717794,
       0.21167983,
     ];
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   });
 });

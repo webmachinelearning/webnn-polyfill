@@ -1,14 +1,14 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Operand} from '../operand';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class LeakyRelu extends SingleOutputOperation {
-  private x_: Operand;
+  private x_: MLOperand;
   private alpha_?: number;
 
-  constructor(x: Operand, alpha = 0.01) {
+  constructor(x: MLOperand, alpha = 0.01) {
     super(x.builder);
     utils.validateOperand(x);
     this.x_ = x;
@@ -16,11 +16,11 @@ export class LeakyRelu extends SingleOutputOperation {
     this.alpha_ = alpha;
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.x_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const x: tf.Tensor = inputTensors.get(this.x_);
     return tf.leakyRelu(x, this.alpha_);
   }

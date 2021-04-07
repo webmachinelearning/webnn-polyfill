@@ -2,17 +2,16 @@
 import * as utils from '../utils.js';
 
 describe('test relu', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   it('relu', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3, 4, 5]});
     const y = builder.relu(x);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({y});
     const inputs = {
       'x': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           -1.483762,   0.6447428,   -1.2266507,  -1.7132527,  0.9777725,
           -0.34438756, -0.99921757, -1.2882805,  1.3725083,   -0.06386258,
           -0.44738683, -0.6776338,  0.5027815,   -1.0428967,  -1.4220539,
@@ -28,7 +27,7 @@ describe('test relu', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, [3, 4, 5]);
     const expected = [
       0.,        0.6447428, 0.,         0.,         0.9777725, 0.,
@@ -42,6 +41,6 @@ describe('test relu', function() {
       0.,        1.1774449, 0.8999488,  0.,         1.0122099, 0.,
       0.,        0.,        1.4515465,  0.,         2.0361354, 0.7899623,
     ];
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   });
 });

@@ -7,7 +7,7 @@ const assert = chai.assert;
 describe('test squeezenet1.1 nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
-  let compiledModel;
+  let graph;
   let beforeNumBytes;
   let beforeNumTensors;
   before(async () => {
@@ -15,8 +15,8 @@ describe('test squeezenet1.1 nchw', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const nn = navigator.ml.getNeuralNetworkContext();
-    const builder = nn.createModelBuilder();
+    const context = navigator.ml.createContext();
+    const builder = new MLGraphBuilder(context);
 
     async function buildConv(input, name, options = undefined) {
       const prefix = './weights/squeezenet0_' + name;
@@ -60,14 +60,13 @@ describe('test squeezenet1.1 nchw', function() {
     const pool3 = builder.averagePool2d(
         conv25, {windowDimensions: [13, 13], strides: [13, 13]});
     const reshape0 = builder.reshape(pool3, [1, -1]);
-    const model = builder.createModel({reshape0});
-    compiledModel = await model.compile();
+    graph = await builder.build({reshape0});
   });
 
   after(async () => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
-      compiledModel.dispose();
+      graph.dispose();
       const afterNumTensors = _tfengine.memory().numTensors;
       const afterNumBytes = _tfengine.memory().numBytes;
       assert(
@@ -83,10 +82,10 @@ describe('test squeezenet1.1 nchw', function() {
     const input = await utils.createTypedArrayFromNpy(new URL(inputFile, url));
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
-    const outputs = await compiledModel.compute({'data': {buffer: input}});
+    const outputs = await graph.compute({'data': {data: input}});
     utils.checkShape(outputs.reshape0.dimensions, [1, 1000]);
     utils.checkValue(
-        outputs.reshape0.buffer, expected,
+        outputs.reshape0.data, expected,
         // refer to onnx
         // https://github.com/onnx/onnx/blob/master/onnx/backend/test/case/model/__init__.py#L58
         new utils.AccuracyCriterion(1e-7, 1e-3));

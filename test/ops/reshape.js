@@ -2,24 +2,23 @@
 import * as utils from '../utils.js';
 
 describe('test reshape', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testReshape(oldShape, newShape, expectedShape) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: oldShape});
     const y = builder.reshape(x, newShape);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({y});
     const bufferSize = utils.sizeOfShape(oldShape);
     const inputBuffer = new Float32Array(bufferSize);
     for (let i = 0; i < inputBuffer.length; ++i) {
       inputBuffer[i] = Math.random();
     }
-    const inputs = {'x': {buffer: inputBuffer}};
-    const outputs = await compiledModel.compute(inputs);
+    const inputs = {'x': {data: inputBuffer}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(
         outputs.y.dimensions, expectedShape ? expectedShape : newShape);
-    utils.checkValue(outputs.y.buffer, inputBuffer);
+    utils.checkValue(outputs.y.data, inputBuffer);
   }
 
   it('reshape reordered_all_dims', async function() {

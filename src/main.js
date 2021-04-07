@@ -1,9 +1,8 @@
 import {ML} from './ml';
-import {Compilation} from './nn/compilation';
-import {Model} from './nn/model';
-import {ModelBuilder} from './nn/model_builder';
-import {NeuralNetworkContext} from './nn/neural_network_context';
-import {Operand} from './nn/operand';
+import {MLContext} from './nn/context';
+import {MLGraph} from './nn/graph';
+import {MLGraphBuilder} from './nn/graph_builder';
+import {MLOperand} from './nn/operand';
 
 if (navigator.ml == null) {
   navigator.ml = new ML();
@@ -13,22 +12,18 @@ if (global.ML == null) {
   global.ML = ML;
 }
 
-if (global.NeuralNetworkContext == null) {
-  global.NeuralNetworkContext = NeuralNetworkContext;
+if (global.MLContext == null) {
+  global.MLContext = MLContext;
 }
 
-if (global.ModelBuilder == null) {
-  global.ModelBuilder = ModelBuilder;
+if (global.MLGraphBuilder == null) {
+  global.MLGraphBuilder = MLGraphBuilder;
 }
 
-if (global.Model == null) {
-  global.Model = Model;
+if (global.MLGraph == null) {
+  global.MLGraph = MLGraph;
 }
 
-if (global.Compilation == null) {
-  global.Compilation = Compilation;
-}
-
-if (global.Operand == null) {
-  global.Operand = Operand;
+if (global.MLOperand == null) {
+  global.MLOperand = MLOperand;
 }

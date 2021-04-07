@@ -2,18 +2,17 @@
 import * as utils from '../utils.js';
 
 describe('test min', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   it('min', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.min(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.30360392,  0.79021126,  0.11072686,  1.0779074,   -0.02202512,
           -0.4660466,  0.5439212,   -1.1046865,  -0.7237214,  1.7275667,
           0.05005725,  0.03450501,  -0.93030375, 0.8889801,   1.6954619,
@@ -29,7 +28,7 @@ describe('test min', function() {
         ]),
       },
       'b': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           -0.3013072,  -0.09710764, 0.19347863,  0.57673335,  -0.9459303,
           -0.311303,   -0.51731133, 0.05566696,  0.1896354,   -2.4551184,
           0.49731326,  -0.505013,   0.38610065,  -0.46502006, 0.11969721,
@@ -45,7 +44,7 @@ describe('test min', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       -0.3013072,  -0.09710764, 0.11072686,  0.57673335,  -0.9459303,
@@ -61,19 +60,18 @@ describe('test min', function() {
       -0.3274254,  -0.24440259, -0.5514492,  -1.3384086,  -1.0613606,
       -0.6608337,  0.30539933,  -1.529869,   -0.70533603, -2.1911235,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 
   it('min broadcast', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.min(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.09259097,  -1.2761278,  0.63461846,  0.83395857,  -0.6424096,
           -0.10002025, 0.2483844,   1.324728,    0.7070375,   -0.24927127,
           -1.1588863,  0.05159701,  -0.27449006, 1.3718864,   -0.2961051,
@@ -89,7 +87,7 @@ describe('test min', function() {
         ]),
       },
       'b': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.6450575,
           -1.302236,
           0.27485028,
@@ -98,7 +96,7 @@ describe('test min', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       0.09259097,  -1.302236,  0.27485028,  0.83395857,  -0.83993983,
@@ -114,6 +112,6 @@ describe('test min', function() {
       -0.5055633,  -1.302236,  0.00957129,  0.41766334,  -0.83993983,
       0.3123349,   -1.302236,  -0.26201916, -1.6016098,  -0.83993983,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 });

@@ -7,7 +7,7 @@ const assert = chai.assert;
 describe('test squeezenet1.0 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
-  let compiledModel;
+  let graph;
   let beforeNumBytes;
   let beforeNumTensors;
   before(async () => {
@@ -15,8 +15,8 @@ describe('test squeezenet1.0 nhwc', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const nn = navigator.ml.getNeuralNetworkContext();
-    const builder = nn.createModelBuilder();
+    const context = navigator.ml.createContext();
+    const builder = new MLGraphBuilder(context);
 
     async function buildConv(input, name, options = undefined) {
       const prefix = './weights/' + name;
@@ -74,14 +74,13 @@ describe('test squeezenet1.0 nhwc', function() {
         conv10, {windowDimensions: [13, 13], layout: 'nhwc'});
     const reshape = builder.reshape(averagePool2d, [1, -1]);
     const softmax = builder.softmax(reshape);
-    const model = builder.createModel({softmax});
-    compiledModel = await model.compile();
+    graph = await builder.build({softmax});
   });
 
   after(async () => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
-      compiledModel.dispose();
+      graph.dispose();
       const afterNumTensors = _tfengine.memory().numTensors;
       const afterNumBytes = _tfengine.memory().numBytes;
       assert(
@@ -97,12 +96,10 @@ describe('test squeezenet1.0 nhwc', function() {
     const input = await utils.createTypedArrayFromNpy(new URL(inputFile, url));
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
-    const outputs =
-        await compiledModel.compute({'placeholder': {buffer: input}});
+    const outputs = await graph.compute({'placeholder': {data: input}});
     utils.checkShape(outputs.softmax.dimensions, [1, 1001]);
     utils.checkValue(
-        outputs.softmax.buffer, expected,
-        utils.ctsFp32RestrictAccuracyCriteria);
+        outputs.softmax.data, expected, utils.ctsFp32RestrictAccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {

@@ -1,17 +1,17 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {InterpolationMode, ResampleOptions} from '../model_builder';
-import {Operand} from '../operand';
+import {MLInterpolationMode, MLResampleOptions} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class Resample extends SingleOutputOperation {
-  private input_: Operand;
-  private mode_: InterpolationMode = InterpolationMode['nearest-neighbor'];
+  private input_: MLOperand;
+  private mode_: MLInterpolationMode = MLInterpolationMode['nearest-neighbor'];
   private scales_: [number, number, number, number];
   private sizes_: [number, number, number, number];
 
-  constructor(input: Operand, options: ResampleOptions = {}) {
+  constructor(input: MLOperand, options: MLResampleOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -35,16 +35,17 @@ export class Resample extends SingleOutputOperation {
         'The scales or sizes parameter is not provied.');
     if (options.mode !== undefined) {
       utils.assert(
-          options.mode in InterpolationMode, 'The mode parameter is invalid.');
+          options.mode in MLInterpolationMode,
+          'The mode parameter is invalid.');
       this.mode_ = options.mode;
     }
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.input_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     utils.assert(input.rank === 4, 'The input tensor is not 4-D.');
     const sizes: [number, number] = [0, 0];
@@ -84,9 +85,9 @@ export class Resample extends SingleOutputOperation {
       }
     }
     let output: tf.Tensor;
-    if (this.mode_ === InterpolationMode['nearest-neighbor']) {
+    if (this.mode_ === MLInterpolationMode['nearest-neighbor']) {
       output = tf.image.resizeNearestNeighbor(input, sizes, false, true);
-    } else if (this.mode_ === InterpolationMode.linear) {
+    } else if (this.mode_ === MLInterpolationMode.linear) {
       output = tf.image.resizeBilinear(input, sizes, false, true);
     }
     if (transposed) {

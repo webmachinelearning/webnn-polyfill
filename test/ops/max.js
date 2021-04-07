@@ -2,18 +2,17 @@
 import * as utils from '../utils.js';
 
 describe('test max', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   it('max', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.max(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.54270846, 0.3356357,  0.04034169,  1.6710619,   -1.0029255,
           1.4024457,  -0.5183214, -1.5897884,  0.16786452,  -0.92690915,
           -0.8761584, 1.8612522,  0.2960607,   0.11604685,  0.2686291,
@@ -29,7 +28,7 @@ describe('test max', function() {
         ]),
       },
       'b': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           -0.00724315, -1.4088361,  0.17466596,  1.1395162,   1.3720452,
           -0.35610083, -0.5597993,  -0.26632488, -0.31922337, -0.2980101,
           0.12268824,  -1.1521344,  -1.0502838,  0.85281086,  -0.83374727,
@@ -45,7 +44,7 @@ describe('test max', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       0.54270846, 0.3356357,   0.17466596, 1.6710619,   1.3720452,  1.4024457,
@@ -59,19 +58,18 @@ describe('test max', function() {
       1.1591603,  0.5907742,   -0.507083,  -0.8065648,  2.0162134,  1.460351,
       1.4930215,  1.6682644,   1.0773797,  0.43166366,  -0.5337765, 0.27636543,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 
   it('max broadcast', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.max(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
+    const graph = await builder.build({c});
     const inputs = {
       'a': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           -0.78042406, -0.18523395, -0.12612817, -0.24858657, 0.36215156,
           -0.41349608, 1.540389,    1.9143543,   0.4806893,   0.0123093,
           1.2142435,   -0.57421523, -2.1229508,  1.1247561,   0.11206079,
@@ -87,7 +85,7 @@ describe('test max', function() {
         ]),
       },
       'b': {
-        buffer: new Float32Array([
+        data: new Float32Array([
           0.67538136,
           0.3535401,
           1.0303422,
@@ -96,7 +94,7 @@ describe('test max', function() {
         ]),
       },
     };
-    const outputs = await compiledModel.compute(inputs);
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, [3, 4, 5]);
     const expected = [
       0.67538136, 0.3535401,  1.0303422, -0.24858657, 0.36215156,
@@ -112,6 +110,6 @@ describe('test max', function() {
       0.67538136, 1.0456259,  1.0303422, 0.5966878,   0.7607826,
       0.9664813,  0.3535401,  1.0303422, 0.38655168,  -0.25600532,
     ];
-    utils.checkValue(outputs.c.buffer, expected);
+    utils.checkValue(outputs.c.data, expected);
   });
 });

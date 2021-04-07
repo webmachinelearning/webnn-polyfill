@@ -2,17 +2,16 @@
 import * as utils from '../utils.js';
 
 describe('test sigmoid', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
   async function testSigmoid(input, expected, shape) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.sigmoid(x);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(input)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(input)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, shape);
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   }
   it('sigmoid 1d', async function() {
     await testSigmoid([-1, 0, 1], [0.26894143, 0.5, 0.7310586], [3]);

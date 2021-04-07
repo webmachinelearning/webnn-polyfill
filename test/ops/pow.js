@@ -2,19 +2,18 @@
 import * as utils from '../utils.js';
 
 describe('test pow', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
   async function testSqrt(input, expected, shape) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.constant(
         {type: 'float32', dimensions: [1]}, new Float32Array([0.5]));
     const z = builder.pow(x, y);
-    const model = builder.createModel({z});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(input)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({z});
+    const inputs = {'x': {data: new Float32Array(input)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.z.dimensions, shape);
-    utils.checkValue(outputs.z.buffer, expected);
+    utils.checkValue(outputs.z.data, expected);
   }
   it('sqrt 1d', async function() {
     await testSqrt([1, 4, 9], [1, 2, 3], [3]);
@@ -54,44 +53,41 @@ describe('test pow', function() {
   });
 
   it('pow 1d', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
         {type: 'float32', dimensions: [3]}, new Float32Array([4, 5, 6]));
     const z = builder.pow(x, y);
-    const model = builder.createModel({z});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array([1, 2, 3])}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({z});
+    const inputs = {'x': {data: new Float32Array([1, 2, 3])}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.z.dimensions, [3]);
-    utils.checkValue(outputs.z.buffer, [1., 32., 729.]);
+    utils.checkValue(outputs.z.data, [1., 32., 729.]);
   });
 
   it('pow broadcast scalar', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
         {type: 'float32', dimensions: [1]}, new Float32Array([2]));
     const z = builder.pow(x, y);
-    const model = builder.createModel({z});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array([1, 2, 3])}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({z});
+    const inputs = {'x': {data: new Float32Array([1, 2, 3])}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.z.dimensions, [3]);
-    utils.checkValue(outputs.z.buffer, [1., 4., 9.]);
+    utils.checkValue(outputs.z.data, [1., 4., 9.]);
   });
 
   it('pow broadcast scalar', async function() {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
     const y = builder.constant(
         {type: 'float32', dimensions: [3]}, new Float32Array([1, 2, 3]));
     const z = builder.pow(x, y);
-    const model = builder.createModel({z});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array([1, 2, 3, 4, 5, 6])}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({z});
+    const inputs = {'x': {data: new Float32Array([1, 2, 3, 4, 5, 6])}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.z.dimensions, [2, 3]);
-    utils.checkValue(outputs.z.buffer, [1., 4., 27., 4., 25., 216.]);
+    utils.checkValue(outputs.z.data, [1., 4., 27., 4., 25., 216.]);
   });
 });
