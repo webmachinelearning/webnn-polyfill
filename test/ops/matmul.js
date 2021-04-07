@@ -2,20 +2,19 @@
 import * as utils from '../utils.js';
 
 describe('test matmul', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testMatmul(A, B, expected) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: A.shape});
     const b = builder.constant(
         {type: 'float32', dimensions: B.shape}, new Float32Array(B.value));
     const c = builder.matmul(a, b);
-    const model = builder.createModel({c});
-    const compiledModel = await model.compile();
-    const inputs = {'a': {buffer: new Float32Array(A.value)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({c});
+    const inputs = {'a': {data: new Float32Array(A.value)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.c.dimensions, expected.shape);
-    utils.checkValue(outputs.c.buffer, expected.value);
+    utils.checkValue(outputs.c.data, expected.value);
   }
 
   it('matmul 1d', async function() {

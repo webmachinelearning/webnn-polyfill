@@ -1,16 +1,16 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Operand} from '../operand';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class Concat extends SingleOutputOperation {
-  private inputs_: Operand[];
+  private inputs_: MLOperand[];
   private axis_: number;
 
-  constructor(inputs: Operand[], axis: number) {
+  constructor(inputs: MLOperand[], axis: number) {
     utils.assert(
-        inputs.every(input => input instanceof Operand),
+        inputs.every(input => input instanceof MLOperand),
         'The parameter is not an operand.');
     super(inputs[0].builder);
     this.inputs_ = inputs;
@@ -18,11 +18,11 @@ export class Concat extends SingleOutputOperation {
     this.axis_ = axis;
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return this.inputs_;
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const inputs: tf.Tensor[] = [];
     for (const input of this.inputs()) {
       inputs.push(inputTensors.get(input));

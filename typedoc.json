@@ -3,10 +3,9 @@
   "readme": "none",
   "entryPoints": [
     "src/ml.ts",
-    "src/nn/compilation.ts",
-    "src/nn/model_builder.ts",
-    "src/nn/model.ts",
-    "src/nn/neural_network_context.ts",
+    "src/nn/graph.ts",
+    "src/nn/graph_builder.ts",
+    "src/nn/context.ts",
     "src/nn/operand.ts",
     "src/nn/types.ts"
   ],

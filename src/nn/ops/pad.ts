@@ -1,17 +1,18 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {PaddingMode, PadOptions} from '../model_builder';
-import {Operand} from '../operand';
+import {MLPaddingMode, MLPadOptions} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class Pad extends SingleOutputOperation {
-  private input_: Operand;
-  private padding_: Operand;
-  private mode_: PaddingMode = PaddingMode.constant;
+  private input_: MLOperand;
+  private padding_: MLOperand;
+  private mode_: MLPaddingMode = MLPaddingMode.constant;
   private value_ = 0;
 
-  constructor(input: Operand, padding: Operand, options: PadOptions = {}) {
+  constructor(
+      input: MLOperand, padding: MLOperand, options: MLPadOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -19,7 +20,7 @@ export class Pad extends SingleOutputOperation {
     this.padding_ = padding;
     if (options.mode !== undefined) {
       utils.assert(
-          options.mode in PaddingMode, 'The mode parameter is invalid.');
+          options.mode in MLPaddingMode, 'The mode parameter is invalid.');
       this.mode_ = options.mode;
     }
     if (options.value !== undefined) {
@@ -27,11 +28,11 @@ export class Pad extends SingleOutputOperation {
     }
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.input_, this.padding_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
     const padding: tf.Tensor = inputTensors.get(this.padding_);
     utils.assert(
@@ -39,10 +40,10 @@ export class Pad extends SingleOutputOperation {
             padding.shape[0] === input.rank,
         'The padding operand is invalid.');
     const paddingArray = padding.arraySync() as Array<[number, number]>;
-    if (this.mode_ === PaddingMode.constant) {
+    if (this.mode_ === MLPaddingMode.constant) {
       return tf.pad(input, paddingArray, this.value_);
     } else {
-      if (this.mode_ === PaddingMode.edge) {
+      if (this.mode_ === MLPaddingMode.edge) {
         const edgePaddings: Array<[number, number]> =
             new Array(paddingArray.length);
         let padded: tf.Tensor = input;
@@ -66,9 +67,9 @@ export class Pad extends SingleOutputOperation {
         return padded;
       } else {
         let mode: 'reflect'|'symmetric';
-        if (this.mode_ === PaddingMode.reflection) {
+        if (this.mode_ === MLPaddingMode.reflection) {
           mode = 'reflect';
-        } else if (this.mode_ === PaddingMode.symmetric) {
+        } else if (this.mode_ === MLPaddingMode.symmetric) {
           mode = 'symmetric';
         }
         return tf.mirrorPad(input, paddingArray, mode);

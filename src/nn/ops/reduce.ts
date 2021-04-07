@@ -1,16 +1,16 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {ReduceOptions} from '../model_builder';
-import {Operand} from '../operand';
+import {MLReduceOptions} from '../graph_builder';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 abstract class Reduce extends SingleOutputOperation {
-  private input_: Operand;
+  private input_: MLOperand;
   private axes_?: number[];
   private keepDimensions_?: boolean;
 
-  constructor(input: Operand, options: ReduceOptions = {}) {
+  constructor(input: MLOperand, options: MLReduceOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
@@ -31,11 +31,11 @@ abstract class Reduce extends SingleOutputOperation {
     }
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.input_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
     // accepts axis range [-r, r)
     utils.assert(utils.validateAxes(this.axes_, input.rank),

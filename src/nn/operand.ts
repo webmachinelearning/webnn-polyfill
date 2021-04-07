@@ -1,12 +1,12 @@
-import {ModelBuilder} from './model_builder';
+import {MLBufferView, MLGraphBuilder} from './graph_builder';
 import {Operation} from './operation';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#enumdef-operandtype)
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype)
  */
-export enum OperandType {
+export enum MLOperandType {
   'float32' = 'float32',
   'float16' = 'float16',
   'int32' = 'int32',
@@ -16,37 +16,37 @@ export enum OperandType {
 }
 
 /**
- * [API
- * spec](https://webmachinelearning.github.io/webnn/#dictdef-operanddescriptor)
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mloperanddescriptor)
  */
-export interface OperandDescriptor {
-  type: OperandType;
+export interface MLOperandDescriptor {
+  type: MLOperandType;
   dimensions: number[];
 }
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#api-operand)
+ * [spec](https://webmachinelearning.github.io/webnn/#api-mloperand)
  */
-export class Operand {
-  private readonly builder_: ModelBuilder;
+export class MLOperand {
+  private readonly builder_: MLGraphBuilder;
 
-  /** @ignore */
-  get builder(): ModelBuilder {
+  /** @internal */
+  get builder(): MLGraphBuilder {
     return this.builder_;
   }
 
-  /** @ignore */
-  constructor(builder: ModelBuilder) {
+  /** @internal */
+  constructor(builder: MLGraphBuilder) {
     this.builder_ = builder;
   }
 }
 
-/** @ignore */
-export class InputOperand extends Operand {
+/** @internal */
+export class InputOperand extends MLOperand {
   readonly name: string;
-  readonly desc: OperandDescriptor;
+  readonly desc: MLOperandDescriptor;
 
-  constructor(name: string, desc: OperandDescriptor, builder: ModelBuilder) {
+  constructor(
+      name: string, desc: MLOperandDescriptor, builder: MLGraphBuilder) {
     super(builder);
     utils.assert(typeof name === 'string', 'The name parameter is invalid');
     this.name = name;
@@ -55,42 +55,42 @@ export class InputOperand extends Operand {
   }
 }
 
-/** @ignore */
-export class ConstantOperand extends Operand {
-  readonly desc: OperandDescriptor;
+/** @internal */
+export class ConstantOperand extends MLOperand {
+  readonly desc: MLOperandDescriptor;
   readonly value: number|ArrayBufferView;
 
   static createScalar(
-      value: number, type: OperandType = OperandType.float32,
-      builder: ModelBuilder): ConstantOperand {
-    utils.assert(type in OperandType, 'The operand type is invalid.');
+      value: number, type: MLOperandType = MLOperandType.float32,
+      builder: MLGraphBuilder): ConstantOperand {
+    utils.assert(type in MLOperandType, 'The operand type is invalid.');
     utils.validateValueType(value, type);
-    return new ConstantOperand({type} as OperandDescriptor, value, builder);
+    return new ConstantOperand({type} as MLOperandDescriptor, value, builder);
   }
 
   static createTensor(
-      desc: OperandDescriptor, value: ArrayBufferView,
-      builder: ModelBuilder): ConstantOperand {
+      desc: MLOperandDescriptor, value: MLBufferView,
+      builder: MLGraphBuilder): ConstantOperand {
+    utils.assert(
+        utils.isTypedArray(value),
+        'Only ArrayBufferView value type is supported.');
+    const array = value as ArrayBufferView;
     utils.validateOperandDescriptor(desc);
-    utils.validateTypedArray(value, desc.type, desc.dimensions);
-    return new ConstantOperand(desc, value, builder);
+    utils.validateTypedArray(array, desc.type, desc.dimensions);
+    return new ConstantOperand(desc, array, builder);
   }
 
   private constructor(
-      desc: OperandDescriptor, value: number|ArrayBufferView,
-      builder: ModelBuilder) {
+      desc: MLOperandDescriptor, value: number|ArrayBufferView,
+      builder: MLGraphBuilder) {
     super(builder);
     this.desc = desc;
-    if (typeof value === 'number') {
-      this.value = value;
-    } else {
-      this.value = utils.cloneTypedArray(value);
-    }
+    this.value = value;
   }
 }
 
 /** @ignore */
-export class OutputOperand extends Operand {
+export class OutputOperand extends MLOperand {
   readonly operation: Operation;
 
   constructor(operation: Operation) {

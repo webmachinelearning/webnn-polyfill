@@ -1,14 +1,14 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {Operand} from '../operand';
+import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export abstract class Binary extends SingleOutputOperation {
-  private a_: Operand;
-  private b_: Operand;
+  private a_: MLOperand;
+  private b_: MLOperand;
 
-  constructor(a: Operand, b: Operand) {
+  constructor(a: MLOperand, b: MLOperand) {
     super(a.builder);
     utils.validateOperand(a);
     this.a_ = a;
@@ -16,11 +16,11 @@ export abstract class Binary extends SingleOutputOperation {
     this.b_ = b;
   }
 
-  inputs(): Operand[] {
+  inputs(): MLOperand[] {
     return [this.a_, this.b_];
   }
 
-  run(inputTensors: Map<Operand, tf.Tensor>): tf.Tensor {
+  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const a: tf.Tensor = inputTensors.get(this.a_);
     const b: tf.Tensor = inputTensors.get(this.b_);
     return this.runOp(a, b);

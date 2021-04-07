@@ -1,11 +1,11 @@
-import {GemmOptions, ModelBuilder} from '../model_builder';
-import {Operand} from '../operand';
+import {MLGemmOptions, MLGraphBuilder} from '../graph_builder';
+import {MLOperand} from '../operand';
 import * as utils from '../utils';
 
 export class Gemm {
   static build(
-      builder: ModelBuilder, a: Operand, b: Operand,
-      options: GemmOptions = {}): Operand {
+      builder: MLGraphBuilder, a: MLOperand, b: MLOperand,
+      options: MLGemmOptions = {}): MLOperand {
     utils.validateOperand(a);
     utils.validateOperand(b);
     utils.validateOptionalOperand(options.c);

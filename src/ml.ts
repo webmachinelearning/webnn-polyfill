@@ -1,19 +1,14 @@
-import {NeuralNetworkContext} from './nn/neural_network_context';
+import {MLContext, MLContextOptions} from './nn/context';
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#ml)
+ * [spec](https://webmachinelearning.github.io/webnn/#ml)
  */
 export class ML {
-  private nnContext: NeuralNetworkContext = null;
-
   /** @ignore */
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
-  getNeuralNetworkContext(): NeuralNetworkContext {
-    if (!this.nnContext) {
-      this.nnContext = new NeuralNetworkContext();
-    }
-    return this.nnContext;
+  createContext(options: MLContextOptions = {}): MLContext {
+    return new MLContext(options);
   }
 }

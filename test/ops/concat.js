@@ -2,20 +2,19 @@
 import * as utils from '../utils.js';
 
 describe('test concat', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testConcat(tensors, expected) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const constants = [];
     for (const t of tensors) {
       constants.push(builder.constant(t.desc, new Float32Array(t.value)));
     }
     const output = builder.concat(constants, expected.axis);
-    const model = builder.createModel({output});
-    const compiledModel = await model.compile();
-    const outputs = await compiledModel.compute();
+    const graph = await builder.build({output});
+    const outputs = await graph.compute();
     utils.checkShape(outputs.output.dimensions, expected.shape);
-    utils.checkValue(outputs.output.buffer, expected.value);
+    utils.checkValue(outputs.output.data, expected.value);
   }
 
   it('concat 1d', async function() {

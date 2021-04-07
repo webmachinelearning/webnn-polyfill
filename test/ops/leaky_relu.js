@@ -2,18 +2,17 @@
 import * as utils from '../utils.js';
 
 describe('test relu', function() {
-  const nn = navigator.ml.getNeuralNetworkContext();
+  const context = navigator.ml.createContext();
 
   async function testLeakyRelu(input, expected, options = {}) {
-    const builder = nn.createModelBuilder();
+    const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const y = builder.leakyRelu(x, options);
-    const model = builder.createModel({y});
-    const compiledModel = await model.compile();
-    const inputs = {'x': {buffer: new Float32Array(input.value)}};
-    const outputs = await compiledModel.compute(inputs);
+    const graph = await builder.build({y});
+    const inputs = {'x': {data: new Float32Array(input.value)}};
+    const outputs = await graph.compute(inputs);
     utils.checkShape(outputs.y.dimensions, input.shape);
-    utils.checkValue(outputs.y.buffer, expected);
+    utils.checkValue(outputs.y.data, expected);
   }
 
   it('leakyRelu', async function() {
