@@ -1243,5 +1243,5 @@ import * as utils from '%sutils.js';\n""" % ''.join(['../']*detph)
     print(testFileHeader,  file=test)
     print("/* eslint-disable max-len */", file=test)
     print("describe('CTS converted from NNAPI CTS', function() {", file=test)
-    IndentedPrint("const nn = navigator.ml.getNeuralNetworkContext();",
+    IndentedPrint("const context = navigator.ml.createContext();",
                   indent=2, file=test)
