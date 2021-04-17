@@ -111,6 +111,8 @@ export class Conv2d extends SingleOutputOperation {
       filter = tf.transpose(filter, [2, 3, 1, 0]);
     } else if (this.filterLayout_ === MLFilterOperandLayout.ohwi) {
       filter = tf.transpose(filter, [1, 2, 3, 0]);
+    } else if (this.filterLayout_ === MLFilterOperandLayout.ihwo) {
+      filter = tf.transpose(filter, [1, 2, 0, 3]);
     }
 
     let output;

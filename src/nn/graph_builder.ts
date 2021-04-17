@@ -57,6 +57,7 @@ export enum MLFilterOperandLayout {
   'oihw' = 'oihw',
   'hwio' = 'hwio',
   'ohwi' = 'ohwi',
+  'ihwo' = 'ihwo',
 }
 
 /**
