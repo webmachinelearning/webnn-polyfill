@@ -49,8 +49,11 @@
   <script type="module" src="./ops/tanh.js"></script>
   <script type="module" src="./ops/transpose.js"></script>
   <script type="module" src="./cts/from_nnapi/tests/cts.js"></script>
-  <script type="module" src="./models/squeezenet1.0_nhwc/squeezenet.js"></script>
-  <script type="module" src="./models/squeezenet1.1_nchw/squeezenet.js"></script>
+  <script type="module" src="./models/mobilenetv2_batchnorm_nchw.js"></script>
+  <script type="module" src="./models/mobilenetv2_nchw.js"></script>
+  <script type="module" src="./models/mobilenetv2_nhwc.js"></script>
+  <script type="module" src="./models/squeezenet1.0_nhwc.js"></script>
+  <script type="module" src="./models/squeezenet1.1_nchw.js"></script>
   <script class="mocha-exec" type="module">
     import {setPolyfillBackend} from './utils.js';
     const backend = (new URLSearchParams(location.search)).get('backend');
