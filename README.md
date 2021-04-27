@@ -13,7 +13,8 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 ### Setup
 
 ```sh
-> npm install
+> git clone --recurse-submodules https://github.com/webmachinelearning/webnn-polyfill
+> cd webnn-polyfill & npm install
 ```
 
 ### Build
