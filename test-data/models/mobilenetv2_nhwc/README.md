@@ -1,0 +1,1 @@
+`.npy` files under this folder are downloaded from model of [MobileNet V2](https://storage.googleapis.com/download.tensorflow.org/models/tflite_11_05_08/mobilenet_v2_1.0_224.tgz), which is licensed under the Apache 2.0.
