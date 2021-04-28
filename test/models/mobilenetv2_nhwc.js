@@ -45,7 +45,7 @@ describe('test mobilenetv2 nhwc', function() {
     }
 
     async function buildLinearBottleneck(input, weightsNameArray, biasName, dwiseOptions, shortcut = true) {
-      const autoPad = 'same-lower';
+      const autoPad = 'same-upper';
       const biasPrefix = 'expanded_conv_' + biasName;
 
       dwiseOptions.autoPad = autoPad;
@@ -66,7 +66,7 @@ describe('test mobilenetv2 nhwc', function() {
     }
 
     const strides = [2, 2];
-    const autoPad = 'same-lower';
+    const autoPad = 'same-upper';
     const filterLayout = 'ohwi';
     const data = builder.input(
         'input', {type: 'float32', dimensions: [1, 224, 224, 3]});

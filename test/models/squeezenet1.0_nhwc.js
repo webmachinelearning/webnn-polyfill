@@ -50,7 +50,7 @@ describe('test squeezenet1.0 nhwc', function() {
     const placeholder = builder.input(
         'placeholder', {type: 'float32', dimensions: [1, 224, 224, 3]});
     const conv1 = await buildConv(
-        placeholder, 'conv1', {strides, autoPad: 'same-lower'});
+        placeholder, 'conv1', {strides, autoPad: 'same-upper'});
     const maxpool1 = builder.maxPool2d(
         conv1, {windowDimensions: [3, 3], strides, layout});
     const fire2 = await buildFire(maxpool1, 'fire2');
