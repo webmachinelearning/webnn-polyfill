@@ -73,10 +73,10 @@ export abstract class Pool extends SingleOutputOperation {
           'tf.pool only supports the same padding value.');
       padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
     } else {
-      if (this.autoPad_ === MLAutoPad['same-lower']) {
+      if (this.autoPad_ === MLAutoPad['same-upper']) {
         padding = 'same';
       } else {
-        throw new Error('tf.pool only supports the same-lower auto pad.');
+        throw new Error('tf.pool only supports the same-upper auto pad.');
       }
     }
     const poolingType = this.getPoolingType();

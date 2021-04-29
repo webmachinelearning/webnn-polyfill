@@ -133,8 +133,8 @@ export class Conv2d extends SingleOutputOperation {
             ] as ExplicitPadding;
           }
         } else {
-          // Calculate the explicit paddings for 'same-upper'
-          if (this.autoPad_ === MLAutoPad['same-upper']) {
+          // Calculate the explicit paddings for 'same-lower'
+          if (this.autoPad_ === MLAutoPad['same-lower']) {
             padding = [[0, 0], [0, 0], [0, 0], [0, 0]];
             const outputSizes = [0, 0];
             for (let i = 0; i < 2; ++i) {
@@ -153,7 +153,7 @@ export class Conv2d extends SingleOutputOperation {
               padding[i + 1][1] = Math.floor(totalPadding[i] / 2);
             }
           } else {
-            // 'same-lower'
+            // 'same-upper'
             padding = 'same';
           }
         }
@@ -168,11 +168,11 @@ export class Conv2d extends SingleOutputOperation {
               'tf.depthwiseConv2d only supports the same padding value.');
           padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
         } else {
-          if (this.autoPad_ === MLAutoPad['same-lower']) {
+          if (this.autoPad_ === MLAutoPad['same-upper']) {
             padding = 'same';
           } else {
             throw new Error(
-                'tf.depthwiseConv2d only supports the same-lower auto pad.');
+                'tf.depthwiseConv2d only supports the same-upper auto pad.');
           }
         }
         // filter layout hwio
@@ -198,7 +198,7 @@ export class Conv2d extends SingleOutputOperation {
             'tf.conv2dTranspose only supports the same padding value.');
         padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
       } else {
-        if (this.autoPad_ === MLAutoPad['same-lower']) {
+        if (this.autoPad_ === MLAutoPad['same-upper']) {
           padding = 'same';
           this.outputSizes_ = [
             input.shape[1] * this.strides_[0],
@@ -206,7 +206,7 @@ export class Conv2d extends SingleOutputOperation {
           ];
         } else {
           throw new Error(
-              'tf.conv2dTranspose only supports the same-lower auto pad.');
+              'tf.conv2dTranspose only supports the same-upper auto pad.');
         }
       }
       // tf.conv2dTranspose outputShape: [batch, height, width, outDepth]

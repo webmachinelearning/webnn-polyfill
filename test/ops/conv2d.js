@@ -863,7 +863,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
     };
     await testConv2d(input, filter, expected, options);
@@ -886,7 +886,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nchw',
       filterLayout: 'hwio',
@@ -911,7 +911,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
@@ -936,7 +936,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nchw',
       filterLayout: 'ihwo',
@@ -961,7 +961,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nhwc',
       filterLayout: 'oihw',
@@ -986,7 +986,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nhwc',
       filterLayout: 'hwio',
@@ -1011,7 +1011,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
@@ -1036,7 +1036,7 @@ describe('test conv2d', function() {
       data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       inputLayout: 'nhwc',
       filterLayout: 'ihwo',
@@ -2052,7 +2052,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
     };
@@ -2079,7 +2079,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nchw',
@@ -2108,7 +2108,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nchw',
@@ -2137,7 +2137,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nchw',
@@ -2166,7 +2166,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nhwc',
@@ -2195,7 +2195,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nhwc',
@@ -2224,7 +2224,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nhwc',
@@ -2253,7 +2253,7 @@ describe('test conv2d', function() {
       ],
     };
     const options = {
-      autoPad: 'same-lower',
+      autoPad: 'same-upper',
       strides: [2, 2],
       transpose: true,
       inputLayout: 'nhwc',
