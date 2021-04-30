@@ -69,7 +69,7 @@ describe('test pool2d', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
-    const autoPad = 'same-lower';
+    const autoPad = 'same-upper';
     const y = builder.maxPool2d(x, {windowDimensions, autoPad});
     const graph = await builder.build({y});
     const inputs = {
@@ -156,7 +156,7 @@ describe('test pool2d', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
-    const autoPad = 'same-lower';
+    const autoPad = 'same-upper';
     const y = builder.averagePool2d(x, {windowDimensions, autoPad});
     const graph = await builder.build({y});
     const inputs = {
