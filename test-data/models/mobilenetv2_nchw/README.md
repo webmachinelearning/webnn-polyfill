@@ -1,2 +1,2 @@
-`.npy` files under this folder are downloaded from model of [MobileNet V2](https://github.com/onnx/models/tree/master/vision/classification/mobilenet),
+`.npy` files under this folder are downloaded from model of [MobileNet V2](https://github.com/onnx/models/blob/master/vision/classification/mobilenet/model/mobilenetv2-7.tar.gz),
 which is licensed under the Apache 2.0.
