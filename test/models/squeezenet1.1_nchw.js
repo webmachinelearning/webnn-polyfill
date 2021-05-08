@@ -1,8 +1,9 @@
 'use strict';
-import * as utils from '../../utils.js';
+import * as utils from '../utils.js';
 
 const url = import.meta.url;
 const assert = chai.assert;
+const testDataDir = '../../test-data/models/squeezenet1.1_nchw';
 
 describe('test squeezenet1.1 nchw', function() {
   // eslint-disable-next-line no-invalid-this
@@ -19,7 +20,7 @@ describe('test squeezenet1.1 nchw', function() {
     const builder = new MLGraphBuilder(context);
 
     async function buildConv(input, name, options = undefined) {
-      const prefix = './weights/squeezenet0_' + name;
+      const prefix = testDataDir + '/weights/squeezenet0_' + name;
       const weightsName = prefix + '_weight.npy';
       const weights =
           await utils.buildConstantFromNpy(builder, new URL(weightsName, url));
@@ -93,16 +94,19 @@ describe('test squeezenet1.1 nchw', function() {
 
   it('test_data_set_0', async function() {
     await testSqueezeNet(
-        './test_data_set_0/input_0.npy', './test_data_set_0/output_0.npy');
+        `${testDataDir}/test_data_set/0/input_0.npy`,
+        `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testSqueezeNet(
-        './test_data_set_1/input_0.npy', './test_data_set_1/output_0.npy');
+        `${testDataDir}/test_data_set/1/input_0.npy`,
+        `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testSqueezeNet(
-        './test_data_set_2/input_0.npy', './test_data_set_2/output_0.npy');
+        `${testDataDir}/test_data_set/2/input_0.npy`,
+        `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });
