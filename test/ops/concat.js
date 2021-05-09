@@ -4,7 +4,7 @@ import * as utils from '../utils.js';
 describe('test concat', function() {
   const context = navigator.ml.createContext();
 
-  async function testConcat(tensors, expected) {
+  async function testConcatConstants(tensors, expected) {
     const builder = new MLGraphBuilder(context);
     const constants = [];
     for (const t of tensors) {
@@ -17,13 +17,29 @@ describe('test concat', function() {
     utils.checkValue(outputs.output.data, expected.value);
   }
 
+  async function testConcatInputs(tensors, expected) {
+    const builder = new MLGraphBuilder(context);
+    const inputs = [];
+    const namedInputs = {};
+    for (let i = 0; i < tensors.length; i++) {
+      inputs.push(builder.input('input' + i, tensors[i].desc));
+      namedInputs['input' + i] = {data: new Float32Array(tensors[i].value)};
+    }
+    const output = builder.concat(inputs, expected.axis);
+    const graph = await builder.build({output});
+    const outputs = await graph.compute(namedInputs);
+    utils.checkShape(outputs.output.dimensions, expected.shape);
+    utils.checkValue(outputs.output.data, expected.value);
+  }
+
   it('concat 1d', async function() {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
     ];
     const expected = {axis: 0, shape: [4], value: [1, 2, 3, 4]};
-    await testConcat(tensors, expected);
+    await testConcatConstants(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
   it('concat 2d', async function() {
@@ -36,7 +52,8 @@ describe('test concat', function() {
       {axis: 1, shape: [2, 4], value: [1, 2, 5, 6, 3, 4, 7, 8]},
     ];
     for (const test of expected) {
-      await testConcat(tensors, test);
+      await testConcatConstants(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
@@ -69,7 +86,8 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      await testConcat(tensors, test);
+      await testConcatConstants(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 });
