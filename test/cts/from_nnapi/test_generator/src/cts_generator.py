@@ -212,41 +212,6 @@ def GetReluMappedInfo(actValue):
 
     return info
 
-def ReorderFilterValue(operation, dimensions, values, layout):
-    valueArray = np.array(values).reshape(dimensions)
-    axes = (0, 3, 1, 2) if layout else (1, 2, 3, 0)
-
-    if operation == 'DEPTHWISE_CONV_2D':
-        axes = (3, 0, 1, 2) if layout else (1, 2, 0, 3)
-
-    return list(np.transpose(valueArray, axes).ravel())
-
-def GetWebNNFilterDimensions(operation, dimensions, layout):
-    # https://webmachinelearning.github.io/webnn/#api-modelbuilder-conv2d
-    # filter tensor:
-    #   "nchw": [output_channels, input_channels/groups, height, width]
-    #   "nhwc": [height, width, input_channels/groups, output_channels]
-    if operation == 'CONV_2D':
-        if layout:
-            outputChannels = dimensions[-1]
-            dimensions = dimensions[:-1]
-            dimensions.insert(1, outputChannels)
-        else:
-            outputChannels = dimensions[0]
-            dimensions = dimensions[1:]
-            dimensions.append(outputChannels)
-    elif operation == 'DEPTHWISE_CONV_2D':
-        if layout:
-            outputChannels = dimensions[-1]
-            dimensions = dimensions[:-1]
-            dimensions.insert(0, outputChannels)
-        else:
-            intputChannels = dimensions[0]
-            dimensions = dimensions[1:]
-            dimensions.insert(2, intputChannels)
-
-    return dimensions
-
 def FlattenedTo2D(in0Dims, in1Dims):
     inputSize = in1Dims[1]
     batchSize = int(np.product(in0Dims) / inputSize)
@@ -266,10 +231,7 @@ def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout):
             operandDims = [operandDims[1], operandDims[0]]
     else:
         oprandName = opInsInfoList[opInsList.index(oprand)]['name']
-
-        if oprandName == 'filter':
-            operandDims = GetWebNNFilterDimensions(operation, operandDims, layout)
-        elif oprandName == 'bias':
+        if oprandName == 'bias':
             if layout and len(operandDims) == 1:
                 # Update operandDims likes [x] -> [1, x, 1, 1]
                 operandDims = [1, operandDims[0], 1, 1]
@@ -289,10 +251,6 @@ def GetOperandValue(oprand, operation, opInsList, name, layout, value=None):
 
     if value is not None:
         opValue = value
-
-    if name == 'filter':
-        opValue = ReorderFilterValue(operation, oprand.type.dimensions, opValue,
-                                     layout)
 
     if operation == 'FULLY_CONNECTED':
         if opInsList.index(oprand) == 1:
@@ -409,13 +367,10 @@ def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList,
                 targetValue[key] = value
                 if key == 'layout':
                     targetValue[key] = 'nchw' if value else 'nhwc'
-                    if operation in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
-                        if not value:
-                            targetValue['filterLayout'] = 'hwio'
-        if operation in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
-            if targetValue.get('filterLayout', None) == None:
-                if not layout:
-                    targetValue['filterLayout'] = 'hwio'
+        if operation == 'CONV_2D':
+            targetValue['filterLayout'] = 'ohwi'
+        elif operation == 'DEPTHWISE_CONV_2D':
+            targetValue['filterLayout'] = 'ihwo'
 
 def GetWebNNParamsString(params):
     paramsList = [p[1] for p in params]
