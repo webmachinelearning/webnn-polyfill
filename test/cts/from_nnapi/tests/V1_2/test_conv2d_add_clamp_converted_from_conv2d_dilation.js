@@ -10,7 +10,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.constant({type: 'float32', dimensions: [2, 2, 1, 1]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
+    const op2 = builder.constant({type: 'float32', dimensions: [1, 2, 2, 1]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
     const op3 = builder.constant({type: 'float32', dimensions: [1]}, new Float32Array([0]));
     const param = 0;
     const param1 = 0;
@@ -22,7 +22,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -35,7 +35,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.constant({type: 'float32', dimensions: [2, 2, 1, 1]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
+    const op2 = builder.constant({type: 'float32', dimensions: [1, 2, 2, 1]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
     const op3 = builder.constant({type: 'float32', dimensions: [1]}, new Float32Array([0]));
     const param = 0;
     const param1 = 0;
@@ -47,7 +47,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -60,7 +60,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [2, 2, 1, 1]});
+    const op2 = builder.input('op2', {type: 'float32', dimensions: [1, 2, 2, 1]});
     const op2Data = new Float32Array([0.25, 0.25, 0.25, 0.25]);
     const op3 = builder.input('op3', {type: 'float32', dimensions: [1]});
     const op3Data = new Float32Array([0]);
@@ -74,7 +74,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -87,7 +87,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [2, 2, 1, 1]});
+    const op2 = builder.input('op2', {type: 'float32', dimensions: [1, 2, 2, 1]});
     const op2Data = new Float32Array([0.25, 0.25, 0.25, 0.25]);
     const op3 = builder.input('op3', {type: 'float32', dimensions: [1]});
     const op3Data = new Float32Array([0]);
@@ -101,7 +101,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -114,7 +114,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 3, 3]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.constant({type: 'float32', dimensions: [1, 1, 2, 2]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
+    const op2 = builder.constant({type: 'float32', dimensions: [1, 2, 2, 1]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
     const op3 = builder.constant({type: 'float32', dimensions: [1, 1, 1, 1]}, new Float32Array([0]));
     const param = 0;
     const param1 = 0;
@@ -126,7 +126,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7]});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -139,7 +139,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 3, 3]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.constant({type: 'float32', dimensions: [1, 1, 2, 2]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
+    const op2 = builder.constant({type: 'float32', dimensions: [1, 2, 2, 1]}, new Float32Array([0.25, 0.25, 0.25, 0.25]));
     const op3 = builder.constant({type: 'float32', dimensions: [1, 1, 1, 1]}, new Float32Array([0]));
     const param = 0;
     const param1 = 0;
@@ -151,7 +151,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7]});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -164,7 +164,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 3, 3]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [1, 1, 2, 2]});
+    const op2 = builder.input('op2', {type: 'float32', dimensions: [1, 2, 2, 1]});
     const op2Data = new Float32Array([0.25, 0.25, 0.25, 0.25]);
     const op3 = builder.input('op3', {type: 'float32', dimensions: [1, 1, 1, 1]});
     const op3Data = new Float32Array([0]);
@@ -178,7 +178,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7]});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -191,7 +191,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 3, 3]});
     const op1Data = new Float32Array([1.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 1.0]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [1, 1, 2, 2]});
+    const op2 = builder.input('op2', {type: 'float32', dimensions: [1, 2, 2, 1]});
     const op2Data = new Float32Array([0.25, 0.25, 0.25, 0.25]);
     const op3 = builder.input('op3', {type: 'float32', dimensions: [1, 1, 1, 1]});
     const op3Data = new Float32Array([0]);
@@ -205,7 +205,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = 1;
     const param8 = 1;
     const expected = [0.875, 0.875, 0.875, 0.875];
-    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7]});
+    const interOut0 = builder.conv2d(op1, op2, {'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'dilations': [param8, param7], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op3);
     const op4 = builder.clamp(interOut1);
     const graph = await builder.build({op4});
@@ -218,7 +218,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 9, 9, 1]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.constant({type: 'float32', dimensions: [3, 3, 1, 1]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+    const op21 = builder.constant({type: 'float32', dimensions: [1, 3, 3, 1]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
     const op31 = builder.constant({type: 'float32', dimensions: [1]}, new Float32Array([0]));
     const param9 = 0;
     const param10 = 0;
@@ -230,7 +230,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -243,7 +243,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 9, 9, 1]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.constant({type: 'float32', dimensions: [3, 3, 1, 1]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+    const op21 = builder.constant({type: 'float32', dimensions: [1, 3, 3, 1]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
     const op31 = builder.constant({type: 'float32', dimensions: [1]}, new Float32Array([0]));
     const param9 = 0;
     const param10 = 0;
@@ -255,7 +255,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -268,7 +268,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 9, 9, 1]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.input('op21', {type: 'float32', dimensions: [3, 3, 1, 1]});
+    const op21 = builder.input('op21', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op21Data = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     const op31 = builder.input('op31', {type: 'float32', dimensions: [1]});
     const op31Data = new Float32Array([0]);
@@ -282,7 +282,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -295,7 +295,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 9, 9, 1]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.input('op21', {type: 'float32', dimensions: [3, 3, 1, 1]});
+    const op21 = builder.input('op21', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op21Data = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     const op31 = builder.input('op31', {type: 'float32', dimensions: [1]});
     const op31Data = new Float32Array([0]);
@@ -309,7 +309,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'hwio'});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -322,7 +322,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 1, 9, 9]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.constant({type: 'float32', dimensions: [1, 1, 3, 3]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+    const op21 = builder.constant({type: 'float32', dimensions: [1, 3, 3, 1]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
     const op31 = builder.constant({type: 'float32', dimensions: [1, 1, 1, 1]}, new Float32Array([0]));
     const param9 = 0;
     const param10 = 0;
@@ -334,7 +334,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16]});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -347,7 +347,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 1, 9, 9]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.constant({type: 'float32', dimensions: [1, 1, 3, 3]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
+    const op21 = builder.constant({type: 'float32', dimensions: [1, 3, 3, 1]}, new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]));
     const op31 = builder.constant({type: 'float32', dimensions: [1, 1, 1, 1]}, new Float32Array([0]));
     const param9 = 0;
     const param10 = 0;
@@ -359,7 +359,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16]});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -372,7 +372,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 1, 9, 9]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.input('op21', {type: 'float32', dimensions: [1, 1, 3, 3]});
+    const op21 = builder.input('op21', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op21Data = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     const op31 = builder.input('op31', {type: 'float32', dimensions: [1, 1, 1, 1]});
     const op31Data = new Float32Array([0]);
@@ -386,7 +386,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16]});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
@@ -399,7 +399,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [1, 1, 9, 9]});
     const op11Data = new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
-    const op21 = builder.input('op21', {type: 'float32', dimensions: [1, 1, 3, 3]});
+    const op21 = builder.input('op21', {type: 'float32', dimensions: [1, 3, 3, 1]});
     const op21Data = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
     const op31 = builder.input('op31', {type: 'float32', dimensions: [1, 1, 1, 1]});
     const op31Data = new Float32Array([0]);
@@ -413,7 +413,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const param16 = 3;
     const param17 = 3;
     const expected = [5, 5, 5, 5, 5, 5, 5, 5, 5];
-    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16]});
+    const interOut0 = builder.conv2d(op11, op21, {'padding': [param11, param12, param9, param10], 'strides': [param14, param13], 'inputLayout': layout, 'dilations': [param17, param16], 'filterLayout': 'ohwi'});
     const interOut1 = builder.add(interOut0, op31);
     const op41 = builder.clamp(interOut1);
     const graph = await builder.build({op41});
