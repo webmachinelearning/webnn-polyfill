@@ -43,7 +43,7 @@ describe('test matmul', function() {
             -0.13988003,
           ],
         },
-        {shape: [3], value: [0.6616409, -0.80990994, 0.8797145]});
+        {shape: [1, 3], value: [0.6616409, -0.80990994, 0.8797145]});
   });
 
   it('matmul 2dx1d', async function() {
@@ -66,7 +66,7 @@ describe('test matmul', function() {
           ],
         },
         {shape: [4], value: [0.25528687, 0.2126722, 0.26320502, 0.8297401]},
-        {shape: [3], value: [0.8839391, 0.9928265, 0.5955407]});
+        {shape: [3, 1], value: [0.8839391, 0.9928265, 0.5955407]});
   });
 
   it('matmul 2d', async function() {

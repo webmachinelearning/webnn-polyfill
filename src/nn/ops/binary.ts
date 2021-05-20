@@ -73,16 +73,26 @@ export class Pow extends Binary {
 
 export class MatMul extends Binary {
   runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
-    if (a.rank === 1 || b.rank === 1) {
-      return tf.dot(a, b);
-    } else {
-      const rank = a.rank > b.rank ? a.rank : b.rank;
-      let c = tf.matMul(a, b);
-      // workaround https://github.com/tensorflow/tfjs/issues/4192
-      if (c.rank !== rank) {
-        c = tf.reshape(c, [1].concat(c.shape));
+    if (a.rank === 1) {
+      if (b.rank === 1) {
+        return tf.dot(a, b);
+      } else {
+        // a is 1-D, convert to a 2-D tensor by prepending a 1 to its dimesions
+        return tf.matMul(tf.reshape(a, [1, -1]), b);
       }
-      return c;
+    } else {
+      if (b.rank === 1) {
+        // b is 1-D, convert to a 2-D tensor by appending a 1 to its dimesions
+        return tf.matMul(a, tf.reshape(b, [-1, 1]));
+      } else {
+        const rank = a.rank > b.rank ? a.rank : b.rank;
+        let c = tf.matMul(a, b);
+        // workaround https://github.com/tensorflow/tfjs/issues/4192
+        if (c.rank !== rank) {
+          c = tf.reshape(c, [1].concat(c.shape));
+        }
+        return c;
+        }
     }
   }
 }
