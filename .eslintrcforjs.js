@@ -19,7 +19,7 @@ module.exports = {
   rules: {
     'semi': 'error',
     'no-multi-spaces': ['error', { 'exceptions': { 'ArrayExpression': true } }],
-    'indent': 'off',
+    'indent': 2,
     'require-jsdoc': 'off',
   },
   extends: [

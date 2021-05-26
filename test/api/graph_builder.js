@@ -20,17 +20,17 @@ describe('test MLGraphBuilder', function() {
   it('check operand types for builder.input', () => {
     const dimensions = [2, 2];
     expect(builder.input('1', {type: 'float32', dimensions}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     expect(builder.input('2', {type: 'float16', dimensions}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     expect(builder.input('3', {type: 'int32', dimensions}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     expect(builder.input('4', {type: 'uint32', dimensions}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     expect(builder.input('5', {type: 'int8', dimensions}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     expect(builder.input('6', {type: 'uint8', dimensions}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
   });
 
   it('builder.input should accept scalar operand descriptor', () => {
@@ -41,7 +41,7 @@ describe('test MLGraphBuilder', function() {
 
   it('builder.input should accept scalar operand descriptor', () => {
     expect(builder.input('x', {type: 'float32', dimensions: []}))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
   });
 
   it('builder.input should throw for invalid name parameter', () => {
@@ -81,43 +81,43 @@ describe('test MLGraphBuilder', function() {
   });
 
   it('builder.constant should accept an MLOperandDescriptor and a value',
-     () => {
-       const buffer = new Float32Array(4);
-       expect(builder.constant(desc, buffer)).to.be.an.instanceof(MLOperand);
-     });
+      () => {
+        const buffer = new Float32Array(4);
+        expect(builder.constant(desc, buffer)).to.be.an.instanceof(MLOperand);
+      });
 
   it('check operand types for builder.constant', () => {
     const dimensions = [2, 2];
     const float32Buffer = new Float32Array(4);
     expect(builder.constant({type: 'float32', dimensions}, float32Buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     const uint16Buffer = new Uint16Array(4);
     expect(builder.constant({type: 'float16', dimensions}, uint16Buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     const int32Buffer = new Int32Array(4);
     expect(builder.constant({type: 'int32', dimensions}, int32Buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     const uint32Buffer = new Uint32Array(4);
     expect(builder.constant({type: 'uint32', dimensions}, uint32Buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     const int8Buffer = new Int8Array(4);
     expect(builder.constant({type: 'int8', dimensions}, int8Buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
     const uint8Buffer = new Uint8Array(4);
     expect(builder.constant({type: 'uint8', dimensions}, uint8Buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
   });
 
   it('builder.constant should accept scalar operand descriptor', () => {
     const buffer = new Float32Array(1);
     expect(builder.constant({type: 'float32'}, buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
   });
 
   it('builder.constant should accept scalar operand descriptor', () => {
     const buffer = new Float32Array(1);
     expect(builder.constant({type: 'float32', dimensions: []}, buffer))
-            .to.be.an.instanceof(MLOperand);
+        .to.be.an.instanceof(MLOperand);
   });
 
   it('builder.constant should throw for invalid desc parameter', () => {
@@ -191,7 +191,7 @@ describe('test MLGraphBuilder', function() {
         .to.throw(Error);
     expect(
         () =>
-            builder.constant({type: 'float32', dimensions: [2, 2, 2]}, buffer))
+          builder.constant({type: 'float32', dimensions: [2, 2, 2]}, buffer))
         .to.throw(Error);
   });
 
@@ -202,14 +202,14 @@ describe('test MLGraphBuilder', function() {
   });
 
   it('builder.constant should accept a single-value and an operand type',
-     () => {
-       expect(builder.constant(1.0, 'float32')).to.be.an.instanceof(MLOperand);
-       expect(builder.constant(1.0, 'float16')).to.be.an.instanceof(MLOperand);
-       expect(builder.constant(1, 'int32')).to.be.an.instanceof(MLOperand);
-       expect(builder.constant(1, 'uint32')).to.be.an.instanceof(MLOperand);
-       expect(builder.constant(1, 'int8')).to.be.an.instanceof(MLOperand);
-       expect(builder.constant(1, 'uint8')).to.be.an.instanceof(MLOperand);
-     });
+      () => {
+        expect(builder.constant(1.0, 'float32')).to.be.an.instanceof(MLOperand);
+        expect(builder.constant(1.0, 'float16')).to.be.an.instanceof(MLOperand);
+        expect(builder.constant(1, 'int32')).to.be.an.instanceof(MLOperand);
+        expect(builder.constant(1, 'uint32')).to.be.an.instanceof(MLOperand);
+        expect(builder.constant(1, 'int8')).to.be.an.instanceof(MLOperand);
+        expect(builder.constant(1, 'uint8')).to.be.an.instanceof(MLOperand);
+      });
 
   it('builder.constant should throw for invalid value', () => {
     expect(() => builder.constant('1')).to.throw(Error);
@@ -225,12 +225,12 @@ describe('test MLGraphBuilder', function() {
   });
 
   it('builder.constant should throw for invalid value according to type',
-     () => {
-       expect(() => builder.constant(1.1, 'int32')).to.throw(Error);
-       expect(() => builder.constant(-1, 'uint32')).to.throw(Error);
-       expect(() => builder.constant(1000, 'int8')).to.throw(Error);
-       expect(() => builder.constant(-1, 'uint8')).to.throw(Error);
-     });
+      () => {
+        expect(() => builder.constant(1.1, 'int32')).to.throw(Error);
+        expect(() => builder.constant(-1, 'uint32')).to.throw(Error);
+        expect(() => builder.constant(1000, 'int8')).to.throw(Error);
+        expect(() => builder.constant(-1, 'uint8')).to.throw(Error);
+      });
 
   // test add
   it('builder should have add method', () => {
