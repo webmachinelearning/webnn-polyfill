@@ -20,7 +20,7 @@ describe('test mobilenetv2 batchnorm nchw', function() {
     const builder = new MLGraphBuilder(context);
 
     async function buildConvBatchNorm(
-              input, name, subName, options = undefined) {
+        input, name, subName, options = undefined) {
       const subPrefix =
          subName !== '' ? '_linearbottleneck' + subName : '';
       let prefix = testDataDir + '/weights/mobilenetv20_features' + subPrefix;
@@ -35,14 +35,14 @@ describe('test mobilenetv2 batchnorm nchw', function() {
       const bias =
           await utils.buildConstantFromNpy(builder, new URL(biasName, url));
       const meanName = prefix + '_running_mean.npy';
-      const mean = await
-          utils.buildConstantFromNpy(builder, new URL(meanName, url));
+      const mean =
+          await utils.buildConstantFromNpy(builder, new URL(meanName, url));
       const varianceName = prefix + '_running_var.npy';
       const variance =
           await utils.buildConstantFromNpy(builder, new URL(varianceName, url));
       const conv = builder.conv2d(input, weights, options);
       return builder.batchNormalization(
-           conv, mean, variance, {scale: scale, bias: bias});
+          conv, mean, variance, {scale: scale, bias: bias});
     }
 
     async function buildLinearBottleneck(

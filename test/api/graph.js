@@ -38,14 +38,14 @@ describe('test MLGraph', function() {
   });
 
   it('MLGraph.compute should accept inputs and pre-allocated outputs',
-     async () => {
-       const graph = await builder.build({c});
-       const inputs = {a: {data: bufferA}, b: {data: bufferB}};
-       const bufferC = new Float32Array(4);
-       const outputs = {c: {data: bufferC}};
-       await graph.compute(inputs, outputs);
-       utils.checkValue(bufferC, expectedC);
-     });
+      async () => {
+        const graph = await builder.build({c});
+        const inputs = {a: {data: bufferA}, b: {data: bufferB}};
+        const bufferC = new Float32Array(4);
+        const outputs = {c: {data: bufferC}};
+        await graph.compute(inputs, outputs);
+        utils.checkValue(bufferC, expectedC);
+      });
 
   it('MLGraph.compute should support multiple outputs', async () => {
     const graph = await builder.build({c, e});
@@ -190,21 +190,21 @@ describe('test MLGraph', function() {
   });
 
   it('MLGraph.compute should throw for no dimensions for dynamic shape',
-     async () => {
-       const graph = await builder.build({z});
-       const shapeX = [3, 2];
-       const bufferX = new Float32Array(utils.sizeOfShape(shapeX)).fill(1);
-       const shapeY = [2, 4];
-       const bufferY = new Float32Array(utils.sizeOfShape(shapeY)).fill(1);
-       const inputs = {x: {data: bufferX}, y: {data: bufferY}};
-       try {
-         await graph.compute(inputs);
-         assert.fail();
-       } catch (err) {
-         assert(!(err instanceof chai.AssertionError), 'No throwing');
-         expect(err).to.be.an.instanceof(Error);
-       }
-     });
+      async () => {
+        const graph = await builder.build({z});
+        const shapeX = [3, 2];
+        const bufferX = new Float32Array(utils.sizeOfShape(shapeX)).fill(1);
+        const shapeY = [2, 4];
+        const bufferY = new Float32Array(utils.sizeOfShape(shapeY)).fill(1);
+        const inputs = {x: {data: bufferX}, y: {data: bufferY}};
+        try {
+          await graph.compute(inputs);
+          assert.fail();
+        } catch (err) {
+          assert(!(err instanceof chai.AssertionError), 'No throwing');
+          expect(err).to.be.an.instanceof(Error);
+        }
+      });
 
   it('MLGraph.compute should throw for invalid output name', async () => {
     const graph = await builder.build({c});
@@ -234,19 +234,19 @@ describe('test MLGraph', function() {
   });
 
   it('MLGraph.compute should throw for invalid output data length',
-     async () => {
-       const graph = await builder.build({c});
-       try {
-         const inputs = {a: {data: bufferA}, b: {data: bufferB}};
-         const bufferC = new Float32Array(1);
-         const outputs = {c: {data: bufferC}};
-         await graph.compute(inputs, outputs);
-         assert.fail();
-       } catch (err) {
-         assert(!(err instanceof chai.AssertionError), 'No throwing');
-         expect(err).to.be.an.instanceof(Error);
-       }
-     });
+      async () => {
+        const graph = await builder.build({c});
+        try {
+          const inputs = {a: {data: bufferA}, b: {data: bufferB}};
+          const bufferC = new Float32Array(1);
+          const outputs = {c: {data: bufferC}};
+          await graph.compute(inputs, outputs);
+          assert.fail();
+        } catch (err) {
+          assert(!(err instanceof chai.AssertionError), 'No throwing');
+          expect(err).to.be.an.instanceof(Error);
+        }
+      });
 
   it('MLGraph should be immutable after creation', async () => {
     const builder = new MLGraphBuilder(context);

@@ -32,11 +32,11 @@ describe('test mobilenetv2 nchw', function() {
           builder.reshape(bias, [1, -1, 1, 1]));
       if (relu6) {
         return builder.clamp(
-          conv,
-          {
-            minValue: builder.constant(0.),
-            maxValue: builder.constant(6.0),
-          },
+            conv,
+            {
+              minValue: builder.constant(0.),
+              maxValue: builder.constant(6.0),
+            },
         );
       }
       return conv;
