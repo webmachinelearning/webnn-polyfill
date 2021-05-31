@@ -341,7 +341,7 @@ describe('test gemm', function() {
         3.14);
   });
 
-  it('gemm single vector bias', async function() {
+  it('gemm broadcasting bias', async function() {
     await testGemm(
         {
           shape: [3, 7],

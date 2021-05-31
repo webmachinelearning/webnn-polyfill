@@ -8,7 +8,10 @@ export class Gemm {
       options: MLGemmOptions = {}): MLOperand {
     utils.validateOperand(a);
     utils.validateOperand(b);
-    utils.validateOptionalOperand(options.c);
+    utils.assert(
+        options.c === undefined || typeof options.c === 'number' ||
+        options.c instanceof MLOperand,
+        'The options.c is invalid.');
     utils.assert(
         options.aTranspose === undefined || utils.isBoolean(options.aTranspose),
         'The options.aTranspose is invalid.');
