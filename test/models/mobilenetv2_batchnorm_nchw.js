@@ -132,10 +132,10 @@ describe('test mobilenetv2 batchnorm nchw', function() {
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.reshape0, expected, new utils.AccuracyCriterion(1e-5, 1e-3));
+        outputs.reshape0, expected, utils.modelFp32AccuracyCriteria);
   }
 
-  it.skip('test_data_set_0', async function() {
+  it('test_data_set_0', async function() {
     await testMobileNetV2(
         `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
