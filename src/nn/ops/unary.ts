@@ -1,16 +1,21 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLOperand} from '../operand';
-import {SingleOutputOperation} from '../operation';
+import {MLOperand, OutputOperand} from '../operand';
+import {MLOperator, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export abstract class Unary extends SingleOutputOperation {
-  private x_: MLOperand;
+  protected x_: MLOperand;
 
   constructor(x: MLOperand) {
-    super(x.builder);
-    utils.validateOperand(x);
-    this.x_ = x;
+    if (x !== undefined) {
+      super(x.builder);
+      utils.validateOperand(x);
+      this.x_ = x;
+    } else {
+      super(undefined);
+      this.x_ = undefined;
+    }
   }
 
   inputs(): MLOperand[] {
@@ -49,8 +54,16 @@ export class Tanh extends Unary {
   }
 }
 
-export class Relu extends Unary {
+export class Relu extends Unary implements MLOperator {
   runOp(x: tf.Tensor): tf.Tensor {
     return tf.relu(x);
+  }
+
+  apply(x: MLOperand): OutputOperand {
+    this.builder_ = x.builder;
+    utils.validateOperand(x);
+    this.x_ = x;
+    this.createOutput();
+    return this.output;
   }
 }

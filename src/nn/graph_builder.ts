@@ -23,6 +23,7 @@ import {Transpose} from './ops/transpose';
 import {Exp, Relu, Sigmoid, Tanh} from './ops/unary';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
+import {MLOperator} from './operation';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlinputoperandlayout)
@@ -40,6 +41,7 @@ export interface MLBatchNormalizationOptions {
   bias?: MLOperand;
   axis?: number;
   epsilon?: number;
+  activation?: MLOperator;
 }
 
 /**
@@ -83,6 +85,8 @@ export interface MLConv2dOptions {
   groups?: number;
   inputLayout?: MLInputOperandLayout;
   filterLayout?: MLFilterOperandLayout;
+  bias?: MLOperand;
+  activation?: MLOperator;
 }
 
 /**
@@ -328,15 +332,26 @@ export class MLGraphBuilder {
       options: MLBatchNormalizationOptions = {}): MLOperand {
     this.validateOperandBuilder(
         [input, mean, variance, options.scale, options.bias]);
-    return (new BatchNormalization(input, mean, variance, options)).output;
+    return (new BatchNormalization(
+        input, mean, variance, options)).getFusedOutputs()[0];
   }
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-clamp)
    */
-  clamp(x: MLOperand, options: MLClampOptions = {}): MLOperand {
-    this.validateOperandBuilder([x, options.minValue, options.maxValue]);
-    return (new Clamp(x, options)).output;
+  clamp(x: MLOperand, options: MLClampOptions): MLOperand;
+  clamp(options: MLClampOptions): MLOperator;
+  clamp(operandOrOptions: MLOperand | MLClampOptions = undefined,
+        options: MLClampOptions = {}): MLOperand | MLOperator {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x, options.minValue, options.maxValue]);
+      return (new Clamp(x, options)).output;
+    } else {
+      const options = operandOrOptions;
+      this.validateOperandBuilder([options.minValue, options.maxValue]);
+      return (new Clamp(undefined, options));
+    }
   }
 
   /**
@@ -352,8 +367,12 @@ export class MLGraphBuilder {
    */
   conv2d(input: MLOperand, filter: MLOperand, options: MLConv2dOptions = {}):
       MLOperand {
-    this.validateOperandBuilder([input, filter]);
-    return (new Conv2d(input, filter, options)).output;
+    const inputs = [input, filter];
+    if (options.bias) {
+      inputs.push(options.bias);
+    }
+    this.validateOperandBuilder(inputs);
+    return (new Conv2d(input, filter, options)).getFusedOutputs()[0];
   }
 
   // start of element-wise binary operations
@@ -429,9 +448,15 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-relu)
    */
-  relu(input: MLOperand): MLOperand {
-    this.validateOperandBuilder([input]);
-    return (new Relu(input)).output;
+  relu(input: MLOperand): MLOperand;
+  relu(): MLOperator;
+  relu(input: MLOperand = undefined): MLOperand | MLOperator {
+    if (input === undefined) {
+      return new Relu(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new Relu(input)).output;
+    }
   }
 
   /**
