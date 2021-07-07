@@ -49,28 +49,28 @@ describe('test squeezenet1.0 nhwc', function() {
     const layout = 'nhwc';
     const placeholder = builder.input(
         'placeholder', {type: 'float32', dimensions: [1, 224, 224, 3]});
-    const conv1 = await buildConv(
-        placeholder, 'conv1', {strides, autoPad: 'same-upper'});
-    const maxpool1 = builder.maxPool2d(
-        conv1, {windowDimensions: [3, 3], strides, layout});
+    const conv1 =
+        await buildConv(placeholder, 'conv1', {strides, autoPad: 'same-upper'});
+    const maxpool1 =
+        builder.maxPool2d(conv1, {windowDimensions: [3, 3], strides, layout});
     const fire2 = await buildFire(maxpool1, 'fire2');
     const fire3 = await buildFire(fire2, 'fire3');
     const fire4 = await buildFire(fire3, 'fire4');
-    const maxpool4 = builder.maxPool2d(
-        fire4, {windowDimensions: [3, 3], strides, layout});
+    const maxpool4 =
+        builder.maxPool2d(fire4, {windowDimensions: [3, 3], strides, layout});
     const fire5 = await buildFire(maxpool4, 'fire5');
     const fire6 = await buildFire(fire5, 'fire6');
     const fire7 = await buildFire(fire6, 'fire7');
     const fire8 = await buildFire(fire7, 'fire8');
-    const maxpool8 = builder.maxPool2d(
-        fire8, {windowDimensions: [3, 3], strides, layout});
+    const maxpool8 =
+        builder.maxPool2d(fire8, {windowDimensions: [3, 3], strides, layout});
     const fire9 = await buildFire(maxpool8, 'fire9');
     const conv10 = await buildConv(fire9, 'conv10');
-    const averagePool2d = builder.averagePool2d(
-        conv10, {windowDimensions: [13, 13], layout});
+    const averagePool2d =
+        builder.averagePool2d(conv10, {windowDimensions: [13, 13], layout});
     const reshape = builder.reshape(averagePool2d, [1, -1]);
     const softmax = builder.softmax(reshape);
-    graph = await builder.build({softmax});
+    graph = builder.build({softmax});
   });
 
   after(async () => {
@@ -89,13 +89,15 @@ describe('test squeezenet1.0 nhwc', function() {
   });
 
   async function testSqueezeNet(inputFile, expectedFile) {
-    const input = await utils.createTypedArrayFromNpy(new URL(inputFile, url));
+    const inputs = {
+      'placeholder':
+          await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+    const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
+    graph.compute(inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
-    const outputs = await graph.compute({'placeholder': {data: input}});
-    utils.checkShape(outputs.softmax.dimensions, [1, 1001]);
     utils.checkValue(
-        outputs.softmax.data, expected, utils.ctsFp32RestrictAccuracyCriteria);
+        outputs.softmax, expected, utils.ctsFp32RestrictAccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {

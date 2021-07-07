@@ -4,7 +4,7 @@ import * as utils from '../utils.js';
 describe('test gemm', function() {
   const context = navigator.ml.createContext();
 
-  async function testGemm(A, B, expected, C = undefined, options = {}) {
+  function testGemm(A, B, expected, C = undefined, options = {}) {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: A.shape});
     const b = builder.constant(
@@ -17,16 +17,16 @@ describe('test gemm', function() {
             {type: 'float32', dimensions: C.shape}, new Float32Array(C.value));
       }
     }
-    const y = builder.gemm(a, b, options);
-    const graph = await builder.build({y});
-    const inputs = {'a': {data: new Float32Array(A.value)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, expected.shape);
-    utils.checkValue(outputs.y.data, expected.value);
+    const c = builder.gemm(a, b, options);
+    const graph = builder.build({c});
+    const inputs = {'a': new Float32Array(A.value)};
+    const outputs = {'c': new Float32Array(utils.sizeOfShape(expected.shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.c, expected.value);
   }
 
-  it('gemm all attributes', async function() {
-    await testGemm(
+  it('gemm all attributes', function() {
+    testGemm(
         {
           shape: [4, 3],
           value: [
@@ -86,8 +86,8 @@ describe('test gemm', function() {
         {alpha: 0.25, beta: 0.35, aTranspose: true, bTranspose: true});
   });
 
-  it('gemm alpha', async function() {
-    await testGemm(
+  it('gemm alpha', function() {
+    testGemm(
         {
           shape: [3, 5],
           value: [
@@ -137,7 +137,7 @@ describe('test gemm', function() {
         undefined, {alpha: 0.5});
   });
 
-  it('gemm beta', async function() {
+  it('gemm beta', function() {
     testGemm(
         {
           shape: [2, 7],
@@ -189,8 +189,8 @@ describe('test gemm', function() {
         {beta: 0.5});
   });
 
-  it('gemm bias', async function() {
-    await testGemm(
+  it('gemm bias', function() {
+    testGemm(
         {
           shape: [3, 6],
           value: [
@@ -260,8 +260,8 @@ describe('test gemm', function() {
         });
   });
 
-  it('gemm no bias', async function() {
-    await testGemm(
+  it('gemm no bias', function() {
+    testGemm(
         {
           shape: [2, 10],
           value: [
@@ -295,8 +295,8 @@ describe('test gemm', function() {
         });
   });
 
-  it('gemm scalar bias', async function() {
-    await testGemm(
+  it('gemm scalar bias', function() {
+    testGemm(
         {
           shape: [2, 3],
           value: [
@@ -341,8 +341,8 @@ describe('test gemm', function() {
         3.14);
   });
 
-  it('gemm broadcasting bias', async function() {
-    await testGemm(
+  it('gemm broadcasting bias', function() {
+    testGemm(
         {
           shape: [3, 7],
           value: [
@@ -380,8 +380,8 @@ describe('test gemm', function() {
         {shape: [1], value: [0.7780463]});
   });
 
-  it('gemm aTranpose', async function() {
-    await testGemm(
+  it('gemm aTranpose', function() {
+    testGemm(
         {
           shape: [6, 3],
           value: [
@@ -435,8 +435,8 @@ describe('test gemm', function() {
         0.0, {aTranspose: true});
   });
 
-  it('gemm bTranspose', async function() {
-    await testGemm(
+  it('gemm bTranspose', function() {
+    testGemm(
         {
           shape: [3, 6],
           value: [

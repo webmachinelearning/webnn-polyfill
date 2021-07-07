@@ -61,7 +61,7 @@ describe('test squeezenet1.1 nchw', function() {
     const pool3 = builder.averagePool2d(
         conv25, {windowDimensions: [13, 13], strides: [13, 13]});
     const reshape0 = builder.reshape(pool3, [1, -1]);
-    graph = await builder.build({reshape0});
+    graph = builder.build({reshape0});
   });
 
   after(async () => {
@@ -80,13 +80,15 @@ describe('test squeezenet1.1 nchw', function() {
   });
 
   async function testSqueezeNet(inputFile, expectedFile) {
-    const input = await utils.createTypedArrayFromNpy(new URL(inputFile, url));
+    const inputs = {
+      'data': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+    const outputs = {
+      'reshape0': new Float32Array(utils.sizeOfShape([1, 1000]))};
+    graph.compute(inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
-    const outputs = await graph.compute({'data': {data: input}});
-    utils.checkShape(outputs.reshape0.dimensions, [1, 1000]);
     utils.checkValue(
-        outputs.reshape0.data, expected,
+        outputs.reshape0, expected,
         // refer to onnx
         // https://github.com/onnx/onnx/blob/master/onnx/backend/test/case/model/__init__.py#L58
         new utils.AccuracyCriterion(1e-7, 1e-3));

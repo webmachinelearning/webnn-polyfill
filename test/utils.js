@@ -40,7 +40,7 @@ export function checkValue(
 
 export function sizeOfShape(array) {
   return array.reduce(
-      (accumulator, currentValue) => accumulator * currentValue);
+      (accumulator, currentValue) => accumulator * currentValue, 1);
 }
 
 export function checkShape(shape, expected) {

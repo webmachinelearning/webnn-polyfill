@@ -9,31 +9,25 @@ import {Operation} from './operation';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
+export type MLResourcce = MLBufferView|WebGLTexture;
+
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlinput)
  */
 export interface MLInput {
-  data: MLBufferView|WebGLTexture;
-  dimensions?: number[];
-}
-
-/**
- * [API spec](https://webmachinelearning.github.io/webnn/#dictdef-mloutput)
- */
-export interface MLOutput {
-  data?: MLBufferView|WebGLTexture;
-  dimensions?: number[];
+  resource: MLResourcce;
+  dimensions: number[];
 }
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedinputs)
  */
-export type MLNamedInputs = Record<string, MLInput>;
+export type MLNamedInputs = Record<string, MLInput|MLResourcce>;
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#typedefdef-mlnamedoutputs)
  */
-export type MLNamedOutputs = Record<string, MLOutput>;
+export type MLNamedOutputs = Record<string, MLResourcce>;
 
 /** @internal */
 class OperandTensor {
@@ -69,15 +63,20 @@ export class ExecutionContext {
       const input = inputs[inputName];
       const inputOperand = inputOperands.get(inputName);
       let desc: MLOperandDescriptor;
-      if (input.dimensions !== undefined) {
-        desc = {type: inputOperand.desc.type, dimensions: input.dimensions} as
-            MLOperandDescriptor;
+      let resource;
+      if ((input as MLInput).dimensions !== undefined) {
+        desc = {
+          type: inputOperand.desc.type,
+          dimensions: (input as MLInput).dimensions
+        } as MLOperandDescriptor;
+        resource = (input as MLInput).resource;
       } else {
         desc = inputOperand.desc;
+        resource = input;
       }
       this.inputTensors_.set(inputOperand, {
         ref: this.operandRefs_.get(inputOperand),
-        tensor: utils.createTensor(desc, input.data)
+        tensor: utils.createTensor(desc, resource as ArrayBufferView)
       });
     }
   }
@@ -150,22 +149,20 @@ export class MLGraph {
   private operandRefs_: Map<MLOperand, number> = new Map();
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
-  async compute(inputs: MLNamedInputs, outputs: MLNamedOutputs = {}):
-      Promise<MLNamedOutputs> {
+  compute(inputs: MLNamedInputs, outputs: MLNamedOutputs): void {
     this.validateInputs(inputs);
 
-    // Filter the required output operands.
-    let outputOperands: Map<string, OutputOperand>;
-    if (Object.keys(outputs).length !== 0) {
-      outputOperands = new Map();
-      for (const outputName in outputs) {
-        utils.assert(
-            typeof outputName === 'string' && this.outputs_.has(outputName),
-            'The name of the output is invalid.');
-        outputOperands.set(outputName, this.outputs_.get(outputName));
-      }
-    } else {
-      outputOperands = this.outputs_;
+    // Validate and filter the required output operands.
+    utils.assert(Object.keys(outputs).length !== 0, 'The outputs is invalid.');
+    const outputOperands: Map<string, OutputOperand> = new Map();
+    for (const outputName in outputs) {
+      utils.assert(
+          typeof outputName === 'string' && this.outputs_.has(outputName),
+          'The name of the output is invalid.');
+      utils.assert(
+          utils.isTypedArray(outputs[outputName]),
+          'Only output of ArrayBufferView type is supported.');
+      outputOperands.set(outputName, this.outputs_.get(outputName));
     }
 
     // Compute the output tensors.
@@ -176,26 +173,15 @@ export class MLGraph {
       return context.compute(outputOperands);
     });
 
-    // Setup the results.
-    const results: MLNamedOutputs = {};
+    // Setup the outputs.
     for (const outputName of Object.keys(outputTensors)) {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
-      const data = await tensor.data();
+      const resource = outputs[outputName] as ArrayBufferView;
+      utils.validateTypedArray(resource, desc.type, desc.dimensions);
+      resource.set(tensor.dataSync());
       tf.dispose(tensor);
-      results[outputName] = {data, dimensions: desc.dimensions} as MLOutput;
-      if (outputs !== undefined && outputName in outputs &&
-          outputs[outputName].data !== undefined) {
-        utils.assert(
-            utils.isTypedArray(outputs[outputName].data),
-            'Only ArrayBufferView data type is supported.');
-        const array = outputs[outputName].data as ArrayBufferView;
-        utils.validateTypedArray(array, desc.type, desc.dimensions);
-        array.set(data);
-      }
     }
-
-    return results;
   }
 
   private validateInputs(inputs: MLNamedInputs) {
@@ -203,13 +189,15 @@ export class MLGraph {
       utils.assert(
           typeof name === 'string' && this.inputs_.has(name),
           'The name of the input is invalid.');
-      const input = inputs[name];
       const inputOperand = this.inputs_.get(name);
-      utils.assert(
-          input.data !== undefined, 'The data of the input is undefined.');
+      let resource;
       let dimensions;
-      if (input.dimensions !== undefined) {
+      if ((inputs[name] as MLInput).dimensions !== undefined) {
+        const input = inputs[name] as MLInput;
+        resource = input.resource;
         dimensions = input.dimensions;
+        utils.assert(
+            resource !== undefined, 'The resource of input is undefined.');
         utils.assert(
             utils.isIntegerArray(dimensions) === true,
             'The type of the input dimensions is invalid.');
@@ -228,16 +216,17 @@ export class MLGraph {
           }
         }
       } else {
+        resource = inputs[name] as MLResourcce;
         utils.assert(
             !utils.isDyanmicShape(inputOperand.desc.dimensions),
             'The input dimensions is not specified.');
         dimensions = inputOperand.desc.dimensions;
       }
       utils.assert(
-          utils.isTypedArray(input.data),
-          'Only ArrayBufferView data type is supported.');
+          utils.isTypedArray(resource),
+          'Only resource of ArrayBufferView type is supported.');
       utils.validateTypedArray(
-          input.data as ArrayBufferView, inputOperand.desc.type, dimensions);
+          resource as ArrayBufferView, inputOperand.desc.type, dimensions);
     }
   }
 
@@ -254,10 +243,10 @@ export class MLGraph {
   }
 
   /** @internal */
-  static async buildAndCompile(outputs?: MLNamedOperands): Promise<MLGraph> {
+  static buildAndCompile(outputs?: MLNamedOperands): MLGraph {
     const graph = new MLGraph(outputs);
     graph.build();
-    await graph.compile();
+    graph.compile();
     return graph;
   }
 
@@ -302,10 +291,9 @@ export class MLGraph {
     }
   }
 
-  private async compile(): Promise<void> {
-    await tf.ready();
+  private compile(): void {
     this.allocateConstants();
-    await this.inferOnce();
+    this.computeOnce();
   }
 
   private allocateConstants(): void {
@@ -315,7 +303,7 @@ export class MLGraph {
     }
   }
 
-  private async inferOnce(): Promise<void> {
+  private computeOnce(): void {
     const inputs: MLNamedInputs = {};
     for (const inputName of this.inputs_.keys()) {
       const inputOperand = this.inputs_.get(inputName);
@@ -324,9 +312,19 @@ export class MLGraph {
       const typedArrayConstructor = utils.getTypedArray(inputOperand.desc.type);
       const inputBuffer = new typedArrayConstructor(
           utils.sizeFromDimensions(inputOperand.desc.dimensions));
-      inputs[inputName] = {data: inputBuffer, dimensions: shape} as MLInput;
+      inputs[inputName] = {resource: inputBuffer, dimensions: shape} as MLInput;
     }
-    await this.compute(inputs);
+    const outputTensors: tf.TensorContainerObject = tf.tidy(() => {
+      const context = new ExecutionContext(
+          this.constantTensors_, this.inputs_, inputs, this.operandRefs_);
+      // The input and immediate tensors will be cleaned up.
+      return context.compute(this.outputs_);
+    });
+    for (const outputName of Object.keys(outputTensors)) {
+      const tensor = outputTensors[outputName] as tf.Tensor;
+      tensor.dataSync();
+      tf.dispose(tensor);
+    }
   }
 
   /** @ignore */

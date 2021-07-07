@@ -3,22 +3,22 @@ import * as utils from '../utils.js';
 
 describe('test exp', function() {
   const context = navigator.ml.createContext();
-  async function testExp(input, expected, shape) {
+  function testExp(input, expected, shape) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.exp(x);
-    const graph = await builder.build({y});
-    const inputs = {'x': {data: new Float32Array(input)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, shape);
-    utils.checkValue(outputs.y.data, expected);
+    const graph = builder.build({y});
+    const inputs = {'x': new Float32Array(input)};
+    const outputs = {'y': new Float32Array(utils.sizeOfShape(shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.y, expected);
   }
-  it('exp 1d', async function() {
-    await testExp([-1, 0, 1], [0.36787945, 1., 2.71828175], [3]);
+  it('exp 1d', function() {
+    testExp([-1, 0, 1], [0.36787945, 1., 2.71828175], [3]);
   });
 
-  it('exp 3d', async function() {
-    await testExp(
+  it('exp 3d', function() {
+    testExp(
         [
           0.3143407,   0.03632548,  0.5354084,   -0.5000897,  1.2028517,
           -1.2581364,  -1.5108215,  -1.2340564,  1.3860914,   -0.2944251,

@@ -589,37 +589,37 @@ describe('test MLGraphBuilder', function() {
     expect(builder.build).to.be.a('function');
   });
 
-  it('builder.build should return a MLGraph', async () => {
+  it('builder.build should return a MLGraph', () => {
     const a = builder.input('a', desc);
     const b = builder.input('b', desc);
     const c = builder.matmul(a, b);
-    expect(await builder.build({c})).to.be.an.instanceof(MLGraph);
+    expect(builder.build({c})).to.be.an.instanceof(MLGraph);
   });
 
-  it('builder.build should throw for invalid parameters', async () => {
+  it('builder.build should throw for invalid parameters', () => {
     try {
-      await builder.build();
+      builder.build();
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
     try {
-      await builder.build({});
+      builder.build({});
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
     try {
-      await builder.build({'a': 1});
+      builder.build({'a': 1});
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
     try {
-      await builder.build({'a': {}});
+      builder.build({'a': {}});
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
