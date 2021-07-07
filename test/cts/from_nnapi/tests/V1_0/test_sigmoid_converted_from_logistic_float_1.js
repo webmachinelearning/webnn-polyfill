@@ -5,16 +5,17 @@ import * as utils from '../../../../utils.js';
 describe('CTS converted from NNAPI CTS', function() {
   const context = navigator.ml.createContext();
 
-  it('test sigmoid converted from logistic_float_1 test', async function() {
+  it('test sigmoid converted from logistic_float_1 test', function() {
     // Converted test case (from: V1_0/logistic_float_1.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
     const op1Data = new Float32Array([1.0, 2.0, 4.0, 8.0]);
     const expected = [0.7310585975646973, 0.8807970285415649, 0.9820137619972229, 0.9996646642684937];
     const op3 = builder.sigmoid(op1);
-    const graph = await builder.build({op3});
-    const outputs = await graph.compute({'op1': {data: op1Data}});
-    utils.checkValue(outputs.op3.data, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const graph = builder.build({op3});
+    const outputs = {op3: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
+    graph.compute({'op1': op1Data}, outputs);
+    utils.checkValue(outputs.op3, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

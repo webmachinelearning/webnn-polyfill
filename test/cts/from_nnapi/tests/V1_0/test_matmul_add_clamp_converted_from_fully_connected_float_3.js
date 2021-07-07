@@ -5,7 +5,7 @@ import * as utils from '../../../../utils.js';
 describe('CTS converted from NNAPI CTS', function() {
   const context = navigator.ml.createContext();
 
-  it('test matmul + add + clamp converted from fully_connected_float_3 test', async function() {
+  it('test matmul + add + clamp converted from fully_connected_float_3 test', function() {
     // Converted test case (from: V1_0/fully_connected_float_3.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [2, 2]});
@@ -16,9 +16,10 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.matmul(op1, op2);
     const interOut1 = builder.add(interOut0, b0);
     const op3 = builder.clamp(interOut1);
-    const graph = await builder.build({op3});
-    const outputs = await graph.compute({'op1': {data: op1Data}});
-    utils.checkValue(outputs.op3.data, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const graph = builder.build({op3});
+    const outputs = {op3: new Float32Array(utils.sizeOfShape([2, 1]))};
+    graph.compute({'op1': op1Data}, outputs);
+    utils.checkValue(outputs.op3, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */
