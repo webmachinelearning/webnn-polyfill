@@ -286,9 +286,8 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-build)
    */
-  async build(outputs: MLNamedOperands): Promise<MLGraph> {
-    const graph = await MLGraph.buildAndCompile(outputs);
-    return graph;
+  build(outputs: MLNamedOperands): MLGraph {
+    return MLGraph.buildAndCompile(outputs);
   }
 
   /**

@@ -92,7 +92,7 @@ export class MatMul extends Binary {
           c = tf.reshape(c, [1].concat(c.shape));
         }
         return c;
-        }
+      }
     }
   }
 }

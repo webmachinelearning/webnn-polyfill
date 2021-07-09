@@ -4,19 +4,19 @@ import * as utils from '../utils.js';
 describe('test transpose', function() {
   const context = navigator.ml.createContext();
 
-  async function checkTranspose(
+  function checkTranspose(
       inputShape, inputData, expectedShape, expected, permutation = undefined) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: inputShape});
     const y = builder.transpose(x, {permutation});
-    const graph = await builder.build({y});
-    const inputs = {'x': {data: new Float32Array(inputData)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, expectedShape);
-    utils.checkValue(outputs.y.data, expected);
+    const graph = builder.build({y});
+    const inputs = {'x': new Float32Array(inputData)};
+    const outputs = {'y': new Float32Array(utils.sizeOfShape(expectedShape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.y, expected);
   }
 
-  it('transpose default', async function() {
+  it('transpose default', function() {
     const inputShape = [2, 3, 4];
     const inputData = [
       0.43376675, 0.264609,   0.26321858, 0.04260185, 0.6862414,  0.26150206,
@@ -30,10 +30,10 @@ describe('test transpose', function() {
       0.26321858, 0.02267954, 0.04169406, 0.09732241, 0.33851373, 0.13075736,
       0.04260185, 0.22069663, 0.24857993, 0.03296741, 0.74131566, 0.82511896,
     ];
-    await checkTranspose(inputShape, inputData, [4, 3, 2], expected);
+    checkTranspose(inputShape, inputData, [4, 3, 2], expected);
   });
 
-  it('transpose permutations', async function() {
+  it('transpose permutations', function() {
     const permutations =
         [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
     const inputShape = [2, 3, 4];
@@ -84,7 +84,7 @@ describe('test transpose', function() {
       ],
     ];
     for (let i = 0; i < permutations.length; ++i) {
-      await checkTranspose(
+      checkTranspose(
           inputShape, inputData, expectedShapes[i], expecteds[i],
           permutations[i]);
     }

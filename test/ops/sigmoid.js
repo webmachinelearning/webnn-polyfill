@@ -7,18 +7,18 @@ describe('test sigmoid', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.sigmoid(x);
-    const graph = await builder.build({y});
-    const inputs = {'x': {data: new Float32Array(input)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, shape);
-    utils.checkValue(outputs.y.data, expected);
+    const graph = builder.build({y});
+    const inputs = {'x': new Float32Array(input)};
+    const outputs = {'y': new Float32Array(utils.sizeOfShape(shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.y, expected);
   }
   it('sigmoid 1d', async function() {
-    await testSigmoid([-1, 0, 1], [0.26894143, 0.5, 0.7310586], [3]);
+    testSigmoid([-1, 0, 1], [0.26894143, 0.5, 0.7310586], [3]);
   });
 
   it('sigmoid 3d', async function() {
-    await testSigmoid(
+    testSigmoid(
         [
           -0.18371736, 0.4805392,   2.7183356,   0.03039639,  0.04197176,
           -1.1536852,  -2.0124357,  -0.885673,   -0.25776535, 1.0151213,

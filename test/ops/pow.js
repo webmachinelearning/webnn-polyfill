@@ -9,18 +9,18 @@ describe('test pow', function() {
     const y = builder.constant(
         {type: 'float32', dimensions: [1]}, new Float32Array([0.5]));
     const z = builder.pow(x, y);
-    const graph = await builder.build({z});
-    const inputs = {'x': {data: new Float32Array(input)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.z.dimensions, shape);
-    utils.checkValue(outputs.z.data, expected);
+    const graph = builder.build({z});
+    const inputs = {'x': new Float32Array(input)};
+    const outputs = {'z': new Float32Array(utils.sizeOfShape(shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.z, expected);
   }
   it('sqrt 1d', async function() {
-    await testSqrt([1, 4, 9], [1, 2, 3], [3]);
+    testSqrt([1, 4, 9], [1, 2, 3], [3]);
   });
 
   it('sqrt 3d', async function() {
-    await testSqrt(
+    testSqrt(
         [
           0.33435354, 0.57139647, 0.03689031, 0.7820907,  0.7718887,
           0.17709309, 1.05624,    2.2693596,  1.0328789,  1.6043026,
@@ -58,11 +58,11 @@ describe('test pow', function() {
     const y = builder.constant(
         {type: 'float32', dimensions: [3]}, new Float32Array([4, 5, 6]));
     const z = builder.pow(x, y);
-    const graph = await builder.build({z});
-    const inputs = {'x': {data: new Float32Array([1, 2, 3])}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.z.dimensions, [3]);
-    utils.checkValue(outputs.z.data, [1., 32., 729.]);
+    const graph = builder.build({z});
+    const inputs = {'x': new Float32Array([1, 2, 3])};
+    const outputs = {'z': new Float32Array(3)};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.z, [1., 32., 729.]);
   });
 
   it('pow broadcast scalar', async function() {
@@ -71,11 +71,11 @@ describe('test pow', function() {
     const y = builder.constant(
         {type: 'float32', dimensions: [1]}, new Float32Array([2]));
     const z = builder.pow(x, y);
-    const graph = await builder.build({z});
-    const inputs = {'x': {data: new Float32Array([1, 2, 3])}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.z.dimensions, [3]);
-    utils.checkValue(outputs.z.data, [1., 4., 9.]);
+    const graph = builder.build({z});
+    const inputs = {'x': new Float32Array([1, 2, 3])};
+    const outputs = {'z': new Float32Array(3)};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.z, [1., 4., 9.]);
   });
 
   it('pow broadcast scalar', async function() {
@@ -84,10 +84,10 @@ describe('test pow', function() {
     const y = builder.constant(
         {type: 'float32', dimensions: [3]}, new Float32Array([1, 2, 3]));
     const z = builder.pow(x, y);
-    const graph = await builder.build({z});
-    const inputs = {'x': {data: new Float32Array([1, 2, 3, 4, 5, 6])}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.z.dimensions, [2, 3]);
-    utils.checkValue(outputs.z.data, [1., 4., 27., 4., 25., 216.]);
+    const graph = builder.build({z});
+    const inputs = {'x': new Float32Array([1, 2, 3, 4, 5, 6])};
+    const outputs = {'z': new Float32Array(utils.sizeOfShape([2, 3]))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.z, [1., 4., 27., 4., 25., 216.]);
   });
 });

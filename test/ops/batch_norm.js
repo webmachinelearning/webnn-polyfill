@@ -4,16 +4,16 @@ import * as utils from '../utils.js';
 describe('test batchNormalization', function() {
   const context = navigator.ml.createContext();
 
-  async function testBatchNorm(
+  function testBatchNorm(
       input, mean, variance, expected, scale = undefined, bias = undefined,
       options = {}) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input(
-        'input', {type: 'float32', dimensions: input.shape});
-    const m = builder.constant({type: 'float32', dimensions: mean.shape},
-        mean.data);
-    const v = builder.constant({type: 'float32', dimensions: variance.shape},
-        variance.data);
+    const x =
+        builder.input('input', {type: 'float32', dimensions: input.shape});
+    const m =
+        builder.constant({type: 'float32', dimensions: mean.shape}, mean.data);
+    const v = builder.constant(
+        {type: 'float32', dimensions: variance.shape}, variance.data);
     if (scale !== undefined) {
       options.scale = builder.constant(
           {type: 'float32', dimensions: scale.shape}, scale.data);
@@ -22,16 +22,16 @@ describe('test batchNormalization', function() {
       options.bias = builder.constant(
           {type: 'float32', dimensions: bias.shape}, bias.data);
     }
-    const output =
-        builder.batchNormalization(x, m, v, options);
-    const graph = await builder.build({output});
-    const inputs = {'input': {data: input.data}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.output.dimensions, input.shape);
-    utils.checkValue(outputs.output.data, expected);
+    const output = builder.batchNormalization(x, m, v, options);
+    const graph = builder.build({output});
+    const inputs = {'input': input.data};
+    const outputs = {
+      'output': new Float32Array(utils.sizeOfShape(input.shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.output, expected);
   }
 
-  it('batchNormalization nchw', async function() {
+  it('batchNormalization nchw', function() {
     const input = {
       shape: [1, 2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -53,16 +53,16 @@ describe('test batchNormalization', function() {
       data: new Float32Array([0, 1]),
     };
     const expected = [-0.999995, 0., 0.999995, -0.22474074, 1., 2.2247407];
-    await testBatchNorm(input, mean, variance, expected, scale, bias);
+    testBatchNorm(input, mean, variance, expected, scale, bias);
 
     const expectedScale = [-0.999995, 0., 0.999995, -1.22474, 0., 1.22474];
-    await testBatchNorm(input, mean, variance, expectedScale, scale);
+    testBatchNorm(input, mean, variance, expectedScale, scale);
 
     const expectedBias = [-0.999995, 0., 0.999995, 0.183506, 1., 1.816494];
-    await testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
+    testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
   });
 
-  it('batchNormalization nhwc', async function() {
+  it('batchNormalization nhwc', function() {
     const input = {
       shape: [1, 1, 3, 2],
       data: new Float32Array([-1, 2, 0, 3, 1, 4]),
@@ -84,19 +84,18 @@ describe('test batchNormalization', function() {
       data: new Float32Array([0, 1]),
     };
     const expected = [-0.999995, -0.22474074, 0., 1., 0.999995, 2.2247407];
-    await testBatchNorm(
-        input, mean, variance, expected, scale, bias, {axis: 3});
+    testBatchNorm(input, mean, variance, expected, scale, bias, {axis: 3});
 
     const expectedScale = [-0.999995, -1.22474, 0., 0., 0.999995, 1.22474];
-    await testBatchNorm(
+    testBatchNorm(
         input, mean, variance, expectedScale, scale, undefined, {axis: 3});
 
     const expectedBias = [-0.999995, 0.183506, 0., 1., 0.999995, 1.816494];
-    await testBatchNorm(
+    testBatchNorm(
         input, mean, variance, expectedBias, undefined, bias, {axis: 3});
   });
 
-  it('batchNormalization without options', async function() {
+  it('batchNormalization without options', function() {
     const input = {
       shape: [1, 2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -111,10 +110,10 @@ describe('test batchNormalization', function() {
     };
 
     const expected = [-0.999995, 0., 0.999995, -0.816494, 0., 0.816494];
-    await testBatchNorm(input, mean, variance, expected);
+    testBatchNorm(input, mean, variance, expected);
   });
 
-  it('batchNormalization with epsilon', async function() {
+  it('batchNormalization with epsilon', function() {
     const input = {
       shape: [2, 3, 4, 5],
       data: new Float32Array([
@@ -192,7 +191,7 @@ describe('test batchNormalization', function() {
       -5.8637255e-01, -3.0367374e-01, -2.7111509e-01, -3.7675196e-01,
       -3.5137540e-01, -1.3970569e-02, 3.7042797e-04,  -3.5802066e-01,
     ];
-    await testBatchNorm(
+    testBatchNorm(
         input, mean, variance, expected, scale, bias, {epsilon: 1e-2});
   });
 });

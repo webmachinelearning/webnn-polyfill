@@ -4,22 +4,22 @@ import * as utils from '../utils.js';
 describe('test pad', function() {
   const context = navigator.ml.createContext();
 
-  async function testPad(input, paddings, options, expected) {
+  function testPad(input, paddings, options, expected) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const padding = builder.constant(
         {type: 'int32', dimensions: paddings.shape},
         new Int32Array(paddings.values));
     const y = builder.pad(x, padding, options);
-    const graph = await builder.build({y});
-    const inputs = {'x': {data: new Float32Array(input.values)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, expected.shape);
-    utils.checkValue(outputs.y.data, expected.values);
+    const graph = builder.build({y});
+    const inputs = {'x': new Float32Array(input.values)};
+    const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.y, expected.values);
   }
 
-  it('pad default', async function() {
-    await testPad(
+  it('pad default', function() {
+    testPad(
         {
           shape: [2, 3],
           values: [1, 2, 3, 4, 5, 6],
@@ -37,8 +37,8 @@ describe('test pad', function() {
         });
   });
 
-  it('pad edge mode', async function() {
-    await testPad(
+  it('pad edge mode', function() {
+    testPad(
         {
           shape: [2, 3],
           values: [1, 2, 3, 4, 5, 6],
@@ -56,8 +56,8 @@ describe('test pad', function() {
         });
   });
 
-  it('pad reflection mode', async function() {
-    await testPad(
+  it('pad reflection mode', function() {
+    testPad(
         {
           shape: [2, 3],
           values: [1, 2, 3, 4, 5, 6],
@@ -75,8 +75,8 @@ describe('test pad', function() {
         });
   });
 
-  it('pad symmetric mode', async function() {
-    await testPad(
+  it('pad symmetric mode', function() {
+    testPad(
         {
           shape: [2, 3],
           values: [1, 2, 3, 4, 5, 6],

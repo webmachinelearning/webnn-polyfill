@@ -1,24 +1,24 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test relu', function() {
+describe('test leakyRelu', function() {
   const context = navigator.ml.createContext();
 
-  async function testLeakyRelu(input, expected, options = {}) {
+  function testLeakyRelu(input, expected, options = {}) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const y = builder.leakyRelu(x, options);
-    const graph = await builder.build({y});
-    const inputs = {'x': {data: new Float32Array(input.value)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, input.shape);
-    utils.checkValue(outputs.y.data, expected);
+    const graph = builder.build({y});
+    const inputs = {'x': new Float32Array(input.value)};
+    const outputs = {'y': new Float32Array(utils.sizeOfShape(input.shape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.y, expected);
   }
 
-  it('leakyRelu', async function() {
-    await testLeakyRelu(
+  it('leakyRelu', function() {
+    testLeakyRelu(
         {shape: [3], value: [-1, 0, 1]}, [-0.1, 0., 1.], {alpha: 0.1});
-    await testLeakyRelu(
+    testLeakyRelu(
         {
           shape: [3, 4, 5],
           value: [
@@ -53,8 +53,8 @@ describe('test relu', function() {
         {alpha: 0.1});
   });
 
-  it('leakyRelu default', async function() {
-    await testLeakyRelu(
+  it('leakyRelu default', function() {
+    testLeakyRelu(
         {
           shape: [3, 4, 5],
           value: [
