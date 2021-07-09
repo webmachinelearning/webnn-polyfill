@@ -15,8 +15,8 @@ abstract class Reduce extends SingleOutputOperation {
     utils.validateOperand(input);
     this.input_ = input;
     if (options.axes !== undefined) {
-      utils.assert(utils.isIntegerArray(options.axes),
-          'The axes parameter is invalid.');
+      utils.assert(
+          utils.isIntegerArray(options.axes), 'The axes parameter is invalid.');
       this.axes_ = options.axes;
     } else {
       this.axes_ = undefined;
@@ -38,7 +38,8 @@ abstract class Reduce extends SingleOutputOperation {
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
     // accepts axis range [-r, r)
-    utils.assert(utils.validateAxes(this.axes_, input.rank),
+    utils.assert(
+        utils.validateAxes(this.axes_, input.rank),
         `The axes must be in range [-${input.rank}, ${input.rank})`);
     return this.runOp(input, this.axes_, this.keepDimensions_);
   }

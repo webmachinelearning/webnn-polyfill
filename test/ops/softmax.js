@@ -4,31 +4,29 @@ import * as utils from '../utils.js';
 describe('test softmax', function() {
   const context = navigator.ml.createContext();
 
-  it('softmax', async function() {
+  it('softmax', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3, 4]});
     const y = builder.softmax(x);
-    const graph = await builder.build({y});
+    const graph = builder.build({y});
     const inputs = {
-      'x': {
-        data: new Float32Array([
-          0.4301911,
-          0.54719144,
-          -1.1637765,
-          0.18390046,
-          0.58390397,
-          0.1735679,
-          0.539724,
-          -0.953514,
-          -0.59202826,
-          -0.17344485,
-          0.14395015,
-          -0.37920907,
-        ]),
-      },
+      'x': new Float32Array([
+        0.4301911,
+        0.54719144,
+        -1.1637765,
+        0.18390046,
+        0.58390397,
+        0.1735679,
+        0.539724,
+        -0.953514,
+        -0.59202826,
+        -0.17344485,
+        0.14395015,
+        -0.37920907,
+      ]),
     };
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, [3, 4]);
+    const outputs = {'y': new Float32Array(utils.sizeOfShape([3, 4]))};
+    graph.compute(inputs, outputs);
     const expected = [
       0.32165375,
       0.36157736,
@@ -43,6 +41,6 @@ describe('test softmax', function() {
       0.35717794,
       0.21167983,
     ];
-    utils.checkValue(outputs.y.data, expected);
+    utils.checkValue(outputs.y, expected);
   });
 });

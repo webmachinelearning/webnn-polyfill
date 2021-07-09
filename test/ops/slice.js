@@ -4,19 +4,19 @@ import * as utils from '../utils.js';
 describe('test slice', function() {
   const context = navigator.ml.createContext();
 
-  async function testSlice(
+  function testSlice(
       inputShape, inputData, starts, sizes, axes, expectedShape, expected) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: inputShape});
     const y = builder.slice(x, starts, sizes, {axes});
-    const graph = await builder.build({y});
-    const inputs = {'x': {data: new Float32Array(inputData)}};
-    const outputs = await graph.compute(inputs);
-    utils.checkShape(outputs.y.dimensions, expectedShape);
-    utils.checkValue(outputs.y.data, expected);
+    const graph = builder.build({y});
+    const inputs = {'x': new Float32Array(inputData)};
+    const outputs = {'y': new Float32Array(utils.sizeOfShape(expectedShape))};
+    graph.compute(inputs, outputs);
+    utils.checkValue(outputs.y, expected);
   }
 
-  it('slice default axes', async function() {
+  it('slice default axes', function() {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -46,12 +46,12 @@ describe('test slice', function() {
       -3.6469769e-01, -8.7751287e-01, 2.7995768e-01,  -1.6042528e+00,
       -1.7991974e+00, -6.8652731e-01, 1.3729302e-03,  -7.7775210e-01,
     ];
-    await testSlice(
+    testSlice(
         inputShape, inputData, starts, sizes, undefined, expectedShape,
         expected);
   });
 
-  it('slice with axes', async function() {
+  it('slice with axes', function() {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -84,11 +84,11 @@ describe('test slice', function() {
       -1.7991974e+00, -6.8652731e-01, 1.3729302e-03,  -7.7775210e-01,
       4.2299256e-01,  1.1432177e-01,  -5.0116669e-02, 1.5525131e+00,
     ];
-    await testSlice(
+    testSlice(
         inputShape, inputData, starts, sizes, axes, expectedShape, expected);
   });
 
-  it('slice with negative axes', async function() {
+  it('slice with negative axes', function() {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -121,7 +121,7 @@ describe('test slice', function() {
       -1.7991974e+00, -6.8652731e-01, 1.3729302e-03,  -7.7775210e-01,
       4.2299256e-01,  1.1432177e-01,  -5.0116669e-02, 1.5525131e+00,
     ];
-    await testSlice(
+    testSlice(
         inputShape, inputData, starts, sizes, axes, expectedShape, expected);
   });
 });

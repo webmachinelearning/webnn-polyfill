@@ -521,7 +521,7 @@ def DumpCtsTest(example, test):
                        str(example.testName))
         if testIndex > 0:
             testPurpose = "%s/%d" % (testPurpose, testIndex)
-        IndentedPrint("it('%s', async function() {" % testPurpose,
+        IndentedPrint("it('%s', function() {" % testPurpose,
                       indent=2, file=test)
         IndentedPrint("// Converted test case (from: %s/%s)" % \
                       (tg.FileNames.version,
@@ -542,7 +542,7 @@ def DumpCtsTest(example, test):
                     PrintInputData(op, nnapiOp, curOpInsList,
                                    opInsDict['name'], inputFeedDict[op],
                                    layout, test)
-                    computeParamsList.append("'%s': {data: %sData}" % \
+                    computeParamsList.append("'%s': %sData" % \
                                              (op, op))
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
                     varValue = inputFeedDict[op]
@@ -562,7 +562,7 @@ def DumpCtsTest(example, test):
                     PrintInputData(op, nnapiOp, curOpInsList,
                                    opInsDict['name'], inputFeedDict[op],
                                    layout, test)
-                    computeParamsList.append("'%s': {data: %sData}" % \
+                    computeParamsList.append("'%s': %sData" % \
                                              (op, op))
         # Create operand(s) by ModelBuilder.constant, or define variable(s)
         for op in curParamsList:
@@ -640,13 +640,26 @@ def DumpCtsTest(example, test):
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
                         fusedReluMappedInfo, outputOp, test)
         if len(curOutputsList) == 1:
-            IndentedPrint("const graph = await builder.build({%s});" % outputOp,
+            IndentedPrint("const graph = builder.build({%s});" % outputOp,
                           indent=4, file=test)
+            IndentedPrint(
+                "const outputs = {%s: new %s(utils.sizeOfShape(%s))};" % \
+                (outputOp, outputOp.type.mappingTypedArrayType,
+                 outputOp.type.dimensions),
+                indent=4, file=test)                         
         elif len(curOutputsList) > 1:
             outputOpNameList = [item.name for item in outputOp]
-            IndentedPrint("const graph = await builder.build({%s});" % \
+            IndentedPrint("const graph = builder.build({%s});" % \
                           ', '.join(outputOpNameList), indent=4, file=test)
-        IndentedPrint("const outputs = await graph.compute({%s});" % \
+            arrayStr = "new %s(utils.sizeOfShape(%s))" % \
+                (outputOp[0].type.mappingTypedArrayType,
+                 outputOp[0].type.dimensions)
+            outputNameBufferList = \
+                ["%s: %s" % (item.name, arrayStr) for item in outputOp]
+            outputStr = ', '.join(outputNameBufferList)
+            IndentedPrint(
+                "const outputs = {%s};" % outputStr, indent=4, file=test)            
+        IndentedPrint("graph.compute({%s}, outputs);" % \
                       ', '.join(computeParamsList), indent=4, file=test)
         # Check compute output
         criteria = 'utils.ctsFp32RestrictAccuracyCriteria'
@@ -654,12 +667,12 @@ def DumpCtsTest(example, test):
             criteria = 'utils.ctsFp32RelaxedAccuracyCriteria'
         if len(curOutputsList) == 1:
             IndentedPrint(
-                "utils.checkValue(outputs.%s.data, expected, %s);" % \
+                "utils.checkValue(outputs.%s, expected, %s);" % \
                 (outputOp, criteria), indent=4, file=test)
         elif len(curOutputsList) > 1:
             IndentedPrint('for (let i = 0; i < %d; i++) {' % \
                           len(curOutputsList), indent=4, file=test)
-            dataStr = 'outputs[%s[i]].data' % ['%s' % k for k in outputOp]
+            dataStr = 'outputs[%s[i]]' % ['%s' % k for k in outputOp]
             IndentedPrint(
                 "utils.checkValue(%s, expected[i], %s);" % \
                 (dataStr, criteria), indent=6, file=test)

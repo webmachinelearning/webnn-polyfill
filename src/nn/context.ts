@@ -15,11 +15,23 @@ export enum MLPowerPreference {
 }
 
 /**
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mldevicepreference)
+ */
+export enum MLDevicePreference {
+  'default' = 'default',
+  'gpu' = 'gpu',
+  'cpu' = 'cpu'
+}
+
+
+/**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlcontextoptions)
  */
 export interface MLContextOptions {
   /** */
   powerPreference?: MLPowerPreference;
+  /** */
+  devicePreference?: MLDevicePreference;
 }
 
 /**

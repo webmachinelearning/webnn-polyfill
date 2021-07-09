@@ -10,7 +10,7 @@ export class Gemm {
     utils.validateOperand(b);
     utils.assert(
         options.c === undefined || typeof options.c === 'number' ||
-        options.c instanceof MLOperand,
+            options.c instanceof MLOperand,
         'The options.c is invalid.');
     utils.assert(
         options.aTranspose === undefined || utils.isBoolean(options.aTranspose),
