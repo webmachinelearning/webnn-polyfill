@@ -1,5 +1,6 @@
 const path = require('path');
 const portfinder = require('portfinder');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const config = {
   entry: ['./src/main.js'],
@@ -48,7 +49,21 @@ const config = {
   },
   node: {
     fs: 'empty'
-  }
+  },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "./node_modules/@tensorflow/tfjs-backend-wasm/dist",
+          globOptions: {
+            ignore: [
+              "**/!(*.wasm)"
+            ],
+          }
+        },
+      ],
+    }),
+  ],
 };
 
 if (process.env.NODE_ENV === 'production') {
