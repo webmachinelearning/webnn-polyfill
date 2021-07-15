@@ -63,7 +63,7 @@ export class MLContext {
   get tf(): unknown {
     // Set directory of wasm binaries for 'wasm' backend
     wasm.setWasmPaths(
-        'https://webmachinelearning.github.io/webnn-polyfill/dist/');
+        `https://unpkg.com/@tensorflow/tfjs-backend-wasm@${tf.version_core}/dist/`);
     return tf;
   }
 }
