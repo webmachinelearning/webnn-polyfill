@@ -3,8 +3,13 @@
 const expect = chai.expect;
 
 describe('test MLContext', function() {
-  it('navigator.ml should be a ML', () => {
-    expect(navigator.ml).to.be.an.instanceof(ML);
+  it('navigator.ml should be a ML', function CheckML() {
+    if (typeof window !== 'undefined') {
+      expect(navigator.ml).to.be.an.instanceof(ML);
+    } else {
+      // This case does not need to be tested on Node.js
+      this.skip();
+    }
   });
 
   it('ml.createContext should be a function', () => {
