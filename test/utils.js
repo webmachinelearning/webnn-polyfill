@@ -20,6 +20,12 @@ export const ctsFp32RestrictAccuracyCriteria =
 export const ctsFp32RelaxedAccuracyCriteria =
     new AccuracyCriterion(5.0 * 0.0009765625, 5.0 * 0.0009765625);
 
+// Refer to onnx/models
+//   https://github.com/onnx/models/blob/master/workflow_scripts/ort_test_dir_utils.py#L239
+// See details of modelFp32AccuracyCriteria setting:
+//   https://github.com/webmachinelearning/webnn-polyfill/issues/55
+export const modelFp32AccuracyCriteria = new AccuracyCriterion(1e-3, 1e-3);
+
 export function almostEqual(a, b, criteria) {
   const delta = Math.abs(a - b);
   if (delta <= criteria.atol + criteria.rtol * Math.abs(b)) {
