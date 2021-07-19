@@ -88,10 +88,7 @@ describe('test squeezenet1.1 nchw', function() {
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.reshape0, expected,
-        // refer to onnx
-        // https://github.com/onnx/onnx/blob/master/onnx/backend/test/case/model/__init__.py#L58
-        new utils.AccuracyCriterion(1e-7, 1e-3));
+        outputs.reshape0, expected, utils.modelFp32AccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {

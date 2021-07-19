@@ -151,7 +151,7 @@ describe('test mobilenetv2 nhwc', function() {
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.softmax, expected, new utils.AccuracyCriterion(1e-5, 1e-3));
+        outputs.softmax, expected, utils.modelFp32AccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {

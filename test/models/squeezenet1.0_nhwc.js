@@ -97,7 +97,7 @@ describe('test squeezenet1.0 nhwc', function() {
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.softmax, expected, utils.ctsFp32RestrictAccuracyCriteria);
+        outputs.softmax, expected, utils.modelFp32AccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {
