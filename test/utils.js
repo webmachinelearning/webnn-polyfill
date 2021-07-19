@@ -121,7 +121,7 @@ export async function setPolyfillBackend(backend) {
   }
   const tf = navigator.ml.createContext().tf;
   if (tf) {
-    const backends = ['webgl', 'cpu'];
+    const backends = ['webgl', 'cpu', 'wasm'];
     if (!backends.includes(backend)) {
       if (backend) {
         console.warn(`webnn-polyfill doesn't support ${backend} backend.`);

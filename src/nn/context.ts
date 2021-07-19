@@ -1,5 +1,6 @@
 import '@tensorflow/tfjs-backend-webgl';
 import '@tensorflow/tfjs-backend-cpu';
+import * as wasm from '@tensorflow/tfjs-backend-wasm';
 
 import * as tf from '@tensorflow/tfjs-core';
 
@@ -60,6 +61,9 @@ export class MLContext {
   /** @internal */
   // Expose tf.js for backend debugging.
   get tf(): unknown {
+    // Set directory of wasm binaries for 'wasm' backend
+    wasm.setWasmPaths(
+        `https://unpkg.com/@tensorflow/tfjs-backend-wasm@${tf.version_core}/dist/`);
     return tf;
   }
 }
