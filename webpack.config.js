@@ -1,5 +1,6 @@
 const path = require('path');
 const portfinder = require('portfinder');
+const TerserPlugin = require("terser-webpack-plugin");
 
 const config = {
   entry: ['./src/main.js'],
@@ -48,7 +49,20 @@ const config = {
   },
   node: {
     fs: 'empty'
-  }
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+        terserOptions: {
+          compress: {
+            typeofs: false,
+          },
+        },
+      }),
+    ],
+  },
 };
 
 if (process.env.NODE_ENV === 'production') {
