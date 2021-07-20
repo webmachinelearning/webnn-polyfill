@@ -313,28 +313,6 @@ describe('test conv2d', function() {
     testConv2d(input, filter, expected);
   });
 
-  it('conv2d without padding explicit autoPad', function() {
-    const input = {
-      shape: [1, 1, 5, 5],
-      data: new Float32Array([
-        0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-        13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      ]),
-    };
-    const filter = {
-      shape: [1, 1, 3, 3],
-      data: new Float32Array(9).fill(1),
-    };
-    const expected = {
-      shape: [1, 1, 3, 3],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
-    };
-    const options = {
-      autopad: 'explicit',
-    };
-    testConv2d(input, filter, expected, options);
-  });
-
   it('conv2d without padding nchw hwio', function() {
     const input = {
       shape: [1, 1, 5, 5],

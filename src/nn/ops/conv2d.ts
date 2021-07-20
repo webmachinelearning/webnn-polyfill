@@ -27,6 +27,12 @@ export class Conv2d extends SingleOutputOperation {
     this.input_ = input;
     utils.validateOperand(filter);
     this.filter_ = filter;
+
+    utils.assert(
+      !(options.autoPad === MLAutoPad.explicit &&
+          options.padding === undefined),
+      'The padding parameter should be assgined when autoPad is explicit.');
+
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
         options.inputLayout, options.filterLayout, options.autoPad,
