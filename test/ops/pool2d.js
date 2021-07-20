@@ -139,6 +139,59 @@ describe('test pool2d', function() {
     utils.checkValue(outputs.y, expected);
   });
 
+  it('maxPool2d autoPad explicit nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [2, 1, 2, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const y = builder.maxPool2d(x,
+        {windowDimensions, autoPad, padding, strides, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+        27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+        40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      9, 11, 13, 14, 23, 25, 27, 28, 37, 39, 41, 42, 44, 46, 48, 49,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('maxPool2d autoPad same-lower nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const autoPad = 'same-lower';
+    const layout = 'nhwc';
+    const y =
+        builder.maxPool2d(x, {windowDimensions, autoPad, strides, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+        27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+        40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      9, 11, 13, 14, 23, 25, 27, 28, 37, 39, 41, 42, 44, 46, 48, 49,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
   it('maxPool2d autoPad same-upper nhwc', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
@@ -321,6 +374,59 @@ describe('test pool2d', function() {
     const expected = [
       7,    7.5, 8,    8.5, 9,    9.5, 10,   10.5, 11,   11.5, 12,   12.5, 13,
       13.5, 14,  14.5, 15,  15.5, 16,  16.5, 17,   17.5, 18,   18.5, 19,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('averagePool2d autoPad explicit nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [2, 1, 2, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const y = builder.averagePool2d(x,
+        {windowDimensions, autoPad, padding, strides, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+        27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+        40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      5, 6, 8, 9.5, 12, 13, 15, 16.5, 26, 27, 29, 30.5, 36.5, 37.5, 39.5, 41,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('averagePool2d autoPad same-lower nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const autoPad = 'same-lower';
+    const layout = 'nhwc';
+    const y =
+        builder.averagePool2d(x, {windowDimensions, autoPad, strides, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13,
+        14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+        27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39,
+        40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      5, 6, 8, 9.5, 12, 13, 15, 16.5, 26, 27, 29, 30.5, 36.5, 37.5, 39.5, 41,
     ];
     utils.checkValue(outputs.y, expected);
   });

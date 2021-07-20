@@ -1,4 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
+import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 
 import {MLAutoPad, MLInputOperandLayout, MLPooling2dOptions} from '../graph_builder';
 import {MLOperand} from '../operand';
@@ -66,19 +67,6 @@ export abstract class Pool extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
-    let padding: 'valid'|'same'|number;
-    if (this.autoPad_ === MLAutoPad.explicit) {
-      utils.assert(
-          this.padding_.every(v => v === this.padding_[0]),
-          'tf.pool only supports the same padding value.');
-      padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
-    } else {
-      if (this.autoPad_ === MLAutoPad['same-upper']) {
-        padding = 'same';
-      } else {
-        throw new Error('tf.pool only supports the same-upper auto pad.');
-      }
-    }
     const poolingType = this.getPoolingType();
     if (this.layout_ === MLInputOperandLayout.nchw) {
       // nchw -> nhwc
@@ -89,6 +77,40 @@ export abstract class Pool extends SingleOutputOperation {
       windowDimensions[0] = input.shape[1];
       windowDimensions[1] = input.shape[2];
     }
+    let padding: 'valid'|'same'|ExplicitPadding;
+    if (this.autoPad_ === MLAutoPad.explicit) {
+      if (this.padding_.every(v => v === 0)) {
+        padding = 'valid';
+      } else {
+        padding = [
+          [0, 0], [this.padding_[0], this.padding_[1]],
+          [this.padding_[2], this.padding_[3]], [0, 0]
+        ] as ExplicitPadding;
+      }
+    } else {
+      if (this.autoPad_ === MLAutoPad['same-upper']) {
+        padding = 'same';
+      } else {
+        // Calculate the explicit paddings for 'same-lower'
+        padding = [[0, 0], [0, 0], [0, 0], [0, 0]];
+        const outputSizes = [0, 0];
+        for (let i = 0; i < 2; ++i) {
+          outputSizes[i] = Math.ceil(input.shape[1 + i] / this.strides_[i]);
+        }
+        const totalPadding: [number, number] = [0, 0];
+        for (let i = 0; i < 2; ++i) {
+          totalPadding[i] = this.strides_[i] * (outputSizes[i] - 1) +
+              ((windowDimensions[i] - 1) * this.dilations_[i] + 1) -
+              input.shape[1 + i];
+        }
+        for (let i = 0; i < 2; ++i) {
+          padding[i + 1][0] =
+              totalPadding[i] - Math.floor(totalPadding[i] / 2);
+          padding[i + 1][1] = Math.floor(totalPadding[i] / 2);
+        }
+      }
+    }
+
     let output = tf.pool(
         input, this.windowDimensions_, poolingType, padding, this.dilations_,
         this.strides_);
