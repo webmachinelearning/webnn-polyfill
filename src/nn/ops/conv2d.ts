@@ -27,6 +27,12 @@ export class Conv2d extends SingleOutputOperation {
     this.input_ = input;
     utils.validateOperand(filter);
     this.filter_ = filter;
+
+    utils.assert(
+      !(options.autoPad === MLAutoPad.explicit &&
+          options.padding === undefined),
+      'The padding parameter should be assgined when autoPad is explicit.');
+
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
         options.inputLayout, options.filterLayout, options.autoPad,
@@ -114,67 +120,16 @@ export class Conv2d extends SingleOutputOperation {
     } else if (this.filterLayout_ === MLFilterOperandLayout.ihwo) {
       filter = tf.transpose(filter, [1, 2, 0, 3]);
     }
-
+    const padding: 'valid'|'same'|ExplicitPadding = utils.getPaddings(
+        input, filter, this.padding_, this.strides_, this.outputPadding_,
+        this.dilations_, this.autoPad_);
     let output;
     if (this.transpose_ === false) {
       if (this.groups_ === 1) {
-        // WebNN padding:
-        //   [beginning_height, ending_height, beginning_width, ending_width]
-        // tf.conv2d NHWC should be in the following form:
-        //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
-        let padding: 'valid'|'same'|ExplicitPadding;
-        if (this.autoPad_ === MLAutoPad.explicit) {
-          if (this.padding_.every(v => v === 0)) {
-            padding = 'valid';
-          } else {
-            padding = [
-              [0, 0], [this.padding_[0], this.padding_[1]],
-              [this.padding_[2], this.padding_[3]], [0, 0]
-            ] as ExplicitPadding;
-          }
-        } else {
-          // Calculate the explicit paddings for 'same-lower'
-          if (this.autoPad_ === MLAutoPad['same-lower']) {
-            padding = [[0, 0], [0, 0], [0, 0], [0, 0]];
-            const outputSizes = [0, 0];
-            for (let i = 0; i < 2; ++i) {
-              outputSizes[i] = Math.ceil(input.shape[1 + i] / this.strides_[i]);
-            }
-            const totalPadding: [number, number] = [0, 0];
-            for (let i = 0; i < 2; ++i) {
-              totalPadding[i] = this.strides_[i] * (outputSizes[i] - 1) +
-                  this.outputPadding_[i] +
-                  ((filter.shape[i] - 1) * this.dilations_[i] + 1) -
-                  input.shape[1 + i];
-            }
-            for (let i = 0; i < 2; ++i) {
-              padding[i + 1][0] =
-                  totalPadding[i] - Math.floor(totalPadding[i] / 2);
-              padding[i + 1][1] = Math.floor(totalPadding[i] / 2);
-            }
-          } else {
-            // 'same-upper'
-            padding = 'same';
-          }
-        }
         output = tf.conv2d(
             input, filter, this.strides_, padding, 'NHWC', this.dilations_);
       } else if (
           this.groups_ === inputChannels && this.groups_ === filter.shape[3]) {
-        let padding: 'valid'|'same'|number;
-        if (this.autoPad_ === MLAutoPad.explicit) {
-          utils.assert(
-              this.padding_.every(v => v === this.padding_[0]),
-              'tf.depthwiseConv2d only supports the same padding value.');
-          padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
-        } else {
-          if (this.autoPad_ === MLAutoPad['same-upper']) {
-            padding = 'same';
-          } else {
-            throw new Error(
-                'tf.depthwiseConv2d only supports the same-upper auto pad.');
-          }
-        }
         // filter layout hwio
         // tf.depthwiseConv2d filter layout: [filterHeight, filterWidth,
         // inChannels, channelMultiplier]
@@ -188,26 +143,11 @@ export class Conv2d extends SingleOutputOperation {
       }
     } else {
       // transpose == true
-      utils.assert(
-          this.dilations_.every(v => v === 1),
-          'tf.conv2dTranspose only supports dilation 1.');
-      let padding: 'valid'|'same'|number;
-      if (this.autoPad_ === MLAutoPad.explicit) {
-        utils.assert(
-            this.padding_.every(v => v === this.padding_[0]),
-            'tf.conv2dTranspose only supports the same padding value.');
-        padding = this.padding_[0] === 0 ? 'valid' : this.padding_[0];
-      } else {
-        if (this.autoPad_ === MLAutoPad['same-upper']) {
-          padding = 'same';
-          this.outputSizes_ = [
-            input.shape[1] * this.strides_[0],
-            input.shape[2] * this.strides_[1],
-          ];
-        } else {
-          throw new Error(
-              'tf.conv2dTranspose only supports the same-upper auto pad.');
-        }
+      if (this.autoPad_ !== MLAutoPad.explicit) {
+        this.outputSizes_ = [
+          input.shape[1] * this.strides_[0],
+          input.shape[2] * this.strides_[1],
+        ];
       }
       // tf.conv2dTranspose outputShape: [batch, height, width, outDepth]
       const outputShape: [number, number, number, number] =
