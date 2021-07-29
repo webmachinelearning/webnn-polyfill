@@ -36,34 +36,36 @@ export class Exp extends Unary {
   }
 }
 
-export class Sigmoid extends Unary {
-  runOp(x: tf.Tensor): tf.Tensor {
-    return tf.sigmoid(x);
-  }
-}
-
 export class Sqrt extends Unary {
   runOp(x: tf.Tensor): tf.Tensor {
     return tf.sqrt(x);
   }
 }
 
-export class Tanh extends Unary {
-  runOp(x: tf.Tensor): tf.Tensor {
-    return tf.tanh(x);
-  }
-}
-
-export class Relu extends Unary implements MLOperator {
-  runOp(x: tf.Tensor): tf.Tensor {
-    return tf.relu(x);
-  }
-
+export abstract class UnaryMLOperator extends Unary implements MLOperator {
   apply(x: MLOperand): OutputOperand {
     this.builder_ = x.builder;
     utils.validateOperand(x);
     this.x_ = x;
     this.createOutput();
     return this.output;
+  }
+}
+
+export class Sigmoid extends UnaryMLOperator {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.sigmoid(x);
+  }
+}
+
+export class Tanh extends UnaryMLOperator {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.tanh(x);
+  }
+}
+
+export class Relu extends UnaryMLOperator {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.relu(x);
   }
 }

@@ -109,15 +109,6 @@ export enum MLRecurrentNetworkWeightLayout {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlrecurrentnetworkactivation)
- */
-export enum MLRecurrentNetworkActivation {
-  'relu' = 'relu',
-  'sigmoid' = 'sigmoid',
-  'tanh' = 'tanh',
-}
-
-/**
  * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlrecurrentnetworkdirection)
  */
 export enum MLRecurrentNetworkDirection {
@@ -137,7 +128,7 @@ export interface MLGruOptions {
   returnSequence?: boolean;
   direction?: MLRecurrentNetworkDirection;
   layout?: MLRecurrentNetworkWeightLayout;
-  activations?: MLRecurrentNetworkActivation[];
+  activations?: MLOperator[];
 }
 
 /**
@@ -148,7 +139,7 @@ export interface MLGruCellOptions {
   recurrentBias?: MLOperand;
   resetAfter?: boolean;
   layout?: MLRecurrentNetworkWeightLayout;
-  activations?: MLRecurrentNetworkActivation[];
+  activations?: MLOperator[];
 }
 
 /**
@@ -462,17 +453,29 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-sigmoid)
    */
-  sigmoid(x: MLOperand): MLOperand {
-    this.validateOperandBuilder([x]);
-    return (new Sigmoid(x)).output;
+  sigmoid(input: MLOperand): MLOperand;
+  sigmoid(): MLOperator;
+  sigmoid(input: MLOperand = undefined): MLOperand | MLOperator {
+    if (input === undefined) {
+      return new Sigmoid(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new Sigmoid(input)).output;
+    }
   }
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-tanh)
    */
-  tanh(x: MLOperand): MLOperand {
-    this.validateOperandBuilder([x]);
-    return (new Tanh(x)).output;
+  tanh(input: MLOperand): MLOperand;
+  tanh(): MLOperator;
+  tanh(input: MLOperand = undefined): MLOperand | MLOperator {
+    if (input === undefined) {
+      return new Tanh(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new Tanh(input)).output;
+    }
   }
   // end of element-wise unary operations
 
