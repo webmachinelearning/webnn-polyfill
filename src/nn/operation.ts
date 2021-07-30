@@ -11,6 +11,9 @@ export interface MLOperator {
 
   /** @internal */
   apply(input: MLOperand): OutputOperand;
+
+  /** @internal */
+  runOp(x: tf.Tensor): tf.Tensor;
 }
 
 export interface FusedOperation {

@@ -125,21 +125,9 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   isRelu6(activation: MLOperator): boolean {
     if (activation instanceof Clamp) {
       const clamp = activation;
-      if (clamp.inputs().length === 3) {
-        const minOperand: MLOperand = clamp.inputs()[1];
-        const maxOperand: MLOperand = clamp.inputs()[2];
-        if (minOperand instanceof ConstantOperand &&
-          maxOperand instanceof ConstantOperand) {
-          const minConstant: ConstantOperand = minOperand;
-          const maxConstant: ConstantOperand = maxOperand;
-          if (typeof minConstant.value === 'number' &&
-            typeof maxConstant.value === 'number') {
-            if (Math.abs(minConstant.value - 0.0) < 1e-5 &&
-                Math.abs(maxConstant.value - 6.0) < 1e-5) {
+      if (Math.abs(clamp.minScalarValue - 0.0) < 1e-5 &&
+          Math.abs(clamp.maxScalarValue - 6.0) < 1e-5) {
               return true;
-            } 
-          }
-        }
       }
     }
     return false;
