@@ -345,11 +345,11 @@ export class MLGraph {
     if (visitedOps.has(operation)) {
       return;
     } else {
+      operation.dispose();
       visitedOps.add(operation);
     }
     for (const operand of operation.inputs()) {
       if (operand instanceof OutputOperand) {
-        operand.operation.dispose();
         this.disposeOperation(operand.operation, visitedOps);
       }
     }
