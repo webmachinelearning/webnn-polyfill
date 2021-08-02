@@ -22,8 +22,8 @@ import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
 import {Exp, Relu, Sigmoid, Tanh} from './ops/unary';
 import {ArrayBufferView} from './types';
-import * as utils from './utils';
 import {MLOperator} from './operation';
+import * as utils from './utils';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlinputoperandlayout)
@@ -531,9 +531,18 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-leakyrelu)
    */
-  leakyRelu(x: MLOperand, options: MLLeakyReluOptions = {}): MLOperand {
-    this.validateOperandBuilder([x]);
-    return (new LeakyRelu(x, options.alpha)).output;
+  leakyRelu(x: MLOperand, options: MLLeakyReluOptions): MLOperand;
+  leakyRelu(options: MLLeakyReluOptions): MLOperator;
+  leakyRelu(operandOrOptions: MLOperand | MLLeakyReluOptions = undefined,
+            options: MLLeakyReluOptions = {}): MLOperand | MLOperator {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x]);
+      return (new LeakyRelu(x, options.alpha)).output;
+    } else {
+      const options = operandOrOptions;
+      return (new LeakyRelu(undefined, options.alpha));
+    }
   }
 
   /**

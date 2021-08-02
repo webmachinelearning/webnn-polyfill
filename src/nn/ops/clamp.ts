@@ -2,10 +2,10 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {MLClampOptions} from '../graph_builder';
 import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
-import {SingleOutputOperation, MLOperator} from '../operation';
+import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class Clamp extends SingleOutputOperation implements MLOperator {
+export class Clamp extends SingleOutputOperation {
   private x_: MLOperand;
   private minOperand_?: MLOperand;
   private maxOperand_?: MLOperand;
@@ -14,6 +14,18 @@ export class Clamp extends SingleOutputOperation implements MLOperator {
 
   get minScalarValue(): number {return this.minScalarValue_;}
   get maxScalarValue(): number {return this.maxScalarValue_;}
+
+  private getScalarValue(operand: MLOperand, minus = false): number {
+    if (operand instanceof ConstantOperand) {
+      const minConstant = operand;
+      if (typeof minConstant.value === 'number') {
+        return minConstant.value;
+      }
+    } else if (operand === undefined) {
+      return minus ? -Infinity : +Infinity;
+    }
+    return undefined;
+  }
 
   constructor(x: MLOperand, options: MLClampOptions = {}) {
     if (x !== undefined) {
@@ -26,28 +38,10 @@ export class Clamp extends SingleOutputOperation implements MLOperator {
     }
     utils.validateOptionalOperand(options.minValue);
     this.minOperand_ = options.minValue;
-    if (this.minOperand_ instanceof ConstantOperand) {
-      const minConstant = this.minOperand_;
-      if (typeof minConstant.value === 'number') {
-        this.minScalarValue_ = minConstant.value;
-      }
-    } else if (this.minOperand_ === undefined) {
-      this.minScalarValue_ = -Infinity;
-    } else {
-      this.minScalarValue_ = undefined;
-    }
+    this.minScalarValue_ = this.getScalarValue(this.minOperand_, true);
     utils.validateOptionalOperand(options.maxValue);
     this.maxOperand_ = options.maxValue;
-    if (this.maxOperand_ instanceof ConstantOperand) {
-      const maxConstant = this.maxOperand_;
-      if (typeof maxConstant.value === 'number') {
-        this.maxScalarValue_ = maxConstant.value;
-      }
-    } else if (this.maxOperand_ === undefined) {
-      this.maxScalarValue_ = +Infinity;
-    } else {
-      this.maxScalarValue_ = undefined;
-    }
+    this.maxScalarValue_ = this.getScalarValue(this.maxOperand_);
   }
 
   inputs(): MLOperand[] {

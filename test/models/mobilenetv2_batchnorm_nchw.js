@@ -186,21 +186,21 @@ describe('test mobilenetv2 batchnorm nchw', function() {
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it('test_data_set_0 (fused batchNormalization)', async function() {
+  it('test_data_set_0 (fused ops)', async function() {
     await testMobileNetV2(
         fusedGraph,
         `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1 (fused batchNormalization)', async function() {
+  it('test_data_set_1 (fused ops)', async function() {
     await testMobileNetV2(
         fusedGraph,
         `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2 (fused batchNormalization)', async function() {
+  it('test_data_set_2 (fused ops)', async function() {
     await testMobileNetV2(
         fusedGraph,
         `${testDataDir}/test_data_set/2/input_0.npy`,

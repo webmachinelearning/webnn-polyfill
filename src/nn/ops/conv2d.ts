@@ -6,6 +6,7 @@ import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
 import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
 import {Relu} from './unary';
 import {Clamp} from './clamp';
+import {LeakyRelu} from './leaky_relu';
 import * as utils from '../utils';
 
 export class Conv2d extends SingleOutputOperation implements FusedOperation {
@@ -24,6 +25,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private transpose_?: boolean;
   private activation_?: MLOperator;
   private fusedActivation_?: tf.fused.Activation;
+  private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
 
   constructor(
@@ -116,6 +118,10 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else if (this.isRelu6(activation)) {
       this.fusedActivation_ = 'relu6';
       this.activation_ = undefined;
+    } else if (activation instanceof LeakyRelu) {
+      this.fusedActivation_ = 'leakyrelu';
+      this.leakyreluAlpha_ = (activation).alpha;
+      this.activation_ = undefined;
     } else {
       this.fusedActivation_ = undefined;
       this.activation_ = activation;
@@ -197,7 +203,8 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
         output = tf.fused.conv2d({
             x: input, filter, strides: this.strides_, pad: padding,
             dataFormat: 'NHWC', dilations: this.dilations_, bias,
-            activation: this.fusedActivation_});
+            activation: this.fusedActivation_,
+            leakyreluAlpha: this.leakyreluAlpha_});
         fused = true;
       } else if (
           this.groups_ === inputChannels && this.groups_ === filter.shape[2]) {
@@ -214,7 +221,8 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
           output = tf.fused.depthwiseConv2d({
               x: input, filter, strides: this.strides_, pad: fusedDepthwisePad,
               dataFormat: 'NHWC', dilations: this.dilations_, bias,
-              activation: this.fusedActivation_});
+              activation: this.fusedActivation_,
+              leakyreluAlpha: this.leakyreluAlpha_});
           fused = true;
         } else {
           output = tf.depthwiseConv2d(
