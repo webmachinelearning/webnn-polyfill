@@ -64,9 +64,9 @@ describe('test tinyYolov2 nchw', function() {
         return builder.leakyRelu(batchNorm, {alpha: 0.10000000149011612});
       } else {
         return builder.batchNormalization(
-          input, mean, variance, {
-            scale: scale, bias: bias,
-            activation: builder.leakyRelu({alpha: 0.10000000149011612})});
+            input, mean, variance, {
+              scale: scale, bias: bias,
+              activation: builder.leakyRelu({alpha: 0.10000000149011612})});
       }
     }
 
