@@ -56,8 +56,8 @@ export class Gru extends Operation {
           MLRecurrentNetworkDirection = MLRecurrentNetworkDirection.forward,
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
-      activations: MLOperator[] =
-          [this.builder.sigmoid(), this.builder.tanh()]): void {
+      activations:
+          MLOperator[] = [this.builder.sigmoid(), this.builder.tanh()]): void {
     utils.validateOptionalOperand(bias);
     this.bias_ = bias;
     utils.validateOptionalOperand(recurrentBias);
@@ -227,8 +227,8 @@ export class GruCell extends SingleOutputOperation {
       bias?: MLOperand, recurrentBias?: MLOperand, resetAfter = true,
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
-      activations: MLOperator[] = [
-          this.builder.sigmoid(), this.builder.tanh()]) {
+      activations:
+          MLOperator[] = [this.builder.sigmoid(), this.builder.tanh()]) {
     utils.validateOptionalOperand(bias);
     this.bias_ = bias;
     utils.validateOptionalOperand(recurrentBias);
@@ -264,8 +264,9 @@ export class GruCell extends SingleOutputOperation {
       input: tf.Tensor, weight: tf.Tensor, recurrentWeight: tf.Tensor,
       hiddenState: tf.Tensor, hiddenSize: number, activations: MLOperator[],
       bias?: tf.Tensor, recurrentBias?: tf.Tensor, resetAfter = true,
-      layout: MLRecurrentNetworkWeightLayout =
-          MLRecurrentNetworkWeightLayout.zrn): tf.Tensor {
+      layout:
+          MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn):
+      tf.Tensor {
     const one = tf.scalar(1);
     const zero = tf.scalar(0);
     const starts = layout === MLRecurrentNetworkWeightLayout.zrn ?

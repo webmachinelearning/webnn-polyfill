@@ -15,7 +15,8 @@ describe('test concat', function() {
     const output = builder.concat(inputs, expected.axis);
     const graph = builder.build({output});
     const outputs = {
-      'output': new Float32Array(utils.sizeOfShape(expected.shape))};
+      'output': new Float32Array(utils.sizeOfShape(expected.shape)),
+    };
     graph.compute(namedInputs, outputs);
     utils.checkValue(outputs.output, expected.value);
   }

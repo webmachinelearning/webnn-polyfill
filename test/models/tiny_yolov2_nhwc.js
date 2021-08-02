@@ -58,8 +58,8 @@ describe('test tinyYolov2 nhwc', function() {
         autoPad: 'same-upper',
         layout: 'nhwc',
       };
-      const data = builder.input('input',
-          {type: 'float32', dimensions: [1, 416, 416, 3]});
+      const data = builder.input(
+          'input', {type: 'float32', dimensions: [1, 416, 416, 3]});
       const conv1 = await buildConv(data, '1');
       const pool1 = builder.maxPool2d(conv1, poolOptions);
       const conv2 = await buildConv(pool1, '2');
@@ -71,7 +71,8 @@ describe('test tinyYolov2 nhwc', function() {
       const conv5 = await buildConv(pool4, '5');
       const pool5 = builder.maxPool2d(conv5, poolOptions);
       const conv6 = await buildConv(pool5, '6');
-      const pool6 = builder.maxPool2d(conv6,
+      const pool6 = builder.maxPool2d(
+          conv6,
           {windowDimensions: [2, 2], autoPad: 'same-upper', layout: 'nhwc'});
       const conv7 = await buildConv(pool6, '7');
       const conv8 = await buildConv(conv7, '8');
@@ -102,9 +103,11 @@ describe('test tinyYolov2 nhwc', function() {
 
   async function testTinyYoloV2(graph, inputFile, expectedFile) {
     const inputs = {
-      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
+    };
     const outputs = {
-      'conv': new Float32Array(utils.sizeOfShape([1, 13, 13, 125]))};
+      'conv': new Float32Array(utils.sizeOfShape([1, 13, 13, 125])),
+    };
     graph.compute(inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
@@ -114,43 +117,37 @@ describe('test tinyYolov2 nhwc', function() {
 
   it('test_data_set_0', async function() {
     await testTinyYoloV2(
-        graph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testTinyYoloV2(
-        graph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testTinyYoloV2(
-        graph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
   it('test_data_set_0 (fused ops)', async function() {
     await testTinyYoloV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1 (fused ops)', async function() {
     await testTinyYoloV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2 (fused ops)', async function() {
     await testTinyYoloV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });

@@ -63,10 +63,11 @@ describe('test tinyYolov2 nchw', function() {
             input, mean, variance, {scale: scale, bias: bias});
         return builder.leakyRelu(batchNorm, {alpha: 0.10000000149011612});
       } else {
-        return builder.batchNormalization(
-            input, mean, variance, {
-              scale: scale, bias: bias,
-              activation: builder.leakyRelu({alpha: 0.10000000149011612})});
+        return builder.batchNormalization(input, mean, variance, {
+          scale: scale,
+          bias: bias,
+          activation: builder.leakyRelu({alpha: 0.10000000149011612}),
+        });
       }
     }
 
@@ -76,17 +77,19 @@ describe('test tinyYolov2 nchw', function() {
     }
 
     async function buildTinyYolo() {
-      const mulScale = builder.constant({type: 'float32',
-        dimensions: [1]}, new Float32Array([0.003921568859368563]));
-      const addBias = builder.constant({type: 'float32',
-        dimensions: [3, 1, 1]}, new Float32Array([0, 0, 0]));
+      const mulScale = builder.constant(
+          {type: 'float32', dimensions: [1]},
+          new Float32Array([0.003921568859368563]));
+      const addBias = builder.constant(
+          {type: 'float32', dimensions: [3, 1, 1]},
+          new Float32Array([0, 0, 0]));
       const poolOptions = {
         windowDimensions: [2, 2],
         strides: [2, 2],
         autoPad: 'same-upper',
       };
-      const data = builder.input('input',
-          {type: 'float32', dimensions: [1, 3, 416, 416]});
+      const data = builder.input(
+          'input', {type: 'float32', dimensions: [1, 3, 416, 416]});
       const mul = builder.mul(data, mulScale);
       const add = builder.add(mul, addBias);
       const conv0 = await buildConvolutional(add, '');
@@ -100,8 +103,8 @@ describe('test tinyYolov2 nchw', function() {
       const conv4 = await buildConvolutional(pool3, '4');
       const pool4 = builder.maxPool2d(conv4, poolOptions);
       const conv5 = await buildConvolutional(pool4, '5');
-      const pool5 = builder.maxPool2d(conv5,
-          {windowDimensions: [2, 2], autoPad: 'same-upper'});
+      const pool5 = builder.maxPool2d(
+          conv5, {windowDimensions: [2, 2], autoPad: 'same-upper'});
       const conv6 = await buildConvolutional(pool5, '6');
       const conv7 = await buildConvolutional(conv6, '7');
       const conv = await buildConv(conv7, '8', true);
@@ -131,9 +134,11 @@ describe('test tinyYolov2 nchw', function() {
 
   async function testTinyYoloV2(graph, inputFile, expectedFile) {
     const inputs = {
-      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
+    };
     const outputs = {
-      'conv': new Float32Array(utils.sizeOfShape([1, 125, 13, 13]))};
+      'conv': new Float32Array(utils.sizeOfShape([1, 125, 13, 13])),
+    };
     graph.compute(inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
@@ -146,43 +151,37 @@ describe('test tinyYolov2 nchw', function() {
 
   it('test_data_set_0', async function() {
     await testTinyYoloV2(
-        graph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testTinyYoloV2(
-        graph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testTinyYoloV2(
-        graph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
   it('test_data_set_0 (fused ops)', async function() {
     await testTinyYoloV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1 (fused ops)', async function() {
     await testTinyYoloV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2 (fused ops)', async function() {
     await testTinyYoloV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });

@@ -86,14 +86,12 @@ describe('test mobilenetv2 nchw', function() {
     }
 
     async function buildMobileNet() {
-      const data =
-          builder.input(
-              'input', {type: 'float32', dimensions: [1, 3, 224, 224]});
+      const data = builder.input(
+          'input', {type: 'float32', dimensions: [1, 3, 224, 224]});
       const conv0 = await buildConv(
           data, '0', true, {padding: [1, 1, 1, 1], strides: [2, 2]});
-      const conv1 =
-          await buildConv(
-              conv0, '2', true, {padding: [1, 1, 1, 1], groups: 32});
+      const conv1 = await buildConv(
+          conv0, '2', true, {padding: [1, 1, 1, 1], groups: 32});
       const conv2 = await buildConv(conv1, '4', false);
       const bottleneck0 =
           await buildLinearBottleneck(conv2, ['5', '7', '9'], 96, 2, false);
@@ -158,54 +156,48 @@ describe('test mobilenetv2 nchw', function() {
 
   async function testMobileNetV2(graph, inputFile, expectedFile) {
     const inputs = {
-      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
+    };
     const outputs = {'gemm': new Float32Array(utils.sizeOfShape([1, 1000]))};
     graph.compute(inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
-    utils.checkValue(
-        outputs.gemm, expected, utils.modelFp32AccuracyCriteria);
+    utils.checkValue(outputs.gemm, expected, utils.modelFp32AccuracyCriteria);
   }
 
   it('test_data_set_0', async function() {
     await testMobileNetV2(
-        graph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testMobileNetV2(
-        graph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testMobileNetV2(
-        graph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
   it('test_data_set_0 (fused ops)', async function() {
     await testMobileNetV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1 (fused ops)', async function() {
     await testMobileNetV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2 (fused ops)', async function() {
     await testMobileNetV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });

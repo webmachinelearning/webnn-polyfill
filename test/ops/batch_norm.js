@@ -29,7 +29,8 @@ describe('test batchNormalization', function() {
     const graph = builder.build({output});
     const inputs = {'input': input.data};
     const outputs = {
-      'output': new Float32Array(utils.sizeOfShape(input.shape))};
+      'output': new Float32Array(utils.sizeOfShape(input.shape)),
+    };
     graph.compute(inputs, outputs);
     utils.checkValue(outputs.output, expected);
   }
@@ -65,15 +66,15 @@ describe('test batchNormalization', function() {
     testBatchNorm(input, mean, variance, expectedScale, scale);
 
     expectedScale = [0., 0., 0.999995, 0., 0., 1.22474];
-    testBatchNorm(input, mean, variance, expectedScale, scale, undefined, {},
-        'RELU');
+    testBatchNorm(
+        input, mean, variance, expectedScale, scale, undefined, {}, 'RELU');
 
     let expectedBias = [-0.999995, 0., 0.999995, 0.183506, 1., 1.816494];
     testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
 
     expectedBias = [0., 0., 0.999995, 0.183506, 1., 1.816494];
-    testBatchNorm(input, mean, variance, expectedBias, undefined, bias, {},
-        'RELU');
+    testBatchNorm(
+        input, mean, variance, expectedBias, undefined, bias, {}, 'RELU');
   });
 
   it('batchNormalization nhwc', function() {
@@ -101,8 +102,8 @@ describe('test batchNormalization', function() {
     testBatchNorm(input, mean, variance, expected, scale, bias, {axis: 3});
 
     expected = [0., 0., 0., 1., 0.999995, 2.2247407];
-    testBatchNorm(input, mean, variance, expected, scale, bias, {axis: 3},
-        'RELU');
+    testBatchNorm(
+        input, mean, variance, expected, scale, bias, {axis: 3}, 'RELU');
 
     let expectedScale = [-0.999995, -1.22474, 0., 0., 0.999995, 1.22474];
     testBatchNorm(

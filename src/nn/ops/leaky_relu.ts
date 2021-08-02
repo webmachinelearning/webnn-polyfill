@@ -1,13 +1,16 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLOperand} from '../operand';
-import {UnaryMLOperator} from './unary';
 import * as utils from '../utils';
+
+import {UnaryMLOperator} from './unary';
 
 export class LeakyRelu extends UnaryMLOperator {
   private alpha_?: number;
 
-  get alpha(): number {return this.alpha_;}
+  get alpha(): number {
+    return this.alpha_;
+  }
 
   constructor(x: MLOperand, alpha = 0.01) {
     super(x);

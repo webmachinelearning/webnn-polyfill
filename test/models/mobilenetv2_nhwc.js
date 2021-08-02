@@ -85,8 +85,8 @@ describe('test mobilenetv2 nhwc', function() {
       const strides = [2, 2];
       const autoPad = 'same-upper';
       const filterLayout = 'ohwi';
-      const data =
-            builder.input('input', {type: 'float32', dimensions: [1, 224, 224, 3]});
+      const data = builder.input(
+          'input', {type: 'float32', dimensions: [1, 224, 224, 3]});
       const conv0 = await buildConv(
           data, '90', 'Conv_Conv2D', true, {strides, autoPad, filterLayout});
       const conv1 = await buildConv(
@@ -100,13 +100,15 @@ describe('test mobilenetv2 nhwc', function() {
       const bottleneck1 = await buildLinearBottleneck(
           bottleneck0, ['3', '119', '115'], '2', {groups: 144});
       const bottleneck2 = await buildLinearBottleneck(
-          bottleneck1, ['255', '216', '157'], '3', {strides, groups: 144}, false);
+          bottleneck1, ['255', '216', '157'], '3', {strides, groups: 144},
+          false);
       const bottleneck3 = await buildLinearBottleneck(
           bottleneck2, ['227', '221', '193'], '4', {groups: 192});
       const bottleneck4 = await buildLinearBottleneck(
           bottleneck3, ['243', '102', '215'], '5', {groups: 192});
       const bottleneck5 = await buildLinearBottleneck(
-          bottleneck4, ['226', '163', '229'], '6', {strides, groups: 192}, false);
+          bottleneck4, ['226', '163', '229'], '6', {strides, groups: 192},
+          false);
       const bottleneck6 = await buildLinearBottleneck(
           bottleneck5, ['104', '254', '143'], '7', {groups: 384});
       const bottleneck7 = await buildLinearBottleneck(
@@ -163,7 +165,8 @@ describe('test mobilenetv2 nhwc', function() {
 
   async function testMobileNetV2(graph, inputFile, expectedFile = false) {
     const inputs = {
-      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
+    };
     const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
     graph.compute(inputs, outputs);
     const expected =
@@ -174,43 +177,37 @@ describe('test mobilenetv2 nhwc', function() {
 
   it('test_data_set_0', async function() {
     await testMobileNetV2(
-        graph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testMobileNetV2(
-        graph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testMobileNetV2(
-        graph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
   it('test_data_set_0 (fused ops)', async function() {
     await testMobileNetV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1 (fused ops)', async function() {
     await testMobileNetV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2 (fused ops)', async function() {
     await testMobileNetV2(
-        fusedGraph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });

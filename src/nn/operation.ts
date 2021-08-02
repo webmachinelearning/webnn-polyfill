@@ -8,7 +8,6 @@ import {MLOperand, OutputOperand} from './operand';
  * [spec](https://webmachinelearning.github.io/webnn/#api-mloperator)
  */
 export interface MLOperator {
-
   /** @internal */
   apply(input: MLOperand): OutputOperand;
 

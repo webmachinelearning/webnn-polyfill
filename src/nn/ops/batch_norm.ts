@@ -5,8 +5,8 @@ import {MLOperand, OutputOperand} from '../operand';
 import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class BatchNormalization extends SingleOutputOperation
-    implements FusedOperation {
+export class BatchNormalization extends SingleOutputOperation implements
+    FusedOperation {
   private input_: MLOperand;
   private mean_: MLOperand;
   private variance_: MLOperand;

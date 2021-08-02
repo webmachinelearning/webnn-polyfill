@@ -4,10 +4,11 @@ import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
 import {MLAutoPad, MLConv2dOptions, MLFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
 import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
 import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
-import {Relu} from './unary';
+import * as utils from '../utils';
+
 import {Clamp} from './clamp';
 import {LeakyRelu} from './leaky_relu';
-import * as utils from '../utils';
+import {Relu, Sigmoid} from './unary';
 
 export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private input_: MLOperand;
@@ -37,9 +38,9 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     this.filter_ = filter;
 
     utils.assert(
-      !(options.autoPad === MLAutoPad.explicit &&
+        !(options.autoPad === MLAutoPad.explicit &&
           options.padding === undefined),
-      'The padding parameter should be assigned when autoPad is explicit.');
+        'The padding parameter should be assigned when autoPad is explicit.');
 
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
@@ -55,8 +56,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       filterLayout: MLFilterOperandLayout = MLFilterOperandLayout.oihw,
       autoPad: MLAutoPad = MLAutoPad.explicit, transpose = false,
       outputPadding: [number, number] = [0, 0],
-      outputSizes: [number, number] = undefined,
-      bias: MLOperand = undefined,
+      outputSizes: [number, number] = undefined, bias: MLOperand = undefined,
       activation: MLOperator = undefined) {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
@@ -122,6 +122,9 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       this.fusedActivation_ = 'leakyrelu';
       this.leakyreluAlpha_ = (activation).alpha;
       this.activation_ = undefined;
+    } else if (activation instanceof Sigmoid) {
+      this.fusedActivation_ = 'sigmoid';
+      this.activation_ = undefined;
     } else {
       this.fusedActivation_ = undefined;
       this.activation_ = activation;
@@ -133,7 +136,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       const clamp = activation;
       if (Math.abs(clamp.minScalarValue - 0.0) < 1e-5 &&
           Math.abs(clamp.maxScalarValue - 6.0) < 1e-5) {
-              return true;
+        return true;
       }
     }
     return false;
@@ -201,17 +204,23 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     if (this.transpose_ === false) {
       if (this.groups_ === 1) {
         output = tf.fused.conv2d({
-            x: input, filter, strides: this.strides_, pad: padding,
-            dataFormat: 'NHWC', dilations: this.dilations_, bias,
-            activation: this.fusedActivation_,
-            leakyreluAlpha: this.leakyreluAlpha_});
+          x: input,
+          filter,
+          strides: this.strides_,
+          pad: padding,
+          dataFormat: 'NHWC',
+          dilations: this.dilations_,
+          bias,
+          activation: this.fusedActivation_,
+          leakyreluAlpha: this.leakyreluAlpha_
+        });
         fused = true;
       } else if (
           this.groups_ === inputChannels && this.groups_ === filter.shape[2]) {
         if (padding === 'valid' || padding === 'same' ||
             (padding instanceof Array && padding[1][0] === padding[1][1] &&
-                padding[1][0] === padding[2][0] &&
-                padding[1][0] === padding[2][1])) {
+             padding[1][0] === padding[2][0] &&
+             padding[1][0] === padding[2][1])) {
           let fusedDepthwisePad: 'valid'|'same'|number;
           if (padding === 'valid' || padding === 'same') {
             fusedDepthwisePad = padding;
@@ -219,10 +228,16 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
             fusedDepthwisePad = padding[1][0];
           }
           output = tf.fused.depthwiseConv2d({
-              x: input, filter, strides: this.strides_, pad: fusedDepthwisePad,
-              dataFormat: 'NHWC', dilations: this.dilations_, bias,
-              activation: this.fusedActivation_,
-              leakyreluAlpha: this.leakyreluAlpha_});
+            x: input,
+            filter,
+            strides: this.strides_,
+            pad: fusedDepthwisePad,
+            dataFormat: 'NHWC',
+            dilations: this.dilations_,
+            bias,
+            activation: this.fusedActivation_,
+            leakyreluAlpha: this.leakyreluAlpha_
+          });
           fused = true;
         } else {
           output = tf.depthwiseConv2d(
@@ -267,6 +282,12 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
         output = tf.relu(output);
       } else if (this.fusedActivation_ === 'relu6') {
         output = tf.clipByValue(output, 0, 6);
+      } else if (this.fusedActivation_ === 'leakyrelu') {
+        output = tf.leakyRelu(output, this.leakyreluAlpha_);
+      } else if (this.fusedActivation_ === 'sigmoid') {
+        output = tf.sigmoid(output);
+      } else if (this.fusedActivation_ !== undefined) {
+        utils.assert(false, `The ${this.fusedActivation_} is un supported.`);
       }
     }
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {

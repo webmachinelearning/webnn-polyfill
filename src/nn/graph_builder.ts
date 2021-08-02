@@ -1,6 +1,7 @@
 import {MLContext} from './context';
 import {MLGraph} from './graph';
 import {ConstantOperand, InputOperand, MLOperand, MLOperandDescriptor, MLOperandType} from './operand';
+import {MLOperator} from './operation';
 import {BatchNormalization} from './ops/batch_norm';
 import {Add, Div, MatMul, Max, Min, Mul, Pow, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
@@ -22,7 +23,6 @@ import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
 import {Exp, Relu, Sigmoid, Tanh} from './ops/unary';
 import {ArrayBufferView} from './types';
-import {MLOperator} from './operation';
 import * as utils from './utils';
 
 /**
@@ -323,8 +323,8 @@ export class MLGraphBuilder {
       options: MLBatchNormalizationOptions = {}): MLOperand {
     this.validateOperandBuilder(
         [input, mean, variance, options.scale, options.bias]);
-    return (new BatchNormalization(
-        input, mean, variance, options)).getFusedOutputs()[0];
+    return (new BatchNormalization(input, mean, variance, options))
+        .getFusedOutputs()[0];
   }
 
   /**
@@ -332,8 +332,9 @@ export class MLGraphBuilder {
    */
   clamp(x: MLOperand, options: MLClampOptions): MLOperand;
   clamp(options: MLClampOptions): MLOperator;
-  clamp(operandOrOptions: MLOperand | MLClampOptions = undefined,
-        options: MLClampOptions = {}): MLOperand | MLOperator {
+  clamp(
+      operandOrOptions: MLOperand|MLClampOptions = undefined,
+      options: MLClampOptions = {}): MLOperand|MLOperator {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
       this.validateOperandBuilder([x, options.minValue, options.maxValue]);
@@ -441,7 +442,7 @@ export class MLGraphBuilder {
    */
   relu(input: MLOperand): MLOperand;
   relu(): MLOperator;
-  relu(input: MLOperand = undefined): MLOperand | MLOperator {
+  relu(input: MLOperand = undefined): MLOperand|MLOperator {
     if (input === undefined) {
       return new Relu(undefined);
     } else {
@@ -455,7 +456,7 @@ export class MLGraphBuilder {
    */
   sigmoid(input: MLOperand): MLOperand;
   sigmoid(): MLOperator;
-  sigmoid(input: MLOperand = undefined): MLOperand | MLOperator {
+  sigmoid(input: MLOperand = undefined): MLOperand|MLOperator {
     if (input === undefined) {
       return new Sigmoid(undefined);
     } else {
@@ -469,7 +470,7 @@ export class MLGraphBuilder {
    */
   tanh(input: MLOperand): MLOperand;
   tanh(): MLOperator;
-  tanh(input: MLOperand = undefined): MLOperand | MLOperator {
+  tanh(input: MLOperand = undefined): MLOperand|MLOperator {
     if (input === undefined) {
       return new Tanh(undefined);
     } else {
@@ -533,8 +534,9 @@ export class MLGraphBuilder {
    */
   leakyRelu(x: MLOperand, options: MLLeakyReluOptions): MLOperand;
   leakyRelu(options: MLLeakyReluOptions): MLOperator;
-  leakyRelu(operandOrOptions: MLOperand | MLLeakyReluOptions = undefined,
-            options: MLLeakyReluOptions = {}): MLOperand | MLOperator {
+  leakyRelu(
+      operandOrOptions: MLOperand|MLLeakyReluOptions = undefined,
+      options: MLLeakyReluOptions = {}): MLOperand|MLOperator {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
       this.validateOperandBuilder([x]);

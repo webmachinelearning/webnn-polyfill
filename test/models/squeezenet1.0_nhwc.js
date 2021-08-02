@@ -56,9 +56,8 @@ describe('test squeezenet1.0 nhwc', function() {
       const layout = 'nhwc';
       const placeholder = builder.input(
           'placeholder', {type: 'float32', dimensions: [1, 224, 224, 3]});
-      const conv1 =
-          await buildConv(
-              placeholder, 'conv1', {strides, autoPad: 'same-upper'});
+      const conv1 = await buildConv(
+          placeholder, 'conv1', {strides, autoPad: 'same-upper'});
       const maxpool1 =
           builder.maxPool2d(conv1, {windowDimensions: [3, 3], strides, layout});
       const fire2 = await buildFire(maxpool1, 'fire2');
@@ -104,7 +103,8 @@ describe('test squeezenet1.0 nhwc', function() {
   async function testSqueezeNet(graph, inputFile, expectedFile) {
     const inputs = {
       'placeholder':
-          await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+          await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
+    };
     const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
     graph.compute(inputs, outputs);
     const expected =
@@ -115,44 +115,37 @@ describe('test squeezenet1.0 nhwc', function() {
 
   it('test_data_set_0', async function() {
     await testSqueezeNet(
-        graph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testSqueezeNet(
-        graph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testSqueezeNet(
-        graph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
   it('test_data_set_0 (fused ops)', async function() {
     await testSqueezeNet(
-        fusedGraph,
-        `${testDataDir}/test_data_set/0/input_0.npy`,
-        `${testDataDir}/test_data_set/0/output_0.npy`,
-        true);
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
+        `${testDataDir}/test_data_set/0/output_0.npy`, true);
   });
 
   it('test_data_set_1 (fused ops)', async function() {
     await testSqueezeNet(
-        fusedGraph,
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2 (fused ops)', async function() {
     await testSqueezeNet(
-        fusedGraph,
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });

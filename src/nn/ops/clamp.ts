@@ -12,8 +12,12 @@ export class Clamp extends SingleOutputOperation {
   private minScalarValue_?: number;
   private maxScalarValue_?: number;
 
-  get minScalarValue(): number {return this.minScalarValue_;}
-  get maxScalarValue(): number {return this.maxScalarValue_;}
+  get minScalarValue(): number {
+    return this.minScalarValue_;
+  }
+  get maxScalarValue(): number {
+    return this.maxScalarValue_;
+  }
 
   private getScalarValue(operand: MLOperand, minus = false): number {
     if (operand instanceof ConstantOperand) {
@@ -83,8 +87,10 @@ export class Clamp extends SingleOutputOperation {
   }
 
   runOp(x: tf.Tensor): tf.Tensor {
-    utils.assert(this.minScalarValue_ !== undefined &&
-        this.maxScalarValue_ !== undefined, 'tf.js only supports clipByValue.');
+    utils.assert(
+        this.minScalarValue_ !== undefined &&
+            this.maxScalarValue_ !== undefined,
+        'tf.js only supports clipByValue.');
     return tf.clipByValue(x, this.minScalarValue_, this.maxScalarValue_);
   }
 }
