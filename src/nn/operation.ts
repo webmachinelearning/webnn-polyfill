@@ -15,10 +15,12 @@ export interface MLOperator {
   runOp(x: tf.Tensor): tf.Tensor;
 }
 
+/** @internal */
 export interface FusedOperation {
   getFusedOutputs(): OutputOperand[];
 }
 
+/** @internal */
 export abstract class Operation {
   protected builder_: MLGraphBuilder;
   protected outputs_: OutputOperand[] = [];
@@ -57,6 +59,7 @@ export abstract class Operation {
   dispose(): void {}
 }
 
+/** @internal */
 export abstract class SingleOutputOperation extends Operation {
   constructor(builder: MLGraphBuilder) {
     super(builder);
