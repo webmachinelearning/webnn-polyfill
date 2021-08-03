@@ -17,7 +17,8 @@ describe('test reshape', function() {
     const inputs = {'x': inputBuffer};
     const outputs = {
       'y': new Float32Array(
-          utils.sizeOfShape(expectedShape ? expectedShape : newShape))};
+          utils.sizeOfShape(expectedShape ? expectedShape : newShape)),
+    };
     graph.compute(inputs, outputs);
     utils.checkValue(outputs.y, inputBuffer);
   }

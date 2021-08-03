@@ -62,8 +62,8 @@ export class MLContext {
   // Expose tf.js for backend debugging.
   get tf(): unknown {
     // Set directory of wasm binaries for 'wasm' backend
-    wasm.setWasmPaths(
-        `https://unpkg.com/@tensorflow/tfjs-backend-wasm@${tf.version_core}/dist/`);
+    wasm.setWasmPaths(`https://unpkg.com/@tensorflow/tfjs-backend-wasm@${
+        tf.version_core}/dist/`);
     return tf;
   }
 }

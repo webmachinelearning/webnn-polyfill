@@ -4,8 +4,23 @@ import {ExecutionContext} from './graph';
 import {MLGraphBuilder} from './graph_builder';
 import {MLOperand, OutputOperand} from './operand';
 
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#api-mloperator)
+ */
+export interface MLOperator {
+  /** @internal */
+  apply(input: MLOperand): OutputOperand;
+
+  /** @internal */
+  runOp(x: tf.Tensor): tf.Tensor;
+}
+
+export interface FusedOperation {
+  getFusedOutputs(): OutputOperand[];
+}
+
 export abstract class Operation {
-  protected readonly builder_: MLGraphBuilder;
+  protected builder_: MLGraphBuilder;
   protected outputs_: OutputOperand[] = [];
 
   get builder(): MLGraphBuilder {
@@ -37,11 +52,20 @@ export abstract class Operation {
   }
 
   abstract computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[];
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  dispose(): void {}
 }
 
 export abstract class SingleOutputOperation extends Operation {
   constructor(builder: MLGraphBuilder) {
     super(builder);
+    if (builder) {
+      this.createOutput();
+    }
+  }
+
+  protected createOutput(): void {
     // Operation produces 1 output operand by default.
     this.outputs_.push(new OutputOperand(this));
   }

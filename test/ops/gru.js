@@ -25,7 +25,8 @@ describe('test gru', function() {
     const graph = builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6])};
     const outputs = {
-      'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize]))};
+      'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
+    };
     graph.compute(inputs, outputs);
     const expected = [
       0.12397027,
@@ -73,10 +74,10 @@ describe('test gru', function() {
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias});
     const graph = builder.build({output});
-    const inputs = {
-      'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
+    const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
-      'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize]))};
+      'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
+    };
     graph.compute(inputs, outputs);
     const expected = [
       0.20053662,
@@ -133,7 +134,8 @@ describe('test gru', function() {
     };
     const outputs = {
       'output': new Float32Array(
-          utils.sizeOfShape([numDirections, batchSize, hiddenSize]))};
+          utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
+    };
     graph.compute(inputs, outputs);
     const expected = [
       0.22391089,
@@ -189,10 +191,12 @@ describe('test gru', function() {
     const graph = builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
-          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])};
+          [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
+    };
     const outputs = {
       'output': new Float32Array(
-          utils.sizeOfShape([numDirections, batchSize, hiddenSize]))};
+          utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
+    };
     graph.compute(inputs, outputs);
     const expected = [
       0.22391089,

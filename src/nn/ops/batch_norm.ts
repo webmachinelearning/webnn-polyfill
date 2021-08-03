@@ -1,11 +1,12 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLBatchNormalizationOptions} from '../graph_builder';
-import {MLOperand} from '../operand';
-import {SingleOutputOperation} from '../operation';
+import {MLOperand, OutputOperand} from '../operand';
+import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class BatchNormalization extends SingleOutputOperation {
+export class BatchNormalization extends SingleOutputOperation implements
+    FusedOperation {
   private input_: MLOperand;
   private mean_: MLOperand;
   private variance_: MLOperand;
@@ -13,6 +14,7 @@ export class BatchNormalization extends SingleOutputOperation {
   private bias_?: MLOperand;
   private axis_?: number;
   private epsilon_?: number;
+  private activation_?: MLOperator;
 
   constructor(
       input: MLOperand, mean: MLOperand, variance: MLOperand,
@@ -43,6 +45,7 @@ export class BatchNormalization extends SingleOutputOperation {
     } else {
       this.epsilon_ = 1e-5;
     }
+    this.activation_ = options.activation;
   }
 
   inputs(): MLOperand[] {
@@ -54,6 +57,14 @@ export class BatchNormalization extends SingleOutputOperation {
       inputs.push(this.bias_);
     }
     return inputs;
+  }
+
+  getFusedOutputs(): OutputOperand[] {
+    if (this.activation_) {
+      return [this.activation_.apply(this.output)];
+    } else {
+      return [this.output];
+    }
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {

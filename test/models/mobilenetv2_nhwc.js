@@ -11,6 +11,7 @@ describe('test mobilenetv2 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
   let graph;
+  let fusedGraph;
   let beforeNumBytes;
   let beforeNumTensors;
   before(async () => {
@@ -20,6 +21,7 @@ describe('test mobilenetv2 nhwc', function() {
     }
     const context = navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
+    const fusedConv = false;
 
     async function buildConv(
         input, weightsSubName, biasSubName, relu6, options) {
@@ -31,17 +33,27 @@ describe('test mobilenetv2 nhwc', function() {
       const bias =
           await utils.buildConstantFromNpy(builder, new URL(biasName, url));
       options.inputLayout = 'nhwc';
-      const add = builder.add(
-          builder.conv2d(input, weights, options),
-          builder.reshape(bias, [1, 1, 1, -1]));
-      // `relu6` in TFLite equals to `clamp` in WebNN API
-      if (relu6) {
-        return builder.clamp(add, {
-          minValue: builder.constant(0.),
-          maxValue: builder.constant(6.0),
-        });
+      if (!fusedConv) {
+        const add = builder.add(
+            builder.conv2d(input, weights, options),
+            builder.reshape(bias, [1, 1, 1, -1]));
+        // `relu6` in TFLite equals to `clamp` in WebNN API
+        if (relu6) {
+          return builder.clamp(add, {
+            minValue: builder.constant(0.),
+            maxValue: builder.constant(6.0),
+          });
+        }
+        return add;
+      } else {
+        options.bias = bias;
+        if (relu6) {
+          options.activation = utils.createActivation(builder, 'relu6');
+        } else {
+          options.activation = undefined;
+        }
+        return builder.conv2d(input, weights, options);
       }
-      return add;
     }
 
     async function buildLinearBottleneck(
@@ -69,69 +81,77 @@ describe('test mobilenetv2 nhwc', function() {
       return conv1x1Linear;
     }
 
-    const strides = [2, 2];
-    const autoPad = 'same-upper';
-    const filterLayout = 'ohwi';
-    const data =
-        builder.input('input', {type: 'float32', dimensions: [1, 224, 224, 3]});
-    const conv0 = await buildConv(
-        data, '90', 'Conv_Conv2D', true, {strides, autoPad, filterLayout});
-    const conv1 = await buildConv(
-        conv0, '238', 'expanded_conv_depthwise_depthwise', true,
-        {autoPad, groups: 32, filterLayout: 'ihwo'});
-    const conv2 = await buildConv(
-        conv1, '167', 'expanded_conv_project_Conv2D', false,
-        {autoPad, filterLayout});
-    const bottleneck0 = await buildLinearBottleneck(
-        conv2, ['165', '99', '73'], '1', {strides, groups: 96}, false);
-    const bottleneck1 = await buildLinearBottleneck(
-        bottleneck0, ['3', '119', '115'], '2', {groups: 144});
-    const bottleneck2 = await buildLinearBottleneck(
-        bottleneck1, ['255', '216', '157'], '3', {strides, groups: 144}, false);
-    const bottleneck3 = await buildLinearBottleneck(
-        bottleneck2, ['227', '221', '193'], '4', {groups: 192});
-    const bottleneck4 = await buildLinearBottleneck(
-        bottleneck3, ['243', '102', '215'], '5', {groups: 192});
-    const bottleneck5 = await buildLinearBottleneck(
-        bottleneck4, ['226', '163', '229'], '6', {strides, groups: 192}, false);
-    const bottleneck6 = await buildLinearBottleneck(
-        bottleneck5, ['104', '254', '143'], '7', {groups: 384});
-    const bottleneck7 = await buildLinearBottleneck(
-        bottleneck6, ['25', '142', '202'], '8', {groups: 384});
-    const bottleneck8 = await buildLinearBottleneck(
-        bottleneck7, ['225', '129', '98'], '9', {groups: 384});
-    const bottleneck9 = await buildLinearBottleneck(
-        bottleneck8, ['169', '2', '246'], '10', {groups: 384}, false);
-    const bottleneck10 = await buildLinearBottleneck(
-        bottleneck9, ['162', '87', '106'], '11', {groups: 576});
-    const bottleneck11 = await buildLinearBottleneck(
-        bottleneck10, ['52', '22', '40'], '12', {groups: 576});
-    const bottleneck12 = await buildLinearBottleneck(
-        bottleneck11, ['114', '65', '242'], '13', {strides, groups: 576},
-        false);
-    const bottleneck13 = await buildLinearBottleneck(
-        bottleneck12, ['203', '250', '92'], '14', {groups: 960});
-    const bottleneck14 = await buildLinearBottleneck(
-        bottleneck13, ['133', '130', '258'], '15', {groups: 960});
-    const bottleneck15 = await buildLinearBottleneck(
-        bottleneck14, ['60', '248', '100'], '16', {groups: 960}, false);
-    const conv3 = await buildConv(
-        bottleneck15, '71', 'Conv_1_Conv2D', true, {autoPad, filterLayout});
+    async function buildMobileNet() {
+      const strides = [2, 2];
+      const autoPad = 'same-upper';
+      const filterLayout = 'ohwi';
+      const data = builder.input(
+          'input', {type: 'float32', dimensions: [1, 224, 224, 3]});
+      const conv0 = await buildConv(
+          data, '90', 'Conv_Conv2D', true, {strides, autoPad, filterLayout});
+      const conv1 = await buildConv(
+          conv0, '238', 'expanded_conv_depthwise_depthwise', true,
+          {autoPad, groups: 32, filterLayout: 'ihwo'});
+      const conv2 = await buildConv(
+          conv1, '167', 'expanded_conv_project_Conv2D', false,
+          {autoPad, filterLayout});
+      const bottleneck0 = await buildLinearBottleneck(
+          conv2, ['165', '99', '73'], '1', {strides, groups: 96}, false);
+      const bottleneck1 = await buildLinearBottleneck(
+          bottleneck0, ['3', '119', '115'], '2', {groups: 144});
+      const bottleneck2 = await buildLinearBottleneck(
+          bottleneck1, ['255', '216', '157'], '3', {strides, groups: 144},
+          false);
+      const bottleneck3 = await buildLinearBottleneck(
+          bottleneck2, ['227', '221', '193'], '4', {groups: 192});
+      const bottleneck4 = await buildLinearBottleneck(
+          bottleneck3, ['243', '102', '215'], '5', {groups: 192});
+      const bottleneck5 = await buildLinearBottleneck(
+          bottleneck4, ['226', '163', '229'], '6', {strides, groups: 192},
+          false);
+      const bottleneck6 = await buildLinearBottleneck(
+          bottleneck5, ['104', '254', '143'], '7', {groups: 384});
+      const bottleneck7 = await buildLinearBottleneck(
+          bottleneck6, ['25', '142', '202'], '8', {groups: 384});
+      const bottleneck8 = await buildLinearBottleneck(
+          bottleneck7, ['225', '129', '98'], '9', {groups: 384});
+      const bottleneck9 = await buildLinearBottleneck(
+          bottleneck8, ['169', '2', '246'], '10', {groups: 384}, false);
+      const bottleneck10 = await buildLinearBottleneck(
+          bottleneck9, ['162', '87', '106'], '11', {groups: 576});
+      const bottleneck11 = await buildLinearBottleneck(
+          bottleneck10, ['52', '22', '40'], '12', {groups: 576});
+      const bottleneck12 = await buildLinearBottleneck(
+          bottleneck11, ['114', '65', '242'], '13', {strides, groups: 576},
+          false);
+      const bottleneck13 = await buildLinearBottleneck(
+          bottleneck12, ['203', '250', '92'], '14', {groups: 960});
+      const bottleneck14 = await buildLinearBottleneck(
+          bottleneck13, ['133', '130', '258'], '15', {groups: 960});
+      const bottleneck15 = await buildLinearBottleneck(
+          bottleneck14, ['60', '248', '100'], '16', {groups: 960}, false);
+      const conv3 = await buildConv(
+          bottleneck15, '71', 'Conv_1_Conv2D', true, {autoPad, filterLayout});
 
-    const averagePool2d = builder.averagePool2d(
-        conv3, {windowDimensions: [7, 7], layout: 'nhwc'});
-    const conv4 = await buildConv(
-        averagePool2d, '222', 'Logits_Conv2d_1c_1x1_Conv2D', false,
-        {autoPad, filterLayout});
-    const reshape = builder.reshape(conv4, [1, -1]);
-    const softmax = builder.softmax(reshape);
-    graph = builder.build({softmax});
+      const averagePool2d = builder.averagePool2d(
+          conv3, {windowDimensions: [7, 7], layout: 'nhwc'});
+      const conv4 = await buildConv(
+          averagePool2d, '222', 'Logits_Conv2d_1c_1x1_Conv2D', false,
+          {autoPad, filterLayout});
+      const reshape = builder.reshape(conv4, [1, -1]);
+      const softmax = builder.softmax(reshape);
+      return builder.build({softmax});
+    }
+
+    graph = await buildMobileNet();
+    fusedGraph = await buildMobileNet(true);
   });
 
   after(async () => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();
+      fusedGraph.dispose();
       const afterNumTensors = _tfengine.memory().numTensors;
       const afterNumBytes = _tfengine.memory().numBytes;
       assert(
@@ -143,9 +163,10 @@ describe('test mobilenetv2 nhwc', function() {
     }
   });
 
-  async function testMobileNetV2(inputFile, expectedFile) {
+  async function testMobileNetV2(graph, inputFile, expectedFile = false) {
     const inputs = {
-      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
+      'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
+    };
     const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
     graph.compute(inputs, outputs);
     const expected =
@@ -156,19 +177,37 @@ describe('test mobilenetv2 nhwc', function() {
 
   it('test_data_set_0', async function() {
     await testMobileNetV2(
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testMobileNetV2(
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testMobileNetV2(
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
+        `${testDataDir}/test_data_set/2/output_0.npy`);
+  });
+
+  it('test_data_set_0 (fused ops)', async function() {
+    await testMobileNetV2(
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
+        `${testDataDir}/test_data_set/0/output_0.npy`);
+  });
+
+  it('test_data_set_1 (fused ops)', async function() {
+    await testMobileNetV2(
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
+        `${testDataDir}/test_data_set/1/output_0.npy`);
+  });
+
+  it('test_data_set_2 (fused ops)', async function() {
+    await testMobileNetV2(
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });

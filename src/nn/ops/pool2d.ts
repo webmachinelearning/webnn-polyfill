@@ -104,8 +104,7 @@ export abstract class Pool extends SingleOutputOperation {
               input.shape[1 + i];
         }
         for (let i = 0; i < 2; ++i) {
-          padding[i + 1][0] =
-              totalPadding[i] - Math.floor(totalPadding[i] / 2);
+          padding[i + 1][0] = totalPadding[i] - Math.floor(totalPadding[i] / 2);
           padding[i + 1][1] = Math.floor(totalPadding[i] / 2);
         }
       }

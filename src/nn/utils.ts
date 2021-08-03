@@ -193,43 +193,40 @@ export function getPaddings(
     padding: [number, number, number, number], strides: [number, number],
     outputPadding: [number, number], dilations: [number, number],
     autoPad: MLAutoPad): 'valid'|'same'|ExplicitPadding {
-    // WebNN padding:
-    //   [beginning_height, ending_height, beginning_width, ending_width]
-    // tf.conv2d NHWC should be in the following form:
-    //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]      
-    let resultPadding: 'valid'|'same'|ExplicitPadding;
-    if (autoPad === MLAutoPad.explicit) {
-      if (padding.every(v => v === 0)) {
-        resultPadding = 'valid';
-      } else {
-        resultPadding = [
-          [0, 0], [padding[0], padding[1]],
-          [padding[2], padding[3]], [0, 0]
-        ] as ExplicitPadding;
-      }
+  // WebNN padding:
+  //   [beginning_height, ending_height, beginning_width, ending_width]
+  // tf.conv2d NHWC should be in the following form:
+  //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
+  let resultPadding: 'valid'|'same'|ExplicitPadding;
+  if (autoPad === MLAutoPad.explicit) {
+    if (padding.every(v => v === 0)) {
+      resultPadding = 'valid';
     } else {
-      if (autoPad === MLAutoPad['same-upper']) {
-        resultPadding = 'same';
-      } else {
-        // Calculate the explicit paddings for 'same-lower'
-        resultPadding = [[0, 0], [0, 0], [0, 0], [0, 0]];
-        const outputSizes = [0, 0];
-        for (let i = 0; i < 2; ++i) {
-          outputSizes[i] = Math.ceil(input.shape[1 + i] / strides[i]);
-        }
-        const totalPadding: [number, number] = [0, 0];
-        for (let i = 0; i < 2; ++i) {
-          totalPadding[i] = strides[i] * (outputSizes[i] - 1) +
-              outputPadding[i] +
-              ((filter.shape[i] - 1) * dilations[i] + 1) -
-              input.shape[1 + i];
-        }
-        for (let i = 0; i < 2; ++i) {
-          resultPadding[i + 1][0] =
-              totalPadding[i] - Math.floor(totalPadding[i] / 2);
-              resultPadding[i + 1][1] = Math.floor(totalPadding[i] / 2);
-        }
+      resultPadding = [
+        [0, 0], [padding[0], padding[1]], [padding[2], padding[3]], [0, 0]
+      ] as ExplicitPadding;
+    }
+  } else {
+    if (autoPad === MLAutoPad['same-upper']) {
+      resultPadding = 'same';
+    } else {
+      // Calculate the explicit paddings for 'same-lower'
+      resultPadding = [[0, 0], [0, 0], [0, 0], [0, 0]];
+      const outputSizes = [0, 0];
+      for (let i = 0; i < 2; ++i) {
+        outputSizes[i] = Math.ceil(input.shape[1 + i] / strides[i]);
+      }
+      const totalPadding: [number, number] = [0, 0];
+      for (let i = 0; i < 2; ++i) {
+        totalPadding[i] = strides[i] * (outputSizes[i] - 1) + outputPadding[i] +
+            ((filter.shape[i] - 1) * dilations[i] + 1) - input.shape[1 + i];
+      }
+      for (let i = 0; i < 2; ++i) {
+        resultPadding[i + 1][0] =
+            totalPadding[i] - Math.floor(totalPadding[i] / 2);
+        resultPadding[i + 1][1] = Math.floor(totalPadding[i] / 2);
       }
     }
-    return resultPadding;
+  }
+  return resultPadding;
 }

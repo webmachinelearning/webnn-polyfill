@@ -1,9 +1,10 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLGruCellOptions, MLGruOptions, MLRecurrentNetworkActivation, MLRecurrentNetworkDirection, MLRecurrentNetworkWeightLayout} from '../graph_builder';
+import {MLGruCellOptions, MLGruOptions, MLRecurrentNetworkDirection, MLRecurrentNetworkWeightLayout} from '../graph_builder';
 import {MLOperand, OutputOperand} from '../operand';
-import {Operation, SingleOutputOperation} from '../operation';
+import {MLOperator, Operation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
+import {UnaryMLOperator} from './unary';
 
 export class Gru extends Operation {
   private input_: MLOperand;
@@ -18,7 +19,7 @@ export class Gru extends Operation {
   private returnSequence_: boolean;
   private direction_: MLRecurrentNetworkDirection;
   private layout_: MLRecurrentNetworkWeightLayout;
-  private activations_: MLRecurrentNetworkActivation[];
+  private activations_: MLOperator[];
 
   constructor(
       input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
@@ -55,9 +56,8 @@ export class Gru extends Operation {
           MLRecurrentNetworkDirection = MLRecurrentNetworkDirection.forward,
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
-      activations: MLRecurrentNetworkActivation[] = [
-        MLRecurrentNetworkActivation.sigmoid, MLRecurrentNetworkActivation.tanh
-      ]): void {
+      activations:
+          MLOperator[] = [this.builder.sigmoid(), this.builder.tanh()]): void {
     utils.validateOptionalOperand(bias);
     this.bias_ = bias;
     utils.validateOptionalOperand(recurrentBias);
@@ -82,7 +82,7 @@ export class Gru extends Operation {
     this.layout_ = layout;
     utils.assert(
         activations instanceof Array && activations.length === 2 &&
-            activations.every(a => a in MLRecurrentNetworkActivation),
+            activations.every(a => a instanceof UnaryMLOperator),
         'The activations parameter is invalid.');
     this.activations_ = activations;
   }
@@ -169,8 +169,8 @@ export class Gru extends Operation {
         const result = tf.reshape(
             GruCell.compute(
                 cellInput, cellWeight[slot], cellRecurrentWeight[slot],
-                cellHidden[slot], hiddenSize, cellBias[slot],
-                cellRecurrentBias[slot], resetAfter, layout, activations),
+                cellHidden[slot], hiddenSize, activations, cellBias[slot],
+                cellRecurrentBias[slot], resetAfter, layout),
             [1, -1, hiddenSize]);
 
         cellOutput = (cellOutput ? tf.concat([cellOutput, result], 0) : result);
@@ -199,7 +199,7 @@ export class GruCell extends SingleOutputOperation {
   private recurrentBias_?: MLOperand;
   private resetAfter_: boolean;
   private layout_: MLRecurrentNetworkWeightLayout;
-  private activations_: MLRecurrentNetworkActivation[];
+  private activations_: MLOperator[];
 
   constructor(
       input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
@@ -227,9 +227,8 @@ export class GruCell extends SingleOutputOperation {
       bias?: MLOperand, recurrentBias?: MLOperand, resetAfter = true,
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
-      activations: MLRecurrentNetworkActivation[] = [
-        MLRecurrentNetworkActivation.sigmoid, MLRecurrentNetworkActivation.tanh
-      ]) {
+      activations:
+          MLOperator[] = [this.builder.sigmoid(), this.builder.tanh()]) {
     utils.validateOptionalOperand(bias);
     this.bias_ = bias;
     utils.validateOptionalOperand(recurrentBias);
@@ -244,7 +243,7 @@ export class GruCell extends SingleOutputOperation {
     this.layout_ = layout;
     utils.assert(
         activations instanceof Array && activations.length === 2 &&
-            activations.every(a => a in MLRecurrentNetworkActivation),
+            activations.every(a => a instanceof UnaryMLOperator),
         'The activations parameter is invalid.');
     this.activations_ = activations;
   }
@@ -263,20 +262,20 @@ export class GruCell extends SingleOutputOperation {
 
   static compute(
       input: tf.Tensor, weight: tf.Tensor, recurrentWeight: tf.Tensor,
-      hiddenState: tf.Tensor, hiddenSize: number, bias?: tf.Tensor,
-      recurrentBias?: tf.Tensor, resetAfter = true,
+      hiddenState: tf.Tensor, hiddenSize: number, activations: MLOperator[],
+      bias?: tf.Tensor, recurrentBias?: tf.Tensor, resetAfter = true,
       layout:
-          MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
-      activations: MLRecurrentNetworkActivation[] = [
-        MLRecurrentNetworkActivation.sigmoid, MLRecurrentNetworkActivation.tanh
-      ]): tf.Tensor {
+          MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn):
+      tf.Tensor {
     const one = tf.scalar(1);
     const zero = tf.scalar(0);
     const starts = layout === MLRecurrentNetworkWeightLayout.zrn ?
         {z: 0, r: hiddenSize, n: 2 * hiddenSize} :
         /*rzn*/ {r: 0, z: hiddenSize, n: 2 * hiddenSize};
+    const activation0: UnaryMLOperator = activations[0] as UnaryMLOperator;
+    const activation1: UnaryMLOperator = activations[1] as UnaryMLOperator;
     // update gate
-    const z = tf[activations[0]](tf.add(
+    const z = activation0.runOp(tf.add(
         tf.add(
             (bias ? tf.slice(bias, [starts.z], [hiddenSize]) : zero),
             (recurrentBias ? tf.slice(recurrentBias, [starts.z], [hiddenSize]) :
@@ -291,7 +290,7 @@ export class GruCell extends SingleOutputOperation {
                 tf.transpose(tf.slice(
                     recurrentWeight, [starts.z, 0], [hiddenSize, -1]))))));
     // reset gate
-    const r = tf[activations[0]](tf.add(
+    const r = activation0.runOp(tf.add(
         tf.add(
             (bias ? tf.slice(bias, [starts.r], [hiddenSize]) : zero),
             (recurrentBias ? tf.slice(recurrentBias, [starts.r], [hiddenSize]) :
@@ -308,7 +307,7 @@ export class GruCell extends SingleOutputOperation {
     // new gate
     let n;
     if (resetAfter) {
-      n = tf[activations[1]](tf.add(
+      n = activation1.runOp(tf.add(
           (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
           tf.add(
               tf.matMul(
@@ -327,7 +326,7 @@ export class GruCell extends SingleOutputOperation {
                               recurrentWeight, [starts.n, 0],
                               [hiddenSize, -1]))))))));
     } else {
-      n = tf[activations[1]](tf.add(
+      n = activation1.runOp(tf.add(
           tf.add(
               (bias ? tf.slice(bias, [starts.n], [hiddenSize]) : zero),
               (recurrentBias ?
@@ -352,8 +351,9 @@ export class GruCell extends SingleOutputOperation {
         inputTensors.get(this.input_), inputTensors.get(this.weight_),
         inputTensors.get(this.recurrentWeight_),
         inputTensors.get(this.hiddenState_), this.hiddenSize_,
+        this.activations_,
         this.bias_ ? inputTensors.get(this.bias_) : undefined,
         this.recurrentBias_ ? inputTensors.get(this.recurrentBias_) : undefined,
-        this.resetAfter_, this.layout_, this.activations_);
+        this.resetAfter_, this.layout_);
   }
 }

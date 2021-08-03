@@ -143,3 +143,23 @@ export async function setPolyfillBackend(backend) {
         ` ${tf.getBackend()} backend.`);
   }
 }
+
+export function createActivation(
+    builder, activation, input = undefined, options = {}) {
+  if (activation === 'relu') {
+    return input === undefined ? builder.relu() : builder.relu(input);
+  } else if (activation === 'relu6') {
+    const clampOptions = {};
+    clampOptions.minValue = builder.constant(0);
+    clampOptions.maxValue = builder.constant(6);
+    return input === undefined ? builder.clamp(clampOptions) :
+                                 builder.clamp(input, clampOptions);
+  } else if (activation === 'sigmoid') {
+    return input === undefined ? builder.sigmoid() : builder.sigmoid(input);
+  } else if (activation === 'leakyRelu') {
+    return input === undefined ? builder.leakyRelu(options) :
+                                 builder.leakyRelu(input, options);
+  } else {
+    assert(false, `activation ${activation} is not supported`);
+  }
+}
