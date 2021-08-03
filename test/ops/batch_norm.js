@@ -60,21 +60,21 @@ describe('test batchNormalization', function() {
     testBatchNorm(input, mean, variance, expected, scale, bias);
 
     expected = [0., 0., 0.999995, 0., 1., 2.2247407];
-    testBatchNorm(input, mean, variance, expected, scale, bias, {}, 'RELU');
+    testBatchNorm(input, mean, variance, expected, scale, bias, {}, 'relu');
 
     let expectedScale = [-0.999995, 0., 0.999995, -1.22474, 0., 1.22474];
     testBatchNorm(input, mean, variance, expectedScale, scale);
 
     expectedScale = [0., 0., 0.999995, 0., 0., 1.22474];
     testBatchNorm(
-        input, mean, variance, expectedScale, scale, undefined, {}, 'RELU');
+        input, mean, variance, expectedScale, scale, undefined, {}, 'relu');
 
     let expectedBias = [-0.999995, 0., 0.999995, 0.183506, 1., 1.816494];
     testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
 
     expectedBias = [0., 0., 0.999995, 0.183506, 1., 1.816494];
     testBatchNorm(
-        input, mean, variance, expectedBias, undefined, bias, {}, 'RELU');
+        input, mean, variance, expectedBias, undefined, bias, {}, 'relu');
   });
 
   it('batchNormalization nhwc', function() {
@@ -103,7 +103,7 @@ describe('test batchNormalization', function() {
 
     expected = [0., 0., 0., 1., 0.999995, 2.2247407];
     testBatchNorm(
-        input, mean, variance, expected, scale, bias, {axis: 3}, 'RELU');
+        input, mean, variance, expected, scale, bias, {axis: 3}, 'relu');
 
     let expectedScale = [-0.999995, -1.22474, 0., 0., 0.999995, 1.22474];
     testBatchNorm(
@@ -112,7 +112,7 @@ describe('test batchNormalization', function() {
     expectedScale = [0., 0., 0., 0., 0.999995, 1.22474];
     testBatchNorm(
         input, mean, variance, expectedScale, scale, undefined, {axis: 3},
-        'RELU');
+        'relu');
 
     let expectedBias = [-0.999995, 0.183506, 0., 1., 0.999995, 1.816494];
     testBatchNorm(
@@ -121,7 +121,7 @@ describe('test batchNormalization', function() {
     expectedBias = [0., 0.183506, 0., 1., 0.999995, 1.816494];
     testBatchNorm(
         input, mean, variance, expectedBias, undefined, bias, {axis: 3},
-        'RELU');
+        'relu');
   });
 
   it('batchNormalization without options', function() {

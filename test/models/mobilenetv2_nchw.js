@@ -46,7 +46,7 @@ describe('test mobilenetv2 nchw', function() {
       } else {
         options.bias = bias;
         if (relu6) {
-          options.activation = utils.createActivation(builder, 'RELU6');
+          options.activation = utils.createActivation(builder, 'relu6');
         } else {
           options.activation = undefined;
         }
