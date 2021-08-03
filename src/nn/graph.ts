@@ -254,11 +254,11 @@ export class MLGraph {
   private build(): void {
     const visitedOps: Set<Operation> = new Set();
     for (const output of this.outputs_.values()) {
-      this.visitOperation(output.operation, visitedOps);
+      this.buildOperation(output.operation, visitedOps);
     }
   }
 
-  private visitOperation(operation: Operation, visitedOps: Set<Operation>):
+  private buildOperation(operation: Operation, visitedOps: Set<Operation>):
       void {
     if (visitedOps.has(operation)) {
       return;
@@ -287,7 +287,7 @@ export class MLGraph {
           this.constants_.add(operand);
         }
       } else if (operand instanceof OutputOperand) {
-        this.visitOperation(operand.operation, visitedOps);
+        this.buildOperation(operand.operation, visitedOps);
       }
     }
   }
@@ -333,6 +333,25 @@ export class MLGraph {
   dispose(): void {
     for (const tensor of this.constantTensors_.values()) {
       tf.dispose(tensor);
+    }
+    const visitedOps: Set<Operation> = new Set();
+    for (const output of this.outputs_.values()) {
+      this.disposeOperation(output.operation, visitedOps);
+    }
+  }
+
+  private disposeOperation(operation: Operation, visitedOps: Set<Operation>):
+      void {
+    if (visitedOps.has(operation)) {
+      return;
+    } else {
+      operation.dispose();
+      visitedOps.add(operation);
+    }
+    for (const operand of operation.inputs()) {
+      if (operand instanceof OutputOperand) {
+        this.disposeOperation(operand.operation, visitedOps);
+      }
     }
   }
 }

@@ -1,0 +1,56 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>WebNN API Polyfill | Mocha Tests - Operations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://unpkg.com/mocha/mocha.css" />
+</head>
+<body>
+  <div id="mocha"></div>
+  <script src="https://unpkg.com/chai/chai.js"></script>
+  <script src="https://unpkg.com/mocha/mocha.js"></script>
+  <script src="../dist/webnn-polyfill.js"></script>
+  <script type="module" src="./utils.js"></script>
+  <script class="mocha-init">
+    mocha.setup('bdd');
+    mocha.checkLeaks();
+  </script>
+  <script type="module" src="./ops/add.js"></script>
+  <script type="module" src="./ops/batch_norm.js"></script>
+  <script type="module" src="./ops/clamp.js"></script>
+  <script type="module" src="./ops/concat.js"></script>
+  <script type="module" src="./ops/conv2d.js"></script>
+  <script type="module" src="./ops/div.js"></script>
+  <script type="module" src="./ops/exp.js"></script>
+  <script type="module" src="./ops/gemm.js"></script>
+  <script type="module" src="./ops/gru.js"></script>
+  <script type="module" src="./ops/instance_norm.js"></script>
+  <script type="module" src="./ops/leaky_relu.js"></script>
+  <script type="module" src="./ops/matmul.js"></script>
+  <script type="module" src="./ops/max.js"></script>
+  <script type="module" src="./ops/min.js"></script>
+  <script type="module" src="./ops/mul.js"></script>
+  <script type="module" src="./ops/pad.js"></script>
+  <script type="module" src="./ops/pool2d.js"></script>
+  <script type="module" src="./ops/pow.js"></script>
+  <script type="module" src="./ops/reduce.js"></script>
+  <script type="module" src="./ops/relu.js"></script>
+  <script type="module" src="./ops/resample.js"></script>
+  <script type="module" src="./ops/reshape.js"></script>
+  <script type="module" src="./ops/sigmoid.js"></script>
+  <script type="module" src="./ops/slice.js"></script>
+  <script type="module" src="./ops/softmax.js"></script>
+  <script type="module" src="./ops/split.js"></script>
+  <script type="module" src="./ops/squeeze.js"></script>
+  <script type="module" src="./ops/sub.js"></script>
+  <script type="module" src="./ops/tanh.js"></script>
+  <script type="module" src="./ops/transpose.js"></script>
+  <script class="mocha-exec" type="module">
+    import {setPolyfillBackend} from './utils.js';
+    const backend = (new URLSearchParams(location.search)).get('backend');
+    setPolyfillBackend(backend).then(() => {
+      mocha.run();
+    });
+  </script>
+</body>
+</html>

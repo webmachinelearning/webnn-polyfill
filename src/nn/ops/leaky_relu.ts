@@ -1,27 +1,24 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLOperand} from '../operand';
-import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-export class LeakyRelu extends SingleOutputOperation {
-  private x_: MLOperand;
+import {UnaryMLOperator} from './unary';
+
+export class LeakyRelu extends UnaryMLOperator {
   private alpha_?: number;
 
+  get alpha(): number {
+    return this.alpha_;
+  }
+
   constructor(x: MLOperand, alpha = 0.01) {
-    super(x.builder);
-    utils.validateOperand(x);
-    this.x_ = x;
+    super(x);
     utils.assert(typeof alpha === 'number', 'The alpha parameter is invalid.');
     this.alpha_ = alpha;
   }
 
-  inputs(): MLOperand[] {
-    return [this.x_];
-  }
-
-  run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
-    const x: tf.Tensor = inputTensors.get(this.x_);
+  runOp(x: tf.Tensor): tf.Tensor {
     return tf.leakyRelu(x, this.alpha_);
   }
 }

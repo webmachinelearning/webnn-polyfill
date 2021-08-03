@@ -7,6 +7,7 @@
     "src/nn/graph_builder.ts",
     "src/nn/context.ts",
     "src/nn/operand.ts",
+    "src/nn/operation.ts",
     "src/nn/types.ts"
   ],
   "excludePrivate": true,

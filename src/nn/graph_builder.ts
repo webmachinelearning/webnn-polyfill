@@ -1,6 +1,7 @@
 import {MLContext} from './context';
 import {MLGraph} from './graph';
 import {ConstantOperand, InputOperand, MLOperand, MLOperandDescriptor, MLOperandType} from './operand';
+import {MLOperator} from './operation';
 import {BatchNormalization} from './ops/batch_norm';
 import {Add, Div, MatMul, Max, Min, Mul, Pow, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
@@ -40,6 +41,7 @@ export interface MLBatchNormalizationOptions {
   bias?: MLOperand;
   axis?: number;
   epsilon?: number;
+  activation?: MLOperator;
 }
 
 /**
@@ -83,6 +85,8 @@ export interface MLConv2dOptions {
   groups?: number;
   inputLayout?: MLInputOperandLayout;
   filterLayout?: MLFilterOperandLayout;
+  bias?: MLOperand;
+  activation?: MLOperator;
 }
 
 /**
@@ -105,15 +109,6 @@ export enum MLRecurrentNetworkWeightLayout {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlrecurrentnetworkactivation)
- */
-export enum MLRecurrentNetworkActivation {
-  'relu' = 'relu',
-  'sigmoid' = 'sigmoid',
-  'tanh' = 'tanh',
-}
-
-/**
  * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlrecurrentnetworkdirection)
  */
 export enum MLRecurrentNetworkDirection {
@@ -133,7 +128,7 @@ export interface MLGruOptions {
   returnSequence?: boolean;
   direction?: MLRecurrentNetworkDirection;
   layout?: MLRecurrentNetworkWeightLayout;
-  activations?: MLRecurrentNetworkActivation[];
+  activations?: MLOperator[];
 }
 
 /**
@@ -144,7 +139,7 @@ export interface MLGruCellOptions {
   recurrentBias?: MLOperand;
   resetAfter?: boolean;
   layout?: MLRecurrentNetworkWeightLayout;
-  activations?: MLRecurrentNetworkActivation[];
+  activations?: MLOperator[];
 }
 
 /**
@@ -328,15 +323,27 @@ export class MLGraphBuilder {
       options: MLBatchNormalizationOptions = {}): MLOperand {
     this.validateOperandBuilder(
         [input, mean, variance, options.scale, options.bias]);
-    return (new BatchNormalization(input, mean, variance, options)).output;
+    return (new BatchNormalization(input, mean, variance, options))
+        .getFusedOutputs()[0];
   }
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-clamp)
    */
-  clamp(x: MLOperand, options: MLClampOptions = {}): MLOperand {
-    this.validateOperandBuilder([x, options.minValue, options.maxValue]);
-    return (new Clamp(x, options)).output;
+  clamp(x: MLOperand, options: MLClampOptions): MLOperand;
+  clamp(options: MLClampOptions): MLOperator;
+  clamp(
+      operandOrOptions: MLOperand|MLClampOptions = undefined,
+      options: MLClampOptions = {}): MLOperand|MLOperator {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x, options.minValue, options.maxValue]);
+      return (new Clamp(x, options)).output;
+    } else {
+      const options = operandOrOptions;
+      this.validateOperandBuilder([options.minValue, options.maxValue]);
+      return (new Clamp(undefined, options));
+    }
   }
 
   /**
@@ -352,8 +359,12 @@ export class MLGraphBuilder {
    */
   conv2d(input: MLOperand, filter: MLOperand, options: MLConv2dOptions = {}):
       MLOperand {
-    this.validateOperandBuilder([input, filter]);
-    return (new Conv2d(input, filter, options)).output;
+    const inputs = [input, filter];
+    if (options.bias) {
+      inputs.push(options.bias);
+    }
+    this.validateOperandBuilder(inputs);
+    return (new Conv2d(input, filter, options)).getFusedOutputs()[0];
   }
 
   // start of element-wise binary operations
@@ -429,25 +440,43 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-relu)
    */
-  relu(input: MLOperand): MLOperand {
-    this.validateOperandBuilder([input]);
-    return (new Relu(input)).output;
+  relu(input: MLOperand): MLOperand;
+  relu(): MLOperator;
+  relu(input: MLOperand = undefined): MLOperand|MLOperator {
+    if (input === undefined) {
+      return new Relu(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new Relu(input)).output;
+    }
   }
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-sigmoid)
    */
-  sigmoid(x: MLOperand): MLOperand {
-    this.validateOperandBuilder([x]);
-    return (new Sigmoid(x)).output;
+  sigmoid(input: MLOperand): MLOperand;
+  sigmoid(): MLOperator;
+  sigmoid(input: MLOperand = undefined): MLOperand|MLOperator {
+    if (input === undefined) {
+      return new Sigmoid(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new Sigmoid(input)).output;
+    }
   }
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-tanh)
    */
-  tanh(x: MLOperand): MLOperand {
-    this.validateOperandBuilder([x]);
-    return (new Tanh(x)).output;
+  tanh(input: MLOperand): MLOperand;
+  tanh(): MLOperator;
+  tanh(input: MLOperand = undefined): MLOperand|MLOperator {
+    if (input === undefined) {
+      return new Tanh(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new Tanh(input)).output;
+    }
   }
   // end of element-wise unary operations
 
@@ -503,9 +532,19 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-leakyrelu)
    */
-  leakyRelu(x: MLOperand, options: MLLeakyReluOptions = {}): MLOperand {
-    this.validateOperandBuilder([x]);
-    return (new LeakyRelu(x, options.alpha)).output;
+  leakyRelu(x: MLOperand, options: MLLeakyReluOptions): MLOperand;
+  leakyRelu(options: MLLeakyReluOptions): MLOperator;
+  leakyRelu(
+      operandOrOptions: MLOperand|MLLeakyReluOptions = undefined,
+      options: MLLeakyReluOptions = {}): MLOperand|MLOperator {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x]);
+      return (new LeakyRelu(x, options.alpha)).output;
+    } else {
+      const options = operandOrOptions;
+      return (new LeakyRelu(undefined, options.alpha));
+    }
   }
 
   /**

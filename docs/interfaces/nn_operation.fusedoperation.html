@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>MLContext | webnn-polyfill</title>
+	<title>FusedOperation | webnn-polyfill</title>
 	<meta name="description" content="Documentation for webnn-polyfill">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,33 +53,59 @@
 					<a href="../index.html">webnn-polyfill</a>
 				</li>
 				<li>
-					<a href="../modules/nn_context.html">nn/context</a>
+					<a href="../modules/nn_operation.html">nn/operation</a>
 				</li>
 				<li>
-					<a href="nn_context.mlcontext.html">MLContext</a>
+					<a href="nn_operation.fusedoperation.html">FusedOperation</a>
 				</li>
 			</ul>
-			<h1>Class MLContext</h1>
+			<h1>Interface FusedOperation</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p><a href="https://webmachinelearning.github.io/webnn/#mlcontext">API spec</a></p>
-					</div>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">MLContext</span>
+						<span class="target">FusedOperation</span>
 					</li>
 				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-interface"><a href="nn_operation.fusedoperation.html#getfusedoutputs" class="tsd-kind-icon">get<wbr>Fused<wbr>Outputs</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-interface">
+					<a name="getfusedoutputs" class="tsd-anchor"></a>
+					<h3>get<wbr>Fused<wbr>Outputs</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-interface">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Fused<wbr>Outputs<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">OutputOperand</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/b6739fc/src/nn/operation.ts#L19">nn/operation.ts:19</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">OutputOperand</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
 			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
@@ -91,7 +117,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ml.html">ml</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/nn_context.html">nn/context</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -103,7 +129,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/nn_operand.html">nn/operand</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/nn_operation.html">nn/operation</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -113,21 +139,26 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/nn_context.mldevicepreference.html" class="tsd-kind-icon">MLDevice<wbr>Preference</a>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/nn_operation.operation.html" class="tsd-kind-icon">Operation</a>
 					</li>
-					<li class=" tsd-kind-enum tsd-parent-kind-module">
-						<a href="../enums/nn_context.mlpowerpreference.html" class="tsd-kind-icon">MLPower<wbr>Preference</a>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/nn_operation.singleoutputoperation.html" class="tsd-kind-icon">Single<wbr>Output<wbr>Operation</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="nn_context.mlcontext.html" class="tsd-kind-icon">MLContext</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="nn_operation.fusedoperation.html" class="tsd-kind-icon">Fused<wbr>Operation</a>
+						<ul>
+							<li class=" tsd-kind-method tsd-parent-kind-interface">
+								<a href="nn_operation.fusedoperation.html#getfusedoutputs" class="tsd-kind-icon">get<wbr>Fused<wbr>Outputs</a>
+							</li>
+						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="../interfaces/nn_context.mlcontextoptions.html" class="tsd-kind-icon">MLContext<wbr>Options</a>
+						<a href="nn_operation.mloperator.html" class="tsd-kind-icon">MLOperator</a>
 					</li>
 				</ul>
 			</nav>
@@ -139,13 +170,14 @@
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
