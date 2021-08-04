@@ -333,7 +333,7 @@ export class MLGraphBuilder {
   clamp(x: MLOperand, options: MLClampOptions): MLOperand;
   clamp(options: MLClampOptions): MLOperator;
   clamp(
-      operandOrOptions: MLOperand|MLClampOptions = undefined,
+      operandOrOptions: MLOperand|MLClampOptions = {},
       options: MLClampOptions = {}): MLOperand|MLOperator {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
@@ -535,7 +535,7 @@ export class MLGraphBuilder {
   leakyRelu(x: MLOperand, options: MLLeakyReluOptions): MLOperand;
   leakyRelu(options: MLLeakyReluOptions): MLOperator;
   leakyRelu(
-      operandOrOptions: MLOperand|MLLeakyReluOptions = undefined,
+      operandOrOptions: MLOperand|MLLeakyReluOptions = {},
       options: MLLeakyReluOptions = {}): MLOperand|MLOperator {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
