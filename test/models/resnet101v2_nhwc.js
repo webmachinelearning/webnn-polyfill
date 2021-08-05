@@ -11,6 +11,7 @@ describe('test resnet101v2 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
   let graph;
+  let fusedGraph;
   let beforeNumBytes;
   let beforeNumTensors;
   before(async () => {
@@ -20,6 +21,7 @@ describe('test resnet101v2 nhwc', function() {
     }
     const context = navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
+    let fusedConv = false;
     const autoPad = 'same-upper';
     const strides = [2, 2];
     const layout = 'nhwc';
@@ -53,13 +55,23 @@ describe('test resnet101v2 nhwc', function() {
       } else {
         options = {inputLayout: layout, filterLayout: 'ohwi'};
       }
-      const add = builder.add(
-          builder.conv2d(input, weights, options),
-          builder.reshape(bias, [1, 1, 1, -1]));
-      if (relu) {
-        return builder.relu(add);
+      if (!fusedConv) {
+        const add = builder.add(
+            builder.conv2d(input, weights, options),
+            builder.reshape(bias, [1, 1, 1, -1]));
+        if (relu) {
+          return builder.relu(add);
+        }
+        return add;
+      } else {
+        options.bias = bias;
+        if (relu) {
+          options.activation = utils.createActivation(builder, 'relu');
+        } else {
+          options.activation = undefined;
+        }
+        return builder.conv2d(input, weights, options);
       }
-      return add;
     }
 
     async function buildFusedBatchNorm(input, nameIndices) {
@@ -109,67 +121,74 @@ describe('test resnet101v2 nhwc', function() {
       return builder.add(conv3, residual);
     }
 
-    const padding = builder.constant(
-        {type: 'int32', dimensions: [4, 2]},
-        new Int32Array([0, 0, 3, 3, 3, 3, 0, 0]));
+    async function buildResNet() {
+      const padding = builder.constant(
+          {type: 'int32', dimensions: [4, 2]},
+          new Int32Array([0, 0, 3, 3, 3, 3, 0, 0]));
 
-    const input = builder.input('input',
-        {type: 'float32', dimensions: [1, 299, 299, 3]});
-    const pad = builder.pad(input, padding);
-    const conv1 = await buildConv(pad, ['', '', '1'], {strides}, false);
-    const pool = builder.maxPool2d(
-        conv1, {windowDimensions: [3, 3], strides, layout, autoPad});
-    // Block 1
-    const bottleneck1 = await buildBottleneckV2(pool, ['1', '1'], true);
-    const bottleneck2 =
-        await buildBottleneckV2(bottleneck1, ['1', '2'], false, false);
-    const bottleneck3 = await buildBottleneckV2(bottleneck2, ['1', '3']);
+      const input = builder.input('input',
+          {type: 'float32', dimensions: [1, 299, 299, 3]});
+      const pad = builder.pad(input, padding);
+      const conv1 = await buildConv(pad, ['', '', '1'], {strides}, false);
+      const pool = builder.maxPool2d(
+          conv1, {windowDimensions: [3, 3], strides, layout, autoPad});
+      // Block 1
+      const bottleneck1 = await buildBottleneckV2(pool, ['1', '1'], true);
+      const bottleneck2 =
+          await buildBottleneckV2(bottleneck1, ['1', '2'], false, false);
+      const bottleneck3 = await buildBottleneckV2(bottleneck2, ['1', '3']);
 
-    // Block 2
-    const bottleneck4 = await buildBottleneckV2(bottleneck3, ['2', '1'], true);
-    const bottleneck5 =
-        await buildBottleneckV2(bottleneck4, ['2', '2'], false, false);
-    const bottleneck6 =
-        await buildBottleneckV2(bottleneck5, ['2', '3'], false, false);
-    const bottleneck7 = await buildBottleneckV2(bottleneck6, ['2', '4']);
+      // Block 2
+      const bottleneck4 = await buildBottleneckV2(bottleneck3, ['2', '1'], true);
+      const bottleneck5 =
+          await buildBottleneckV2(bottleneck4, ['2', '2'], false, false);
+      const bottleneck6 =
+          await buildBottleneckV2(bottleneck5, ['2', '3'], false, false);
+      const bottleneck7 = await buildBottleneckV2(bottleneck6, ['2', '4']);
 
-    // Block 3
-    const bottleneck8 = await buildBottleneckV2(bottleneck7, ['3', '1'], true);
-    const loop = async (node, num) => {
-      if (num > 22) {
-        return node;
-      } else {
-        const newNode = await buildBottleneckV2(
-            node, ['3', num.toString()], false, false);
-        num++;
-        return loop(newNode, num);
-      }
-    };
-    const bottleneck9 = await loop(bottleneck8, 2);
-    const bottleneck10 =await buildBottleneckV2(bottleneck9, ['3', '23']);
+      // Block 3
+      const bottleneck8 = await buildBottleneckV2(bottleneck7, ['3', '1'], true);
+      const loop = async (node, num) => {
+        if (num > 22) {
+          return node;
+        } else {
+          const newNode = await buildBottleneckV2(
+              node, ['3', num.toString()], false, false);
+          num++;
+          return loop(newNode, num);
+        }
+      };
+      const bottleneck9 = await loop(bottleneck8, 2);
+      const bottleneck10 =await buildBottleneckV2(bottleneck9, ['3', '23']);
 
-    // Block 4
-    const bottleneck11 =
-        await buildBottleneckV2(bottleneck10, ['4', '1'], true);
-    const bottleneck12 =
-        await buildBottleneckV2(bottleneck11, ['4', '2'], false, false);
-    const bottleneck13 =
-        await buildBottleneckV2(bottleneck12, ['4', '3'], false, false);
+      // Block 4
+      const bottleneck11 =
+          await buildBottleneckV2(bottleneck10, ['4', '1'], true);
+      const bottleneck12 =
+          await buildBottleneckV2(bottleneck11, ['4', '2'], false, false);
+      const bottleneck13 =
+          await buildBottleneckV2(bottleneck12, ['4', '3'], false, false);
 
-    const fusedBn =
-        await buildFusedBatchNorm(bottleneck13, ['postnorm']);
-    const mean =
-        builder.reduceMean(fusedBn, {keepDimensions: true, axes: [1, 2]});
-    const conv2 =
-        await buildConv(mean, ['', '', 'logits'], {autoPad}, false);
-    const reshape = builder.reshape(conv2, [1, -1]);
-    graph = builder.build({reshape});
+      const fusedBn =
+          await buildFusedBatchNorm(bottleneck13, ['postnorm']);
+      const mean =
+          builder.reduceMean(fusedBn, {keepDimensions: true, axes: [1, 2]});
+      const conv2 =
+          await buildConv(mean, ['', '', 'logits'], {autoPad}, false);
+      const reshape = builder.reshape(conv2, [1, -1]);
+      return builder.build({reshape});
+    }
+
+    graph = await buildResNet();
+    fusedConv = true;
+    fusedGraph = await buildResNet();
   });
 
   after(async () => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();
+      fusedGraph.dispose();
       const afterNumTensors = _tfengine.memory().numTensors;
       const afterNumBytes = _tfengine.memory().numBytes;
       assert(
@@ -181,7 +200,7 @@ describe('test resnet101v2 nhwc', function() {
     }
   });
 
-  async function testResNet101V2(inputFile, expectedFile) {
+  async function testResNet101V2(graph, inputFile, expectedFile) {
     const inputs = {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
     const outputs = {
@@ -195,19 +214,37 @@ describe('test resnet101v2 nhwc', function() {
 
   it('test_data_set_0', async function() {
     await testResNet101V2(
-        `${testDataDir}/test_data_set/0/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
   it('test_data_set_1', async function() {
     await testResNet101V2(
-        `${testDataDir}/test_data_set/1/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
   it('test_data_set_2', async function() {
     await testResNet101V2(
-        `${testDataDir}/test_data_set/2/input_0.npy`,
+        graph, `${testDataDir}/test_data_set/2/input_0.npy`,
+        `${testDataDir}/test_data_set/2/output_0.npy`);
+  });
+
+  it('test_data_set_0 (fused ops)', async function() {
+    await testResNet101V2(
+        fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
+        `${testDataDir}/test_data_set/0/output_0.npy`);
+  });
+
+  it('test_data_set_1 (fused ops)', async function() {
+    await testResNet101V2(
+        fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
+        `${testDataDir}/test_data_set/1/output_0.npy`);
+  });
+
+  it('test_data_set_2 (fused ops)', async function() {
+    await testResNet101V2(
+        fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 });
