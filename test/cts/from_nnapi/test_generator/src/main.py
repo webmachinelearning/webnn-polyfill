@@ -16,17 +16,20 @@ def ParseCmdLine():
     args = parser.parse_args()
     return (args.spec, args.test, args.cts)
 
-def ConvertNNAPITest(spec, test):
+def ConvertNNAPITest(spec, test, fused = False):
     if os.path.isfile(spec):
-        cmd = cmdTemplate % (spec, test, cts)
-        os.system("python3 ./src/cts_generator.py %s -t %s" % (spec, test))
+        os.system(
+            "python3 ./src/cts_generator.py %s -t %s -f %s" % \
+            (spec, test, fused))
     elif os.path.isdir(spec):
         for version in sorted(os.listdir(spec)):
             specDir = os.path.join(spec, version)
             testDir = os.path.join(test, version)
             if not os.path.exists(testDir):
                 os.makedirs(testDir)
-            os.system("python3 ./src/cts_generator.py %s -t %s" % (specDir, testDir))
+            os.system(
+                "python3 ./src/cts_generator.py %s -t %s -f %s" % \
+                (specDir, testDir, fused))
 
 def DumpAllInOneCtsTest(test, cts):
     versionList = os.listdir(test)
@@ -46,6 +49,10 @@ def DumpAllInOneCtsTest(test, cts):
 
 if __name__ == "__main__":
     spec, test, cts = ParseCmdLine()
+    if os.path.exists(cts):
+        os.remove(cts)
     ConvertNNAPITest(spec, test)
+    # generate tests with fused operations
+    ConvertNNAPITest(spec, test, True)
     if os.path.isdir(test):
         DumpAllInOneCtsTest(test, cts)

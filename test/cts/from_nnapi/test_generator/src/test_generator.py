@@ -1004,10 +1004,10 @@ class Example:
 
     # Main entrance of test generator
     @staticmethod
-    def DumpAllExamples(DumpTest=None, test=None):
+    def DumpAllExamples(DumpTest=None, test=None, fused=False):
         Example.CombineAllExamples()
         for example in Example.examples:
-            example.Dump(DumpTest, test)
+            example.Dump(DumpTest, test, fused)
 
     # Combine examples with the same model, same name, and same set of variations
     @staticmethod
@@ -1130,7 +1130,7 @@ class Example:
         self.feedDicts.extend(other.feedDicts)
         return self
 
-    def Dump(self, DumpTest, test):
+    def Dump(self, DumpTest, test, fused):
         [v.SetToDefaultName() for vs in self.variations for v in vs if v.name is None]
         for variationList in itertools.product(*self.variations):
             # Apply variations
@@ -1147,7 +1147,7 @@ class Example:
             self.model.WithSuffix(*varNames).Compile()
             # Dump files
             if DumpTest is not None and test is not None:
-                DumpTest(self, test)
+                DumpTest(self, test, fused)
             # Restore model and feedDicts before variation
             self.model = modelOrigin
             self.feedDicts = feedDictsOrigin
@@ -1169,9 +1169,11 @@ class FileNames:
     testFile = ""
     version = ""
     fileIndex = 0
+    fused = False
 
     @staticmethod
-    def InitializeFileLists(spec, test):
+    def InitializeFileLists(spec, test, fused):
+        FileNames.fused = fused
         # get all spec files
         if os.path.isfile(spec):
             FileNames.specFiles = [os.path.abspath(spec)]
