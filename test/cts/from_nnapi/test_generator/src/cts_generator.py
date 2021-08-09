@@ -53,6 +53,7 @@ from test_generator import InitializeCtsTestFile
 
 import mapping_dict as md
 
+supportFusedOpSrcList = ['CONV_2D', 'DEPTHWISE_CONV_2D']
 msgTemplate = 'Unsupported convert "%s" test due to "%s"'
 
 def ParseCmdLine():
@@ -60,8 +61,11 @@ def ParseCmdLine():
     parser.add_argument("spec", help="the spec file/directory")
     parser.add_argument(
         "-t", "--test", help="the generated test file/directory", default="-")
+    parser.add_argument(
+        "-f", "--fused", help="the generated test with fused operations",
+        default=False)
     args = parser.parse_args()
-    tg.FileNames.InitializeFileLists(args.spec, args.test)
+    tg.FileNames.InitializeFileLists(args.spec, args.test, args.fused == 'True')
 
 def CheckOperationWithImplicitPadding(nnapiOp, curOpInsList, nnapiOpInsList,
                                       nnapiOpOptionalInsLen):
@@ -183,12 +187,14 @@ def SupportedConvertSoftmax(opInfoList, inOperand, paramsList, insList):
 
     return flag
 
-def UpdateMappingWebNNOpList(actValue):
+def UpdateMappingWebNNOpList(nnapiOp, actValue, fused):
     if Configuration.successedCounter == 0:
-        if actValue == 1:
-            Configuration.mappingWebNNOp.append('relu')
-        else:
-            Configuration.mappingWebNNOp.append('clamp')
+        # activation is fused as an option of WebNN conv2d op
+        if not fused or (fused and nnapiOp not in supportFusedOpSrcList):
+            if actValue == 1:
+                Configuration.mappingWebNNOp.append('relu')
+            else:
+                Configuration.mappingWebNNOp.append('clamp')
 
 def GetReluMappedInfo(actValue):
     info = None
@@ -217,7 +223,8 @@ def FlattenedTo2D(in0Dims, in1Dims):
     batchSize = int(np.product(in0Dims) / inputSize)
     return [batchSize, inputSize]
 
-def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout):
+def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout,
+                        fused):
     operandType = oprand.type.mappingType
     operandDims = oprand.type.dimensions
 
@@ -232,21 +239,22 @@ def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout):
     else:
         oprandName = opInsInfoList[opInsList.index(oprand)]['name']
         if oprandName == 'bias':
-            if layout and len(operandDims) == 1:
-                # Update operandDims likes [x] -> [1, x, 1, 1]
-                operandDims = [1, operandDims[0], 1, 1]
-
+            # bais of WebNN conv2d is 1-D tensor
+            if not fused or (fused and operation not in supportFusedOpSrcList):
+                if layout and len(operandDims) == 1:
+                    # Update operandDims likes [x] -> [1, x, 1, 1]
+                    operandDims = [1, operandDims[0], 1, 1]
     operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
     return operandDesc
 
 def PrintInputOperand(oprand, operation, opInsList, opInsInfoList, layout,
-                      test):
+                      test, fused):
     opDesc = GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList,
-                                 layout)
+                                 layout, fused)
     operand = "const %s = builder.input('%s', %s);" % (oprand, oprand, opDesc)
     IndentedPrint(operand, indent=4, file=test)
 
-def GetOperandValue(oprand, operation, opInsList, name, layout, value=None):
+def GetOperandValue(oprand, operation, opInsList, value=None):
     opValue = oprand.value
 
     if value is not None:
@@ -260,17 +268,17 @@ def GetOperandValue(oprand, operation, opInsList, name, layout, value=None):
 
     return opValue
 
-def PrintInputData(oprand, operation, opInsList, name, value, layout, test):
+def PrintInputData(oprand, operation, opInsList, value, test):
     typedArray = oprand.type.mappingTypedArrayType
-    opValue = GetOperandValue(oprand, operation, opInsList, name, layout, value)
+    opValue = GetOperandValue(oprand, operation, opInsList, value)
     IndentedPrint('const %sData = new %s(%s);' % (oprand, typedArray, opValue),
                   indent=4, file=test)
 
-def PrintConstant(oprand, operation, opInsList, opInsInfoList, name, layout,
-                  test):
-    opDesc = GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList,
-                                 layout)
-    opValue = GetOperandValue(oprand, operation, opInsList, name, layout)
+def PrintConstant(oprand, operation, opInsList, opInsInfoList, layout,
+                  test, fused):
+    opDesc = GetWebNNOperandDesc(
+        oprand, operation, opInsList, opInsInfoList, layout, fused)
+    opValue = GetOperandValue(oprand, operation, opInsList)
     operand = "const %s = builder.constant(%s, new %s(%s));" % \
               (oprand, opDesc, oprand.type.mappingTypedArrayType, opValue)
     IndentedPrint(operand, indent=4, file=test)
@@ -359,8 +367,7 @@ def GetWebNNOperationParamsList(opInsInfoList, opInsList, inputFeedDict,
             lastParam['dilations'].reverse()
     return paramsList
 
-def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList,
-                                           layout):
+def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList):
     if isinstance(targetValue, dict):
         for key, value in kvList:
             if targetValue.get(key, None) is None:
@@ -391,7 +398,7 @@ def PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, operandName):
                           indent=4, file=test)
 
 def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
-                    outputOp, test):
+                    outputOp, test, fused):
     if biasOp is not None:
         IndentedPrint("const interOut0 = builder.%s(%s);" % \
                       (webnnOpType, webnnParamsStr),
@@ -410,12 +417,25 @@ def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
     else:
         if fusedReluMappedInfo is not None:
             if fusedReluMappedInfo[0]:
-                IndentedPrint("const interOut0 = builder.%s(%s);" % \
-                              (webnnOpType, webnnParamsStr), indent=4,
-                              file=test)
-                # Add 'relu' or 'clamp' operation
-                PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
-                                         'interOut0')
+                # activation is fused as an option of WebNN conv2d op
+                if not fused or (fused and webnnOpType != 'conv2d'):
+                    IndentedPrint("const interOut0 = builder.%s(%s);" % \
+                                  (webnnOpType, webnnParamsStr), indent=4,
+                                  file=test)
+                    # Add 'relu' or 'clamp' operation
+                    PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
+                                            'interOut0')
+                else:
+                    actName = fusedReluMappedInfo[1]['name']
+                    optionsStr = fusedReluMappedInfo[1].get('options', '')
+                    if actName != 'clamp' or \
+                        (actName == 'clamp' and optionsStr != ''):
+                        webnnParamsStr = webnnParamsStr[:-1] + \
+                            ", 'activation': builder.%s(%s)}" % \
+                            (actName, optionsStr)
+                    IndentedPrint("const %s = builder.%s(%s);" % \
+                                  (outputOp, webnnOpType, webnnParamsStr),
+                                  indent=4, file=test)
             else:
                 PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
                                          webnnParamsStr)
@@ -425,8 +445,12 @@ def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
                           indent=4, file=test)
 
 # Dump Test file for Cts tests
-def DumpCtsTest(example, test):
+def DumpCtsTest(example, test, fused):
     model = example.model
+    targetMappingDict = md.MappingDict
+
+    if fused:
+        targetMappingDict = md.MappingDictFused
 
     if len(model.operations) > 1:
         msg = 'Not convert complicated tests with multi-operations'
@@ -435,9 +459,7 @@ def DumpCtsTest(example, test):
 
     nnapiOp = model.operations[0].optype
 
-    if nnapiOp not in md.MappingDict.keys():
-        msg = msgTemplate % (nnapiOp, 'none mapped WebNN Opeartion')
-        # print(msg, file=sys.stderr)
+    if nnapiOp not in targetMappingDict.keys():
         return
 
     # WebNN polyfill API cur supports 'int32' and 'float32'
@@ -451,7 +473,7 @@ def DumpCtsTest(example, test):
         # print(msg, file=sys.stderr)
         return
 
-    mappingOpDict = md.MappingDict[nnapiOp]
+    mappingOpDict = targetMappingDict[nnapiOp]
     mappedWebNNOp = mappingOpDict['webnnOperation']
 
     if Configuration.successedCounter == 0:
@@ -470,7 +492,9 @@ def DumpCtsTest(example, test):
 
     if GetOperandIndex(nnapiOpInsList, 'bias') != -1:
         if Configuration.successedCounter == 0:
-            Configuration.mappingWebNNOp.append('add')
+            # bais is fused as an option of WebNN conv2d op
+            if not fused or (fused and nnapiOp not in supportFusedOpSrcList):
+                Configuration.mappingWebNNOp.append('add')
 
     curInputsList = example.model.GetInputs()
     curOutputsList = example.model.GetOutputs()
@@ -482,7 +506,7 @@ def DumpCtsTest(example, test):
                                                actIndex)
 
     if actStatus:
-        UpdateMappingWebNNOpList(actValue[0])
+        UpdateMappingWebNNOpList(nnapiOp, actValue[0], fused)
         fusedReluMappedInfo = (True, GetReluMappedInfo(actValue[0]))
 
     if nnapiOp == 'RELU1':
@@ -508,6 +532,10 @@ def DumpCtsTest(example, test):
 
     biasOp = None
     testIndex = 1 if len(example.feedDicts)>1 else 0
+    testPurposeTemplate = 'test %s converted from %s test'
+
+    if fused:
+        testPurposeTemplate = 'test %s (fused ops) converted from %s test'
 
     for inputFeedDict, outputFeedDict in example.feedDicts:
         if nnapiOp == 'SOFTMAX':
@@ -516,7 +544,7 @@ def DumpCtsTest(example, test):
                 ClearMappingWebNNOpConfiguration()
                 return
         IndentedPrint("", file=test) # Add blank line
-        testPurpose = 'test %s converted from %s test' % \
+        testPurpose = testPurposeTemplate % \
                       (' + '.join(Configuration.mappingWebNNOp),
                        str(example.testName))
         if testIndex > 0:
@@ -538,10 +566,9 @@ def DumpCtsTest(example, test):
                 rule = md.MappingRule(opInsDict['mappingRuleType'])
                 if rule == md.MappingRule.OPERAND_OPERAND:
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
-                                      layout, test)
+                                      layout, test, fused)
                     PrintInputData(op, nnapiOp, curOpInsList,
-                                   opInsDict['name'], inputFeedDict[op],
-                                   layout, test)
+                                   inputFeedDict[op], test)
                     computeParamsList.append("'%s': %sData" % \
                                              (op, op))
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
@@ -558,10 +585,9 @@ def DumpCtsTest(example, test):
                 if opInsDict['name'] == 'bias':
                     biasOp = op
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
-                                      layout, test)
+                                      layout, test, fused)
                     PrintInputData(op, nnapiOp, curOpInsList,
-                                   opInsDict['name'], inputFeedDict[op],
-                                   layout, test)
+                                   inputFeedDict[op], test)
                     computeParamsList.append("'%s': %sData" % \
                                              (op, op))
         # Create operand(s) by ModelBuilder.constant, or define variable(s)
@@ -572,7 +598,7 @@ def DumpCtsTest(example, test):
                 rule = md.MappingRule(opInsDict['mappingRuleType'])
                 if rule == md.MappingRule.OPERAND_OPERAND:
                     PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
-                                  opInsDict['name'], layout, test)
+                                  layout, test, fused)
                 elif rule == md.MappingRule.VARIABLE_VARIABLE:
                     varValue = curParamsList[curParamsList.index(op)].value[0]
                     if opInsDict['name'] == 'layout':
@@ -596,7 +622,7 @@ def DumpCtsTest(example, test):
                 if opInsDict['name'] == 'bias':
                     biasOp = op
                     PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
-                                  opInsDict['name'], layout, test)
+                                  layout, test, fused)
         if len(curOutputsList) == 1:
             outputOp = curOutputsList[0]
             IndentedPrint("const expected = %s;" % outputFeedDict[outputOp],
@@ -628,7 +654,7 @@ def DumpCtsTest(example, test):
                                                     curParamsList,
                                                     nnapiOp)
         UpdateWebNNOperationOptionalParamValue(nnapiOp, mappingParams[-1][1],
-                                               optionsKeyValueList, layout)
+                                               optionsKeyValueList)
         webnnParamsStr = GetWebNNParamsString(mappingParams)
         if nnapiOp == 'SQRT':
             exponent = "const exponent = builder.constant({type: 'float32'," + \
@@ -638,7 +664,7 @@ def DumpCtsTest(example, test):
         if nnapiOp in ['CONV_2D', 'DEPTHWISE_CONV_2D']:
             webnnParamsStr = webnnParamsStr.replace("'layout'", "'inputLayout'")
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
-                        fusedReluMappedInfo, outputOp, test)
+                        fusedReluMappedInfo, outputOp, test, fused)
         if len(curOutputsList) == 1:
             IndentedPrint("const graph = builder.build({%s});" % outputOp,
                           indent=4, file=test)
@@ -693,7 +719,8 @@ if __name__ == '__main__':
         testFile = tg.FileNames.testFile
         with SmartOpen(testFile) as test:
             InitializeCtsTestFile(test, 4)
-            Example.DumpAllExamples(DumpTest=DumpCtsTest, test=test)
+            Example.DumpAllExamples(DumpTest=DumpCtsTest, test=test,
+                                    fused=tg.FileNames.fused)
             IndentedPrint("});", file=test)
             IndentedPrint("/* eslint-disable max-len */", file=test)
         if Configuration.successedCounter == 0:
