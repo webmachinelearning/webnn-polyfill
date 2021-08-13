@@ -65,7 +65,7 @@ describe('test pow', function() {
     utils.checkValue(outputs.z, [1., 32., 729.]);
   });
 
-  it('pow broadcast scalar', async function() {
+  it('pow broadcast with 1d of [3] and 1d of [1]', async function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
@@ -78,7 +78,7 @@ describe('test pow', function() {
     utils.checkValue(outputs.z, [1., 4., 9.]);
   });
 
-  it('pow broadcast scalar', async function() {
+  it('pow broadcast with 2d of [2, 3] and 1d of [3]', async function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
     const y = builder.constant(

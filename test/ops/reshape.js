@@ -43,11 +43,11 @@ describe('test reshape', function() {
     testReshape([2, 3, 4], [24]);
   });
 
-  it('reshape negative_dim', function() {
+  it('reshape [2, 3, 4] to negative_dim [2, -1, 2]', function() {
     testReshape([2, 3, 4], [2, -1, 2], [2, 6, 2]);
   });
 
-  it('reshape negative_dim', function() {
+  it('reshape [2, 3, 4] to negative_dim [-1, 2, 3, 4]', function() {
     testReshape([2, 3, 4], [-1, 2, 3, 4], [1, 2, 3, 4]);
   });
 });
