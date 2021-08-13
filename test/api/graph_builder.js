@@ -39,10 +39,11 @@ describe('test MLGraphBuilder', function() {
     })).to.be.an.instanceof(MLOperand);
   });
 
-  it('builder.input should accept scalar operand descriptor', () => {
-    expect(builder.input('x', {type: 'float32', dimensions: []}))
-        .to.be.an.instanceof(MLOperand);
-  });
+  it('builder.input should accept scalar operand descriptor dimensions []',
+      () => {
+        expect(builder.input('x', {type: 'float32', dimensions: []}))
+            .to.be.an.instanceof(MLOperand);
+      });
 
   it('builder.input should throw for invalid name parameter', () => {
     expect(() => builder.input(1, desc)).to.throw(Error);
@@ -114,11 +115,12 @@ describe('test MLGraphBuilder', function() {
         .to.be.an.instanceof(MLOperand);
   });
 
-  it('builder.constant should accept scalar operand descriptor', () => {
-    const buffer = new Float32Array(1);
-    expect(builder.constant({type: 'float32', dimensions: []}, buffer))
-        .to.be.an.instanceof(MLOperand);
-  });
+  it('builder.constant should accept scalar operand descriptor dimensions []',
+      () => {
+        const buffer = new Float32Array(1);
+        expect(builder.constant({type: 'float32', dimensions: []}, buffer))
+            .to.be.an.instanceof(MLOperand);
+      });
 
   it('builder.constant should throw for invalid desc parameter', () => {
     const buffer = new Float32Array(4);
