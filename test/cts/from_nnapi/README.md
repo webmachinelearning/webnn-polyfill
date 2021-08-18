@@ -37,6 +37,7 @@ NNAPI operations to the tests for such WebNN API operations of first wave.
 | SPLIT                         | split                         |
 | SQUEEZE                       | squeeze                       |
 | TRANSPOSE                     | transpose                     |
+| POW                           | pow                           |
 
 * Part II
 
