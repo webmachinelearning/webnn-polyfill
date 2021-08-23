@@ -497,6 +497,42 @@ MappingDict = {
             }
         ]
     },
+    'PAD': {
+        'webnnOperation': 'pad',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'padding',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 0
+            }
+        ]
+    },
+    'PAD_V2': {
+        'webnnOperation': 'pad',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'padding',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'value',
+                'mappingParamIndex': 2,
+                'optionsDictKey': 'value',
+                'mappingRuleType': 1
+            }
+        ]
+    },
     'POW': {
         'webnnOperation': 'pow',
         'insList': [
