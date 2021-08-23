@@ -37,6 +37,45 @@ describe('test pad', function() {
         });
   });
 
+  it('pad constant model default value', function() {
+    testPad(
+        {
+          shape: [2, 3],
+          values: [1, 2, 3, 4, 5, 6],
+        },
+        {
+          shape: [2, 2],
+          values: [1, 1, 2, 2],
+        },
+        {mode: 'constant'}, {
+          shape: [4, 7],
+          values: [
+            0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 2., 3., 0., 0.,
+            0., 0., 4., 5., 6., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+          ],
+        });
+  });
+
+  it('pad constant model specified value', function() {
+    testPad(
+        {
+          shape: [2, 3],
+          values: [1, 2, 3, 4, 5, 6],
+        },
+        {
+          shape: [2, 2],
+          values: [1, 1, 2, 2],
+        },
+        {mode: 'constant',
+          value: 9.}, {
+          shape: [4, 7],
+          values: [
+            9., 9., 9., 9., 9., 9., 9., 9., 9., 1., 2., 3., 9., 9.,
+            9., 9., 4., 5., 6., 9., 9., 9., 9., 9., 9., 9., 9., 9.,
+          ],
+        });
+  });
+
   it('pad edge mode', function() {
     testPad(
         {
