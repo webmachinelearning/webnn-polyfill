@@ -2694,7 +2694,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2716,7 +2716,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2742,7 +2742,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2768,7 +2768,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2794,7 +2794,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2820,7 +2820,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2846,7 +2846,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2872,7 +2872,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2898,7 +2898,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2930,7 +2930,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2964,7 +2964,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -2998,7 +2998,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3032,7 +3032,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3065,7 +3065,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3098,7 +3098,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3131,7 +3131,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3164,7 +3164,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3196,7 +3196,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3230,7 +3230,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3264,7 +3264,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3298,7 +3298,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3331,7 +3331,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3364,7 +3364,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3397,7 +3397,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3430,7 +3430,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3457,7 +3457,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3486,7 +3486,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3515,7 +3515,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3544,7 +3544,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3572,7 +3572,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [3, 3, 2, 1],
+      shape: [3, 3, 1, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3600,7 +3600,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 3, 3, 2],
+      shape: [2, 3, 3, 1],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3628,7 +3628,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3656,7 +3656,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3685,7 +3685,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [2, 3, 3, 1],
+      shape: [1, 3, 3, 2],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
@@ -3716,7 +3716,7 @@ describe('test conv2d', function() {
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
     };
     const filter = {
-      shape: [1, 2, 3, 3],
+      shape: [2, 1, 3, 3],
       data: new Float32Array(18).fill(1),
     };
     const expected = {
