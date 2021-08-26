@@ -173,16 +173,30 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       input = tf.transpose(input, [0, 2, 3, 1]);
     }
     const inputChannels = input.shape[3];
-    // tf.conv2d filter layout (hwio): [filterHeight, filterWidth, inDepth,
-    // outDepth]
     if (this.filterTensor_ === undefined) {
       filter = inputTensors.get(this.filter_) as tf.Tensor4D;
-      if (this.filterLayout_ === MLFilterOperandLayout.oihw) {
-        filter = tf.transpose(filter, [2, 3, 1, 0]);
-      } else if (this.filterLayout_ === MLFilterOperandLayout.ohwi) {
-        filter = tf.transpose(filter, [1, 2, 3, 0]);
-      } else if (this.filterLayout_ === MLFilterOperandLayout.ihwo) {
-        filter = tf.transpose(filter, [1, 2, 0, 3]);
+      if (this.transpose_ === false) {
+        // tf.conv2d filter layout (hwio): [filterHeight, filterWidth, inDepth,
+        // outDepth]
+        if (this.filterLayout_ === MLFilterOperandLayout.oihw) {
+          filter = tf.transpose(filter, [2, 3, 1, 0]);
+        } else if (this.filterLayout_ === MLFilterOperandLayout.ohwi) {
+          filter = tf.transpose(filter, [1, 2, 3, 0]);
+        } else if (this.filterLayout_ === MLFilterOperandLayout.ihwo) {
+          filter = tf.transpose(filter, [1, 2, 0, 3]);
+        }
+      } else {
+        // tf.conv2dTranspose filter layout (hwoi): [filterHeight, filterWidth,
+        // outDepth, inDepth]
+        if (this.filterLayout_ === MLFilterOperandLayout.oihw) {
+          filter = tf.transpose(filter, [2, 3, 0, 1]);
+        } else if (this.filterLayout_ === MLFilterOperandLayout.hwio) {
+          filter = tf.transpose(filter, [0, 1, 3, 2]);
+        } else if (this.filterLayout_ === MLFilterOperandLayout.ohwi) {
+          filter = tf.transpose(filter, [1, 2, 0, 3]);
+        } else if (this.filterLayout_ === MLFilterOperandLayout.ihwo) {
+          filter = tf.transpose(filter, [1, 2, 3, 0]);
+        }
       }
       if (this.groups_ !== 1) {
         // filter layout hwio
