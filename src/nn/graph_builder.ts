@@ -577,7 +577,7 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-l2pool2d)
    */
-   l2Pool2d(input: MLOperand, options: MLPooling2dOptions = {}): MLOperand {
+  l2Pool2d(input: MLOperand, options: MLPooling2dOptions = {}): MLOperand {
     this.validateOperandBuilder([input]);
     return (new L2Pool2d(input, options)).output;
   }
