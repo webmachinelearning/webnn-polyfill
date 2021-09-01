@@ -586,4 +586,166 @@ describe('test pool2d', function() {
     const expected = [0.07170041, 0.05194739, 0.07117923];
     utils.checkValue(outputs.y, expected);
   });
+
+  it('l2Pool2d strides default', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const windowDimensions = [2, 2];
+    const y = builder.l2Pool2d(x, {windowDimensions});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 3]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 1, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d strides', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const windowDimensions = [2, 2];
+    const strides = [2, 2];
+    const y = builder.l2Pool2d(x, {windowDimensions, strides});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d strides nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const windowDimensions = [2, 2];
+    const strides = [2, 2];
+    const layout = 'nhwc';
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d pads default', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const windowDimensions = [3, 3];
+    const strides = [3, 3];
+    const padding = [1, 0, 1, 1];
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, padding});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d pads nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const windowDimensions = [3, 3];
+    const strides = [3, 3];
+    const padding = [1, 0, 1, 1];
+    const layout = 'nhwc';
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, padding, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d same-upper default', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const windowDimensions = [3, 3];
+    const strides = [3, 3];
+    const autoPad = 'same-upper';
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, autoPad});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d same-upper nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const windowDimensions = [3, 3];
+    const strides = [3, 3];
+    const autoPad = 'same-upper';
+    const layout = 'nhwc';
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, autoPad, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d same-lower default', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const windowDimensions = [3, 3];
+    const strides = [3, 3];
+    const autoPad = 'same-lower';
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, autoPad});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d same-lower nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const windowDimensions = [3, 3];
+    const strides = [3, 3];
+    const autoPad = 'same-lower';
+    const layout = 'nhwc';
+    const y = builder.l2Pool2d(x, {windowDimensions, strides, autoPad, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [-1, 2, 0, 3, -2, 0, 0, -4]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
+    graph.compute(inputs, outputs);
+    const expected = [1.5, 2.5];
+    utils.checkValue(outputs.y, expected);
+  });
 });

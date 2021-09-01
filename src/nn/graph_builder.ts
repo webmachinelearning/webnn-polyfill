@@ -12,7 +12,7 @@ import {Gru, GruCell} from './ops/gru';
 import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
 import {Pad} from './ops/pad';
-import {AveragePool2d, MaxPool2d} from './ops/pool2d';
+import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
 import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
 import {Resample} from './ops/resample';
 import {Reshape} from './ops/reshape';
@@ -572,6 +572,14 @@ export class MLGraphBuilder {
   averagePool2d(input: MLOperand, options: MLPooling2dOptions = {}): MLOperand {
     this.validateOperandBuilder([input]);
     return (new AveragePool2d(input, options)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-l2pool2d)
+   */
+  l2Pool2d(input: MLOperand, options: MLPooling2dOptions = {}): MLOperand {
+    this.validateOperandBuilder([input]);
+    return (new L2Pool2d(input, options)).output;
   }
 
   /**

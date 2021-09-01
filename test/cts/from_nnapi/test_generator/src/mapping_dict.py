@@ -360,6 +360,84 @@ MappingDict = {
             }
         ]
     },
+    'L2_POOL_2D': {
+        'webnnOperation': 'l2Pool2d',
+        'insList': [ # only support for explicit paddings
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'paddingLeft',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'padding',
+                'sequenceIndex': 2, # [beginning_height, ending_height, beginning_width, ending_width]
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'paddingRight',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'padding',
+                'sequenceIndex': 3,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'paddingTop',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'padding',
+                'sequenceIndex': 0,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'paddingBottom',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'padding',
+                'sequenceIndex': 1,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'strideWidth',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'strides',
+                'sequenceIndex': 1, # [stride_height, stride_width]
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'strideHeight',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'strides',
+                'sequenceIndex': 0,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'filterWidth',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'windowDimensions',
+                'sequenceIndex': 1, # [window_height, window_width]
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'filterHeight',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'windowDimensions',
+                'sequenceIndex': 0,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'activation',
+                'mappingParamIndex': -1
+            }
+        ],
+        'optionalInsList': [
+            {
+                'name': 'layout',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'layout',
+                'mappingRuleType': 1
+            }
+        ]
+    },
     'LOGISTIC': {
         'webnnOperation': 'sigmoid',
         'insList': [
