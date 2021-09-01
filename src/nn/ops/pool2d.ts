@@ -6,7 +6,7 @@ import {MLOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
-type PoolingType = 'avg'|'max';
+type PoolingType = 'avg'|'l2'|'max';
 
 export abstract class Pool extends SingleOutputOperation {
   protected input_: MLOperand;
@@ -110,9 +110,18 @@ export abstract class Pool extends SingleOutputOperation {
       }
     }
 
-    let output = tf.pool(
+    let output;
+    if (poolingType === 'l2') {
+      input = tf.pow(input, 2);
+      output = tf.sqrt(
+        tf.pool(input, this.windowDimensions_, 'avg', padding, this.dilations_,
+        this.strides_));
+    } else {
+      output = tf.pool(
         input, this.windowDimensions_, poolingType, padding, this.dilations_,
         this.strides_);
+    }
+
     if (this.layout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
@@ -132,5 +141,11 @@ export class AveragePool2d extends Pool {
 export class MaxPool2d extends Pool {
   getPoolingType(): PoolingType {
     return 'max';
+  }
+}
+
+export class L2Pool2d extends Pool {
+  getPoolingType(): PoolingType {
+    return 'l2';
   }
 }
