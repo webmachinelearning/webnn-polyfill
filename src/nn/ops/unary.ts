@@ -69,3 +69,17 @@ export class Relu extends UnaryMLOperator {
     return tf.relu(x);
   }
 }
+
+export class HardSwish extends UnaryMLOperator {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.div(
+      tf.mul(
+          x,
+          tf.maximum(
+              0,
+              tf.minimum(
+                  6,
+                  tf.add(x, 3)))),
+      6);
+  }
+}

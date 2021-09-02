@@ -21,7 +21,7 @@ import {Softmax} from './ops/softmax';
 import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
-import {Exp, Relu, Sigmoid, Tanh} from './ops/unary';
+import {Exp, HardSwish, Relu, Sigmoid, Tanh} from './ops/unary';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
@@ -435,6 +435,20 @@ export class MLGraphBuilder {
   exp(x: MLOperand): MLOperand {
     this.validateOperandBuilder([x]);
     return (new Exp(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-hard-swish)
+   */
+  hardSwish(input: MLOperand): MLOperand;
+  hardSwish(): MLOperator;
+  hardSwish(input: MLOperand = undefined): MLOperand|MLOperator {
+    if (input === undefined) {
+      return new HardSwish(undefined);
+    } else {
+      this.validateOperandBuilder([input]);
+      return (new HardSwish(input)).output;
+    }
   }
 
   /**
