@@ -1,5 +1,5 @@
 import * as tf from '@tensorflow/tfjs-core';
-import {ExplicitPadding} from '@tensorflow/tfjs-core/src/ops/conv_util';
+import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
 import {MLAutoPad, MLInputOperandLayout, MLPooling2dOptions} from '../graph_builder';
 import {MLOperand} from '../operand';
