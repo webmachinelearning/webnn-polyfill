@@ -116,7 +116,7 @@ describe('test resnet50v2 nchw', function() {
           builder.input('input', {type: 'float32', dimensions: [1, 3, 224, 224]});
       const bn1 = await buildBatchNorm(data, '0', '', false);
       const conv0 = await buildConv(
-          bn1, '0', '', {pading: [3, 3, 3, 3], strides: [2, 2]});
+          bn1, '0', '', {padding: [3, 3, 3, 3], strides: [2, 2]});
       const bn2 = await buildBatchNorm(conv0, '1', '');
       const pool1 = await builder.maxPool2d(bn2,
           {windowDimensions: [3, 3], padding: [1, 1, 1, 1], strides: [2, 2]});
@@ -204,37 +204,37 @@ describe('test resnet50v2 nchw', function() {
         new utils.AccuracyCriterion(1e-3, 1e-3));
   }
 
-  it.skip('test_data_set_0', async function() {
+  it('test_data_set_0', async function() {
     await testResNet50V2(
         graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it.skip('test_data_set_1', async function() {
+  it('test_data_set_1', async function() {
     await testResNet50V2(
         graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it.skip('test_data_set_2', async function() {
+  it('test_data_set_2', async function() {
     await testResNet50V2(
         graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it.skip('test_data_set_0 (fused ops)', async function() {
+  it('test_data_set_0 (fused ops)', async function() {
     await testResNet50V2(
         fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it.skip('test_data_set_1 (fused ops)', async function() {
+  it('test_data_set_1 (fused ops)', async function() {
     await testResNet50V2(
         fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it.skip('test_data_set_2 (fused ops)', async function() {
+  it('test_data_set_2 (fused ops)', async function() {
     await testResNet50V2(
         fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
