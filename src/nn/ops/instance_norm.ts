@@ -83,7 +83,7 @@ export class InstanceNormalization extends SingleOutputOperation {
     const mean = tf.mean(input, axes, true);
     const variance = tf.mean(tf.pow(tf.sub(input, mean), 2), axes, true);
     const norm = tf.div(
-        tf.sub(input, mean), tf.pow(tf.add(variance, this.epsilon_), 0.5));
+        tf.sub(input, mean), tf.sqrt(tf.add(variance, this.epsilon_)));
     const scaled = scale ? tf.mul(tf.reshape(scale, shape), norm) : norm;
     return bias ? tf.add(tf.reshape(bias, shape), scaled) : scaled;
   }
