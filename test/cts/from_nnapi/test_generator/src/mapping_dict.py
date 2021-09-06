@@ -438,6 +438,40 @@ MappingDict = {
             }
         ]
     },
+    'INSTANCE_NORMALIZATION': {
+        'webnnOperation': 'instanceNormalization',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'gamma',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'scale',
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'beta',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'bias',
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'epsilon',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'epsilon',
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'layout',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'layout',
+                'mappingRuleType': 1
+            }
+        ]
+    },
     'LOGISTIC': {
         'webnnOperation': 'sigmoid',
         'insList': [

@@ -224,7 +224,7 @@ def FlattenedTo2D(in0Dims, in1Dims):
     return [batchSize, inputSize]
 
 def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout,
-                        fused):
+                        fused, size = None):
     operandType = oprand.type.mappingType
     operandDims = oprand.type.dimensions
 
@@ -244,7 +244,11 @@ def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout,
                 if layout and len(operandDims) == 1:
                     # Update operandDims likes [x] -> [1, x, 1, 1]
                     operandDims = [1, operandDims[0], 1, 1]
-    operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
+
+    if operation == 'INSTANCE_NORMALIZATION' and size != None:
+        operandDesc = "{type: '%s', dimensions: [%d]}" % (operandType, size)
+    else:
+        operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
     return operandDesc
 
 def PrintInputOperand(oprand, operation, opInsList, opInsInfoList, layout,
@@ -275,11 +279,16 @@ def PrintInputData(oprand, operation, opInsList, value, test):
                   indent=4, file=test)
 
 def PrintConstant(oprand, operation, opInsList, opInsInfoList, layout,
-                  test, fused):
-    opDesc = GetWebNNOperandDesc(
-        oprand, operation, opInsList, opInsInfoList, layout, fused)
+                  test, fused, size = None):
     opValue = GetOperandValue(oprand, operation, opInsList)
-    operand = "const %s = builder.constant(%s, new %s(%s));" % \
+    opDesc = GetWebNNOperandDesc(
+        oprand, operation, opInsList, opInsInfoList, layout, fused, size)
+    if operation == 'INSTANCE_NORMALIZATION' and size != None:
+        operand = "const %s = builder.constant(%s, new %s(%s));" % \
+              (oprand, opDesc, oprand.type.mappingTypedArrayType,
+               opValue * size)
+    else:
+        operand = "const %s = builder.constant(%s, new %s(%s));" % \
               (oprand, opDesc, oprand.type.mappingTypedArrayType, opValue)
     IndentedPrint(operand, indent=4, file=test)
 
@@ -522,6 +531,7 @@ def DumpCtsTest(example, test, fused):
                                                      layoutIndex)
     # True: 'nchw', False: 'nhwc'
     layout = False if not layoutStatus else layoutValue[0]
+    chanelIndex = 1 if layout else 3
 
     if nnapiOp == 'DEPTHWISE_CONV_2D':
         if not SupportedConvertDepthwiseConv2D(curInputsList[0],
@@ -529,6 +539,9 @@ def DumpCtsTest(example, test, fused):
                                                layout):
             ClearMappingWebNNOpConfiguration()
             return
+
+    # for 1D scale and bias options of WebNN instanceNormalization op
+    size = None
 
     biasOp = None
     testIndex = 1 if len(example.feedDicts)>1 else 0
@@ -581,6 +594,8 @@ def DumpCtsTest(example, test, fused):
                     if len(varValue) != 0:
                         IndentedPrint('const %s = %s;' % (op, varValue),
                                       indent=4, file=test)
+                if nnapiOp == 'INSTANCE_NORMALIZATION' and opInsDict['name'] == 'input':
+                    size = op.type.dimensions[chanelIndex]
             else:
                 if opInsDict['name'] == 'bias':
                     biasOp = op
@@ -598,7 +613,7 @@ def DumpCtsTest(example, test, fused):
                 rule = md.MappingRule(opInsDict['mappingRuleType'])
                 if rule == md.MappingRule.OPERAND_OPERAND:
                     PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
-                                  layout, test, fused)
+                                  layout, test, fused, size)
                 elif rule == md.MappingRule.VARIABLE_VARIABLE:
                     varValue = curParamsList[curParamsList.index(op)].value[0]
                     if opInsDict['name'] == 'layout':
@@ -644,8 +659,6 @@ def DumpCtsTest(example, test, fused):
                 # Default 'nchw' layout with WebNN API
                 optionsKeyValueList.append(('layout', False))
         if nnapiOp == 'DEPTHWISE_CONV_2D':
-            # True: 'nchw' False: 'nhwc'
-            chanelIndex = 1 if layout else 3
             groups = outputOp.type.dimensions[chanelIndex]
             optionsKeyValueList.append(('groups', groups))
         mappingParams = GetWebNNOperationParamsList(nnapiOpInsList,
