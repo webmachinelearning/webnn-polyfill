@@ -295,6 +295,9 @@ class SymmPerChannelQuantParams():
 # declared before operations.
 class Operand(NamedVariable):
     def __init__(self, name, opType, value, backward=None, skipRenaming=False, extraParams=None):
+        # Replace string 'in' by 'input', since 'in' is a JavaScript Reserved Word
+        if name == 'in':
+            name = 'input'
         NamedVariable.__init__(self, CamelCaseStr(name), sep="", skipRenaming=skipRenaming)
         if type(opType) is str:
             self.type = Type.GetTypeFromString(opType, value, extraParams)
