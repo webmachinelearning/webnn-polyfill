@@ -37,8 +37,8 @@ describe('test mobilenetv2 nchw', function() {
           return builder.clamp(
               conv,
               {
-                minValue: builder.constant(0.),
-                maxValue: builder.constant(6.0),
+                minValue: 0,
+                maxValue: 6,
               },
           );
         }

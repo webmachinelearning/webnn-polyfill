@@ -46,7 +46,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const input1Data = new Float32Array([2.0, -2.0, -4.0, 4.0]);
     const expected = [0.0, -1.0, 1.0, -1.0];
     const interOut0 = builder.sub(input0, input1);
-    const output0 = builder.clamp(interOut0, {minValue: builder.constant(-1), maxValue: builder.constant(1)});
+    const output0 = builder.clamp(interOut0, {minValue: -1, maxValue: 1});
     const graph = builder.build({output0});
     const outputs = {output0: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
     graph.compute({'input0': input0Data, 'input1': input1Data}, outputs);
@@ -62,7 +62,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const input1Data = new Float32Array([2.0, -2.0, -4.0, 4.0]);
     const expected = [0.0, 0.0, 6.0, 0.0];
     const interOut0 = builder.sub(input0, input1);
-    const output0 = builder.clamp(interOut0, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const output0 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = builder.build({output0});
     const outputs = {output0: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
     graph.compute({'input0': input0Data, 'input1': input1Data}, outputs);

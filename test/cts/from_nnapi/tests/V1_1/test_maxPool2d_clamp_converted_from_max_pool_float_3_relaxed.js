@@ -15,7 +15,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const filter = 20;
     const expected = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
     const interOut0 = builder.maxPool2d(i0, {'padding': [padding, padding, padding, padding], 'strides': [stride, stride], 'windowDimensions': [filter, filter], 'layout': 'nhwc'});
-    const output = builder.clamp(interOut0, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const output = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = builder.build({output});
     const outputs = {output: new Float32Array(utils.sizeOfShape([5, 2, 3, 3]))};
     graph.compute({'i0': i0Data}, outputs);

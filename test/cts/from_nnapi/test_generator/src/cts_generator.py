@@ -207,8 +207,7 @@ def GetReluMappedInfo(actValue):
         info = {
             'name': 'clamp'
         }
-        options = \
-            "{minValue: builder.constant(%d), maxValue: builder.constant(%d)}"
+        options = "{minValue: %d, maxValue: %d}"
         if actValue == 2:
             # relu1
             info['options'] = options % (-1, 1)
