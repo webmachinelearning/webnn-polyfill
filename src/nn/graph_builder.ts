@@ -13,7 +13,7 @@ import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
 import {Pad} from './ops/pad';
 import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
-import {ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
+import {ReduceL1, ReduceL2, ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
 import {Resample} from './ops/resample';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
@@ -607,6 +607,22 @@ export class MLGraphBuilder {
 
   // start of reduction operations
   // https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-reduce
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-reducel1)
+   */
+  reduceL1(input: MLOperand, options: MLReduceOptions = {}): MLOperand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceL1(input, options)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-reducel2)
+   */
+  reduceL2(input: MLOperand, options: MLReduceOptions = {}): MLOperand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceL2(input, options)).output;
+  }
+
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-reducelogsumexp)
    */

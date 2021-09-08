@@ -83,3 +83,15 @@ export class ReduceSum extends Reduce {
     return tf.sum(input, axes, keepDimensions);
   }
 }
+
+export class ReduceL1 extends Reduce {
+  runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
+    return tf.sum(tf.abs(input), axes, keepDimensions);
+  }
+}
+
+export class ReduceL2 extends Reduce {
+  runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
+    return tf.sqrt(tf.sum(tf.pow(input, 2), axes, keepDimensions));
+  }
+}
