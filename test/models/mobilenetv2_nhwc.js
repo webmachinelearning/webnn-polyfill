@@ -40,8 +40,8 @@ describe('test mobilenetv2 nhwc', function() {
         // `relu6` in TFLite equals to `clamp` in WebNN API
         if (relu6) {
           return builder.clamp(add, {
-            minValue: builder.constant(0.),
-            maxValue: builder.constant(6.0),
+            minValue: 0,
+            maxValue: 6,
           });
         }
         return add;

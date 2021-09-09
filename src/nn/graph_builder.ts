@@ -48,8 +48,8 @@ export interface MLBatchNormalizationOptions {
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlclampoptions)
  */
 export interface MLClampOptions {
-  minValue?: MLOperand;
-  maxValue?: MLOperand;
+  minValue?: number;
+  maxValue?: number;
 }
 
 /**
@@ -337,11 +337,10 @@ export class MLGraphBuilder {
       options: MLClampOptions = {}): MLOperand|MLOperator {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
-      this.validateOperandBuilder([x, options.minValue, options.maxValue]);
+      this.validateOperandBuilder([x]);
       return (new Clamp(x, options)).output;
     } else {
       const options = operandOrOptions;
-      this.validateOperandBuilder([options.minValue, options.maxValue]);
       return (new Clamp(undefined, options));
     }
   }

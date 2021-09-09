@@ -4,17 +4,9 @@ import * as utils from '../utils.js';
 describe('test clamp', function() {
   const context = navigator.ml.createContext();
 
-  function testClamp(inputShape, inputValue, expected, limits = {}) {
+  function testClamp(inputShape, inputValue, expected, options = {}) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: inputShape});
-
-    const options = {};
-    if (limits.min !== undefined) {
-      options.minValue = builder.constant(limits.min);
-    }
-    if (limits.max !== undefined) {
-      options.maxValue = builder.constant(limits.max);
-    }
     const y = builder.clamp(x, options);
     const graph = builder.build({y});
     const inputs = {'x': new Float32Array(inputValue)};
@@ -24,10 +16,10 @@ describe('test clamp', function() {
   }
 
   it('clamp', function() {
-    testClamp([3], [-2, 0, 2], [-1, 0, 1], {min: -1, max: 1});
-    testClamp([3], [-1, 0, 1], [-1, 0, 1], {min: -5, max: 5});
-    testClamp([3], [-6, 0, 6], [-5, 0, 5], {min: -5, max: 5});
-    testClamp([3], [-1, 0, 6], [-1, 0, 5], {min: -5, max: 5});
+    testClamp([3], [-2, 0, 2], [-1, 0, 1], {minValue: -1, maxValue: 1});
+    testClamp([3], [-1, 0, 1], [-1, 0, 1], {minValue: -5, maxValue: 5});
+    testClamp([3], [-6, 0, 6], [-5, 0, 5], {minValue: -5, maxValue: 5});
+    testClamp([3], [-1, 0, 6], [-1, 0, 5], {minValue: -5, maxValue: 5});
     testClamp(
         [3, 4, 5],
         [
@@ -58,7 +50,7 @@ describe('test clamp', function() {
           0.90072393,  0.8913641,   -0.55512637, -0.17248231, -1.,
           -1.,         0.1265688,   0.7930071,   0.63802403,  0.3400246,
         ],
-        {min: -1, max: 1});
+        {minValue: -1, maxValue: 1});
   });
 
   it('clamp with defaults', function() {
@@ -93,7 +85,7 @@ describe('test clamp', function() {
           0.,         0.9219348,  0.,        0.,         0.,
           0.45028883, 0.,         1.2341441, 1.4498476,  0.,
         ],
-        {min: 0});
+        {minValue: 0});
     testClamp(
         [3, 4, 5],
         [
@@ -124,6 +116,6 @@ describe('test clamp', function() {
           0.,          -2.1573563,  0.,          0.,          -0.7802799,
           0.,          -0.2568697,  0.,          0.,          -0.72000146,
         ],
-        {max: 0});
+        {maxValue: 0});
   });
 });
