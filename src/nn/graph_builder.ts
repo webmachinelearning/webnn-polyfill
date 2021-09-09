@@ -21,7 +21,7 @@ import {Softmax} from './ops/softmax';
 import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
-import {Exp, HardSwish, Relu, Sigmoid, Tanh} from './ops/unary';
+import {Abs, Ceil, Cos, Exp, Floor, HardSwish, Log, Neg, Relu, Sigmoid, Sin, Tan, Tanh} from './ops/unary';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
@@ -429,11 +429,75 @@ export class MLGraphBuilder {
   // start of element-wise unary operations
   // https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-unary
   /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-abs)
+   */
+  abs(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Abs(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-ceil)
+   */
+  ceil(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Ceil(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-cos)
+   */
+  cos(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Cos(x)).output;
+  }
+
+  /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-exp)
    */
   exp(x: MLOperand): MLOperand {
     this.validateOperandBuilder([x]);
     return (new Exp(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-floor)
+   */
+  floor(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Floor(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-log)
+   */
+  log(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Log(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-neg)
+   */
+  neg(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Neg(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-sin)
+   */
+  sin(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Sin(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-tan)
+   */
+  tan(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Tan(x)).output;
   }
 
   /**
