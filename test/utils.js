@@ -149,9 +149,7 @@ export function createActivation(
   if (activation === 'relu') {
     return input === undefined ? builder.relu() : builder.relu(input);
   } else if (activation === 'relu6') {
-    const clampOptions = {};
-    clampOptions.minValue = builder.constant(0);
-    clampOptions.maxValue = builder.constant(6);
+    const clampOptions = {minValue: 0, maxValue: 6};
     return input === undefined ? builder.clamp(clampOptions) :
                                  builder.clamp(input, clampOptions);
   } else if (activation === 'sigmoid') {

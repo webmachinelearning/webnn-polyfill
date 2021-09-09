@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
     const op1Data = new Float32Array([-10.0, -0.5, 0.5, 10.0]);
     const expected = [0.0, 0.0, 0.5, 6.0];
-    const op2 = builder.clamp(op1, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const op2 = builder.clamp(op1, {minValue: 0, maxValue: 6});
     const graph = builder.build({op2});
     const outputs = {op2: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
     graph.compute({'op1': op1Data}, outputs);

@@ -205,7 +205,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const layout = 'nhwc';
     const expected = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
     const interOut0 = builder.maxPool2d(op12, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'windowDimensions': [param25, param24], 'layout': layout});
-    const op42 = builder.clamp(interOut0, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const op42 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([5, 2, 3, 3]))};
     graph.compute({'op12': op12Data}, outputs);
@@ -228,7 +228,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const layout = 'nhwc';
     const expected = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
     const interOut0 = builder.maxPool2d(op12, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'windowDimensions': [param25, param24], 'layout': layout});
-    const op42 = builder.clamp(interOut0, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const op42 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([5, 2, 3, 3]))};
     graph.compute({'op12': op12Data}, outputs);
@@ -251,7 +251,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const layout = 'nchw';
     const expected = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
     const interOut0 = builder.maxPool2d(op12, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'windowDimensions': [param25, param24], 'layout': layout});
-    const op42 = builder.clamp(interOut0, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const op42 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([5, 3, 2, 3]))};
     graph.compute({'op12': op12Data}, outputs);
@@ -274,7 +274,7 @@ describe('CTS converted from NNAPI CTS', function() {
     const layout = 'nchw';
     const expected = [6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6];
     const interOut0 = builder.maxPool2d(op12, {'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'windowDimensions': [param25, param24], 'layout': layout});
-    const op42 = builder.clamp(interOut0, {minValue: builder.constant(0), maxValue: builder.constant(6)});
+    const op42 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([5, 3, 2, 3]))};
     graph.compute({'op12': op12Data}, outputs);
