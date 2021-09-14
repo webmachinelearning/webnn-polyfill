@@ -10,6 +10,16 @@ class MappingRule(IntEnum):
 
 # NN-API Operations mapping WebNN API Operations
 MappingDict = {
+    'ABS': {
+        'webnnOperation': 'abs',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            }
+        ]
+    },
     'ADD': {
         'webnnOperation': 'add',
         'insList': [
@@ -336,6 +346,16 @@ MappingDict = {
             }
         ]
     },
+    'FLOOR': {
+        'webnnOperation': 'floor',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            }
+        ]
+    },
     'FULLY_CONNECTED': {
         'webnnOperation': 'matmul',
         'insList': [
@@ -469,6 +489,16 @@ MappingDict = {
                 'mappingParamIndex': 1,
                 'optionsDictKey': 'layout',
                 'mappingRuleType': 1
+            }
+        ]
+    },
+    'LOG': {
+        'webnnOperation': 'log',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
             }
         ]
     },
@@ -609,6 +639,16 @@ MappingDict = {
             }
         ]
     },
+    'NEG': {
+        'webnnOperation': 'neg',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            }
+        ]
+    },
     'PAD': {
         'webnnOperation': 'pad',
         'insList': [
@@ -702,6 +742,16 @@ MappingDict = {
                 'name': 'shape',
                 'mappingParamIndex': 1,
                 'mappingRuleType': 2
+            }
+        ]
+    },
+    'SIN': {
+        'webnnOperation': 'sin',
+        'insList': [
+            {
+                'name': 'input',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
             }
         ]
     },
