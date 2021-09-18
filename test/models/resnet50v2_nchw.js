@@ -173,7 +173,7 @@ describe('test resnet50v2 nchw', function() {
     fusedGraph = await buildResNet();
   });
 
-  after(async () => {
+  after(() => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();

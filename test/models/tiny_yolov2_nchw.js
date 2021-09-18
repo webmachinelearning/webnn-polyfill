@@ -116,7 +116,7 @@ describe('test tinyYolov2 nchw', function() {
     fusedGraph = await buildTinyYolo();
   });
 
-  after(async () => {
+  after(() => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();

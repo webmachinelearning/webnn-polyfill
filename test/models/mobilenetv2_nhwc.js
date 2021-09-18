@@ -21,7 +21,7 @@ describe('test mobilenetv2 nhwc', function() {
     }
     const context = navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
-    const fusedConv = false;
+    let fusedConv = false;
 
     async function buildConv(
         input, weightsSubName, biasSubName, relu6, options) {
@@ -144,10 +144,11 @@ describe('test mobilenetv2 nhwc', function() {
     }
 
     graph = await buildMobileNet();
-    fusedGraph = await buildMobileNet(true);
+    fusedConv = true;
+    fusedGraph = await buildMobileNet();
   });
 
-  after(async () => {
+  after(() => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();
@@ -163,7 +164,7 @@ describe('test mobilenetv2 nhwc', function() {
     }
   });
 
-  async function testMobileNetV2(graph, inputFile, expectedFile = false) {
+  async function testMobileNetV2(graph, inputFile, expectedFile) {
     const inputs = {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
     };

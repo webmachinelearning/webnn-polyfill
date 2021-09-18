@@ -84,7 +84,7 @@ describe('test squeezenet1.0 nhwc', function() {
     fusedGraph = await buildSqueezeNet();
   });
 
-  after(async () => {
+  after(() => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();

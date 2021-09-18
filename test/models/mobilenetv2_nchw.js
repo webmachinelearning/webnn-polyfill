@@ -138,7 +138,7 @@ describe('test mobilenetv2 nchw', function() {
     fusedGraph = await buildMobileNet();
   });
 
-  after(async () => {
+  after(() => {
     if (typeof _tfengine !== 'undefined') {
       // Check memory leaks.
       graph.dispose();
