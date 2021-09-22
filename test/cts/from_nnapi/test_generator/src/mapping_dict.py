@@ -700,6 +700,94 @@ MappingDict = {
             }
         ]
     },
+    'REDUCE_MAX': {
+        'webnnOperation': 'reduceMax',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'axes',
+                'mappingRuleType': 3
+            },
+            {
+                'name': 'input2',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'keepDimensions',
+                'mappingRuleType': 1
+            },
+        ]
+    },
+    'REDUCE_MIN': {
+        'webnnOperation': 'reduceMin',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'axes',
+                'mappingRuleType': 3
+            },
+            {
+                'name': 'input2',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'keepDimensions',
+                'mappingRuleType': 1
+            },
+        ]
+    },
+    'REDUCE_PROD': {
+        'webnnOperation': 'reduceProduct',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'axes',
+                'mappingRuleType': 3
+            },
+            {
+                'name': 'input2',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'keepDimensions',
+                'mappingRuleType': 1
+            },
+        ]
+    },
+    'REDUCE_SUM': {
+        'webnnOperation': 'reduceSum',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'axes',
+                'mappingRuleType': 3
+            },
+            {
+                'name': 'input2',
+                'mappingParamIndex': 1,
+                'optionsDictKey': 'keepDimensions',
+                'mappingRuleType': 1
+            },
+        ]
+    },
     'RELU': {
         'webnnOperation': 'relu',
         'insList': [
