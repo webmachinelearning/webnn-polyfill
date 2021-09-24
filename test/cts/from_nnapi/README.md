@@ -5,55 +5,51 @@ This [test_generator](./test_generator) tool is for converting existed native
 [NNAPI CTS](https://android.googlesource.com/platform/frameworks/ml/+/refs/tags/android-cts-10.0_r5/nn/runtime/test/specs/) of V1_0, V1_1 and V1_2 versions to these tests for WebNN API.
 
 ### NNAPI Operations being map to WebNN API Operations Tables
-* Part I 
 
 The `test_generator` tool has supported to convert those tests of following
-NNAPI operations to the tests for such WebNN API operations of first wave.
+NNAPI operations to the tests for such WebNN API operations.
 
-| NNAPI                         | WebNN API (first wave ops)    |
-|:------------------------------|:------------------------------|
-| RELU1                         | clamp                         |
-| RELU6                         | clamp                         |
-| CONCATENATION                 | concat                        |
-| ADD                           | add [+ relu/clamp]            |
-| SUB                           | sub [+ relu/clamp]            |
-| MUL                           | mul [+ relu/clamp]            |
-| DIV                           | div [+ relu/clamp]            |
-| MAXIMUM                       | max                           |
-| MINIMUM                       | min                           |
-| EXP                           | exp                           |
-| LOGISTIC                      | sigmoid                       |
-| SQRT                          | pow                           |
-| TANH                          | tanh                          |
-| FULLY_CONNECTED               | matmul [+ add+ relu/clamp]    |
-| AVERAGE_POOL_2D               | averagePool2d [+ relu/clamp]  |
-| MAX_POOL_2D                   | maxPool2d  [+ relu/clamp]     |
-| CONV_2D                       | conv2d [+ add + relu/clamp]   |
-| DEPTHWISE_CONV_2D             | conv2d [+ add + relu/clamp]   |
-| RELU                          | relu                          |
-| RESHAPE                       | reshape                       |
-| SLICE                         | slice                         |
-| SOFTMAX                       | softmax                       |
-| SPLIT                         | split                         |
-| SQUEEZE                       | squeeze                       |
-| TRANSPOSE                     | transpose                     |
-| PAD                           | pad                           |
-| PAD_V2                        | pad                           |
-| POW                           | pow                           |
-
-* Part II
-
-And there're these following NNAPI operations which could be map to others
-WebNN API operations of next waves.
-
-| NNAPI                         | WebNN API (next waves ops)     |
-|:------------------------------|:------------------------------|
-| ABS                           | abs                           |
-| FLOOR                         | floor                         |
-| LOG                           | log                           |
-| NEG                           | neg                           |
-| SIN                           | sin                           |
-| L2_POOL_2D                    | l2Pool2d  [+ relu/clamp]      |
+| NNAPI                         | WebNN API                            |
+|:------------------------------|:-------------------------------------|
+| RELU1                         | clamp                                |
+| RELU6                         | clamp                                |
+| CONCATENATION                 | concat                               |
+| CONV_2D                       | conv2d/conv2d [+ add + relu/clamp]   |
+| DEPTHWISE_CONV_2D             | conv2d/conv2d [+ add + relu/clamp]   |
+| ADD                           | add [+ relu/clamp]                   |
+| SUB                           | sub [+ relu/clamp]                   |
+| MUL                           | mul [+ relu/clamp]                   |
+| DIV                           | div [+ relu/clamp]                   |
+| MAXIMUM                       | max                                  |
+| MINIMUM                       | min                                  |
+| POW                           | pow                                  |
+| SQRT                          | pow                                  |
+| ABS                           | abs                                  |
+| EXP                           | exp                                  |
+| FLOOR                         | floor                                |
+| LOG                           | log                                  |
+| NEG                           | neg                                  |
+| SIN                           | sin                                  |
+| INSTANCE_NORMALIZATION        | instanceNormalization                |
+| FULLY_CONNECTED               | matmul [+ add+ relu/clamp]           |
+| PAD                           | pad                                  |
+| PAD_V2                        | pad                                  |
+| AVERAGE_POOL_2D               | averagePool2d [+ relu/clamp]         |
+| L2_POOL_2D                    | l2Pool2d  [+ relu/clamp]             |
+| MAX_POOL_2D                   | maxPool2d  [+ relu/clamp]            |
+| REDUCE_MAX                    | reduceMax                            |
+| REDUCE_MIN                    | reduceMin                            |
+| REDUCE_PROD                   | reduceProduct                        |
+| REDUCE_SUM                    | reduceSum                            |
+| RELU                          | relu                                 |
+| RESHAPE                       | reshape                              |
+| LOGISTIC                      | sigmoid                              |
+| SLICE                         | slice                                |
+| SOFTMAX                       | softmax                              |
+| SPLIT                         | split                                |
+| SQUEEZE                       | squeeze                              |
+| TANH                          | tanh                                 |
+| TRANSPOSE                     | transpose                            |
 
 * Note: 
 
