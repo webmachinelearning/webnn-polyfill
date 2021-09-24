@@ -120,6 +120,18 @@ def SupportedConvertDepthwiseConv2D(inOprand, outOprand, layout):
 
     return flag
 
+
+def SupportedConvertReduce(inOprand, paramsList, insList):
+    flag = True
+    # Use 1 is for input1: A 1-D tensor of ANEURALNETWORKS_TENSOR_INT32.
+    #                      The dimensions to reduce
+    s, v = GetParamOperandValue(paramsList, insList, 1)
+
+    if len(inOprand.dimensions) < len(v):
+        flag = False
+
+    return flag
+
 def GetOperandIndex(opInfoList, opName):
     index = 0
     found = False
@@ -539,6 +551,13 @@ def DumpCtsTest(example, test, fused):
             ClearMappingWebNNOpConfiguration()
             return
 
+    if nnapiOp.startswith('REDUCE'):
+        if not SupportedConvertReduce(curInputsList[0],
+                                      curParamsList,
+                                      curOpInsList):
+            ClearMappingWebNNOpConfiguration()
+            return
+
     # for 1D scale and bias options of WebNN instanceNormalization op
     size = None
 
@@ -620,8 +639,17 @@ def DumpCtsTest(example, test, fused):
                             varValue = "'nchw'"
                         else:
                             varValue = "'nhwc'"
-                    IndentedPrint('const %s = %s;' % (op, varValue), indent=4,
-                                  file=test)
+                    if type(varValue) is bool:
+                        # Python use True/False, JavaScript use true/false as boolean value
+                        if varValue:
+                            IndentedPrint('const %s = true;' % op, indent=4,
+                                          file=test)
+                        else:
+                            IndentedPrint('const %s = false;' % op, indent=4,
+                                          file=test)
+                    else:
+                        IndentedPrint('const %s = %s;' % (op, varValue),
+                                      indent=4, file=test)
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
                     varValue = curParamsList[curParamsList.index(op)].value
                     if len(varValue) != 0 and varValue[0] is not None:
