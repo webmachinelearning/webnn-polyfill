@@ -833,6 +833,136 @@ MappingDict = {
             }
         ]
     },
+    'RESIZE_BILINEAR': {
+        'webnnOperation': 'resample2d',
+        'insList': {
+            'shape': [
+                {
+                    'name': 'input',
+                    'mappingParamIndex': 0,
+                    'mappingRuleType': 0
+                },
+                {
+                    'name': 'outputWidth',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'sizes',
+                    'sequenceIndex': 1,
+                    'mappingRuleType': 1
+                },
+                {
+                    'name': 'outputHeight',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'sizes',
+                    'sequenceIndex': 0,
+                    'mappingRuleType': 1
+                },            
+            ],
+            'scale': [
+                {
+                    'name': 'input',
+                    'mappingParamIndex': 0,
+                    'mappingRuleType': 0
+                },
+                {
+                    'name': 'widthScale',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'scales',
+                    'sequenceIndex': 1,
+                    'mappingRuleType': 1
+                },
+                {
+                    'name': 'heightScale',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'scales',
+                    'sequenceIndex': 0,
+                    'mappingRuleType': 1
+                },            
+            ], 
+        },
+        'optionalInsList': [
+            {
+                'name': 'layout',
+                'mappingParamIndex': -1,
+                'optionsDictKey': 'axes',
+                'mappingRuleType': 2
+            },
+            {
+                'name': 'alignCorners',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'halfPixelCenters',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 1
+            }                        
+        ]                
+    },
+    'RESIZE_NEAREST_NEIGHBOR': {
+        'webnnOperation': 'resample2d',
+        'insList': {
+            'shape': [
+                {
+                    'name': 'input',
+                    'mappingParamIndex': 0,
+                    'mappingRuleType': 0
+                },
+                {
+                    'name': 'outputWidth',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'sizes',
+                    'sequenceIndex': 1,
+                    'mappingRuleType': 1
+                },
+                {
+                    'name': 'outputHeight',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'sizes',
+                    'sequenceIndex': 0,
+                    'mappingRuleType': 1
+                },            
+            ],
+            'scale': [
+                {
+                    'name': 'input',
+                    'mappingParamIndex': 0,
+                    'mappingRuleType': 0
+                },
+                {
+                    'name': 'widthScale',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'scales',
+                    'sequenceIndex': 1,
+                    'mappingRuleType': 1
+                },
+                {
+                    'name': 'heightScale',
+                    'mappingParamIndex': 1,
+                    'optionsDictKey': 'scales',
+                    'sequenceIndex': 0,
+                    'mappingRuleType': 1
+                },            
+            ], 
+        },
+        'optionalInsList': [
+            {
+                'name': 'layout',
+                'mappingParamIndex': -1,
+                'optionsDictKey': 'axes',
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'alignCorners',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 1
+            },
+            {
+                'name': 'halfPixelCenters',
+                'mappingParamIndex': -1,
+                'mappingRuleType': 1
+            }                        
+        ]                
+    },
     'SIN': {
         'webnnOperation': 'sin',
         'insList': [
