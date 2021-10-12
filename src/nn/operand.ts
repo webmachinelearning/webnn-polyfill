@@ -77,7 +77,7 @@ export class ConstantOperand extends MLOperand {
     const array = value as ArrayBufferView;
     utils.validateOperandDescriptor(desc);
     utils.validateTypedArray(array, desc.type, desc.dimensions);
-    return new ConstantOperand(desc, array, builder);
+    return new ConstantOperand(desc, array.slice(), builder);
   }
 
   private constructor(
