@@ -30,6 +30,18 @@ export function isTypedArray(array: MLBufferView|WebGLTexture): boolean {
       array instanceof Uint8Array;
 }
 
+export function isValidResample2dAxes(array: number[]): boolean {
+  if (array[0] === 0 && array[1] === 1) {
+    return true;
+  } else if (array[0] === 1 && array[1] === 2) {
+    return true;
+  } else if (array[0] === 2 && array[1] === 3) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export function getTypedArray(type: MLOperandType): Float32ArrayConstructor|
     Int32ArrayConstructor|Uint32ArrayConstructor|Uint16ArrayConstructor|
     Int8ArrayConstructor|Uint8ArrayConstructor {

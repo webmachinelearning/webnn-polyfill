@@ -32,7 +32,8 @@ export class Resample2d extends SingleOutputOperation {
     }
     if (options.axes !== undefined) {
       utils.assert(
-          utils.isIntegerArray(options.axes) && options.axes.length === 2,
+          utils.isIntegerArray(options.axes) && options.axes.length === 2 &&
+              utils.isValidResample2dAxes(options.axes),
           'The axes parameter is invalid.');
       this.axes_ = options.axes;
     }
@@ -60,22 +61,13 @@ export class Resample2d extends SingleOutputOperation {
         sizes[0] = this.sizes_[0];
         sizes[1] = this.sizes_[1];
     } else if (this.scales_ !== undefined) {
-      if (this.axes_[0] === 2 && this.axes_[1] === 3) {
-        // nchw
-        sizes[0] = Math.floor(input.shape[2] * this.scales_[0]);
-        sizes[1] = Math.floor(input.shape[3] * this.scales_[1]);
-      } else if (this.axes_[0] === 1 && this.axes_[1] === 2) {
-        // nhwc
-        sizes[0] = Math.floor(input.shape[1] * this.scales_[0]);
-        sizes[1] = Math.floor(input.shape[2] * this.scales_[1]);
-      } else if (this.axes_[0] === 0 && this.axes_[1] === 1) {
-        sizes[0] = Math.floor(input.shape[0] * this.scales_[0]);
-        sizes[1] = Math.floor(input.shape[1] * this.scales_[1]);
-      } else {
-        throw new Error('axes parameter is invalid.');
-      }
+        sizes[0] = Math.floor(input.shape[this.axes_[0]] * this.scales_[0]);
+        sizes[1] = Math.floor(input.shape[this.axes_[1]] * this.scales_[1]);
     }
-    if (this.axes_[0] === 2 && this.axes_[1] === 3) {
+    if (this.axes_[0] === 0) {
+      // hwnc -> nhwc
+      input = tf.transpose(input, [2, 0, 1, 3]);
+    } else if (this.axes_[0] === 2) {
       // nchw -> nhwc
       input = tf.transpose(input, [0, 2, 3, 1]);
     }
@@ -85,7 +77,10 @@ export class Resample2d extends SingleOutputOperation {
     } else if (this.mode_ === MLInterpolationMode.linear) {
       output = tf.image.resizeBilinear(input, sizes, false, true);
     }
-    if (this.axes_[0] === 2 && this.axes_[1] === 3) {
+    if (this.axes_[0] === 0) {
+      // nhwc -> hwnc
+      output = tf.transpose(output, [1, 2, 0, 3]);
+    } else if (this.axes_[0] === 2) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
     }
