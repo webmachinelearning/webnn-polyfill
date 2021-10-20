@@ -398,6 +398,8 @@ def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList):
             targetValue['filterLayout'] = 'ohwi'
         elif operation == 'DEPTHWISE_CONV_2D':
             targetValue['filterLayout'] = 'ihwo'
+        elif operation == 'RESIZE_BILINEAR':
+            targetValue['mode'] = 'linear'
 
 def GetWebNNParamsString(params):
     paramsList = [p[1] for p in params]
@@ -460,6 +462,13 @@ def PrintOperations(biasOp, webnnOpType, webnnParamsStr, fusedReluMappedInfo,
                 PrintMappedReluOpertions(fusedReluMappedInfo[1], outputOp,
                                          webnnParamsStr)
         else:
+            if webnnOpType == 'resample2d':
+                if webnnParamsStr.find('nhwc') != -1:
+                    webnnParamsStr = webnnParamsStr.replace(
+                        "'layout': 'nhwc'", "'axes': [1, 2]")
+                elif webnnParamsStr.find('nchw') != -1:
+                    webnnParamsStr = webnnParamsStr.replace(
+                        "'layout': 'nchw'", "'axes': [2, 3]")
             IndentedPrint("const %s = builder.%s(%s);" % \
                           (outputOp, webnnOpType, webnnParamsStr),
                           indent=4, file=test)
@@ -500,7 +509,12 @@ def DumpCtsTest(example, test, fused):
         # Update mappingWebNNOp by first time
         Configuration.mappingWebNNOp.append(mappedWebNNOp)
 
-    nnapiOpInsList = copy.deepcopy(mappingOpDict['insList'])
+    if nnapiOp not in ['RESIZE_BILINEAR', 'RESIZE_NEAREST_NEIGHBOR']:
+        nnapiOpInsList = copy.deepcopy(mappingOpDict['insList'])
+    else:
+        insType = 'shape' if model.operations[0].ins[1].type.type == 'INT32' else 'scale'
+        nnapiOpInsList = copy.deepcopy(mappingOpDict['insList'][insType])
+
     nnapiOpOptionalInsList = mappingOpDict.get('optionalInsList', [])
     curOpInsList = model.operations[0].ins
 
@@ -519,6 +533,17 @@ def DumpCtsTest(example, test, fused):
     curInputsList = example.model.GetInputs()
     curOutputsList = example.model.GetOutputs()
     curParamsList = example.model.GetParameters()
+
+    if nnapiOp in ['RESIZE_BILINEAR', 'RESIZE_NEAREST_NEIGHBOR']:
+        # resample2d just supports 'Half Pixel Centers' position offset
+        # Align corners
+        acStatus, acValue = GetParamOperandValue(curParamsList, curOpInsList, 4)
+        if acValue != None and acValue == True:
+            return
+        # Half pixel centers
+        hpcStatus, hpcValue = GetParamOperandValue(curParamsList, curOpInsList, 5)
+        if hpcStatus == False or hpcValue == False:
+            return
 
     fusedReluMappedInfo = None
     actIndex = GetOperandIndex(nnapiOpInsList, 'activation')
