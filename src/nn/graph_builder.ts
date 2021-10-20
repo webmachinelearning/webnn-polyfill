@@ -14,7 +14,7 @@ import {LeakyRelu} from './ops/leaky_relu';
 import {Pad} from './ops/pad';
 import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
 import {ReduceL1, ReduceL2, ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
-import {Resample} from './ops/resample';
+import {Resample2d} from './ops/resample2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
@@ -206,12 +206,13 @@ export enum MLInterpolationMode {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlresampleoptions)
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlresample2doptions)
  */
-export interface MLResampleOptions {
+export interface MLResample2dOptions {
   mode?: MLInterpolationMode;
-  scales?: [number, number, number, number];
-  sizes?: [number, number, number, number];
+  scales?: [number, number];
+  sizes?: [number, number];
+  axes?: [number, number];
 }
 
 /**
@@ -736,11 +737,11 @@ export class MLGraphBuilder {
   // end of reduction operations
 
   /**
-   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-resample)
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-resample2d)
    */
-  resample(input: MLOperand, options: MLResampleOptions = {}): MLOperand {
+  resample2d(input: MLOperand, options: MLResample2dOptions = {}): MLOperand {
     this.validateOperandBuilder([input]);
-    return (new Resample(input, options)).output;
+    return (new Resample2d(input, options)).output;
   }
 
   /**

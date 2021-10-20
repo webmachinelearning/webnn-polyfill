@@ -42,6 +42,8 @@ NNAPI operations to the tests for such WebNN API operations.
 | REDUCE_PROD                   | reduceProduct                        |
 | REDUCE_SUM                    | reduceSum                            |
 | RELU                          | relu                                 |
+| RESIZE_BILINEAR               | resample2d                           |
+| RESIZE_NEAREST_NEIGHBOR       | resample2d                           |
 | RESHAPE                       | reshape                              |
 | LOGISTIC                      | sigmoid                              |
 | SLICE                         | slice                                |
