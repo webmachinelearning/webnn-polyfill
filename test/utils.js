@@ -36,6 +36,22 @@ export function almostEqual(a, b, criteria) {
   }
 }
 
+function getBitwise(value) {
+  const buffer = new ArrayBuffer(4);
+  const view = new DataView(buffer);
+  view.setFloat32(0, value);
+  return view.getInt32(0);
+}
+
+export function compareUlp(a, b, nulp = 1, format = 'float32') {
+  assert(format === 'float32', `Format ${format} is not supported.`);
+  const aBitwise = getBitwise(a);
+  const bBitwise = getBitwise(b);
+  let distance = aBitwise - bBitwise;
+  distance = distance > 0 ? distance : -distance;
+  return distance > nulp;
+}
+
 export function checkValue(
     output, expected, criteria = opFp32AccuracyCriteria) {
   assert.isTrue(output.length === expected.length);
