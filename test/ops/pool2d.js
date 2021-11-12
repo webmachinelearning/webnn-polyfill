@@ -180,6 +180,160 @@ describe('test pool2d', function() {
     utils.checkValue(outputs.y, expected);
   });
 
+  it('maxPool2d autoPad explicit outputSizes=[3,3] nhwc ', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const outputSizes = [3, 3];
+    const y = builder.maxPool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, outputSizes});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 3, 3, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      17,
+      19,
+      21,
+      31,
+      33,
+      35,
+      45,
+      47,
+      49,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('maxPool2d autoPad explicit outputSizes=[4,4] nhwc ', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const outputSizes = [4, 4];
+    const y = builder.maxPool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, outputSizes});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      17,
+      19,
+      21,
+      21,
+      31,
+      33,
+      35,
+      35,
+      45,
+      47,
+      49,
+      49,
+      45,
+      47,
+      49,
+      49,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('maxPool2d autoPad explicit roundingType=floor nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const roundingType = 'floor';
+    const y = builder.maxPool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, roundingType});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 3, 3, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      17,
+      19,
+      21,
+      31,
+      33,
+      35,
+      45,
+      47,
+      49,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('maxPool2d autoPad explicit roundingType=ceil nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const roundingType = 'ceil';
+    const y = builder.maxPool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, roundingType});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      17,
+      19,
+      21,
+      21,
+      31,
+      33,
+      35,
+      35,
+      45,
+      47,
+      49,
+      49,
+      45,
+      47,
+      49,
+      49,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
   it('maxPool2d autoPad same-lower nhwc', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
@@ -447,6 +601,201 @@ describe('test pool2d', function() {
     utils.checkValue(outputs.y, expected);
   });
 
+  it('averagePool2d autoPad explicit nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [2, 1, 2, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const y = builder.averagePool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      5,
+      6,
+      8,
+      9.5,
+      12,
+      13,
+      15,
+      16.5,
+      26,
+      27,
+      29,
+      30.5,
+      36.5,
+      37.5,
+      39.5,
+      41,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('averagePool2d autoPad explicit outputSizes=[3,3] nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const outputSizes = [3, 3];
+    const y = builder.averagePool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, outputSizes});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 3, 3, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      9,
+      10.5,
+      12.5,
+      19.5,
+      21,
+      23,
+      33.5,
+      35,
+      37,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('averagePool2d autoPad explicit outputSizes=[4,4] nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const outputSizes = [4, 4];
+    const y = builder.averagePool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, outputSizes});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      9,
+      10.5,
+      12.5,
+      13.5,
+      19.5,
+      21,
+      23,
+      24,
+      33.5,
+      35,
+      37,
+      38,
+      40.5,
+      42,
+      44,
+      45,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('averagePool2d autoPad explicit roundingType=floor nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const roundingType = 'floor';
+    const y = builder.averagePool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, roundingType});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 3, 3, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      9,
+      10.5,
+      12.5,
+      19.5,
+      21,
+      23,
+      33.5,
+      35,
+      37,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('averagePool2d autoPad explicit roundingType=ceil nhwc', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const windowDimensions = [4, 4];
+    const padding = [1, 1, 1, 1];
+    const strides = [2, 2];
+    const autoPad = 'explicit';
+    const layout = 'nhwc';
+    const roundingType = 'ceil';
+    const y = builder.averagePool2d(
+        x, {windowDimensions, autoPad, padding, strides, layout, roundingType});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array([
+        1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+        35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+      ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 4, 4, 1]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      9,
+      10.5,
+      12.5,
+      13.5,
+      19.5,
+      21,
+      23,
+      24,
+      33.5,
+      35,
+      37,
+      38,
+      40.5,
+      42,
+      44,
+      45,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
   it('averagePool2d autoPad same-lower nhwc', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
@@ -656,6 +1005,156 @@ describe('test pool2d', function() {
     utils.checkValue(outputs.y, expected);
   });
 
+  it('l2Pool2d pads outputSizes=[3,3]', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const outputSizes = [3, 3];
+    const y =
+        builder.l2Pool2d(x, {windowDimensions, strides, padding, outputSizes});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [
+            1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+          ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 3, 3]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      10.692676544189453,
+      12.006942749023438,
+      13.790093421936035,
+      21.027759552001953,
+      22.438806533813477,
+      24.320772171020508,
+      34.41172409057617,
+      35.881752014160156,
+      37.835166931152344,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d pads outputSizes=[4,4]', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const outputSizes = [4, 4];
+    const y =
+        builder.l2Pool2d(x, {windowDimensions, strides, padding, outputSizes});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [
+            1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+          ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 4, 4]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      10.692676544189453,
+      12.006942749023438,
+      13.790093421936035,
+      14.668560981750488,
+      21.027759552001953,
+      22.438806533813477,
+      24.320772171020508,
+      25.248762130737305,
+      34.41172409057617,
+      35.881752014160156,
+      37.835166931152344,
+      38.80077362060547,
+      40.65915298461914,
+      42.16040802001953,
+      44.153141021728516,
+      45.138675689697266,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d pads roundingType=floor', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const roundingType = 'floor';
+    const y =
+        builder.l2Pool2d(x, {windowDimensions, strides, padding, roundingType});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [
+            1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+          ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 3, 3]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      10.692676544189453,
+      12.006942749023438,
+      13.790093421936035,
+      21.027759552001953,
+      22.438806533813477,
+      24.320772171020508,
+      34.41172409057617,
+      35.881752014160156,
+      37.835166931152344,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
+  it('l2Pool2d pads roundingType=ceil', function() {
+    const builder = new MLGraphBuilder(context);
+    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const windowDimensions = [4, 4];
+    const strides = [2, 2];
+    const padding = [1, 1, 1, 1];
+    const roundingType = 'ceil';
+    const y =
+        builder.l2Pool2d(x, {windowDimensions, strides, padding, roundingType});
+    const graph = builder.build({y});
+    const inputs = {
+      'x': new Float32Array(
+          [
+            1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
+            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
+            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49,
+          ]),
+    };
+    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 4, 4]))};
+    graph.compute(inputs, outputs);
+    const expected = [
+      10.692676544189453,
+      12.006942749023438,
+      13.790093421936035,
+      14.668560981750488,
+      21.027759552001953,
+      22.438806533813477,
+      24.320772171020508,
+      25.248762130737305,
+      34.41172409057617,
+      35.881752014160156,
+      37.835166931152344,
+      38.80077362060547,
+      40.65915298461914,
+      42.16040802001953,
+      44.153141021728516,
+      45.138675689697266,
+    ];
+    utils.checkValue(outputs.y, expected);
+  });
+
   it('l2Pool2d pads nhwc', function() {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
@@ -682,25 +1181,6 @@ describe('test pool2d', function() {
     const strides = [3, 3];
     const autoPad = 'same-upper';
     const y = builder.l2Pool2d(x, {windowDimensions, strides, autoPad});
-    const graph = builder.build({y});
-    const inputs = {
-      'x': new Float32Array(
-          [-1, 2, 0, 3, -2, 0, 0, -4]),
-    };
-    const outputs = {y: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
-    graph.compute(inputs, outputs);
-    const expected = [1.5, 2.5];
-    utils.checkValue(outputs.y, expected);
-  });
-
-  it('l2Pool2d same-upper nhwc', function() {
-    const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
-    const windowDimensions = [3, 3];
-    const strides = [3, 3];
-    const autoPad = 'same-upper';
-    const layout = 'nhwc';
-    const y = builder.l2Pool2d(x, {windowDimensions, strides, autoPad, layout});
     const graph = builder.build({y});
     const inputs = {
       'x': new Float32Array(

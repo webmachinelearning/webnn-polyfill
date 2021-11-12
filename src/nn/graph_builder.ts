@@ -177,6 +177,15 @@ export interface MLPadOptions {
   value?: number;
 }
 
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlroundingtype)
+ */
+ export enum  MLRoundingType {
+  'floor' = 'floor',
+  'ceil' = 'ceil'
+}
+
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlpool2doptions)
  */
@@ -187,6 +196,8 @@ export interface MLPooling2dOptions {
   dilations?: [number, number];
   autoPad?: MLAutoPad;
   layout?: MLInputOperandLayout;
+  roundingType?: MLRoundingType;
+  outputSizes?: [number, number];
 }
 
 /**
