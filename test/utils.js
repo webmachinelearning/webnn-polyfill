@@ -36,19 +36,21 @@ export function almostEqual(a, b, criteria) {
   }
 }
 
-function getBitwise(value) {
-  const buffer = new ArrayBuffer(4);
-  const view = new DataView(buffer);
-  view.setFloat32(0, value);
-  return view.getInt32(0);
+export function getBitwiseFloat32(value) {
+  const buffer = new ArrayBuffer(8);
+  const int64Array = new BigInt64Array(buffer);
+  int64Array[0] = value < 0 ? ~BigInt(0) : BigInt(0);
+  const f32Array = new Float32Array(buffer);
+  f32Array[0] = value;
+  return int64Array[0];
 }
 
-export function compareUlp(a, b, nulp = 1, format = 'float32') {
-  assert(format === 'float32', `Format ${format} is not supported.`);
-  const aBitwise = getBitwise(a);
-  const bBitwise = getBitwise(b);
+export function compareUlp(a, b, nulp = 1n, dataType = 'float32') {
+  assert(dataType === 'float32', `DataType ${dataType} is not supported.`);
+  const aBitwise = getBitwiseFloat32(a);
+  const bBitwise = getBitwiseFloat32(b);
   let distance = aBitwise - bBitwise;
-  distance = distance > 0 ? distance : -distance;
+  distance = distance >= 0 ? distance : -distance;
   return distance > nulp;
 }
 
