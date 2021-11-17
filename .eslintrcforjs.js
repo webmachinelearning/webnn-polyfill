@@ -11,6 +11,7 @@ module.exports = {
     'MLGraph': 'readonly',
     'MLOperand': 'readonly',
     '_tfengine': 'readonly',
+    'BigInt': 'readonly',
     'BigInt64Array': 'readonly',
     'BigUint64Array': 'readonly',
     'fs': 'readonly',
