@@ -36,6 +36,49 @@ export function almostEqual(a, b, criteria) {
   }
 }
 
+/**
+ * Get bitwise of the given value.
+ * @param {number} value
+ * @param {string} dataType A data type string, like "float32", "int8",
+ *     more data type strings, please see:
+ *     https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype
+ * @return {number} A 64-bit signed integer.
+ */
+export function getBitwise(value, dataType) {
+  const buffer = new ArrayBuffer(8);
+  const int64Array = new BigInt64Array(buffer);
+  int64Array[0] = value < 0 ? ~BigInt(0) : BigInt(0);
+  let typedArray;
+  if (dataType === 'float32') {
+    typedArray = new Float32Array(buffer);
+  } else {
+    throw Error(`Data type ${dataType} is not supported.`);
+  }
+  typedArray[0] = value;
+  return int64Array[0];
+}
+
+/**
+ * Compare the distance between a and b with given ULP distance.
+ * @param {number} a
+ * @param {number} b
+ * @param {number} nulp A BigInt value.
+ * @param {string} dataType A data type string, default "float32",
+ *     more data type strings, please see:
+ *     https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype
+ * @return {Boolean} A boolean value:
+ *     true: The distance between a and b is greater than given ULP distance.
+ *     false: The distance between a and b is less than or equal to given ULP
+ *            distance.
+ */
+export function compareUlp(a, b, nulp = 1n, dataType = 'float32') {
+  const aBitwise = getBitwise(a, dataType);
+  const bBitwise = getBitwise(b, dataType);
+  let distance = aBitwise - bBitwise;
+  distance = distance >= 0 ? distance : -distance;
+  return distance > nulp;
+}
+
 export function checkValue(
     output, expected, criteria = opFp32AccuracyCriteria) {
   assert.isTrue(output.length === expected.length);
