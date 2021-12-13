@@ -740,6 +740,41 @@ describe('test convTranspose2d', function() {
     testConvTranspose2d(input, filter, expected, options);
   });
 
+  it('conv2d transpose autopad explicit default padding', function() {
+    const input = {
+      shape: [1, 1, 3, 3],
+      data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
+    };
+    const filter = {
+      shape: [1, 2, 3, 3],
+      data: new Float32Array(18).fill(1),
+    };
+    const expected = {
+      shape: [1, 7, 7, 2],
+      data: [
+        0, 0, 1, 1, 3, 2, 2,
+        0, 0, 1, 1, 3, 2, 2,
+        3, 3, 8, 5, 12, 7, 7,
+        3, 3, 7, 4, 9, 5, 5,
+        9, 9, 20, 11, 24, 13, 13,
+        6, 6, 13, 7, 15, 8, 8,
+        6, 6, 13, 7, 15, 8, 8,
+        0, 0, 1, 1, 3, 2, 2,
+        0, 0, 1, 1, 3, 2, 2,
+        3, 3, 8, 5, 12, 7, 7,
+        3, 3, 7, 4, 9, 5, 5,
+        9, 9, 20, 11, 24, 13, 13,
+        6, 6, 13, 7, 15, 8, 8,
+        6, 6, 13, 7, 15, 8, 8,
+      ],
+    };
+    const options = {
+      autoPad: 'explicit',
+      strides: [2, 2],
+    };
+    testConvTranspose2d(input, filter, expected, options);
+  });
+
   it('conv2d transpose autopad explicit nchw iohw', function() {
     const input = {
       shape: [1, 1, 3, 3],

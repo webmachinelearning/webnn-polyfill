@@ -35,11 +35,6 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     utils.validateOperand(filter);
     this.filter_ = filter;
 
-    utils.assert(
-        !(options.autoPad === MLAutoPad.explicit &&
-          options.padding === undefined),
-        'The padding parameter should be assigned when autoPad is explicit.');
-
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
         options.inputLayout, options.filterLayout, options.autoPad, 
