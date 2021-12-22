@@ -21,7 +21,6 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private inputLayout_?: MLInputOperandLayout;
   private filterLayout_?: MLConv2dFilterOperandLayout;
   private autoPad_?: MLAutoPad;
-  private outputPadding_?: [number, number];
   private activation_?: MLOperator;
   private fusedActivation_?: tf.fused.Activation;
   private leakyreluAlpha_?: number;
@@ -38,7 +37,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
         options.inputLayout, options.filterLayout, options.autoPad, 
-        options.outputPadding, options.bias, options.activation);
+        options.bias, options.activation);
   }
 
   private initOptions(
@@ -47,8 +46,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       groups = 1, inputLayout: MLInputOperandLayout = MLInputOperandLayout.nchw,
       filterLayout: 
       MLConv2dFilterOperandLayout = MLConv2dFilterOperandLayout.oihw,
-      autoPad: MLAutoPad = MLAutoPad.explicit, 
-      outputPadding: [number, number] = [0, 0], bias: MLOperand = undefined,
+      autoPad: MLAutoPad = MLAutoPad.explicit, bias: MLOperand = undefined,
       activation: MLOperator = undefined) {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
@@ -80,8 +78,6 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
 
     utils.assert(autoPad in MLAutoPad, 'The autoPad parameter is invalid.');
     this.autoPad_ = autoPad;
-
-    this.outputPadding_ = outputPadding;
     
     this.bias_ = bias;
     if (this.bias_) {
@@ -176,7 +172,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       filter = this.filterTensor_;
     }
     const padding: 'valid'|'same'|ExplicitPadding = utils.getPaddings(
-        input, filter, this.padding_, this.strides_, this.outputPadding_,
+        input, filter, this.padding_, this.strides_, [0, 0],
         this.dilations_, this.autoPad_);
     let output;
     

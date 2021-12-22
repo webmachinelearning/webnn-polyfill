@@ -54,7 +54,7 @@ export interface MLClampOptions {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlfilteroperandlayout)
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlconv2dfilteroperandlayout)
  */
 export enum MLConv2dFilterOperandLayout {
   'oihw' = 'oihw',
@@ -79,7 +79,6 @@ export interface MLConv2dOptions {
   padding?: [number, number, number, number];
   strides?: [number, number];
   dilations?: [number, number];
-  outputPadding?: [number, number];
   autoPad?: MLAutoPad;
   groups?: number;
   inputLayout?: MLInputOperandLayout;
@@ -89,7 +88,7 @@ export interface MLConv2dOptions {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlfilteroperandlayout)
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlconvtranspose2dfilteroperandlayout)
  */
 export enum MLConvTranspose2dFilterOperandLayout {
   'iohw' = 'iohw',

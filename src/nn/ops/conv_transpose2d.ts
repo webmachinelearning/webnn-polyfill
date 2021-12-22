@@ -70,9 +70,13 @@ export class ConvTranspose2d extends SingleOutputOperation
         utils.isIntegerArray(dilations) && dilations.length === 2,
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
+    utils.assert(this.dilations_.every(v => v === 1), 
+      'The tf.conv2dTranspose does not support dilations parameter.');
 
     utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
     this.groups_ = groups;
+    utils.assert(this.groups_ === 1, 
+      'The tf.conv2dTranspose does not support groups parameter.');
 
     utils.assert(
         inputLayout in MLInputOperandLayout,
@@ -153,7 +157,6 @@ export class ConvTranspose2d extends SingleOutputOperation
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     let filter: tf.Tensor4D;
     let bias: tf.Tensor1D;
-    const fused = false;
     if (this.bias_) {
       bias = inputTensors.get(this.bias_) as tf.Tensor1D;
     }
@@ -212,22 +215,20 @@ export class ConvTranspose2d extends SingleOutputOperation
     }
     output = tf.conv2dTranspose(
         input, filter, outputShape, this.strides_, padding);
-    if (!fused) {
-      if (bias) {
-        // output is still nhwc
-        output = tf.add(output, bias);
-      }
-      if (this.fusedActivation_ === 'relu') {
-        output = tf.relu(output);
-      } else if (this.fusedActivation_ === 'relu6') {
-        output = tf.clipByValue(output, 0, 6);
-      } else if (this.fusedActivation_ === 'leakyrelu') {
-        output = tf.leakyRelu(output, this.leakyreluAlpha_);
-      } else if (this.fusedActivation_ === 'sigmoid') {
-        output = tf.sigmoid(output);
-      } else if (this.fusedActivation_ !== undefined) {
-        utils.assert(false, `The ${this.fusedActivation_} is un supported.`);
-      }
+    if (bias) {
+      // output is still nhwc
+      output = tf.add(output, bias);
+    }
+    if (this.fusedActivation_ === 'relu') {
+      output = tf.relu(output);
+    } else if (this.fusedActivation_ === 'relu6') {
+      output = tf.clipByValue(output, 0, 6);
+    } else if (this.fusedActivation_ === 'leakyrelu') {
+      output = tf.leakyRelu(output, this.leakyreluAlpha_);
+    } else if (this.fusedActivation_ === 'sigmoid') {
+      output = tf.sigmoid(output);
+    } else if (this.fusedActivation_ !== undefined) {
+      utils.assert(false, `The ${this.fusedActivation_} is un supported.`);
     }
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
