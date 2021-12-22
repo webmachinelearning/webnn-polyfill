@@ -206,6 +206,9 @@ export function product(array: number[]): number {
 }
 
 export function checkShape(actual: number[], expected: number[]): void {
+  assert(actual.length === expected.length,
+    `The actual length ${actual.length} is not equal to expected length ` +
+    `${expected.length}.`);
   for (let i = 0; i < actual.length; ++i) {
     assert(
       actual[i] === expected[i],

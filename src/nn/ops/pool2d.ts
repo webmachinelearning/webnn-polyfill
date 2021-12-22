@@ -84,7 +84,13 @@ export abstract class Pool extends SingleOutputOperation {
     return [this.input_];
   }
 
-  calculateShape(
+  /**
+   * Calcuate output sizes for a given input shape and round type.
+   * @param inputShape - A shape array of [N, H, W, C]
+   * @param roundingType - String value: 'ceil' | 'floor' | 'round'
+   * @returns output sizes array of [outputHeight, outputWidth].
+   */
+  calculateOutputSizes(
       inputShape:[number, number, number, number],
       roundingType?: 'ceil' | 'floor' | 'round'): [number, number] {
     // nhwc layout
@@ -162,7 +168,7 @@ export abstract class Pool extends SingleOutputOperation {
     if (this.outputSizes_ !== undefined) {
       let isValidOutputSizes = false;
       for (const t of [undefined, 'ceil', 'floor', 'round']) {
-        const [outputRows, outputCols] = this.calculateShape(input.shape,
+        const [outputRows, outputCols] = this.calculateOutputSizes(input.shape,
             t as 'ceil'|'floor'|'round');
         if (this.outputSizes_[0] === outputRows
             && this.outputSizes_[1] === outputCols) {
@@ -181,7 +187,7 @@ export abstract class Pool extends SingleOutputOperation {
       dimRoundingMode =
           this.roundingType_ === MLRoundingType.floor ? 'floor' : 'ceil';
       [outputHeight, outputWidth] =
-          this.calculateShape(input.shape, dimRoundingMode);
+          this.calculateOutputSizes(input.shape, dimRoundingMode);
     }
 
     if (this.layout_ === MLInputOperandLayout.nchw) {
