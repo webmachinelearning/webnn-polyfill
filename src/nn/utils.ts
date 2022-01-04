@@ -200,6 +200,23 @@ export function validateAxes(axes: number[], rank: number): boolean {
   return true;
 }
 
+export function product(array: number[]): number {
+  return array.reduce(
+      (accumulator, currentValue) => accumulator * currentValue);
+}
+
+export function checkShape(actual: number[], expected: number[]): void {
+  assert(actual.length === expected.length,
+    `The actual length ${actual.length} is not equal to expected length ` +
+    `${expected.length}.`);
+  for (let i = 0; i < actual.length; ++i) {
+    assert(
+      actual[i] === expected[i],
+      `${actual[i]} is not equal to ${expected[i]} of index ${i}.`
+      );
+  }
+}
+
 export function getPaddings(
     input: tf.Tensor4D, filter: tf.Tensor4D,
     padding: [number, number, number, number], strides: [number, number],
@@ -241,4 +258,31 @@ export function getPaddings(
     }
   }
   return resultPadding;
+}
+
+export function computeImplicitPaddingForAutoPad(
+    autoPad: MLAutoPad, dilation: number, inputSize: number,
+    filterSize: number, stride: number, paddingBegin: number,
+    paddingEnd: number): [number, number] {
+  const outSize = (inputSize + stride - 1) / stride;
+  const dilatedFilter = filterSize + (filterSize - 1) * (dilation - 1);
+  const neededInput = (outSize - 1) * stride + dilatedFilter;
+  const totalPadding = neededInput > inputSize ? neededInput - inputSize : 0;
+
+  switch(autoPad) {
+    case MLAutoPad['same-upper']: {
+      paddingBegin = Math.floor(totalPadding / 2);
+      paddingEnd = Math.floor((totalPadding + 1) / 2);
+      break;
+    }
+    case MLAutoPad['same-lower']: {
+      paddingBegin = Math.floor((totalPadding + 1) / 2);
+      paddingEnd = Math.floor(totalPadding / 2);
+      break;
+    }
+    default: {
+      break;
+    }
+  }
+  return [paddingBegin, paddingEnd];
 }
