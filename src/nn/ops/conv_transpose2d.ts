@@ -189,30 +189,28 @@ export class ConvTranspose2d extends SingleOutputOperation
     } else {
       filter = this.filterTensor_;
     }
-    const padding: 'valid'|'same'|ExplicitPadding = utils.getPaddings(
+    const padding: ExplicitPadding = utils.getPaddings(
         input, filter, this.padding_, this.strides_, this.outputPadding_,
         this.dilations_, this.autoPad_);
     let output;
-    if (this.autoPad_ !== MLAutoPad.explicit) {
-      this.outputSizes_ = [
-        input.shape[1] * this.strides_[0],
-        input.shape[2] * this.strides_[1],
-      ];
-    }
+
     // tf.convTranspose2d outputShape: [batch, height, width, outDepth]
     const outputShape: [number, number, number, number] =
         [input.shape[0], 0, 0, filter.shape[2]];
-    if (this.outputSizes_ === undefined) {
-      for (let i = 0; i < 2; ++i) {
-        outputShape[i + 1] = this.strides_[i] * (input.shape[i + 1] - 1) +
-            this.outputPadding_[i] +
-            ((filter.shape[i] - 1) * this.dilations_[i] + 1) -
-            this.padding_[i * 2] - this.padding_[i * 2 + 1];
-      }
-    } else {
+    if (this.outputSizes_ !== undefined) {
       outputShape[1] = this.outputSizes_[0];
-      outputShape[2] = this.outputSizes_[1];
+      outputShape[2] = this.outputSizes_[1]; 
+    } else {
+      // output size = (input size - 1) * stride + filter size +
+      //               (filter size - 1) * (dilations - 1) -
+      //               beginning padding - ending padding + output padding
+      for (let i = 0; i < 2; ++i) {
+        outputShape[i + 1] = (input.shape[i + 1] - 1) * this.strides_[i] +
+            ((filter.shape[i] - 1) * this.dilations_[i] + 1) -
+            padding[i + 1][0] - padding[i + 1][1] + this.outputPadding_[i];
+      }
     }
+  
     output = tf.conv2dTranspose(
         input, filter, outputShape, this.strides_, padding);
     if (bias) {
