@@ -66,7 +66,8 @@ export class Slice extends SingleOutputOperation {
       if (axis < 0) {
         axis = rank + axis;
       }
-      begin[axis] = this.starts_[i];
+      begin[axis] = this.starts_[i] >= 0 ? this.starts_[i] :
+          this.starts_[i] + input.shape[axis];
       size[axis] = this.sizes_[i];
     }
     return tf.slice(input, begin, size);
