@@ -92,15 +92,21 @@ export class ConvTranspose2d extends SingleOutputOperation
     this.autoPad_ = autoPad;
 
     utils.assert(
-        utils.isIntegerArray(outputPadding) && outputPadding.length === 2,
-        'The outputPadding parameter is invalid.');
-    this.outputPadding_ = outputPadding;
-
-    utils.assert(
         outputSizes === undefined ||
             (utils.isIntegerArray(outputSizes) && outputSizes.length === 2),
         'The outputSizes parameter is invalid.');
     this.outputSizes_ = outputSizes;
+
+    if (outputSizes === undefined) {
+      utils.assert(
+        utils.isIntegerArray(outputPadding) && outputPadding.length === 2,
+        'The outputPadding parameter is invalid.');
+      this.outputPadding_ = outputPadding;
+    } else {
+      // When the output sizes are explicitly specified, the output padding
+      // values in options.outputPadding are ignored.
+      this.outputPadding_ = [0, 0];
+    }
   
     this.bias_ = bias;
     if (this.bias_) {
@@ -174,8 +180,7 @@ export class ConvTranspose2d extends SingleOutputOperation
       } else if (
         this.filterLayout_ === MLConvTranspose2dFilterOperandLayout.ohwi) {
         filter = tf.transpose(filter, [1, 2, 0, 3]);
-      } 
-
+      }
       if (this.groups_ !== 1) {
         // filter layout hwoi
         // tf.depthwiseconvTranspose2d filter layout: [filterHeight,
@@ -193,7 +198,6 @@ export class ConvTranspose2d extends SingleOutputOperation
         input, filter, this.padding_, this.strides_, this.outputPadding_,
         this.dilations_, this.autoPad_);
     let output;
-
     // tf.convTranspose2d outputShape: [batch, height, width, outDepth]
     const outputShape: [number, number, number, number] =
         [input.shape[0], 0, 0, filter.shape[2]];
@@ -210,7 +214,6 @@ export class ConvTranspose2d extends SingleOutputOperation
             padding[i + 1][0] - padding[i + 1][1] + this.outputPadding_[i];
       }
     }
-  
     output = tf.conv2dTranspose(
         input, filter, outputShape, this.strides_, padding);
     if (bias) {
