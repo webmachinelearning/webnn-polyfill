@@ -194,7 +194,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       if ((padding instanceof Array && padding[1][0] === padding[1][1] &&
             padding[1][0] === padding[2][0] &&
             padding[1][0] === padding[2][1])) {
-        const fusedDepthwisePad: 'valid'|'same'|number = padding[1][0];
+        const fusedDepthwisePad: number = padding[1][0];
         output = tf.fused.depthwiseConv2d({
           x: input,
           filter,

@@ -209,8 +209,9 @@ export class ConvTranspose2d extends SingleOutputOperation
       //               (filter size - 1) * (dilations - 1) -
       //               beginning padding - ending padding + output padding
       for (let i = 0; i < 2; ++i) {
-        outputShape[i + 1] = (input.shape[i + 1] - 1) * this.strides_[i] +
-            ((filter.shape[i] - 1) * this.dilations_[i] + 1) -
+        outputShape[i + 1] =
+            (input.shape[i + 1] - 1) * this.strides_[i] + filter.shape[i] +
+            (filter.shape[i] - 1) * (this.dilations_[i] - 1) -
             padding[i + 1][0] - padding[i + 1][1] + this.outputPadding_[i];
       }
     }
