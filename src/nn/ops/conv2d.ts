@@ -171,7 +171,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else {
       filter = this.filterTensor_;
     }
-    const padding: 'valid'|'same'|ExplicitPadding = utils.getPaddings(
+    const padding: ExplicitPadding = utils.getPaddings(
         input, filter, this.padding_, this.strides_, [0, 0],
         this.dilations_, this.autoPad_);
     let output;
@@ -191,16 +191,10 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       fused = true;
     } else if (
         this.groups_ === inputChannels && this.groups_ === filter.shape[2]) {
-      if (padding === 'valid' || padding === 'same' ||
-          (padding instanceof Array && padding[1][0] === padding[1][1] &&
+      if ((padding instanceof Array && padding[1][0] === padding[1][1] &&
             padding[1][0] === padding[2][0] &&
             padding[1][0] === padding[2][1])) {
-        let fusedDepthwisePad: 'valid'|'same'|number;
-        if (padding === 'valid' || padding === 'same') {
-          fusedDepthwisePad = padding;
-        } else {
-          fusedDepthwisePad = padding[1][0];
-        }
+        const fusedDepthwisePad: number = padding[1][0];
         output = tf.fused.depthwiseConv2d({
           x: input,
           filter,
