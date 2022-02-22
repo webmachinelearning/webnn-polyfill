@@ -27,6 +27,12 @@ export class Concat extends SingleOutputOperation {
     for (const input of this.inputs()) {
       inputs.push(inputTensors.get(input));
     }
-    return tf.concat(inputs, this.axis_);
+    const outputShape = inputs[0].shape.slice();
+    for (let i = 1; i < inputs.length; ++i) {
+      outputShape[this.axis_] += inputs[i].shape[this.axis_];
+    }
+    const output = tf.concat(inputs, this.axis_);
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 }

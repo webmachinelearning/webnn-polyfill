@@ -26,6 +26,11 @@ export class Squeeze extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    return tf.squeeze(input, this.axes_);
+    const inpAxes = this.axes_ ?? [...Array(input.rank).keys()];
+    const outputShape = input.shape.filter(
+        (dim, axis) => !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+    const output = tf.squeeze(input, this.axes_);
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 }
