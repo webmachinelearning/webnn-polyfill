@@ -22,6 +22,9 @@ export class Softmax extends SingleOutputOperation {
     if (x.rank !== 2) {
       throw new Error('The rank of x parameter should be 2.');
     }
-    return tf.softmax(x);
+    const output: tf.Tensor = tf.softmax(x);
+    // The output shape is the same shape as the input
+    utils.checkShape(output.shape, x.shape);
+    return output;
   }
 }
