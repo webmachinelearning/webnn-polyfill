@@ -157,7 +157,6 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else if (this.filterLayout_ === MLConv2dFilterOperandLayout.ihwo) {
       filter = tf.transpose(filter, [1, 2, 0, 3]);
     }
-      
     if (this.groups_ !== 1) {
       // filter layout hwio
       // tf.depthwiseConv2d filter layout: [filterHeight, filterWidth,
@@ -171,9 +170,8 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else {
       filter = this.filterTensor_;
     }
-    const padding: ExplicitPadding = utils.getPaddings(
-        input, filter, this.padding_, this.strides_, [0, 0],
-        this.dilations_, this.autoPad_);
+    const padding: ExplicitPadding = utils.getPaddings(input, filter,
+        this.padding_, this.strides_, this.dilations_, this.autoPad_);
     let output;
     
     if (this.groups_ === 1) {

@@ -49,7 +49,7 @@ export class ConvTranspose2d extends SingleOutputOperation
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       groups = 1, inputLayout: MLInputOperandLayout = MLInputOperandLayout.nchw,
-      filterLayout: MLConvTranspose2dFilterOperandLayout = 
+      filterLayout: MLConvTranspose2dFilterOperandLayout =
       MLConvTranspose2dFilterOperandLayout.iohw,
       autoPad: MLAutoPad = MLAutoPad.explicit,
       outputPadding: [number, number] = [0, 0],
@@ -70,12 +70,12 @@ export class ConvTranspose2d extends SingleOutputOperation
         utils.isIntegerArray(dilations) && dilations.length === 2,
         'The dilations parameter is invalid.');
     this.dilations_ = dilations;
-    utils.assert(this.dilations_.every(v => v === 1), 
+    utils.assert(this.dilations_.every(v => v === 1),
       'The tf.conv2dTranspose does not support dilations parameter.');
 
     utils.assert(utils.isInteger(groups), 'The gourps parameter is invalid.');
     this.groups_ = groups;
-    utils.assert(this.groups_ === 1, 
+    utils.assert(this.groups_ === 1,
       'The tf.conv2dTranspose does not support groups parameter.');
 
     utils.assert(
@@ -107,7 +107,7 @@ export class ConvTranspose2d extends SingleOutputOperation
       // values in options.outputPadding are ignored.
       this.outputPadding_ = [0, 0];
     }
-  
+
     this.bias_ = bias;
     if (this.bias_) {
       utils.validateOperand(this.bias_);
@@ -182,10 +182,9 @@ export class ConvTranspose2d extends SingleOutputOperation
         filter = tf.transpose(filter, [1, 2, 0, 3]);
       }
       if (this.groups_ !== 1) {
-        // filter layout hwoi
-        // tf.depthwiseconvTranspose2d filter layout: [filterHeight,
-        // filterWidth, channelMultiplier, inChannels]
-        filter = tf.transpose(filter, [0, 1, 2, 3]);
+        // TODO
+        throw new Error(
+            'Unsupported the groups parameter by tfjs.convTranspose2d');
       }
       if (this.filter_ instanceof ConstantOperand) {
         this.filterTensor_ = filter;
@@ -195,15 +194,15 @@ export class ConvTranspose2d extends SingleOutputOperation
       filter = this.filterTensor_;
     }
     const padding: ExplicitPadding = utils.getPaddings(
-        input, filter, this.padding_, this.strides_, this.outputPadding_,
-        this.dilations_, this.autoPad_);
+        input, filter, this.padding_, this.strides_,
+        this.dilations_, this.autoPad_, this.outputPadding_);
     let output;
     // tf.convTranspose2d outputShape: [batch, height, width, outDepth]
     const outputShape: [number, number, number, number] =
         [input.shape[0], 0, 0, filter.shape[2]];
     if (this.outputSizes_ !== undefined) {
       outputShape[1] = this.outputSizes_[0];
-      outputShape[2] = this.outputSizes_[1]; 
+      outputShape[2] = this.outputSizes_[1];
     } else {
       // output size = (input size - 1) * stride + filter size +
       //               (filter size - 1) * (dilations - 1) -
@@ -235,7 +234,12 @@ export class ConvTranspose2d extends SingleOutputOperation
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
+      const outputChannel = outputShape[3];
+      outputShape[3] = outputShape[2];
+      outputShape[2] = outputShape[1];
+      outputShape[1] = outputChannel;
     }
+    utils.checkShape(output.shape, outputShape);
     return output;
   }
 
