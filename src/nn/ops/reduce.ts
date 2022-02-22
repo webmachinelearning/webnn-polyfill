@@ -41,7 +41,21 @@ abstract class Reduce extends SingleOutputOperation {
     utils.assert(
         utils.validateAxes(this.axes_, input.rank),
         `The axes must be in range [-${input.rank}, ${input.rank})`);
-    return this.runOp(input, this.axes_, this.keepDimensions_);
+    const inpAxes = this.axes_ ?? [...Array(input.rank).keys()];
+    let outputShape = input.shape.slice();
+    for (let i = 0; i < inpAxes.length; ++i) {
+      if (inpAxes[i] < 0) {
+        inpAxes[i] = input.rank + inpAxes[i];
+      }
+      outputShape[inpAxes[i]] = 1;
+    }
+    if (!this.keepDimensions_) {
+      outputShape = outputShape.filter((dim, axis) =>
+        !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+    }
+    const output = this.runOp(input, this.axes_, this.keepDimensions_);
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 
   abstract runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean):
