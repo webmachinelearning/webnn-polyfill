@@ -23,7 +23,28 @@ export abstract class Binary extends SingleOutputOperation {
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const a: tf.Tensor = inputTensors.get(this.a_);
     const b: tf.Tensor = inputTensors.get(this.b_);
-    return this.runOp(a, b);
+    let outputShape: number[];
+    if (this instanceof MatMul) {
+      const rankA = a.rank;
+      const rankB = b.rank;
+      if (rankA === 1 && rankB === 1) {
+        outputShape = [];
+      } else if (rankA === 2 && rankB === 1) {
+        outputShape = [a.shape[0], 1];
+      } else if (rankA === 1 && rankB === 2) {
+        outputShape = [1, b.shape[1]];
+      } else if (rankA >= 2 && rankB >= 2) {
+        outputShape = utils.getBroadcastShape(a.shape.slice(0, -2),
+            b.shape.slice(0, -2));
+        outputShape.push(a.shape[rankA - 2]);
+        outputShape.push(b.shape[rankB - 1]);
+      }
+    } else {
+      outputShape = utils.getBroadcastShape(a.shape, b.shape);
+    }
+    const output = this.runOp(a, b);
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 
   abstract runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor;
