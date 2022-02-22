@@ -40,8 +40,11 @@ export class Pad extends SingleOutputOperation {
             padding.shape[0] === input.rank,
         'The padding operand is invalid.');
     const paddingArray = padding.arraySync() as Array<[number, number]>;
+    const outputShape = input.shape.map(
+        (val, index) => val + paddingArray[index][0] + paddingArray[index][1]);
+    let output;
     if (this.mode_ === MLPaddingMode.constant) {
-      return tf.pad(input, paddingArray, this.value_);
+      output = tf.pad(input, paddingArray, this.value_);
     } else {
       if (this.mode_ === MLPaddingMode.edge) {
         const edgePaddings: Array<[number, number]> =
@@ -64,7 +67,7 @@ export class Pad extends SingleOutputOperation {
           }
           padded = tf.mirrorPad(padded, edgePaddings, 'symmetric');
         }
-        return padded;
+        output = padded;
       } else {
         let mode: 'reflect'|'symmetric';
         if (this.mode_ === MLPaddingMode.reflection) {
@@ -72,8 +75,10 @@ export class Pad extends SingleOutputOperation {
         } else if (this.mode_ === MLPaddingMode.symmetric) {
           mode = 'symmetric';
         }
-        return tf.mirrorPad(input, paddingArray, mode);
+        output = tf.mirrorPad(input, paddingArray, mode);
       }
     }
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 }
