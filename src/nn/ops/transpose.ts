@@ -26,6 +26,12 @@ export class Transpose extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    return tf.transpose(input, this.permutation_);
+    const inpPermutation = this.permutation_ ??
+        new Array(input.rank).fill(0).map((e, i, a) => a.length - i - 1);
+    const outputShape = new Array(input.rank).fill(0).map(
+        (_, i) => input.shape[inpPermutation[i]]);
+    const output = tf.transpose(input, this.permutation_);
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 }
