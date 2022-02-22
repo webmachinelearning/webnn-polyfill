@@ -24,7 +24,10 @@ export abstract class Unary extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const x: tf.Tensor = inputTensors.get(this.x_);
-    return this.runOp(x);
+    const output: tf.Tensor = this.runOp(x);
+    // The output shape is the same shape as the input
+    utils.checkShape(output.shape, x.shape);
+    return output;
   }
 
   abstract runOp(x: tf.Tensor): tf.Tensor;
