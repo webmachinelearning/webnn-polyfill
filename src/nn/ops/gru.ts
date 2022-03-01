@@ -184,8 +184,20 @@ export class Gru extends Operation {
             (sequence ? tf.concat([sequence, cellOutput], 0) : cellOutput);
       }
     }
-
-    return [hiddenState, sequence];
+    const outputs = [hiddenState];
+    //  the first output is 3-D tensor of shape
+    //    [num_directions, batch_size, hidden_size]    
+    const outputsShape = [[numDirections, input.shape[1], hiddenSize]];
+    if (returnSequence) {
+        outputs.push(sequence);
+        //  returnSequence true, the second output tensor of shape
+        //    [steps, num_directions, batch_size, hidden_size]
+        outputsShape.push([steps, numDirections, input.shape[1], hiddenSize]);
+    }
+    for (let i = 0; i < outputs.length; ++i) {
+      utils.checkShape(outputs[i].shape, outputsShape[i]);
+    }
+    return outputs;
   }
 }
 
@@ -347,13 +359,18 @@ export class GruCell extends SingleOutputOperation {
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
-    return GruCell.compute(
-        inputTensors.get(this.input_), inputTensors.get(this.weight_),
+    const input: tf.Tensor = inputTensors.get(this.input_);
+    const output = GruCell.compute(
+        input, inputTensors.get(this.weight_),
         inputTensors.get(this.recurrentWeight_),
         inputTensors.get(this.hiddenState_), this.hiddenSize_,
         this.activations_,
         this.bias_ ? inputTensors.get(this.bias_) : undefined,
         this.recurrentBias_ ? inputTensors.get(this.recurrentBias_) : undefined,
         this.resetAfter_, this.layout_);
+    // output shape [batch_size, hidden_size]
+    const outputShape = [input.shape[0], this.hiddenSize_];
+    utils.checkShape(output.shape, outputShape);
+    return output;
   }
 }
