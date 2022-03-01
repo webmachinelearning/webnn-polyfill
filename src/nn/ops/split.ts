@@ -22,7 +22,7 @@ export class Split extends Operation {
     utils.assert(
         options.axis === undefined || utils.isInteger(options.axis),
         'The options.axis is invalid.');
-    this.axis_ = options.axis;
+    this.axis_ = options.axis ?? 0;
 
     // Prepare outputs.
     const numOutputs =
@@ -38,6 +38,23 @@ export class Split extends Operation {
 
   computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[] {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    return tf.split(input, this.splits_, this.axis_);
+    const outputs = tf.split(input, this.splits_, this.axis_);
+    let sliceSizes = [];
+    if (typeof this.splits_ === 'number') {
+      sliceSizes =
+          new Array(this.splits_).fill(input.shape[this.axis_] / this.splits_);
+    } else {
+      sliceSizes = this.splits_.slice();
+    }
+    const outputsShape = [];
+    for (const size of sliceSizes) {
+      const outputShape = input.shape.slice();
+      outputShape[this.axis_] = size;
+      outputsShape.push(outputShape);
+    }
+    for (let i = 0; i < outputs.length; ++i) {
+      utils.checkShape(outputs[i].shape, outputsShape[i]);
+    }
+    return outputs;
   }
 }
