@@ -39,17 +39,18 @@ export class Split extends Operation {
   computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[] {
     const input: tf.Tensor = inputTensors.get(this.input_);
     const outputs = tf.split(input, this.splits_, this.axis_);
+    const axis = this.axis_ >= 0 ? this.axis_ : this.axis_ + input.rank;
     let sliceSizes = [];
     if (typeof this.splits_ === 'number') {
       sliceSizes =
-          new Array(this.splits_).fill(input.shape[this.axis_] / this.splits_);
+          new Array(this.splits_).fill(input.shape[axis] / this.splits_);
     } else {
       sliceSizes = this.splits_.slice();
     }
     const outputsShape = [];
     for (const size of sliceSizes) {
       const outputShape = input.shape.slice();
-      outputShape[this.axis_] = size;
+      outputShape[axis] = size;
       outputsShape.push(outputShape);
     }
     for (let i = 0; i < outputs.length; ++i) {
