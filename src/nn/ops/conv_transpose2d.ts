@@ -28,6 +28,7 @@ export class ConvTranspose2d extends SingleOutputOperation
   private fusedActivation_?: tf.fused.Activation;
   private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, filter: MLOperand,
@@ -239,7 +240,10 @@ export class ConvTranspose2d extends SingleOutputOperation
       outputShape[2] = outputShape[1];
       outputShape[1] = outputChannel;
     }
-    utils.checkShape(output.shape, outputShape);
+    if (this.needCheckOutputShape_) {
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 

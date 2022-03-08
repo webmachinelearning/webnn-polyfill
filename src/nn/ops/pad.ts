@@ -10,6 +10,7 @@ export class Pad extends SingleOutputOperation {
   private padding_: MLOperand;
   private mode_: MLPaddingMode = MLPaddingMode.constant;
   private value_ = 0;
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, padding: MLOperand, options: MLPadOptions = {}) {
@@ -78,7 +79,10 @@ export class Pad extends SingleOutputOperation {
         output = tf.mirrorPad(input, paddingArray, mode);
       }
     }
-    utils.checkShape(output.shape, outputShape);
+    if (this.needCheckOutputShape_) {
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 }

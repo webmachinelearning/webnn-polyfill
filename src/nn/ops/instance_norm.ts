@@ -11,6 +11,7 @@ export class InstanceNormalization extends SingleOutputOperation {
   private bias_?: MLOperand;
   private epsilon_?: number;
   private layout_: MLInputOperandLayout;
+  private needCheckOutputShape_ = true;
 
   constructor(input: MLOperand, options: MLInstanceNormalizationOptions = {}) {
     super(input.builder);
@@ -87,8 +88,11 @@ export class InstanceNormalization extends SingleOutputOperation {
     const scaled = scale ? tf.mul(tf.reshape(scale, shape), norm) : norm;
     const output: tf.Tensor =
         bias ? tf.add(tf.reshape(bias, shape), scaled) : scaled;
-    // The output shape is the same shape as the input
-    utils.checkShape(output.shape, input.shape);
+    if (this.needCheckOutputShape_) {
+      // The output shape is the same shape as the input
+      utils.checkShape(output.shape, input.shape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 }

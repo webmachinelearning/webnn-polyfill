@@ -11,6 +11,7 @@ export class Resample2d extends SingleOutputOperation {
   private scales_: [number, number] = [1.0, 1.0];
   private sizes_: [number, number];
   private axes_: [number, number] = [2, 3];
+  private needCheckOutputShape_ = true;
 
   constructor(input: MLOperand, options: MLResample2dOptions = {}) {
     super(input.builder);
@@ -85,8 +86,11 @@ export class Resample2d extends SingleOutputOperation {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
     }
-    this.axes_.map((x, i) => outputShape[x] = sizes[i]);
-    utils.checkShape(output.shape, outputShape);
+    if (this.needCheckOutputShape_) {
+      this.axes_.map((x, i) => outputShape[x] = sizes[i]);
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 }

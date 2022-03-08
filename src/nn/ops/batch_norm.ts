@@ -15,6 +15,7 @@ export class BatchNormalization extends SingleOutputOperation implements
   private axis_?: number;
   private epsilon_?: number;
   private activation_?: MLOperator;
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, mean: MLOperand, variance: MLOperand,
@@ -96,8 +97,11 @@ export class BatchNormalization extends SingleOutputOperation implements
             tf.transpose(input, permutation), mean, variance, bias, scale,
             this.epsilon_),
         permutation);
-    // The output shape is the same shape as the input
-    utils.checkShape(output.shape, input.shape);
+    if (this.needCheckOutputShape_) {
+      // The output shape is the same shape as the input
+      utils.checkShape(output.shape, input.shape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 }

@@ -6,6 +6,7 @@ import * as utils from '../utils';
 
 export class Softmax extends SingleOutputOperation {
   private x_: MLOperand;
+  private needCheckOutputShape_ = true;
 
   constructor(x: MLOperand) {
     super(x.builder);
@@ -23,8 +24,11 @@ export class Softmax extends SingleOutputOperation {
       throw new Error('The rank of x parameter should be 2.');
     }
     const output: tf.Tensor = tf.softmax(x);
-    // The output shape is the same shape as the input
-    utils.checkShape(output.shape, x.shape);
+    if (this.needCheckOutputShape_) {
+      // The output shape is the same shape as the input
+      utils.checkShape(output.shape, x.shape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 }

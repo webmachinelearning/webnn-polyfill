@@ -20,6 +20,7 @@ export class Gru extends Operation {
   private direction_: MLRecurrentNetworkDirection;
   private layout_: MLRecurrentNetworkWeightLayout;
   private activations_: MLOperator[];
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
@@ -185,17 +186,22 @@ export class Gru extends Operation {
       }
     }
     const outputs = [hiddenState];
-    //  the first output is 3-D tensor of shape
-    //    [num_directions, batch_size, hidden_size]    
-    const outputsShape = [[numDirections, input.shape[1], hiddenSize]];
     if (returnSequence) {
-        outputs.push(sequence);
-        //  returnSequence true, the second output tensor of shape
-        //    [steps, num_directions, batch_size, hidden_size]
-        outputsShape.push([steps, numDirections, input.shape[1], hiddenSize]);
+      outputs.push(sequence);
     }
-    for (let i = 0; i < outputs.length; ++i) {
-      utils.checkShape(outputs[i].shape, outputsShape[i]);
+    if (this.needCheckOutputShape_) {
+      // the first output is 3-D tensor of shape
+      //   [num_directions, batch_size, hidden_size]
+      const outputsShape = [[numDirections, input.shape[1], hiddenSize]];
+      if (returnSequence) {
+        // returnSequence true, the second output tensor of shape
+        //   [steps, num_directions, batch_size, hidden_size]
+        outputsShape.push([steps, numDirections, input.shape[1], hiddenSize]);
+      }
+      for (let i = 0; i < outputs.length; ++i) {
+        utils.checkShape(outputs[i].shape, outputsShape[i]);
+      }
+      this.needCheckOutputShape_ = false;
     }
     return outputs;
   }
@@ -212,6 +218,7 @@ export class GruCell extends SingleOutputOperation {
   private resetAfter_: boolean;
   private layout_: MLRecurrentNetworkWeightLayout;
   private activations_: MLOperator[];
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
@@ -368,9 +375,12 @@ export class GruCell extends SingleOutputOperation {
         this.bias_ ? inputTensors.get(this.bias_) : undefined,
         this.recurrentBias_ ? inputTensors.get(this.recurrentBias_) : undefined,
         this.resetAfter_, this.layout_);
-    // output shape [batch_size, hidden_size]
-    const outputShape = [input.shape[0], this.hiddenSize_];
-    utils.checkShape(output.shape, outputShape);
+    if (this.needCheckOutputShape_) {
+      // output shape [batch_size, hidden_size]
+      const outputShape = [input.shape[0], this.hiddenSize_];
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
     return output;
   }
 }

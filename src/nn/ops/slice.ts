@@ -9,6 +9,7 @@ export class Slice extends SingleOutputOperation {
   private starts_: number[];
   private sizes_: number[];
   private axes_?: number[];
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, starts: number[], sizes: number[], axes?: number[]) {
@@ -70,20 +71,22 @@ export class Slice extends SingleOutputOperation {
           this.starts_[i] + input.shape[axis];
       size[axis] = this.sizes_[i];
     }
-    const outputShape = input.shape.slice();
-    for (let i = 0; i < this.axes_.length; ++i) {
-      const axis = this.axes_[i] >= 0 ? this.axes_[i] : this.axes_[i] + rank;
-      const size = input.shape[axis];
-      const start = this.starts_[i];
-      const sliceSize = this.sizes_[i];
-      if (sliceSize >= 0) {
-        outputShape[axis] = sliceSize;
-      } else {
-        outputShape[axis] = start >= 0 ? size - start : -start;
-      }
-    }
     const output = tf.slice(input, begin, size);
-    utils.checkShape(output.shape, outputShape);
+    if (this.needCheckOutputShape_) {
+      const outputShape = input.shape.slice();
+      for (let i = 0; i < this.axes_.length; ++i) {
+        const axis = this.axes_[i] >= 0 ? this.axes_[i] : this.axes_[i] + rank;
+        const size = input.shape[axis];
+        const start = this.starts_[i];
+        const sliceSize = this.sizes_[i];
+        if (sliceSize >= 0) {
+          outputShape[axis] = sliceSize;
+        } else {
+          outputShape[axis] = start >= 0 ? size - start : -start;
+        }
+      }
+      utils.checkShape(output.shape, outputShape);
+    }
     return output;
   }
 }
