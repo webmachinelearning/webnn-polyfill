@@ -15,6 +15,7 @@ export class BatchNormalization extends SingleOutputOperation implements
   private axis_?: number;
   private epsilon_?: number;
   private activation_?: MLOperator;
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, mean: MLOperand, variance: MLOperand,
@@ -91,10 +92,16 @@ export class BatchNormalization extends SingleOutputOperation implements
     const permutation = Array.from(Array(input.rank).keys());
     permutation[axis] = input.rank - 1;
     permutation[input.rank - 1] = axis;
-    return tf.transpose(
+    const output: tf.Tensor = tf.transpose(
         tf.batchNorm(
             tf.transpose(input, permutation), mean, variance, bias, scale,
             this.epsilon_),
         permutation);
+    if (this.needCheckOutputShape_) {
+      // The output shape is the same shape as the input
+      utils.checkShape(output.shape, input.shape);
+      this.needCheckOutputShape_ = false;
+    }
+    return output;
   }
 }

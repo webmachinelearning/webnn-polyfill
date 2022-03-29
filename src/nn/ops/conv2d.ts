@@ -25,6 +25,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private fusedActivation_?: tf.fused.Activation;
   private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, filter: MLOperand, options: MLConv2dOptions = {}) {
@@ -157,7 +158,6 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else if (this.filterLayout_ === MLConv2dFilterOperandLayout.ihwo) {
       filter = tf.transpose(filter, [1, 2, 0, 3]);
     }
-      
     if (this.groups_ !== 1) {
       // filter layout hwio
       // tf.depthwiseConv2d filter layout: [filterHeight, filterWidth,
@@ -171,9 +171,8 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else {
       filter = this.filterTensor_;
     }
-    const padding: ExplicitPadding = utils.getPaddings(
-        input, filter, this.padding_, this.strides_, [0, 0],
-        this.dilations_, this.autoPad_);
+    const padding: ExplicitPadding = utils.getPaddings(input, filter,
+        this.padding_, this.strides_, this.dilations_, this.autoPad_);
     let output;
     
     if (this.groups_ === 1) {
@@ -236,6 +235,39 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
+    }
+    if (this.needCheckOutputShape_) {
+      const effectiveFilterHeight =
+          filter.shape[0] + (filter.shape[0] - 1) * (this.dilations_[0] - 1);
+      const effectiveFilterWidth =
+          filter.shape[1] + (filter.shape[1] - 1) * (this.dilations_[1] - 1);
+      // output size = 1 +
+      //     (input size - filter size - (filter size - 1) * (dilation - 1) +
+      //      beginning padding + ending padding) / stride
+      const outputHeight =
+          1 + Math.floor((input.shape[1] - effectiveFilterHeight +
+              padding[1][0] + padding[1][1]) / this.strides_[0]);
+      const outputWidth =
+          1 + Math.floor((input.shape[2] - effectiveFilterWidth +
+              padding[2][0] + padding[2][1]) / this.strides_[1]);
+      // A depthwise conv2d operation is a variant of grouped convolution, used
+      // in models like the MobileNet, where the
+      //   options.groups = input_channels = output_channels
+      const outputChannels =
+          this.groups_ !== 1 ? filter.shape[2] : filter.shape[3];
+      const outputShape = new Array(4);
+      outputShape[0] = input.shape[0];
+      outputShape[1] = outputHeight;
+      outputShape[2] = outputWidth;
+      outputShape[3] = outputChannels;
+      if (this.inputLayout_ === MLInputOperandLayout.nchw) {
+        // nhwc -> nchw
+        outputShape[1] = outputChannels;
+        outputShape[2] = outputHeight;
+        outputShape[3] = outputWidth;
+      }
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
     }
     return output;
   }

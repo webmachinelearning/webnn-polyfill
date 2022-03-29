@@ -220,8 +220,9 @@ export function checkShape(actual: number[], expected: number[]): void {
 export function getPaddings(
     input: tf.Tensor4D, filter: tf.Tensor4D,
     padding: [number, number, number, number], strides: [number, number],
-    outputPadding: [number, number], dilations: [number, number],
-    autoPad: MLAutoPad): ExplicitPadding {
+    dilations: [number, number], autoPad: MLAutoPad,
+    outputPadding?: [number, number]): ExplicitPadding {
+  // input layout: NHWC
   // WebNN padding:
   //   [beginning_height, ending_height, beginning_width, ending_width]
   // tf.conv2d NHWC should be in the following form:
@@ -233,22 +234,41 @@ export function getPaddings(
     ] as ExplicitPadding;
   } else {
     resultPadding = [[0, 0], [0, 0], [0, 0], [0, 0]];
-    const outputSizes = [0, 0];
-    for (let i = 0; i < 2; ++i) {
-      outputSizes[i] = Math.ceil(input.shape[1 + i] / strides[i]);
-    }
     const totalPadding: [number, number] = [0, 0];
-    for (let i = 0; i < 2; ++i) {
-      totalPadding[i] = strides[i] * (outputSizes[i] - 1) + outputPadding[i] +
-          ((filter.shape[i] - 1) * dilations[i] + 1) - input.shape[1 + i];
-    }    
+    if (outputPadding === undefined) {
+      // conv2d
+      for (let i = 0; i < 2; ++i) {
+        // totalPadding = beginning padding + ending padding
+        // SAME_UPPER or SAME_LOWER mean pad the input so that
+        //   output size = ceil(input size / strides)
+        // output size = 1 +
+        //     (input size - filter size - (filter size - 1) * (dilation - 1) +
+        //      beginning padding + ending padding) / stride
+        totalPadding[i] =
+            strides[i] * (Math.ceil(input.shape[1 + i] / strides[i]) - 1) +
+            ((filter.shape[i] - 1) * dilations[i] + 1) - input.shape[1 + i];
+      }
+    } else {
+      // convTranspose2d
+      for (let i = 0; i < 2; ++i) {
+        // totalPadding = beginning padding + ending padding
+        // SAME_UPPER or SAME_LOWER mean pad the input so that
+        //   output size = input size * strides
+        // output size = (input size - 1) * stride + filter size +
+        //     (filter size - 1) * (dilation - 1) - beginning padding -
+        //     ending padding + output padding
+        totalPadding[i] = (input.shape[1 + i] - 1) * strides[i] +
+            filter.shape[i] + (filter.shape[i] - 1) * (dilations[i] - 1) +
+            outputPadding[i] - input.shape[1 + i] * strides[i];
+      }
+    }
     if (autoPad === MLAutoPad['same-upper']) {
       // Calculate the explicit paddings for 'same-upper'
       for (let i = 0; i < 2; ++i) {
         resultPadding[i + 1][0] =
             totalPadding[i] - Math.ceil(totalPadding[i] / 2);
         resultPadding[i + 1][1] = Math.ceil(totalPadding[i] / 2);
-      }    
+      }
     } else {
       // Calculate the explicit paddings for 'same-lower'
       for (let i = 0; i < 2; ++i) {
@@ -286,4 +306,34 @@ export function computeImplicitPaddingForAutoPad(
     }
   }
   return [paddingBegin, paddingEnd];
+}
+
+export function getBroadcastShape(shapeA: number[], shapeB: number[]):
+    number[] {
+  // According to General Broadcasting Rules on
+  //   https://numpy.org/doc/stable/user/basics.broadcasting.html.
+  const outShape = [];
+  const lenA = shapeA.length;
+  const lenB = shapeB.length;
+  const outlen = Math.max(lenA, lenB);
+  for (let i = 0; i < outlen; ++i) {
+    let a = shapeA[lenA - i - 1];
+    if (a === undefined) {
+      a = 1;
+    }
+    let b = shapeB[lenB - i - 1];
+    if (b === undefined) {
+      b = 1;
+    }
+    if (a === 1) {
+      outShape.unshift(b);
+    } else if (b === 1) {
+      outShape.unshift(a);
+    } else if (a !== b) {
+      throw new Error(`Shapes [${shapeA}] and [${shapeB}] are incompatible.`);
+    } else {
+      outShape.unshift(a);
+    }
+  }
+  return outShape;
 }

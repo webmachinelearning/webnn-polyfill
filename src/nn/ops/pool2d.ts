@@ -19,7 +19,7 @@ export abstract class Pool extends SingleOutputOperation {
   private autoPad_?: MLAutoPad;
   protected roundingType_?: MLRoundingType;
   protected outputSizes_?: [number, number];
-  private outputShape_?: [number, number, number, number];
+  private needCheckOutputShape_ = true;
 
   constructor(input: MLOperand, options: MLPooling2dOptions = {}) {
     super(input.builder);
@@ -162,8 +162,6 @@ export abstract class Pool extends SingleOutputOperation {
       windowDimensions[1] = input.shape[2];
     }
 
-    let outputHeight;
-    let outputWidth;
     let dimRoundingMode: 'ceil'|'floor'|'round';
     if (this.outputSizes_ !== undefined) {
       let isValidOutputSizes = false;
@@ -180,22 +178,9 @@ export abstract class Pool extends SingleOutputOperation {
       utils.assert(
           isValidOutputSizes,
           `The outputSizes [${this.outputSizes_}] is invalid.`);
-      outputHeight = this.outputSizes_[0];
-      outputWidth = this.outputSizes_[1];
     } else {
-      // calculate output shape ownself
       dimRoundingMode =
           this.roundingType_ === MLRoundingType.floor ? 'floor' : 'ceil';
-      [outputHeight, outputWidth] =
-          this.calculateOutputSizes(input.shape, dimRoundingMode);
-    }
-
-    if (this.layout_ === MLInputOperandLayout.nchw) {
-      this.outputShape_ =
-          [input.shape[0], input.shape[3], outputHeight, outputWidth];
-    } else {
-      this.outputShape_ =
-          [input.shape[0], outputHeight, outputWidth, input.shape[3]];
     }
 
     const poolingType = this.getPoolingType();
@@ -255,8 +240,31 @@ export abstract class Pool extends SingleOutputOperation {
       output = tf.transpose(output, [0, 3, 1, 2]);
     }
 
-    // check output shape by TF.js with own calculated output shape
-    utils.checkShape(output.shape, this.outputShape_);
+    if (this.needCheckOutputShape_) {
+      let outputHeight;
+      let outputWidth;
+      let outputShape;
+      if (this.outputSizes_ !== undefined) {
+        outputHeight = this.outputSizes_[0];
+        outputWidth = this.outputSizes_[1];
+      } else {
+        dimRoundingMode =
+            this.roundingType_ === MLRoundingType.floor ? 'floor' : 'ceil';
+        [outputHeight, outputWidth] =
+            this.calculateOutputSizes(input.shape, dimRoundingMode);
+      }
+      if (this.layout_ === MLInputOperandLayout.nchw) {
+        outputShape =
+            [input.shape[0], input.shape[3], outputHeight, outputWidth];
+      } else {
+        outputShape =
+            [input.shape[0], outputHeight, outputWidth, input.shape[3]];
+      }
+
+      // check output shape by TF.js with own calculated output shape
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
 
     return output;
   }

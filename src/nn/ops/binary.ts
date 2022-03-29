@@ -7,6 +7,7 @@ import * as utils from '../utils';
 export abstract class Binary extends SingleOutputOperation {
   private a_: MLOperand;
   private b_: MLOperand;
+  private needCheckOutputShape_ = true;
 
   constructor(a: MLOperand, b: MLOperand) {
     super(a.builder);
@@ -23,7 +24,31 @@ export abstract class Binary extends SingleOutputOperation {
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const a: tf.Tensor = inputTensors.get(this.a_);
     const b: tf.Tensor = inputTensors.get(this.b_);
-    return this.runOp(a, b);
+    const output = this.runOp(a, b);
+    if (this.needCheckOutputShape_) {
+      let outputShape: number[];
+      if (this instanceof MatMul) {
+        const rankA = a.rank;
+        const rankB = b.rank;
+        if (rankA === 1 && rankB === 1) {
+          outputShape = [];
+        } else if (rankA === 2 && rankB === 1) {
+          outputShape = [a.shape[0], 1];
+        } else if (rankA === 1 && rankB === 2) {
+          outputShape = [1, b.shape[1]];
+        } else if (rankA >= 2 && rankB >= 2) {
+          outputShape = utils.getBroadcastShape(a.shape.slice(0, -2),
+              b.shape.slice(0, -2));
+          outputShape.push(a.shape[rankA - 2]);
+          outputShape.push(b.shape[rankB - 1]);
+        }
+      } else {
+        outputShape = utils.getBroadcastShape(a.shape, b.shape);
+      }
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
+    return output;
   }
 
   abstract runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor;

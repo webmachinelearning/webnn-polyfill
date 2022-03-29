@@ -9,6 +9,7 @@ abstract class Reduce extends SingleOutputOperation {
   private input_: MLOperand;
   private axes_?: number[];
   private keepDimensions_?: boolean;
+  private needCheckOutputShape_ = true;
 
   constructor(input: MLOperand, options: MLReduceOptions = {}) {
     super(input.builder);
@@ -41,7 +42,24 @@ abstract class Reduce extends SingleOutputOperation {
     utils.assert(
         utils.validateAxes(this.axes_, input.rank),
         `The axes must be in range [-${input.rank}, ${input.rank})`);
-    return this.runOp(input, this.axes_, this.keepDimensions_);
+    const output = this.runOp(input, this.axes_, this.keepDimensions_);
+    if (this.needCheckOutputShape_) {
+      const inpAxes = this.axes_ ?? [...Array(input.rank).keys()];
+      let outputShape = input.shape.slice();
+      for (let i = 0; i < inpAxes.length; ++i) {
+        if (inpAxes[i] < 0) {
+          inpAxes[i] = input.rank + inpAxes[i];
+        }
+        outputShape[inpAxes[i]] = 1;
+      }
+      if (!this.keepDimensions_) {
+        outputShape = outputShape.filter((dim, axis) =>
+          !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+      }
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
+    return output;
   }
 
   abstract runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean):

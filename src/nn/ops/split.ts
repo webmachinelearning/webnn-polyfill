@@ -9,6 +9,7 @@ export class Split extends Operation {
   private input_: MLOperand;
   private splits_: number|number[];
   private axis_?: number;
+  private needCheckOutputShape_ = true;
 
   constructor(
       input: MLOperand, splits: number|number[], options: MLSplitOptions = {}) {
@@ -22,7 +23,7 @@ export class Split extends Operation {
     utils.assert(
         options.axis === undefined || utils.isInteger(options.axis),
         'The options.axis is invalid.');
-    this.axis_ = options.axis;
+    this.axis_ = options.axis ?? 0;
 
     // Prepare outputs.
     const numOutputs =
@@ -38,6 +39,27 @@ export class Split extends Operation {
 
   computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[] {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    return tf.split(input, this.splits_, this.axis_);
+    const outputs = tf.split(input, this.splits_, this.axis_);
+    if (this.needCheckOutputShape_) {
+      const axis = this.axis_ >= 0 ? this.axis_ : this.axis_ + input.rank;
+      let sliceSizes = [];
+      if (typeof this.splits_ === 'number') {
+        sliceSizes =
+            new Array(this.splits_).fill(input.shape[axis] / this.splits_);
+      } else {
+        sliceSizes = this.splits_.slice();
+      }
+      const outputsShape = [];
+      for (const size of sliceSizes) {
+        const outputShape = input.shape.slice();
+        outputShape[axis] = size;
+        outputsShape.push(outputShape);
+      }
+      for (let i = 0; i < outputs.length; ++i) {
+        utils.checkShape(outputs[i].shape, outputsShape[i]);
+      }
+      this.needCheckOutputShape_ = false;
+    }
+    return outputs;
   }
 }
