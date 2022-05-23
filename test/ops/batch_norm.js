@@ -77,6 +77,72 @@ describe('test batchNormalization', function() {
         input, mean, variance, expectedBias, undefined, bias, {}, 'relu');
   });
 
+  it('batchNormalization 3D input axis=0', function() {
+    const input = {
+      shape: [3, 1, 2],
+      data: new Float32Array([-1, 0, 1, 2, 3, 4]),
+    };
+    const mean = {
+      shape: [3],
+      data: new Float32Array([0, 3, 6]),
+    };
+    const variance = {
+      shape: [3],
+      data: new Float32Array([1.0, 1.5, 2.0]),
+    };
+    const scale = {
+      shape: [3],
+      data: new Float32Array([1.0, 1.5, 2.0]),
+    };
+    const bias = {
+      shape: [3],
+      data: new Float32Array([0, 1, 2]),
+    };
+    const expected = [
+      -0.9995003746877732,
+      0,
+      -1.4486736542238683,
+      -0.22433682711193415,
+      -2.241580424529414,
+      -0.8277202830196093,
+    ];
+    testBatchNorm(input, mean, variance, expected, scale, bias,
+        {epsilon: 1e-3, axis: 0});
+  });
+
+  it('batchNormalization 3D input axis=2', function() {
+    const input = {
+      shape: [2, 1, 3],
+      data: new Float32Array([-1, 0, 1, 2, 3, 4]),
+    };
+    const mean = {
+      shape: [3],
+      data: new Float32Array([0, 3, 6]),
+    };
+    const variance = {
+      shape: [3],
+      data: new Float32Array([1.0, 1.5, 2.0]),
+    };
+    const scale = {
+      shape: [3],
+      data: new Float32Array([1.0, 1.5, 2.0]),
+    };
+    const bias = {
+      shape: [3],
+      data: new Float32Array([0, 1, 2]),
+    };
+    const expected = [
+      -0.9995003746877732,
+      -2.6730104813358024,
+      -5.069300707549023,
+      1.9990007493755464,
+      1,
+      -0.8277202830196093,
+    ];
+    testBatchNorm(input, mean, variance, expected, scale, bias,
+        {epsilon: 1e-3, axis: 2});
+  });
+
   it('batchNormalization nhwc', function() {
     const input = {
       shape: [1, 1, 3, 2],

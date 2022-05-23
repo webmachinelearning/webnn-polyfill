@@ -11,6 +11,7 @@ export class Resample2d extends SingleOutputOperation {
   private scales_: [number, number] = [1.0, 1.0];
   private sizes_: [number, number];
   private axes_: [number, number] = [2, 3];
+  private needCheckOutputShape_ = true;
 
   constructor(input: MLOperand, options: MLResample2dOptions = {}) {
     super(input.builder);
@@ -55,6 +56,7 @@ export class Resample2d extends SingleOutputOperation {
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     utils.assert(input.rank === 4, 'The input tensor is not 4-D.');
+    const outputShape = input.shape.slice();
     const sizes: [number, number] = [0, 0];
     if (this.sizes_ !== undefined) {
         // ignore scales
@@ -83,6 +85,11 @@ export class Resample2d extends SingleOutputOperation {
     } else if (this.axes_[0] === 2) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
+    }
+    if (this.needCheckOutputShape_) {
+      this.axes_.map((x, i) => outputShape[x] = sizes[i]);
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
     }
     return output;
   }

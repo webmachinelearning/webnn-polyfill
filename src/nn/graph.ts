@@ -1,4 +1,5 @@
 import '@tensorflow/tfjs-backend-webgl';
+import '@tensorflow/tfjs-backend-webgpu';
 import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-wasm';
 

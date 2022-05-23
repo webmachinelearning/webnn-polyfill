@@ -6,6 +6,7 @@ import * as utils from '../utils';
 
 export abstract class Unary extends SingleOutputOperation {
   protected x_: MLOperand;
+  private needCheckOutputShape_: boolean;
 
   constructor(x: MLOperand) {
     if (x !== undefined) {
@@ -16,6 +17,7 @@ export abstract class Unary extends SingleOutputOperation {
       super(undefined);
       this.x_ = undefined;
     }
+    this.needCheckOutputShape_ = true;
   }
 
   inputs(): MLOperand[] {
@@ -24,7 +26,13 @@ export abstract class Unary extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const x: tf.Tensor = inputTensors.get(this.x_);
-    return this.runOp(x);
+    const output: tf.Tensor = this.runOp(x);
+    if (this.needCheckOutputShape_) {
+      // The output shape is the same shape as the input
+      utils.checkShape(output.shape, x.shape);
+      this.needCheckOutputShape_ = false;
+    }
+    return output;
   }
 
   abstract runOp(x: tf.Tensor): tf.Tensor;

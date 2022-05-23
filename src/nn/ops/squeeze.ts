@@ -7,6 +7,7 @@ import * as utils from '../utils';
 export class Squeeze extends SingleOutputOperation {
   private input_: MLOperand;
   private axes_?: number[];
+  private needCheckOutputShape_ = true;
 
   constructor(input: MLOperand, axes?: number[]) {
     super(input.builder);
@@ -26,6 +27,14 @@ export class Squeeze extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    return tf.squeeze(input, this.axes_);
+    const output = tf.squeeze(input, this.axes_);
+    if (this.needCheckOutputShape_) {
+      const inpAxes = this.axes_ ?? [...Array(input.rank).keys()];
+      const outputShape = input.shape.filter(
+          (dim, axis) => !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+      utils.checkShape(output.shape, outputShape);
+      this.needCheckOutputShape_ = false;
+    }
+    return output;
   }
 }
