@@ -23,7 +23,7 @@ export function isIntegerArray(array: number[]): boolean {
   return array instanceof Array && array.every(v => isInteger(v));
 }
 
-export function isTypedArray(array: MLBufferView|WebGLTexture): boolean {
+export function isTypedArray(array: MLBufferView): boolean {
   return array instanceof Float32Array || array instanceof Int32Array ||
       array instanceof Uint32Array || array instanceof Int16Array ||
       array instanceof Uint16Array || array instanceof Int8Array ||
@@ -145,11 +145,11 @@ export function validateValueType(value: number, type: MLOperandType): void {
 
 export function createTensor(
     desc: MLOperandDescriptor,
-    value: MLBufferView|WebGLTexture|number): tf.Tensor {
+    value: MLBufferView|number): tf.Tensor {
   const dtype: tf.DataType = getDataType(desc.type);
   if (desc.dimensions !== undefined) {
     assert(
-        isTypedArray(value as MLBufferView | WebGLTexture),
+        isTypedArray(value as MLBufferView),
         'Only ArrayBufferView value is supported.');
     const array = value as TypedArray;
     validateTypedArray(array, desc.type, desc.dimensions);

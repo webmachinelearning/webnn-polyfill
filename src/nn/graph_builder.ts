@@ -287,7 +287,7 @@ export type MLNamedOperands = Record<string, MLOperand>;
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlbufferresourceview)
  */
 export interface MLBufferResourceView {
-  resource: WebGLBuffer;
+  resource: GPUBuffer;
   offset?: number;
   size?: number;
 }
@@ -317,8 +317,16 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-build)
    */
-  build(outputs: MLNamedOperands): MLGraph {
-    return MLGraph.buildAndCompile(outputs);
+  async build(outputs: MLNamedOperands): Promise<MLGraph> {
+    const graph = await MLGraph.buildAndCompile(outputs);
+    return graph;    
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-buildsync)
+   */
+  buildSync(outputs: MLNamedOperands): MLGraph {
+    return MLGraph.buildAndCompileSync(outputs);
   }
 
   /**

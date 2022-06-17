@@ -8,7 +8,11 @@ export class ML {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
-  createContext(options: MLContextOptions = {}): MLContext {
+  async createContext(options: MLContextOptions = {}): Promise<MLContext> {
+    return new Promise((resolve) => resolve(new MLContext(options)));
+  }
+
+  createContextSync(options: MLContextOptions = {}): MLContext {
     return new MLContext(options);
   }
 }
