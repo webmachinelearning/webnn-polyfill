@@ -8,6 +8,7 @@ const testDataDir = '../../test-data/models/squeezenet1.1_nchw';
 describe('test squeezenet1.1 nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -17,7 +18,7 @@ describe('test squeezenet1.1 nchw', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fusedConv = false;
 
@@ -70,7 +71,8 @@ describe('test squeezenet1.1 nchw', function() {
       const pool3 = builder.averagePool2d(
           conv25, {windowDimensions: [13, 13], strides: [13, 13]});
       const reshape0 = builder.reshape(pool3, [1, -1]);
-      return builder.build({reshape0});
+      const squeezeNetGraph = await builder.build({reshape0});
+      return squeezeNetGraph;
     }
 
     graph = await buildSqueezeNet();
@@ -101,7 +103,7 @@ describe('test squeezenet1.1 nchw', function() {
     const outputs = {
       'reshape0': new Float32Array(utils.sizeOfShape([1, 1000])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(

@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test add async', function() {
+describe('test add', function() {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();

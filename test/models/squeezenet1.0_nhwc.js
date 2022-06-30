@@ -8,6 +8,7 @@ const testDataDir = '../../test-data/models/squeezenet1.0_nhwc';
 describe('test squeezenet1.0 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -17,7 +18,7 @@ describe('test squeezenet1.0 nhwc', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fusedConv = false;
 
@@ -77,7 +78,8 @@ describe('test squeezenet1.0 nhwc', function() {
           builder.averagePool2d(conv10, {windowDimensions: [13, 13], layout});
       const reshape = builder.reshape(averagePool2d, [1, -1]);
       const softmax = builder.softmax(reshape);
-      return builder.build({softmax});
+      const squeezeNetGraph = await builder.build({softmax});
+      return squeezeNetGraph;
     }
     graph = await buildSqueezeNet();
     fusedConv = true;
@@ -106,7 +108,7 @@ describe('test squeezenet1.0 nhwc', function() {
           await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
     };
     const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(

@@ -9,7 +9,15 @@ export class ML {
   constructor() {}
 
   async createContext(options: MLContextOptions = {}): Promise<MLContext> {
-    return new Promise((resolve) => resolve(new MLContext(options)));
+    return new Promise((resolve, reject) => {
+      let context;
+      try {
+        context = new MLContext(options);
+      } catch(msg) {
+        reject(msg);
+      }
+      resolve(context);
+    });
   }
 
   createContextSync(options: MLContextOptions = {}): MLContext {

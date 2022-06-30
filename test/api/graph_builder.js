@@ -4,8 +4,12 @@ const expect = chai.expect;
 const assert = chai.assert;
 
 describe('test MLGraphBuilder', function() {
-  const context = navigator.ml.createContext();
-  const builder = new MLGraphBuilder(context);
+  let context;
+  let builder;
+  before(async () => {
+    context = await navigator.ml.createContext();
+    builder = new MLGraphBuilder(context);
+  });
 
   // test input
   it('MLGraphBuilder should have input method', () => {
@@ -591,37 +595,75 @@ describe('test MLGraphBuilder', function() {
     expect(builder.build).to.be.a('function');
   });
 
-  it('builder.build should return a MLGraph', () => {
+  it('builder.build should return an Object', () => {
     const a = builder.input('a', desc);
     const b = builder.input('b', desc);
     const c = builder.matmul(a, b);
-    expect(builder.build({c})).to.be.an.instanceof(MLGraph);
+    expect(builder.build({c})).to.be.an.instanceof(Object);
   });
 
-  it('builder.build should throw for invalid parameters', () => {
+  it('builder.buildSync should return a MLGraph', () => {
+    const a = builder.input('a', desc);
+    const b = builder.input('b', desc);
+    const c = builder.matmul(a, b);
+    expect(builder.buildSync({c})).to.be.an.instanceof(MLGraph);
+  });
+
+  it('builder.build should throw for invalid parameters', async () => {
     try {
-      builder.build();
+      await builder.build();
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
     try {
-      builder.build({});
+      await builder.build({});
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
     try {
-      builder.build({'a': 1});
+      await builder.build({'a': 1});
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');
       expect(err).to.be.an.instanceof(Error);
     }
     try {
-      builder.build({'a': {}});
+      await builder.build({'a': {}});
+      assert.fail();
+    } catch (err) {
+      assert(!(err instanceof chai.AssertionError), 'No throwing');
+      expect(err).to.be.an.instanceof(Error);
+    }
+  });
+
+  it('builder.buildSync should throw for invalid parameters', () => {
+    try {
+      builder.buildSync();
+      assert.fail();
+    } catch (err) {
+      assert(!(err instanceof chai.AssertionError), 'No throwing');
+      expect(err).to.be.an.instanceof(Error);
+    }
+    try {
+      builder.buildSync({});
+      assert.fail();
+    } catch (err) {
+      assert(!(err instanceof chai.AssertionError), 'No throwing');
+      expect(err).to.be.an.instanceof(Error);
+    }
+    try {
+      builder.buildSync({'a': 1});
+      assert.fail();
+    } catch (err) {
+      assert(!(err instanceof chai.AssertionError), 'No throwing');
+      expect(err).to.be.an.instanceof(Error);
+    }
+    try {
+      builder.buildSync({'a': {}});
       assert.fail();
     } catch (err) {
       assert(!(err instanceof chai.AssertionError), 'No throwing');

@@ -10,6 +10,7 @@ const testDataDir = '../../test-data/models/mobilenetv2_nhwc';
 describe('test mobilenetv2 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -19,7 +20,7 @@ describe('test mobilenetv2 nhwc', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fusedConv = false;
 
@@ -140,7 +141,8 @@ describe('test mobilenetv2 nhwc', function() {
           {autoPad, filterLayout});
       const reshape = builder.reshape(conv4, [1, -1]);
       const softmax = builder.softmax(reshape);
-      return builder.build({softmax});
+      const mobileNetGraph = await builder.build({softmax});
+      return mobileNetGraph;
     }
 
     graph = await buildMobileNet();
@@ -169,7 +171,7 @@ describe('test mobilenetv2 nhwc', function() {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
     };
     const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(

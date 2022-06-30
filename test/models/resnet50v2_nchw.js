@@ -10,6 +10,7 @@ const testDataDir = '../../test-data/models/resnet50v2_nchw';
 describe('test resnet50v2 nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -19,7 +20,7 @@ describe('test resnet50v2 nchw', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fusedBatchNorm = false;
 
@@ -165,7 +166,8 @@ describe('test resnet50v2 nchw', function() {
       const pool2 = await builder.averagePool2d(bn3);
       const reshape = builder.reshape(pool2, [1, -1]);
       const gemm = await buildGemm(reshape, '0');
-      return builder.build({gemm});
+      const resNetGraph = await builder.build({gemm});
+      return resNetGraph;
     }
 
     graph = await buildResNet();
@@ -194,7 +196,7 @@ describe('test resnet50v2 nchw', function() {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
     const outputs = {
       'gemm': new Float32Array(utils.sizeOfShape([1, 1000]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(

@@ -95,7 +95,7 @@ export class MLContext {
       graph: MLGraph,
       inputs: MLNamedArrayInputs,
       outputs: MLNamedArrayOutputs): void {
-    graph.computeSync(inputs, outputs);
+      graph.computeSync(inputs, outputs);
   }
 
   /** @internal */
