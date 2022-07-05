@@ -318,14 +318,24 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-build)
    */
   async build(outputs: MLNamedOperands): Promise<MLGraph> {
-    const graph = await MLGraph.buildAndCompile(outputs);
-    return graph;    
+    return new Promise((resolve, reject) => {
+      let graph;
+      try {
+        graph = MLGraph.buildAndCompile(outputs);
+      } catch(error) {
+        reject(error);
+      }
+      resolve(graph);
+    });
   }
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-buildsync)
    */
   buildSync(outputs: MLNamedOperands): MLGraph {
+    utils.assert(
+        typeof window === 'undefined' && typeof importScripts === 'function',
+        'buildSync() should only be allowed in dedicated worker.');
     return MLGraph.buildAndCompileSync(outputs);
   }
 

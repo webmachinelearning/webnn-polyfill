@@ -85,7 +85,7 @@ export class MLContext {
       graph: MLGraph,
       inputs: MLNamedArrayInputs,
       outputs: MLNamedArrayOutputs): Promise<void> {
-    await graph.compute(inputs, outputs);
+    await graph.compute(inputs, outputs, false);
   }
 
   /**
@@ -95,7 +95,10 @@ export class MLContext {
       graph: MLGraph,
       inputs: MLNamedArrayInputs,
       outputs: MLNamedArrayOutputs): void {
-      graph.computeSync(inputs, outputs);
+      utils.assert(
+          typeof window === 'undefined' && typeof importScripts === 'function',
+          'computeSync() should only be allowed in dedicated worker.');
+      graph.compute(inputs, outputs, true);
   }
 
   /** @internal */

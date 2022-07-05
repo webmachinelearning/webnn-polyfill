@@ -1,7 +1,6 @@
 'use strict';
 
 const expect = chai.expect;
-const assert = chai.assert;
 
 describe('test MLGraphBuilder', function() {
   let context;
@@ -595,80 +594,21 @@ describe('test MLGraphBuilder', function() {
     expect(builder.build).to.be.a('function');
   });
 
-  it('builder.build should return an Object', () => {
+  it('builder.build should return a Promise', () => {
     const a = builder.input('a', desc);
     const b = builder.input('b', desc);
     const c = builder.matmul(a, b);
-    expect(builder.build({c})).to.be.an.instanceof(Object);
-  });
-
-  it('builder.buildSync should return a MLGraph', () => {
-    const a = builder.input('a', desc);
-    const b = builder.input('b', desc);
-    const c = builder.matmul(a, b);
-    expect(builder.buildSync({c})).to.be.an.instanceof(MLGraph);
+    expect(builder.build({c})).to.be.a('promise');
   });
 
   it('builder.build should throw for invalid parameters', async () => {
-    try {
-      await builder.build();
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-    try {
-      await builder.build({});
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-    try {
-      await builder.build({'a': 1});
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-    try {
-      await builder.build({'a': {}});
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-  });
-
-  it('builder.buildSync should throw for invalid parameters', () => {
-    try {
-      builder.buildSync();
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-    try {
-      builder.buildSync({});
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-    try {
-      builder.buildSync({'a': 1});
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
-    try {
-      builder.buildSync({'a': {}});
-      assert.fail();
-    } catch (err) {
-      assert(!(err instanceof chai.AssertionError), 'No throwing');
-      expect(err).to.be.an.instanceof(Error);
-    }
+    await expect(builder.build()).to.be.rejectedWith('Invalid argument');
+    await expect(builder.build({})).to.be
+        .rejectedWith('The outputs is empty');
+    await expect(builder.build({'a': 1})).to.be
+        .rejectedWith('The outputs parameter is invalid.');
+    await expect(builder.build({'a': {}})).to.be
+        .rejectedWith('The outputs parameter is invalid.');
   });
 
   it('builder should throw for cross builders inputs', () => {

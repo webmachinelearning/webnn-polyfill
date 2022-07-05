@@ -1,4 +1,5 @@
 import {MLContext, MLContextOptions} from './nn/context';
+import * as utils from './nn/utils';
 
 /**
  * [spec](https://webmachinelearning.github.io/webnn/#ml)
@@ -13,14 +14,17 @@ export class ML {
       let context;
       try {
         context = new MLContext(options);
-      } catch(msg) {
-        reject(msg);
+      } catch(error) {
+        reject(error);
       }
       resolve(context);
     });
   }
 
   createContextSync(options: MLContextOptions = {}): MLContext {
+    utils.assert(
+        typeof window === 'undefined' && typeof importScripts === 'function',
+        'createContextSync() should only be allowed in dedicated worker.');
     return new MLContext(options);
   }
 }

@@ -1,6 +1,8 @@
 global.navigator = {};
 require('./dist/webnn-polyfill.js');
 global.chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+global.chai.use(chaiAsPromised);
 global.fs = require('fs');
 
 exports.mochaGlobalSetup = async function() {

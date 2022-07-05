@@ -12,7 +12,8 @@
     "target": "es2017",
     "lib": [
       "es2017",
-      "dom"
+      "dom",
+      "webworker"
     ],
     "noUnusedLocals": true,
     "noImplicitReturns": true,
