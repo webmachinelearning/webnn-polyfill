@@ -232,16 +232,15 @@ export class ConvTranspose2d extends SingleOutputOperation
     } else if (this.fusedActivation_ !== undefined) {
       utils.assert(false, `The ${this.fusedActivation_} is un supported.`);
     }
+    let expectedShape = outputShape.slice();
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
-      const outputChannel = outputShape[3];
-      outputShape[3] = outputShape[2];
-      outputShape[2] = outputShape[1];
-      outputShape[1] = outputChannel;
+      expectedShape =
+        [outputShape[0], outputShape[3], outputShape[1], outputShape[2]];
     }
     if (this.needCheckOutputShape_) {
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, expectedShape);
       this.needCheckOutputShape_ = false;
     }
     return output;
