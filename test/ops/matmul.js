@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test matmul', function() {
+describe('test matmul', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -20,14 +20,14 @@ describe('test matmul', function() {
     utils.checkValue(outputs.c, expected.value);
   }
 
-  it('matmul 1d', async function() {
+  it('matmul 1d', async () => {
     await testMatmul(
         {shape: [4], value: [0.9025404, 0.89538723, 0.16789329, 0.7440875]},
         {shape: [4], value: [0.8782074, 0.22533207, 0.7134056, 0.04190519]},
         {shape: [], value: [1.1453342]});
   });
 
-  it('matmul 1dx2d', async function() {
+  it('matmul 1dx2d', async () => {
     await testMatmul(
         {shape: [4], value: [0.1309212, 0.9090703, 0.62183434, 0.9195683]}, {
           shape: [4, 3],
@@ -49,7 +49,7 @@ describe('test matmul', function() {
         {shape: [1, 3], value: [0.6616409, -0.80990994, 0.8797145]});
   });
 
-  it('matmul 2dx1d', async function() {
+  it('matmul 2dx1d', async () => {
     await testMatmul(
         {
           shape: [3, 4],
@@ -72,7 +72,7 @@ describe('test matmul', function() {
         {shape: [3, 1], value: [0.8839391, 0.9928265, 0.5955407]});
   });
 
-  it('matmul 2d', async function() {
+  it('matmul 2d', async () => {
     await testMatmul(
         {
           shape: [3, 4],
@@ -124,7 +124,7 @@ describe('test matmul', function() {
         });
   });
 
-  it('matmul 3d', async function() {
+  it('matmul 3d', async () => {
     await testMatmul(
         {
           shape: [2, 3, 4],
@@ -171,7 +171,7 @@ describe('test matmul', function() {
         });
   });
 
-  it('matmul 3dx2d', async function() {
+  it('matmul 3dx2d', async () => {
     await testMatmul(
         {
           shape: [2, 3, 4],
@@ -225,7 +225,7 @@ describe('test matmul', function() {
         });
   });
 
-  it('matmul 3dx2d should be 3d', async function() {
+  it('matmul 3dx2d should be 3d', async () => {
     await testMatmul(
         {
           shape: [1, 3, 4],
@@ -277,7 +277,7 @@ describe('test matmul', function() {
         });
   });
 
-  it('matmul 4d', async function() {
+  it('matmul 4d', async () => {
     await testMatmul(
         {
           shape: [1, 2, 3, 4],
@@ -324,7 +324,7 @@ describe('test matmul', function() {
         });
   });
 
-  it('matmul 4dx2d', async function() {
+  it('matmul 4dx2d', async () => {
     await testMatmul(
         {
           shape: [1, 2, 3, 4],

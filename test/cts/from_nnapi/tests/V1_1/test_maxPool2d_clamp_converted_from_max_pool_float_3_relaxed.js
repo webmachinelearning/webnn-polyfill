@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test maxPool2d + clamp converted from max_pool_float_3_relaxed test', async function() {
+  it('test maxPool2d + clamp converted from max_pool_float_3_relaxed test', async () => {
     // Converted test case (from: V1_1/max_pool_float_3_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
     const i0 = builder.input('i0', {type: 'float32', dimensions: [5, 50, 70, 3]});

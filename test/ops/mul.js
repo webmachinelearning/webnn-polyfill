@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test mul', function() {
+describe('test mul', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('mul input and constant', async function() {
+  it('mul input and constant', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.constant(
@@ -68,7 +68,7 @@ describe('test mul', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('mul two inputs', async function() {
+  it('mul two inputs', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
@@ -129,7 +129,7 @@ describe('test mul', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('mul broadcast', async function() {
+  it('mul broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});

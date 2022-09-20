@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -30,7 +30,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_relaxed test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -52,7 +52,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -76,7 +76,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -100,7 +100,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -122,7 +122,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_relaxed test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -144,7 +144,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -168,7 +168,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -192,7 +192,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -214,7 +214,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_relaxed_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -236,7 +236,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -260,7 +260,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -284,7 +284,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -306,7 +306,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_relaxed_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -328,7 +328,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -352,7 +352,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed_2 test', async function() {
+  it('test conv2d (fused ops) converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});

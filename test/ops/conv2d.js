@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test conv2d', function() {
+describe('test conv2d', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -48,7 +48,7 @@ describe('test conv2d', function() {
     utils.checkValue(outputs.y, expected.data);
   }
 
-  it('conv2d with padding default', async function() {
+  it('conv2d with padding default', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -71,7 +71,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding explicit autoPad default padding', async function() {
+  it('conv2d with padding explicit autoPad default padding', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -97,7 +97,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding explicit autoPad', async function() {
+  it('conv2d with padding explicit autoPad', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -123,7 +123,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nchw oihw', async function() {
+  it('conv2d with padding nchw oihw', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -150,7 +150,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nchw hwio', async function() {
+  it('conv2d with padding nchw hwio', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -177,7 +177,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nchw ohwi', async function() {
+  it('conv2d with padding nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -204,7 +204,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nchw ihwo', async function() {
+  it('conv2d with padding nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -231,7 +231,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nhwc oihw', async function() {
+  it('conv2d with padding nhwc oihw', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -258,7 +258,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nhwc hwio', async function() {
+  it('conv2d with padding nhwc hwio', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -285,7 +285,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nhwc ohwi', async function() {
+  it('conv2d with padding nhwc ohwi', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -312,7 +312,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with padding nhwc ihwo', async function() {
+  it('conv2d with padding nhwc ihwo', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -339,7 +339,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding default', async function() {
+  it('conv2d without padding default', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -358,7 +358,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected);
   });
 
-  it('conv2d without padding nchw hwio', async function() {
+  it('conv2d without padding nchw hwio', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -381,7 +381,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding nchw ohwi', async function() {
+  it('conv2d without padding nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -404,7 +404,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding nchw ihwo', async function() {
+  it('conv2d without padding nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -427,7 +427,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding nhwc oihw', async function() {
+  it('conv2d without padding nhwc oihw', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -450,7 +450,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding nhwc hwio', async function() {
+  it('conv2d without padding nhwc hwio', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -473,7 +473,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding nhwc ohwi', async function() {
+  it('conv2d without padding nhwc ohwi', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -496,7 +496,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d without padding nhwc ihwo', async function() {
+  it('conv2d without padding nhwc ihwo', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -519,7 +519,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding default', async function() {
+  it('conv2d with strides=2 and padding default', async () => {
     const input = {
       shape: [1, 1, 7, 5],
       data: new Float32Array([
@@ -542,7 +542,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nchw hwio', async function() {
+  it('conv2d with strides=2 and padding nchw hwio', async () => {
     const input = {
       shape: [1, 1, 7, 5],
       data: new Float32Array([
@@ -567,7 +567,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nchw ohwi', async function() {
+  it('conv2d with strides=2 and padding nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 7, 5],
       data: new Float32Array([
@@ -592,7 +592,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nchw ihwo', async function() {
+  it('conv2d with strides=2 and padding nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 7, 5],
       data: new Float32Array([
@@ -617,7 +617,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nhwc oihw', async function() {
+  it('conv2d with strides=2 and padding nhwc oihw', async () => {
     const input = {
       shape: [1, 7, 5, 1],
       data: new Float32Array([
@@ -642,7 +642,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nhwc hwio', async function() {
+  it('conv2d with strides=2 and padding nhwc hwio', async () => {
     const input = {
       shape: [1, 7, 5, 1],
       data: new Float32Array([
@@ -667,7 +667,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nhwc ohwi', async function() {
+  it('conv2d with strides=2 and padding nhwc ohwi', async () => {
     const input = {
       shape: [1, 7, 5, 1],
       data: new Float32Array([
@@ -692,7 +692,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and padding nhwc ihwo', async function() {
+  it('conv2d with strides=2 and padding nhwc ihwo', async () => {
     const input = {
       shape: [1, 7, 5, 1],
       data: new Float32Array([
@@ -717,7 +717,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding default', async function() {
+  it('conv2d with strides=2 and asymetric padding default', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -740,7 +740,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nchw hwio', async function() {
+  it('conv2d with strides=2 and asymetric padding nchw hwio', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -765,7 +765,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nchw ohwi', async function() {
+  it('conv2d with strides=2 and asymetric padding nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -790,7 +790,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nchw ihwo', async function() {
+  it('conv2d with strides=2 and asymetric padding nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -815,7 +815,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nhwc oihw', async function() {
+  it('conv2d with strides=2 and asymetric padding nhwc oihw', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -840,7 +840,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nhwc hwio', async function() {
+  it('conv2d with strides=2 and asymetric padding nhwc hwio', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -865,7 +865,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nhwc ohwi', async function() {
+  it('conv2d with strides=2 and asymetric padding nhwc ohwi', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -890,7 +890,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with strides=2 and asymetric padding nhwc ihwo', async function() {
+  it('conv2d with strides=2 and asymetric padding nhwc ihwo', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -915,7 +915,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower default', async function() {
+  it('conv2d with autopad same-lower default', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -938,7 +938,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nchw hwio', async function() {
+  it('conv2d with autopad same-lower nchw hwio', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -963,7 +963,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nchw ohwi', async function() {
+  it('conv2d with autopad same-lower nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -988,7 +988,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nchw ihwo', async function() {
+  it('conv2d with autopad same-lower nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -1013,7 +1013,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nhwc oihw', async function() {
+  it('conv2d with autopad same-lower nhwc oihw', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -1038,7 +1038,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nhwc hwio', async function() {
+  it('conv2d with autopad same-lower nhwc hwio', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -1063,7 +1063,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nhwc ohwi', async function() {
+  it('conv2d with autopad same-lower nhwc ohwi', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -1088,7 +1088,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-lower nhwc ihwo', async function() {
+  it('conv2d with autopad same-lower nhwc ihwo', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -1113,7 +1113,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper default', async function() {
+  it('conv2d with autopad same-upper default', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -1136,7 +1136,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nchw hwio', async function() {
+  it('conv2d with autopad same-upper nchw hwio', async () => {
     const input = {
       shape: [1, 1, 4, 4],
       data: new Float32Array([
@@ -1175,7 +1175,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nchw ohwi', async function() {
+  it('conv2d with autopad same-upper nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 4, 4],
       data: new Float32Array([
@@ -1214,7 +1214,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nchw ihwo', async function() {
+  it('conv2d with autopad same-upper nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 4, 4],
       data: new Float32Array([
@@ -1253,7 +1253,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nhwc oihw', async function() {
+  it('conv2d with autopad same-upper nhwc oihw', async () => {
     const input = {
       shape: [1, 4, 4, 1],
       data: new Float32Array([
@@ -1292,7 +1292,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nhwc hwio', async function() {
+  it('conv2d with autopad same-upper nhwc hwio', async () => {
     const input = {
       shape: [1, 4, 4, 1],
       data: new Float32Array([
@@ -1331,7 +1331,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nhwc ohwi', async function() {
+  it('conv2d with autopad same-upper nhwc ohwi', async () => {
     const input = {
       shape: [1, 4, 4, 1],
       data: new Float32Array([
@@ -1370,7 +1370,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d with autopad same-upper nhwc ihwo', async function() {
+  it('conv2d with autopad same-upper nhwc ihwo', async () => {
     const input = {
       shape: [1, 4, 4, 1],
       data: new Float32Array([
@@ -1409,7 +1409,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('fused depthwise conv2d default', async function() {
+  it('fused depthwise conv2d default', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 4, 2, 2],
@@ -1471,7 +1471,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nchw hwio', async function() {
+  it('fused depthwise conv2d nchw hwio', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 4, 2, 2],
@@ -1537,7 +1537,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nchw ohwi', async function() {
+  it('fused depthwise conv2d nchw ohwi', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 4, 2, 2],
@@ -1603,7 +1603,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nchw ihwo', async function() {
+  it('fused depthwise conv2d nchw ihwo', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 4, 2, 2],
@@ -1669,7 +1669,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nhwc oihw', async function() {
+  it('fused depthwise conv2d nhwc oihw', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 2, 2, 4],
@@ -1735,7 +1735,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nhwc hwio', async function() {
+  it('fused depthwise conv2d nhwc hwio', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 2, 2, 4],
@@ -1801,7 +1801,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nhwc ohwi', async function() {
+  it('fused depthwise conv2d nhwc ohwi', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 2, 2, 4],
@@ -1867,7 +1867,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused depthwise conv2d nhwc ihwo', async function() {
+  it('fused depthwise conv2d nhwc ihwo', async () => {
     // It is based on Android NNAPI CTS: V1_2/depthwise_conv2d_v1_2.mod.py
     const input = {
       shape: [1, 2, 2, 4],
@@ -1933,7 +1933,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('depthwise conv2d nchw oihw', async function() {
+  it('depthwise conv2d nchw oihw', async () => {
     const input = {
       shape: [1, 4, 2, 2],
       data: new Float32Array([
@@ -1995,7 +1995,7 @@ describe('test conv2d', function() {
         input, filter, expected, options, undefined, 'relu6', true);
   });
 
-  it('fused depthwise conv2d explicit autoPad', async function() {
+  it('fused depthwise conv2d explicit autoPad', async () => {
     const input = {
       shape: [1, 2, 3, 3],
       data: new Float32Array([
@@ -2089,7 +2089,7 @@ describe('test conv2d', function() {
         input, filter, expected, options, undefined, 'relu6', true);
   });
 
-  it('fused depthwise conv2d same-upper autoPad', async function() {
+  it('fused depthwise conv2d same-upper autoPad', async () => {
     const input = {
       shape: [1, 2, 3, 3],
       data: new Float32Array([
@@ -2183,7 +2183,7 @@ describe('test conv2d', function() {
         input, filter, expected, options, undefined, 'relu6', true);
   });
 
-  it('fused depthwise conv2d same-lower autoPad', async function() {
+  it('fused depthwise conv2d same-lower autoPad', async () => {
     const input = {
       shape: [1, 2, 3, 3],
       data: new Float32Array([
@@ -2277,7 +2277,7 @@ describe('test conv2d', function() {
         input, filter, expected, options, undefined, 'relu6', true);
   });
 
-  it('fused conv2d with padding default', async function() {
+  it('fused conv2d with padding default', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -2379,7 +2379,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'sigmoid', true);
   });
 
-  it('fused conv2d with padding nchw hwio', async function() {
+  it('fused conv2d with padding nchw hwio', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -2419,7 +2419,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused conv2d with padding nchw ohwi', async function() {
+  it('fused conv2d with padding nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -2459,7 +2459,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused conv2d with padding nchw ihwo', async function() {
+  it('fused conv2d with padding nchw ihwo', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -2499,7 +2499,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused conv2d with padding nhwc oihw', async function() {
+  it('fused conv2d with padding nhwc oihw', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -2603,7 +2603,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'sigmoid', true);
   });
 
-  it('fused conv2d with padding nhwc hwio', async function() {
+  it('fused conv2d with padding nhwc hwio', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -2643,7 +2643,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused conv2d with padding nhwc ohwi', async function() {
+  it('fused conv2d with padding nhwc ohwi', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -2683,7 +2683,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('fused conv2d with padding nhwc ihwo', async function() {
+  it('fused conv2d with padding nhwc ihwo', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -2723,7 +2723,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
   });
 
-  it('conv2d input=1x1x5x5 dilations=2', async function() {
+  it('conv2d input=1x1x5x5 dilations=2', async () => {
     const input = {
       shape: [1, 1, 5, 5],
       data: new Float32Array([
@@ -2745,7 +2745,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d input=1x5x5x1 dilations=4 nhwc', async function() {
+  it('conv2d input=1x5x5x1 dilations=4 nhwc', async () => {
     const input = {
       shape: [1, 5, 5, 1],
       data: new Float32Array([
@@ -2768,7 +2768,7 @@ describe('test conv2d', function() {
     await testConv2d(input, filter, expected, options);
   });
 
-  it('conv2d input=1x65x65x1 dilations=4 nhwc', async function() {
+  it('conv2d input=1x65x65x1 dilations=4 nhwc', async () => {
     const input = {
       shape: [1, 65, 65, 1],
       data: new Float32Array([

@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test sigmoid', function() {
+describe('test sigmoid', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -16,11 +16,11 @@ describe('test sigmoid', function() {
     await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.y, expected);
   }
-  it('sigmoid 1d', async function() {
+  it('sigmoid 1d', async () => {
     testSigmoid([-1, 0, 1], [0.26894143, 0.5, 0.7310586], [3]);
   });
 
-  it('sigmoid 3d', async function() {
+  it('sigmoid 3d', async () => {
     testSigmoid(
         [
           -0.18371736, 0.4805392,   2.7183356,   0.03039639,  0.04197176,

@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test split', function() {
+describe('test split', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -30,7 +30,7 @@ describe('test split', function() {
     }
   }
 
-  it('split', async function() {
+  it('split', async () => {
     await testSplit(
         [6], [1, 2, 3, 4, 5, 6],
         [
@@ -46,7 +46,7 @@ describe('test split', function() {
         [2, 4]);
   });
 
-  it('split 2d', async function() {
+  it('split 2d', async () => {
     await testSplit(
         [2, 6], [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
         [

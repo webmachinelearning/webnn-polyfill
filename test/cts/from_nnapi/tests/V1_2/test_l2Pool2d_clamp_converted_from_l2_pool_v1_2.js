@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nhwc test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nhwc test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
@@ -31,7 +31,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nhwc_relaxed test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nhwc_relaxed test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
@@ -54,7 +54,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nchw test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nchw test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 2, 2]});
@@ -77,7 +77,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nchw_relaxed test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_nchw_relaxed test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 2, 2]});
@@ -100,7 +100,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nhwc test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nhwc test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 3]});
@@ -123,7 +123,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nhwc_relaxed test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nhwc_relaxed test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 3]});
@@ -146,7 +146,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nchw test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nchw test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 3, 2, 2]});
@@ -169,7 +169,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nchw_relaxed test', async function() {
+  it('test l2Pool2d + clamp converted from l2_pool_v1_2_large_nchw_relaxed test', async () => {
     // Converted test case (from: V1_2/l2_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 3, 2, 2]});

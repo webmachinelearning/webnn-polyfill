@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test pow', function() {
+describe('test pow', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -18,11 +18,11 @@ describe('test pow', function() {
     await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.z, expected);
   }
-  it('sqrt 1d', async function() {
+  it('sqrt 1d', async () => {
     testSqrt([1, 4, 9], [1, 2, 3], [3]);
   });
 
-  it('sqrt 3d', async function() {
+  it('sqrt 3d', async () => {
     testSqrt(
         [
           0.33435354, 0.57139647, 0.03689031, 0.7820907,  0.7718887,
@@ -55,7 +55,7 @@ describe('test pow', function() {
         [3, 4, 5]);
   });
 
-  it('pow 1d', async function() {
+  it('pow 1d', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
@@ -68,7 +68,7 @@ describe('test pow', function() {
     utils.checkValue(outputs.z, [1., 32., 729.]);
   });
 
-  it('pow broadcast with 1d of [3] and 1d of [1]', async function() {
+  it('pow broadcast with 1d of [3] and 1d of [1]', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
@@ -81,7 +81,7 @@ describe('test pow', function() {
     utils.checkValue(outputs.z, [1., 4., 9.]);
   });
 
-  it('pow broadcast with 2d of [2, 3] and 1d of [3]', async function() {
+  it('pow broadcast with 2d of [2, 3] and 1d of [3]', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
     const y = builder.constant(

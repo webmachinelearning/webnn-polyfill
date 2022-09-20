@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test max', function() {
+describe('test max', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('max', async function() {
+  it('max', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
@@ -60,7 +60,7 @@ describe('test max', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('max broadcast', async function() {
+  it('max broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});

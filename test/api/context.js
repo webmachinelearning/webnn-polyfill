@@ -5,7 +5,7 @@ const assert = chai.assert;
 
 import * as utils from '../utils.js';
 
-describe('test MLContext', function() {
+describe('test MLContext', () => {
   it('navigator.ml should be a ML', function CheckML() {
     if (typeof window !== 'undefined') {
       expect(navigator.ml).to.be.an.instanceof(ML);
@@ -70,7 +70,7 @@ describe('test MLContext', function() {
   });
 });
 
-describe('test MLContext.compute', function() {
+describe('test MLContext.compute', () => {
   const desc = {type: 'float32', dimensions: [2, 2]};
   const bufferA = new Float32Array(4).fill(1);
   const bufferB = new Float32Array(4).fill(1);
@@ -78,8 +78,6 @@ describe('test MLContext.compute', function() {
   const bufferE = new Float32Array(4);
   const expectedC = [2, 2, 2, 2];
   const expectedE = [3, 3, 3, 3];
-  const descX = {type: 'float32', dimensions: [-1, 2]};
-  const descY = {type: 'float32', dimensions: [2, -1]};
 
   let a; let b; let c; let d; let e; let x; let y; let z;
   let context;
@@ -93,8 +91,8 @@ describe('test MLContext.compute', function() {
     d = builder.constant(
         {type: 'float32', dimensions: [2, 2]}, new Float32Array(4).fill(1));
     e = builder.add(c, d);
-    x = builder.input('x', descX);
-    y = builder.input('y', descY);
+    x = builder.input('x', {type: 'float32', dimensions: [3, 2]});
+    y = builder.input('y', {type: 'float32', dimensions: [2, 4]});
     z = builder.matmul(x, y);
   });
 
@@ -140,8 +138,8 @@ describe('test MLContext.compute', function() {
         const shapeY = [2, 4];
         const bufferY = new Float32Array(utils.sizeOfShape(shapeY)).fill(1);
         const inputs = {
-          x: {resource: bufferX, dimensions: shapeX},
-          y: {resource: bufferY, dimensions: shapeY},
+          x: bufferX,
+          y: bufferY,
         };
         const shapeZ = [shapeX[0], shapeY[1]];
         const outputs = {z: new Float32Array(utils.sizeOfShape(shapeZ))};
@@ -246,25 +244,6 @@ describe('test MLContext.compute', function() {
                 b: {resource: bufferB, dimensions: [2]},
               },
               {c: bufferC});
-          assert.fail();
-        } catch (err) {
-          assert(!(err instanceof chai.AssertionError), 'No throwing');
-          expect(err).to.be.an.instanceof(Error);
-        }
-      });
-
-  it('MLContext.compute should throw for no dimensions for dynamic shape',
-      async () => {
-        const graph = await builder.build({z});
-        const shapeX = [3, 2];
-        const bufferX = new Float32Array(utils.sizeOfShape(shapeX)).fill(1);
-        const shapeY = [2, 4];
-        const bufferY = new Float32Array(utils.sizeOfShape(shapeY)).fill(1);
-        const inputs = {x: {resource: bufferX}, y: {resource: bufferY}};
-        const shapeZ = [shapeX[0], shapeY[1]];
-        const outputs = {z: new Float32Array(utils.sizeOfShape(shapeZ))};
-        try {
-          await context.compute(graph, inputs, outputs);
           assert.fail();
         } catch (err) {
           assert(!(err instanceof chai.AssertionError), 'No throwing');

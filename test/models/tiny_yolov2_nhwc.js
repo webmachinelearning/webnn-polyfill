@@ -117,37 +117,37 @@ describe('test tinyYolov2 nhwc', function() {
         outputs.conv, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   }
 
-  it('test_data_set_0', async function() {
+  it('test_data_set_0', async () => {
     await testTinyYoloV2(
         graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1', async function() {
+  it('test_data_set_1', async () => {
     await testTinyYoloV2(
         graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2', async function() {
+  it('test_data_set_2', async () => {
     await testTinyYoloV2(
         graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it('test_data_set_0 (fused ops)', async function() {
+  it('test_data_set_0 (fused ops)', async () => {
     await testTinyYoloV2(
         fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1 (fused ops)', async function() {
+  it('test_data_set_1 (fused ops)', async () => {
     await testTinyYoloV2(
         fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2 (fused ops)', async function() {
+  it('test_data_set_2 (fused ops)', async () => {
     await testTinyYoloV2(
         fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);

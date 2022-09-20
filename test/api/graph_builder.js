@@ -2,7 +2,7 @@
 
 const expect = chai.expect;
 
-describe('test MLGraphBuilder', function() {
+describe('test MLGraphBuilder', () => {
   let context;
   let builder;
   before(async () => {

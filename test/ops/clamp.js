@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test clamp', function() {
+describe('test clamp', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -18,7 +18,7 @@ describe('test clamp', function() {
     utils.checkValue(outputs.y, expected);
   }
 
-  it('clamp', async function() {
+  it('clamp', async () => {
     await testClamp([3], [-2, 0, 2], [-1, 0, 1], {minValue: -1, maxValue: 1});
     await testClamp([3], [-1, 0, 1], [-1, 0, 1], {minValue: -5, maxValue: 5});
     await testClamp([3], [-6, 0, 6], [-5, 0, 5], {minValue: -5, maxValue: 5});
@@ -56,7 +56,7 @@ describe('test clamp', function() {
         {minValue: -1, maxValue: 1});
   });
 
-  it('clamp with defaults', async function() {
+  it('clamp with defaults', async () => {
     await testClamp([3], [-1, 0, 1], [-1, 0, 1]);
     await testClamp(
         [3, 4, 5],

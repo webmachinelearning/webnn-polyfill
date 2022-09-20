@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test resample2d', function() {
+describe('test resample2d', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -18,7 +18,7 @@ describe('test resample2d', function() {
     utils.checkValue(outputs.y, expected.values);
   }
 
-  it('resample2d upsample scales linear', async function() {
+  it('resample2d upsample scales linear', async () => {
     await testResample2d(
         {
           shape: [1, 1, 2, 2],
@@ -52,7 +52,7 @@ describe('test resample2d', function() {
   });
 
   it('resample2d upsample scales linear with explict axes [2, 3]',
-      async function() {
+      async () => {
         await testResample2d(
             {
               shape: [1, 1, 2, 2],
@@ -86,7 +86,7 @@ describe('test resample2d', function() {
             });
       });
 
-  it('resample2d upsample scales linear axes [0, 1]', async function() {
+  it('resample2d upsample scales linear axes [0, 1]', async () => {
     await testResample2d(
         {
           shape: [2, 2, 1, 1],
@@ -120,7 +120,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample scales linear axes [1, 2]', async function() {
+  it('resample2d upsample scales linear axes [1, 2]', async () => {
     await testResample2d(
         {
           shape: [1, 2, 2, 1],
@@ -154,7 +154,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample sizes linear', async function() {
+  it('resample2d upsample sizes linear', async () => {
     await testResample2d(
         {
           shape: [1, 1, 2, 2],
@@ -187,7 +187,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample sizes linear explict axes [2, 3]', async function() {
+  it('resample2d upsample sizes linear explict axes [2, 3]', async () => {
     await testResample2d(
         {
           shape: [1, 1, 2, 2],
@@ -221,7 +221,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample sizes linear axes [0, 1]', async function() {
+  it('resample2d upsample sizes linear axes [0, 1]', async () => {
     await testResample2d(
         {
           shape: [2, 2, 1, 1],
@@ -255,7 +255,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample sizes linear axes [1, 2]', async function() {
+  it('resample2d upsample sizes linear axes [1, 2]', async () => {
     await testResample2d(
         {
           shape: [1, 2, 2, 1],
@@ -289,7 +289,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample sizes linear ignored scales', async function() {
+  it('resample2d upsample sizes linear ignored scales', async () => {
     await testResample2d(
         {
           shape: [1, 1, 2, 2],
@@ -323,7 +323,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample scales nearest', async function() {
+  it('resample2d upsample scales nearest', async () => {
     await testResample2d(
         {
           shape: [1, 1, 2, 2],
@@ -343,7 +343,7 @@ describe('test resample2d', function() {
         });
   });
 
-  it('resample2d upsample sizes nearest', async function() {
+  it('resample2d upsample sizes nearest', async () => {
     await testResample2d(
         {
           shape: [1, 1, 2, 2],

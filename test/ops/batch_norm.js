@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test batchNormalization', function() {
+describe('test batchNormalization', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -38,7 +38,7 @@ describe('test batchNormalization', function() {
     utils.checkValue(outputs.output, expected);
   }
 
-  it('batchNormalization nchw', async function() {
+  it('batchNormalization nchw', async () => {
     const input = {
       shape: [1, 2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -81,7 +81,7 @@ describe('test batchNormalization', function() {
         input, mean, variance, expectedBias, undefined, bias, {}, 'relu');
   });
 
-  it('batchNormalization 3D input axis=0', async function() {
+  it('batchNormalization 3D input axis=0', async () => {
     const input = {
       shape: [3, 1, 2],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -114,7 +114,7 @@ describe('test batchNormalization', function() {
         {epsilon: 1e-3, axis: 0});
   });
 
-  it('batchNormalization 3D input axis=2', async function() {
+  it('batchNormalization 3D input axis=2', async () => {
     const input = {
       shape: [2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -147,7 +147,7 @@ describe('test batchNormalization', function() {
         {epsilon: 1e-3, axis: 2});
   });
 
-  it('batchNormalization nhwc', async function() {
+  it('batchNormalization nhwc', async () => {
     const input = {
       shape: [1, 1, 3, 2],
       data: new Float32Array([-1, 2, 0, 3, 1, 4]),
@@ -195,7 +195,7 @@ describe('test batchNormalization', function() {
         'relu');
   });
 
-  it('batchNormalization without options', async function() {
+  it('batchNormalization without options', async () => {
     const input = {
       shape: [1, 2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -213,7 +213,7 @@ describe('test batchNormalization', function() {
     await testBatchNorm(input, mean, variance, expected);
   });
 
-  it('batchNormalization with epsilon', async function() {
+  it('batchNormalization with epsilon', async () => {
     const input = {
       shape: [2, 3, 4, 5],
       data: new Float32Array([

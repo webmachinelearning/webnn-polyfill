@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test softmax converted from softmax_float_2 test', async function() {
+  it('test softmax converted from softmax_float_2 test', async () => {
     // Converted test case (from: V1_0/softmax_float_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const input = builder.input('input', {type: 'float32', dimensions: [2, 5]});

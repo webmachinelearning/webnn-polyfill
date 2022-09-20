@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test sub + clamp converted from sub_v1_2_broadcast_none test', async function() {
+  it('test sub + clamp converted from sub_v1_2_broadcast_none test', async () => {
     // Converted test case (from: V1_2/sub_v1_2_broadcast.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2]});
@@ -24,7 +24,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test sub + clamp converted from sub_v1_2_broadcast_relu test', async function() {
+  it('test sub + clamp converted from sub_v1_2_broadcast_relu test', async () => {
     // Converted test case (from: V1_2/sub_v1_2_broadcast.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2]});
@@ -40,7 +40,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test sub + clamp converted from sub_v1_2_broadcast_relu1 test', async function() {
+  it('test sub + clamp converted from sub_v1_2_broadcast_relu1 test', async () => {
     // Converted test case (from: V1_2/sub_v1_2_broadcast.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2]});
@@ -56,7 +56,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test sub + clamp converted from sub_v1_2_broadcast_relu6 test', async function() {
+  it('test sub + clamp converted from sub_v1_2_broadcast_relu6 test', async () => {
     // Converted test case (from: V1_2/sub_v1_2_broadcast.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2]});

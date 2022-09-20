@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test reshape converted from reshape_weights_as_inputs test', async function() {
+  it('test reshape converted from reshape_weights_as_inputs test', async () => {
     // Converted test case (from: V1_0/reshape_weights_as_inputs.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 3, 3]});

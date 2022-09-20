@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test gemm', function() {
+describe('test gemm', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -28,7 +28,7 @@ describe('test gemm', function() {
     utils.checkValue(outputs.c, expected.value);
   }
 
-  it('gemm all attributes', async function() {
+  it('gemm all attributes', async () => {
     await testGemm(
         {
           shape: [4, 3],
@@ -89,7 +89,7 @@ describe('test gemm', function() {
         {alpha: 0.25, beta: 0.35, aTranspose: true, bTranspose: true});
   });
 
-  it('gemm alpha', async function() {
+  it('gemm alpha', async () => {
     await testGemm(
         {
           shape: [3, 5],
@@ -140,7 +140,7 @@ describe('test gemm', function() {
         undefined, {alpha: 0.5});
   });
 
-  it('gemm beta', async function() {
+  it('gemm beta', async () => {
     await testGemm(
         {
           shape: [2, 7],
@@ -192,7 +192,7 @@ describe('test gemm', function() {
         {beta: 0.5});
   });
 
-  it('gemm bias', async function() {
+  it('gemm bias', async () => {
     await testGemm(
         {
           shape: [3, 6],
@@ -263,7 +263,7 @@ describe('test gemm', function() {
         });
   });
 
-  it('gemm no bias', async function() {
+  it('gemm no bias', async () => {
     await testGemm(
         {
           shape: [2, 10],
@@ -298,7 +298,7 @@ describe('test gemm', function() {
         });
   });
 
-  it('gemm scalar bias', async function() {
+  it('gemm scalar bias', async () => {
     await testGemm(
         {
           shape: [2, 3],
@@ -344,7 +344,7 @@ describe('test gemm', function() {
         3.14);
   });
 
-  it('gemm broadcasting bias', async function() {
+  it('gemm broadcasting bias', async () => {
     await testGemm(
         {
           shape: [3, 7],
@@ -383,7 +383,7 @@ describe('test gemm', function() {
         {shape: [1], value: [0.7780463]});
   });
 
-  it('gemm aTranpose', async function() {
+  it('gemm aTranpose', async () => {
     await testGemm(
         {
           shape: [6, 3],
@@ -438,7 +438,7 @@ describe('test gemm', function() {
         0.0, {aTranspose: true});
   });
 
-  it('gemm bTranspose', async function() {
+  it('gemm bTranspose', async () => {
     await testGemm(
         {
           shape: [3, 6],

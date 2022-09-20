@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
@@ -31,7 +31,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
@@ -54,7 +54,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 2, 2]});
@@ -77,7 +77,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 2, 2]});
@@ -100,7 +100,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_2 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_2 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [5, 52, 60, 3]});
@@ -123,7 +123,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op41, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_2 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [5, 52, 60, 3]});
@@ -146,7 +146,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op41, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_2 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_2 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [5, 3, 52, 60]});
@@ -169,7 +169,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op41, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_2 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op11 = builder.input('op11', {type: 'float32', dimensions: [5, 3, 52, 60]});
@@ -192,7 +192,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op41, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_3 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_3 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 200, 180, 1]});
@@ -215,7 +215,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_3 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_3 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 200, 180, 1]});
@@ -238,7 +238,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_3 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_3 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 1, 200, 180]});
@@ -261,7 +261,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_3 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_3 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 1, 200, 180]});
@@ -284,7 +284,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_4 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_4 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [5, 52, 60, 3]});
@@ -307,7 +307,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_4 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_4 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [5, 52, 60, 3]});
@@ -330,7 +330,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_4 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_4 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [5, 3, 52, 60]});
@@ -353,7 +353,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_4 test', async function() {
+  it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_4 test', async () => {
     // Converted test case (from: V1_2/avg_pool_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [5, 3, 52, 60]});

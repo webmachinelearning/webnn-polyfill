@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test pow converted from pow test', async function() {
+  it('test pow converted from pow test', async () => {
     // Converted test case (from: V1_2/pow.mod.py)
     const builder = new MLGraphBuilder(context);
     const base = builder.input('base', {type: 'float32', dimensions: [2, 1]});
@@ -23,7 +23,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test pow converted from pow_relaxed test', async function() {
+  it('test pow converted from pow_relaxed test', async () => {
     // Converted test case (from: V1_2/pow.mod.py)
     const builder = new MLGraphBuilder(context);
     const base = builder.input('base', {type: 'float32', dimensions: [2, 1]});
@@ -38,7 +38,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test pow converted from pow_2 test', async function() {
+  it('test pow converted from pow_2 test', async () => {
     // Converted test case (from: V1_2/pow.mod.py)
     const builder = new MLGraphBuilder(context);
     const base = builder.input('base', {type: 'float32', dimensions: [2, 1]});
@@ -53,7 +53,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output1, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test pow converted from pow_relaxed_2 test', async function() {
+  it('test pow converted from pow_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/pow.mod.py)
     const builder = new MLGraphBuilder(context);
     const base = builder.input('base', {type: 'float32', dimensions: [2, 1]});
@@ -68,7 +68,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output1, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test pow converted from pow_3 test', async function() {
+  it('test pow converted from pow_3 test', async () => {
     // Converted test case (from: V1_2/pow.mod.py)
     const builder = new MLGraphBuilder(context);
     const base = builder.input('base', {type: 'float32', dimensions: [2, 1]});
@@ -83,7 +83,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test pow converted from pow_relaxed_3 test', async function() {
+  it('test pow converted from pow_relaxed_3 test', async () => {
     // Converted test case (from: V1_2/pow.mod.py)
     const builder = new MLGraphBuilder(context);
     const base = builder.input('base', {type: 'float32', dimensions: [2, 1]});

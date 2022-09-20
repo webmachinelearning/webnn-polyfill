@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test min', function() {
+describe('test min', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('min', async function() {
+  it('min', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
@@ -62,7 +62,7 @@ describe('test min', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('min broadcast', async function() {
+  it('min broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});

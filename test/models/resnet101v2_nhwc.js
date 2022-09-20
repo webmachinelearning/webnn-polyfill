@@ -214,37 +214,37 @@ describe('test resnet101v2 nhwc', function() {
         outputs.reshape, expected, utils.ctsFp32RestrictAccuracyCriteria);
   }
 
-  it('test_data_set_0', async function() {
+  it('test_data_set_0', async () => {
     await testResNet101V2(
         graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1', async function() {
+  it('test_data_set_1', async () => {
     await testResNet101V2(
         graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2', async function() {
+  it('test_data_set_2', async () => {
     await testResNet101V2(
         graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it('test_data_set_0 (fused ops)', async function() {
+  it('test_data_set_0 (fused ops)', async () => {
     await testResNet101V2(
         fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1 (fused ops)', async function() {
+  it('test_data_set_1 (fused ops)', async () => {
     await testResNet101V2(
         fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2 (fused ops)', async function() {
+  it('test_data_set_2 (fused ops)', async () => {
     await testResNet101V2(
         fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);

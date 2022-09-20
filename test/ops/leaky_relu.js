@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test leakyRelu', function() {
+describe('test leakyRelu', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -18,7 +18,7 @@ describe('test leakyRelu', function() {
     utils.checkValue(outputs.y, expected);
   }
 
-  it('leakyRelu', async function() {
+  it('leakyRelu', async () => {
     await testLeakyRelu(
         {shape: [3], value: [-1, 0, 1]}, [-0.1, 0., 1.], {alpha: 0.1});
     await testLeakyRelu(
@@ -56,7 +56,7 @@ describe('test leakyRelu', function() {
         {alpha: 0.1});
   });
 
-  it('leakyRelu default', async function() {
+  it('leakyRelu default', async () => {
     await testLeakyRelu(
         {
           shape: [3, 4, 5],

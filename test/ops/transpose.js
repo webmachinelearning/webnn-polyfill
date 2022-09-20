@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test transpose', function() {
+describe('test transpose', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -19,7 +19,7 @@ describe('test transpose', function() {
     utils.checkValue(outputs.y, expected);
   }
 
-  it('transpose default', async function() {
+  it('transpose default', async () => {
     const inputShape = [2, 3, 4];
     const inputData = [
       0.43376675, 0.264609,   0.26321858, 0.04260185, 0.6862414,  0.26150206,
@@ -36,7 +36,7 @@ describe('test transpose', function() {
     await checkTranspose(inputShape, inputData, [4, 3, 2], expected);
   });
 
-  it('transpose permutations', async function() {
+  it('transpose permutations', async () => {
     const permutations =
         [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]];
     const inputShape = [2, 3, 4];

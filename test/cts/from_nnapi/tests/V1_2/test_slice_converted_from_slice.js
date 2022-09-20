@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test slice converted from slice test', async function() {
+  it('test slice converted from slice test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input = builder.input('input', {type: 'float32', dimensions: [4]});
@@ -23,7 +23,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed test', async function() {
+  it('test slice converted from slice_relaxed test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input = builder.input('input', {type: 'float32', dimensions: [4]});
@@ -38,7 +38,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_2 test', async function() {
+  it('test slice converted from slice_2 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input1 = builder.input('input1', {type: 'float32', dimensions: [2, 3]});
@@ -53,7 +53,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output1, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed_2 test', async function() {
+  it('test slice converted from slice_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input1 = builder.input('input1', {type: 'float32', dimensions: [2, 3]});
@@ -68,7 +68,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output1, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_3 test', async function() {
+  it('test slice converted from slice_3 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input2 = builder.input('input2', {type: 'float32', dimensions: [2, 3, 2]});
@@ -83,7 +83,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed_3 test', async function() {
+  it('test slice converted from slice_relaxed_3 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input2 = builder.input('input2', {type: 'float32', dimensions: [2, 3, 2]});
@@ -98,7 +98,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_4 test', async function() {
+  it('test slice converted from slice_4 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input3 = builder.input('input3', {type: 'float32', dimensions: [4, 1, 1, 1]});
@@ -113,7 +113,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output3, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed_4 test', async function() {
+  it('test slice converted from slice_relaxed_4 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input3 = builder.input('input3', {type: 'float32', dimensions: [4, 1, 1, 1]});
@@ -128,7 +128,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output3, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_5 test', async function() {
+  it('test slice converted from slice_5 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input4 = builder.input('input4', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -143,7 +143,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed_5 test', async function() {
+  it('test slice converted from slice_relaxed_5 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input4 = builder.input('input4', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -158,7 +158,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_float16_5 test', async function() {
+  it('test slice converted from slice_float16_5 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input4 = builder.input('input4', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -173,7 +173,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_6 test', async function() {
+  it('test slice converted from slice_6 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input5 = builder.input('input5', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -188,7 +188,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output5, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed_6 test', async function() {
+  it('test slice converted from slice_relaxed_6 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input5 = builder.input('input5', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -203,7 +203,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output5, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_float16_6 test', async function() {
+  it('test slice converted from slice_float16_6 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input5 = builder.input('input5', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -218,7 +218,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output5, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_8 test', async function() {
+  it('test slice converted from slice_8 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input7 = builder.input('input7', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -233,7 +233,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output7, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test slice converted from slice_relaxed_8 test', async function() {
+  it('test slice converted from slice_relaxed_8 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input7 = builder.input('input7', {type: 'int32', dimensions: [3, 2, 3, 1]});
@@ -248,7 +248,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output7, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test slice converted from slice_float16_8 test', async function() {
+  it('test slice converted from slice_float16_8 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
     const input7 = builder.input('input7', {type: 'int32', dimensions: [3, 2, 3, 1]});

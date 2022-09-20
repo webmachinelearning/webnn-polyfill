@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test clamp converted from relu6_float_2_relaxed test', async function() {
+  it('test clamp converted from relu6_float_2_relaxed test', async () => {
     // Converted test case (from: V1_1/relu6_float_2_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
     const input = builder.input('input', {type: 'float32', dimensions: [2, 26, 40, 2]});

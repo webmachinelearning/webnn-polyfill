@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test relu in worker', function() {
+describe('test relu in worker', () => {
   it('relu', async () => {
     const shape = [3, 4, 5];
     const inputs = {

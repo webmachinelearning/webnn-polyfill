@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test pad', function() {
+describe('test pad', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -21,7 +21,7 @@ describe('test pad', function() {
     utils.checkValue(outputs.y, expected.values);
   }
 
-  it('pad default', async function() {
+  it('pad default', async () => {
     await testPad(
         {
           shape: [2, 3],
@@ -40,7 +40,7 @@ describe('test pad', function() {
         });
   });
 
-  it('pad constant model default value', async function() {
+  it('pad constant model default value', async () => {
     await testPad(
         {
           shape: [2, 3],
@@ -59,7 +59,7 @@ describe('test pad', function() {
         });
   });
 
-  it('pad constant model specified value', async function() {
+  it('pad constant model specified value', async () => {
     await testPad(
         {
           shape: [2, 3],
@@ -79,7 +79,7 @@ describe('test pad', function() {
         });
   });
 
-  it('pad edge mode', async function() {
+  it('pad edge mode', async () => {
     await testPad(
         {
           shape: [2, 3],
@@ -98,7 +98,7 @@ describe('test pad', function() {
         });
   });
 
-  it('pad reflection mode', async function() {
+  it('pad reflection mode', async () => {
     await testPad(
         {
           shape: [2, 3],
@@ -117,7 +117,7 @@ describe('test pad', function() {
         });
   });
 
-  it('pad symmetric mode', async function() {
+  it('pad symmetric mode', async () => {
     await testPad(
         {
           shape: [2, 3],

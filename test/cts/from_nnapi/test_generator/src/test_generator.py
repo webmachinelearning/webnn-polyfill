@@ -1247,7 +1247,7 @@ def InitializeCtsTestFile(test, detph):
 import * as utils from '%sutils.js';\n""" % ''.join(['../']*detph)
     print(testFileHeader,  file=test)
     print("/* eslint-disable max-len */", file=test)
-    print("describe('CTS converted from NNAPI CTS', function() {", file=test)
+    print("describe('CTS converted from NNAPI CTS', () => {", file=test)
     IndentedPrint("let context;",indent=2, file=test)
     IndentedPrint("before(async () => {",indent=2, file=test)
     IndentedPrint("context = await navigator.ml.createContext();",

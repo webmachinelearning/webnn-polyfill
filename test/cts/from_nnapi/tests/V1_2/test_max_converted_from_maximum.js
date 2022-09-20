@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test max converted from maximum_simple test', async function() {
+  it('test max converted from maximum_simple test', async () => {
     // Converted test case (from: V1_2/maximum.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [3, 1, 2]});
@@ -23,7 +23,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test max converted from maximum_simple_relaxed test', async function() {
+  it('test max converted from maximum_simple_relaxed test', async () => {
     // Converted test case (from: V1_2/maximum.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [3, 1, 2]});
@@ -38,7 +38,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test max converted from maximum_simple_int32 test', async function() {
+  it('test max converted from maximum_simple_int32 test', async () => {
     // Converted test case (from: V1_2/maximum.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'int32', dimensions: [3, 1, 2]});
@@ -53,7 +53,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test max converted from maximum_broadcast test', async function() {
+  it('test max converted from maximum_broadcast test', async () => {
     // Converted test case (from: V1_2/maximum.mod.py)
     const builder = new MLGraphBuilder(context);
     const input01 = builder.input('input01', {type: 'float32', dimensions: [3, 1, 2]});
@@ -68,7 +68,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output01, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test max converted from maximum_broadcast_relaxed test', async function() {
+  it('test max converted from maximum_broadcast_relaxed test', async () => {
     // Converted test case (from: V1_2/maximum.mod.py)
     const builder = new MLGraphBuilder(context);
     const input01 = builder.input('input01', {type: 'float32', dimensions: [3, 1, 2]});
@@ -83,7 +83,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output01, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test max converted from maximum_broadcast_int32 test', async function() {
+  it('test max converted from maximum_broadcast_int32 test', async () => {
     // Converted test case (from: V1_2/maximum.mod.py)
     const builder = new MLGraphBuilder(context);
     const input01 = builder.input('input01', {type: 'int32', dimensions: [3, 1, 2]});

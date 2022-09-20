@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test slice', function() {
+describe('test slice', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -19,7 +19,7 @@ describe('test slice', function() {
     utils.checkValue(outputs.y, expected);
   }
 
-  it('slice default axes', async function() {
+  it('slice default axes', async () => {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -54,7 +54,7 @@ describe('test slice', function() {
         expected);
   });
 
-  it('slice with negative starts', async function() {
+  it('slice with negative starts', async () => {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -89,7 +89,7 @@ describe('test slice', function() {
         expected);
   });
 
-  it('slice with axes', async function() {
+  it('slice with axes', async () => {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -126,7 +126,7 @@ describe('test slice', function() {
         inputShape, inputData, starts, sizes, axes, expectedShape, expected);
   });
 
-  it('slice with negative axes', async function() {
+  it('slice with negative axes', async () => {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,
@@ -163,7 +163,7 @@ describe('test slice', function() {
         inputShape, inputData, starts, sizes, axes, expectedShape, expected);
   });
 
-  it('slice with -1 sizes', async function() {
+  it('slice with -1 sizes', async () => {
     const inputShape = [3, 4, 5];
     const inputData = [
       1.3165863e+00,  4.1239005e-02,  4.6697399e-01,  -6.6145003e-02,

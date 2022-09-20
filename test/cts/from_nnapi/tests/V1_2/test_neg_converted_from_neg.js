@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test neg converted from neg test', async function() {
+  it('test neg converted from neg test', async () => {
     // Converted test case (from: V1_2/neg.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 3, 4, 5]});
@@ -21,7 +21,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test neg converted from neg_relaxed test', async function() {
+  it('test neg converted from neg_relaxed test', async () => {
     // Converted test case (from: V1_2/neg.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 3, 4, 5]});
@@ -34,7 +34,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test neg converted from neg_int32 test', async function() {
+  it('test neg converted from neg_int32 test', async () => {
     // Converted test case (from: V1_2/neg.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'int32', dimensions: [1, 2, 3, 4, 5]});

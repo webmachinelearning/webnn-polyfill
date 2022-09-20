@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test add', function() {
+describe('test add', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('add constant and input', async function() {
+  it('add constant and input', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.constant(
@@ -62,7 +62,7 @@ describe('test add', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('add two inputs', async function() {
+  it('add two inputs', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
@@ -117,7 +117,7 @@ describe('test add', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('add broadcast', async function() {
+  it('add broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});

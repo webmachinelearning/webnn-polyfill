@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test instanceNormalization', function() {
+describe('test instanceNormalization', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('instanceNormalization default', async function() {
+  it('instanceNormalization default', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -21,7 +21,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('instanceNormalization with scale', async function() {
+  it('instanceNormalization with scale', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -37,7 +37,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('instanceNormalization with bias', async function() {
+  it('instanceNormalization with bias', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -53,7 +53,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('instanceNormalization with scale and bias', async function() {
+  it('instanceNormalization with scale and bias', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -70,7 +70,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('batchNormalization with epsilon', async function() {
+  it('batchNormalization with epsilon', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
@@ -148,7 +148,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('batchNormalization nchw', async function() {
+  it('batchNormalization nchw', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
@@ -228,7 +228,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('batchNormalization nhwc', async function() {
+  it('batchNormalization nhwc', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 4, 5, 3];
     const input =

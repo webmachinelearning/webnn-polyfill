@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test matmul + add + clamp converted from fully_connected_v1_2 test', async function() {
+  it('test matmul + add + clamp converted from fully_connected_v1_2 test', async () => {
     // Converted test case (from: V1_2/fully_connected_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [3, 1]});
@@ -25,7 +25,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op3, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test matmul + add + clamp converted from fully_connected_v1_2_relaxed test', async function() {
+  it('test matmul + add + clamp converted from fully_connected_v1_2_relaxed test', async () => {
     // Converted test case (from: V1_2/fully_connected_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [3, 1]});

@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test gru', function() {
+describe('test gru', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('gruCell defaults', async function() {
+  it('gruCell defaults', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 2;
@@ -51,7 +51,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with bias', async function() {
+  it('gruCell with bias', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -92,7 +92,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with recurrentBias', async function() {
+  it('gruCell with recurrentBias', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -134,7 +134,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with explict resetAfter true', async function() {
+  it('gruCell with explict resetAfter true', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -180,7 +180,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with resetAfter false', async function() {
+  it('gruCell with resetAfter false', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -226,7 +226,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with default zrn layout', async function() {
+  it('gruCell with default zrn layout', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -283,7 +283,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with explict zrn layout', async function() {
+  it('gruCell with explict zrn layout', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -341,7 +341,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with rzn layout', async function() {
+  it('gruCell with rzn layout', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -399,7 +399,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with [tanh, sigmoid] activations', async function() {
+  it('gruCell with [tanh, sigmoid] activations', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -461,7 +461,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with 1 step', async function() {
+  it('gru with 1 step', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 1;
     const numDirections = 1;
@@ -530,7 +530,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with 2 steps', async function() {
+  it('gru with 2 steps', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -594,7 +594,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with explict returnSequence false', async function() {
+  it('gru with explict returnSequence false', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -659,7 +659,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with returnSequence true', async function() {
+  it('gru with returnSequence true', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -763,7 +763,7 @@ describe('test gru', function() {
     }
   });
 
-  it('gru with explict forward direction', async function() {
+  it('gru with explict forward direction', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -828,7 +828,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with backward direction', async function() {
+  it('gru with backward direction', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -893,7 +893,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with both direction', async function() {
+  it('gru with both direction', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 2;
@@ -973,7 +973,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru without initialHiddenState', async function() {
+  it('gru without initialHiddenState', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;

@@ -2,13 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
+describe('CTS converted from NNAPI CTS', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('test softmax converted from softmax_v1_2_axis_dim2_axis1 test', async function() {
+  it('test softmax converted from softmax_v1_2_axis_dim2_axis1 test', async () => {
     // Converted test case (from: V1_2/softmax_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [2, 5]});
@@ -21,7 +21,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test softmax converted from softmax_v1_2_axis_dim2_axis1_neg test', async function() {
+  it('test softmax converted from softmax_v1_2_axis_dim2_axis1_neg test', async () => {
     // Converted test case (from: V1_2/softmax_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [2, 5]});
@@ -34,7 +34,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1 test', async function() {
+  it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1 test', async () => {
     // Converted test case (from: V1_2/softmax_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [2, 5]});
@@ -47,7 +47,7 @@ describe('CTS converted from NNAPI CTS', function() {
     utils.checkValue(outputs.op2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1_neg test', async function() {
+  it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1_neg test', async () => {
     // Converted test case (from: V1_2/softmax_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [2, 5]});

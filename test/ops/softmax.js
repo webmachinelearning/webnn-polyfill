@@ -1,13 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test softmax', function() {
+describe('test softmax', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
   });
 
-  it('softmax', async function() {
+  it('softmax', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3, 4]});
     const y = builder.softmax(x);

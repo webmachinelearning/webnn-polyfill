@@ -1,7 +1,7 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test tanh', function() {
+describe('test tanh', () => {
   let context;
   before(async () => {
     context = await navigator.ml.createContext();
@@ -16,11 +16,11 @@ describe('test tanh', function() {
     await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.y, expected);
   }
-  it('tanh 1d', async function() {
+  it('tanh 1d', async () => {
     await testTanh([-1, 0, 1], [-0.76159418, 0., 0.76159418], [3]);
   });
 
-  it('tanh 3d', async function() {
+  it('tanh 3d', async () => {
     await testTanh(
         [
           0.15102264,  -1.1556778,  -0.0657572,  -0.04362043, 1.13937,

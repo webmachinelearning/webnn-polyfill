@@ -605,7 +605,7 @@ def DumpCtsTest(example, test, fused):
                        str(example.testName))
         if testIndex > 0:
             testPurpose = "%s/%d" % (testPurpose, testIndex)
-        IndentedPrint("it('%s', async function() {" % testPurpose,
+        IndentedPrint("it('%s', async () => {" % testPurpose,
                       indent=2, file=test)
         IndentedPrint("// Converted test case (from: %s/%s)" % \
                       (tg.FileNames.version,
