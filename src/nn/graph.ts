@@ -127,42 +127,76 @@ export class MLGraph {
   private operandRefs_: Map<MLOperand, number> = new Map();
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
-  /** @internal */
-  async compute(
-    inputs:MLNamedArrayBufferViews, outputs: MLNamedArrayBufferViews,
-    syncFlag: boolean): Promise<void> {
-    this.validateInputs(inputs);
-    // Validate and filter the required output operands.
-    utils.assert(Object.keys(outputs).length !== 0, 'The outputs is invalid.');
-    const outputOperands: Map<string, OutputOperand> = new Map();
-    for (const outputName in outputs) {
-      utils.assert(
-          typeof outputName === 'string' && this.outputs_.has(outputName),
-          'The name of the output is invalid.');
-      utils.assert(
-          utils.isTypedArray(outputs[outputName]),
-          'Only output of ArrayBufferView type is supported.');
-      outputOperands.set(outputName, this.outputs_.get(outputName));
+  private computeOutputTensors(
+    inputs: MLNamedArrayBufferViews = undefined,
+    outputs: MLNamedArrayBufferViews = undefined): tf.TensorContainerObject {
+    if (inputs) {
+      this.validateInputs(inputs);
+    } else {
+      inputs = {};
+      for (const inputName of this.inputs_.keys()) {
+        const inputOperand = this.inputs_.get(inputName);
+        const typedArrayConstructor =
+            utils.getTypedArray(inputOperand.desc.type);
+        const inputBuffer = new typedArrayConstructor(
+            utils.sizeFromDimensions(inputOperand.desc.dimensions));
+        inputs[inputName] = inputBuffer;
+      }
     }
-
-    // Compute the output tensors.
+    let outputOperands: Map<string, OutputOperand> = this.outputs_;
+    if (outputs) {
+      // Validate and filter the required output operands.
+      utils.assert(Object.keys(outputs).length !== 0,
+                   'The outputs is invalid.');
+      outputOperands = new Map();
+      for (const outputName in outputs) {
+        utils.assert(
+            typeof outputName === 'string' && this.outputs_.has(outputName),
+            'The name of the output is invalid.');
+        utils.assert(
+            utils.isTypedArray(outputs[outputName]),
+            'Only output of ArrayBufferView type is supported.');
+        outputOperands.set(outputName, this.outputs_.get(outputName));
+      }
+    }
     const outputTensors: tf.TensorContainerObject = tf.tidy(() => {
       const context = new ExecutionContext(
           this.constantTensors_, this.inputs_, inputs, this.operandRefs_);
       // The input and immediate tensors will be cleaned up.
       return context.compute(outputOperands);
     });
+    return outputTensors;
+  }
 
+  /** @internal */
+  async compute(
+    inputs: MLNamedArrayBufferViews,
+    outputs: MLNamedArrayBufferViews): Promise<void> {
+    const outputTensors: tf.TensorContainerObject =
+        this.computeOutputTensors(inputs, outputs);
     // Setup the outputs.
     for (const outputName of Object.keys(outputTensors)) {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
-      let data;
-      if (syncFlag) {
-        data = tensor.dataSync();
-      } else {
-        data = await tensor.data();
-      }
+      const data = await tensor.data();
+      const resource = outputs[outputName] ;
+      utils.validateTypedArray(resource, desc.type, desc.dimensions);
+      resource.set(data);
+      tf.dispose(tensor);
+    }
+  }
+
+  /** @internal */
+  computeSync(
+    inputs: MLNamedArrayBufferViews,
+    outputs: MLNamedArrayBufferViews): void {
+    const outputTensors: tf.TensorContainerObject =
+        this.computeOutputTensors(inputs, outputs);
+    // Setup the outputs.
+    for (const outputName of Object.keys(outputTensors)) {
+      const tensor = outputTensors[outputName] as tf.Tensor;
+      const desc = utils.createOperandDescriptorFromTensor(tensor);
+      const data = tensor.dataSync();
       const resource = outputs[outputName] ;
       utils.validateTypedArray(resource, desc.type, desc.dimensions);
       resource.set(data);
@@ -201,7 +235,7 @@ export class MLGraph {
   static async buildAndCompile(outputs?: MLNamedOperands): Promise<MLGraph> {
     const graph = new MLGraph(outputs);
     graph.build();
-    await graph.compile(false);
+    await graph.compile();
     return graph;
   }
 
@@ -209,7 +243,7 @@ export class MLGraph {
   static buildAndCompileSync(outputs?: MLNamedOperands): MLGraph {
     const graph = new MLGraph(outputs);
     graph.build();
-    graph.compile(true);
+    graph.compileSync();
     return graph;
   }
 
@@ -254,9 +288,14 @@ export class MLGraph {
     }
   }
 
-  private async compile(syncFlag: boolean): Promise<void> {
+  private async compile(): Promise<void> {
     this.allocateConstants();
-    await this.computeOnce(syncFlag);
+    await this.computeOnce();
+  }
+
+  private compileSync(): void {
+    this.allocateConstants();
+    this.computeOnceSync();
   }
 
   private allocateConstants(): void {
@@ -266,28 +305,20 @@ export class MLGraph {
     }
   }
 
-  private async computeOnce(syncFlag: boolean): Promise<void> {
-    const inputs: MLNamedArrayBufferViews = {};
-    for (const inputName of this.inputs_.keys()) {
-      const inputOperand = this.inputs_.get(inputName);
-      const typedArrayConstructor = utils.getTypedArray(inputOperand.desc.type);
-      const inputBuffer = new typedArrayConstructor(
-          utils.sizeFromDimensions(inputOperand.desc.dimensions));
-      inputs[inputName] = inputBuffer;
-    }
-    const outputTensors: tf.TensorContainerObject = tf.tidy(() => {
-      const context = new ExecutionContext(
-          this.constantTensors_, this.inputs_, inputs, this.operandRefs_);
-      // The input and immediate tensors will be cleaned up.
-      return context.compute(this.outputs_);
-    });
+  private async computeOnce(): Promise<void> {
+    const outputTensors = this.computeOutputTensors();
     for (const outputName of Object.keys(outputTensors)) {
       const tensor = outputTensors[outputName] as tf.Tensor;
-      if (syncFlag) {
-        tensor.dataSync();
-      } else {
-        await tensor.data();
-      }
+      await tensor.data();
+      tf.dispose(tensor);
+    }
+  }
+
+  private computeOnceSync(): void {
+    const outputTensors = this.computeOutputTensors();
+    for (const outputName of Object.keys(outputTensors)) {
+      const tensor = outputTensors[outputName] as tf.Tensor;
+      tensor.dataSync();
       tf.dispose(tensor);
     }
   }
