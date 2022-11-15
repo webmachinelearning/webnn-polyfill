@@ -127,6 +127,39 @@ export class MLGraph {
   private operandRefs_: Map<MLOperand, number> = new Map();
   private constantTensors_: Map<ConstantOperand, tf.Tensor> = new Map();
 
+  private validateInputs(inputs: MLNamedArrayBufferViews) {
+    for (const name in inputs) {
+      utils.assert(
+          typeof name === 'string' && this.inputs_.has(name),
+          'The name of the input is invalid.');
+      const inputOperand = this.inputs_.get(name);
+      const resource = inputs[name];
+      const dimensions = inputOperand.desc.dimensions;
+      utils.assert(
+          utils.isTypedArray(resource),
+          'Only resource of ArrayBufferView type is supported.');
+      utils.validateTypedArray(resource, inputOperand.desc.type, dimensions);
+    }
+  }
+
+  private validateAndSetOutputOperands(outputs: MLNamedArrayBufferViews):
+      Map<string, OutputOperand> {
+    // Validate and filter the required output operands.
+    utils.assert(Object.keys(outputs).length !== 0,
+                  'The outputs is invalid.');
+    const outputOperands = new Map();
+    for (const outputName in outputs) {
+      utils.assert(
+          typeof outputName === 'string' && this.outputs_.has(outputName),
+          'The name of the output is invalid.');
+      utils.assert(
+          utils.isTypedArray(outputs[outputName]),
+          'Only output of ArrayBufferView type is supported.');
+      outputOperands.set(outputName, this.outputs_.get(outputName));
+    }
+    return outputOperands;
+  }
+
   private computeOutputTensors(
     inputs: MLNamedArrayBufferViews = undefined,
     outputs: MLNamedArrayBufferViews = undefined): tf.TensorContainerObject {
@@ -145,19 +178,7 @@ export class MLGraph {
     }
     let outputOperands: Map<string, OutputOperand> = this.outputs_;
     if (outputs) {
-      // Validate and filter the required output operands.
-      utils.assert(Object.keys(outputs).length !== 0,
-                   'The outputs is invalid.');
-      outputOperands = new Map();
-      for (const outputName in outputs) {
-        utils.assert(
-            typeof outputName === 'string' && this.outputs_.has(outputName),
-            'The name of the output is invalid.');
-        utils.assert(
-            utils.isTypedArray(outputs[outputName]),
-            'Only output of ArrayBufferView type is supported.');
-        outputOperands.set(outputName, this.outputs_.get(outputName));
-      }
+      outputOperands = this.validateAndSetOutputOperands(outputs);
     }
     const outputTensors: tf.TensorContainerObject = tf.tidy(() => {
       const context = new ExecutionContext(
@@ -178,10 +199,9 @@ export class MLGraph {
     for (const outputName of Object.keys(outputTensors)) {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
-      const data = await tensor.data();
       const resource = outputs[outputName] ;
       utils.validateTypedArray(resource, desc.type, desc.dimensions);
-      resource.set(data);
+      resource.set(await tensor.data());
       tf.dispose(tensor);
     }
   }
@@ -196,26 +216,10 @@ export class MLGraph {
     for (const outputName of Object.keys(outputTensors)) {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
-      const data = tensor.dataSync();
       const resource = outputs[outputName] ;
       utils.validateTypedArray(resource, desc.type, desc.dimensions);
-      resource.set(data);
+      resource.set(tensor.dataSync());
       tf.dispose(tensor);
-    }
-  }
-
-  private validateInputs(inputs: MLNamedArrayBufferViews) {
-    for (const name in inputs) {
-      utils.assert(
-          typeof name === 'string' && this.inputs_.has(name),
-          'The name of the input is invalid.');
-      const inputOperand = this.inputs_.get(name);
-      const resource = inputs[name];
-      const dimensions = inputOperand.desc.dimensions;
-      utils.assert(
-          utils.isTypedArray(resource),
-          'Only resource of ArrayBufferView type is supported.');
-      utils.validateTypedArray(resource, inputOperand.desc.type, dimensions);
     }
   }
 
