@@ -10,6 +10,7 @@ const testDataDir = '../../test-data/models/resnet50v2_nchw';
 describe('test resnet50v2 nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -19,7 +20,7 @@ describe('test resnet50v2 nchw', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fusedBatchNorm = false;
 
@@ -165,7 +166,8 @@ describe('test resnet50v2 nchw', function() {
       const pool2 = await builder.averagePool2d(bn3);
       const reshape = builder.reshape(pool2, [1, -1]);
       const gemm = await buildGemm(reshape, '0');
-      return builder.build({gemm});
+      const resNetGraph = await builder.build({gemm});
+      return resNetGraph;
     }
 
     graph = await buildResNet();
@@ -194,7 +196,7 @@ describe('test resnet50v2 nchw', function() {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
     const outputs = {
       'gemm': new Float32Array(utils.sizeOfShape([1, 1000]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
@@ -204,37 +206,37 @@ describe('test resnet50v2 nchw', function() {
         new utils.AccuracyCriterion(1e-3, 1e-3));
   }
 
-  it('test_data_set_0', async function() {
+  it('test_data_set_0', async () => {
     await testResNet50V2(
         graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1', async function() {
+  it('test_data_set_1', async () => {
     await testResNet50V2(
         graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2', async function() {
+  it('test_data_set_2', async () => {
     await testResNet50V2(
         graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it('test_data_set_0 (fused ops)', async function() {
+  it('test_data_set_0 (fused ops)', async () => {
     await testResNet50V2(
         fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1 (fused ops)', async function() {
+  it('test_data_set_1 (fused ops)', async () => {
     await testResNet50V2(
         fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2 (fused ops)', async function() {
+  it('test_data_set_2 (fused ops)', async () => {
     await testResNet50V2(
         fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);

@@ -8,6 +8,7 @@ const testDataDir = '../../test-data/models/mobilenetv2_batchnorm_nchw';
 describe('test mobilenetv2 batchnorm nchw', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -17,7 +18,7 @@ describe('test mobilenetv2 batchnorm nchw', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fusedBatchNorm = false;
 
@@ -124,7 +125,8 @@ describe('test mobilenetv2 batchnorm nchw', function() {
           builder, new URL(conv0WeightUrl, url));
       const conv0 = builder.conv2d(pool0, conv0Weight);
       const reshape0 = builder.reshape(conv0, [1, -1]);
-      return builder.build({reshape0});
+      const mobileNetGraph = await builder.build({reshape0});
+      return mobileNetGraph;
     }
     graph = await buildMobileNet();
     fusedBatchNorm = true;
@@ -154,44 +156,44 @@ describe('test mobilenetv2 batchnorm nchw', function() {
     const outputs = {
       'reshape0': new Float32Array(utils.sizeOfShape([1, 1000])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
         outputs.reshape0, expected, utils.modelFp32AccuracyCriteria);
   }
 
-  it('test_data_set_0', async function() {
+  it('test_data_set_0', async () => {
     await testMobileNetV2(
         graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1', async function() {
+  it('test_data_set_1', async () => {
     await testMobileNetV2(
         graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2', async function() {
+  it('test_data_set_2', async () => {
     await testMobileNetV2(
         graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it('test_data_set_0 (fused ops)', async function() {
+  it('test_data_set_0 (fused ops)', async () => {
     await testMobileNetV2(
         fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1 (fused ops)', async function() {
+  it('test_data_set_1 (fused ops)', async () => {
     await testMobileNetV2(
         fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2 (fused ops)', async function() {
+  it('test_data_set_2 (fused ops)', async () => {
     await testMobileNetV2(
         fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);

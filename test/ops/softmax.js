@@ -1,14 +1,17 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test softmax', function() {
-  const context = navigator.ml.createContext();
+describe('test softmax', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('softmax', function() {
+  it('softmax', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3, 4]});
     const y = builder.softmax(x);
-    const graph = builder.build({y});
+    const graph = await builder.build({y});
     const inputs = {
       'x': new Float32Array([
         0.4301911,
@@ -26,7 +29,7 @@ describe('test softmax', function() {
       ]),
     };
     const outputs = {'y': new Float32Array(utils.sizeOfShape([3, 4]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.32165375,
       0.36157736,

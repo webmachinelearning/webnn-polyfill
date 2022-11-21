@@ -605,7 +605,7 @@ def DumpCtsTest(example, test, fused):
                        str(example.testName))
         if testIndex > 0:
             testPurpose = "%s/%d" % (testPurpose, testIndex)
-        IndentedPrint("it('%s', function() {" % testPurpose,
+        IndentedPrint("it('%s', async () => {" % testPurpose,
                       indent=2, file=test)
         IndentedPrint("// Converted test case (from: %s/%s)" % \
                       (tg.FileNames.version,
@@ -731,7 +731,7 @@ def DumpCtsTest(example, test, fused):
         PrintOperations(biasOp, mappedWebNNOp, webnnParamsStr,
                         fusedReluMappedInfo, outputOp, test, fused)
         if len(curOutputsList) == 1:
-            IndentedPrint("const graph = builder.build({%s});" % outputOp,
+            IndentedPrint("const graph = await builder.build({%s});" % outputOp,
                           indent=4, file=test)
             IndentedPrint(
                 "const outputs = {%s: new %s(utils.sizeOfShape(%s))};" % \
@@ -740,7 +740,7 @@ def DumpCtsTest(example, test, fused):
                 indent=4, file=test)                         
         elif len(curOutputsList) > 1:
             outputOpNameList = [item.name for item in outputOp]
-            IndentedPrint("const graph = builder.build({%s});" % \
+            IndentedPrint("const graph = await builder.build({%s});" % \
                           ', '.join(outputOpNameList), indent=4, file=test)
             arrayStr = "new %s(utils.sizeOfShape(%s))" % \
                 (outputOp[0].type.mappingTypedArrayType,
@@ -750,7 +750,7 @@ def DumpCtsTest(example, test, fused):
             outputStr = ', '.join(outputNameBufferList)
             IndentedPrint(
                 "const outputs = {%s};" % outputStr, indent=4, file=test)            
-        IndentedPrint("graph.compute({%s}, outputs);" % \
+        IndentedPrint("await context.compute(graph, {%s}, outputs);" % \
                       ', '.join(computeParamsList), indent=4, file=test)
         # Check compute output
         criteria = 'utils.ctsFp32RestrictAccuracyCriteria'

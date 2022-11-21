@@ -8,6 +8,7 @@ const testDataDir = '../../test-data/models/tiny_yolov2_nhwc';
 describe('test tinyYolov2 nhwc', function() {
   // eslint-disable-next-line no-invalid-this
   this.timeout(0);
+  let context;
   let graph;
   let fusedGraph;
   let beforeNumBytes;
@@ -17,7 +18,7 @@ describe('test tinyYolov2 nhwc', function() {
       beforeNumBytes = _tfengine.memory().numBytes;
       beforeNumTensors = _tfengine.memory().numTensors;
     }
-    const context = navigator.ml.createContext();
+    context = await navigator.ml.createContext();
     const builder = new MLGraphBuilder(context);
     let fused = false;
 
@@ -77,7 +78,8 @@ describe('test tinyYolov2 nhwc', function() {
       const conv7 = await buildConv(pool6, '7');
       const conv8 = await buildConv(conv7, '8');
       const conv = await buildConv(conv8, '9', false);
-      return builder.build({conv});
+      const tinyYoloGraph = await builder.build({conv});
+      return tinyYoloGraph;
     }
 
     graph = await buildTinyYolo();
@@ -108,44 +110,44 @@ describe('test tinyYolov2 nhwc', function() {
     const outputs = {
       'conv': new Float32Array(utils.sizeOfShape([1, 13, 13, 125])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
         outputs.conv, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   }
 
-  it('test_data_set_0', async function() {
+  it('test_data_set_0', async () => {
     await testTinyYoloV2(
         graph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1', async function() {
+  it('test_data_set_1', async () => {
     await testTinyYoloV2(
         graph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2', async function() {
+  it('test_data_set_2', async () => {
     await testTinyYoloV2(
         graph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);
   });
 
-  it('test_data_set_0 (fused ops)', async function() {
+  it('test_data_set_0 (fused ops)', async () => {
     await testTinyYoloV2(
         fusedGraph, `${testDataDir}/test_data_set/0/input_0.npy`,
         `${testDataDir}/test_data_set/0/output_0.npy`);
   });
 
-  it('test_data_set_1 (fused ops)', async function() {
+  it('test_data_set_1 (fused ops)', async () => {
     await testTinyYoloV2(
         fusedGraph, `${testDataDir}/test_data_set/1/input_0.npy`,
         `${testDataDir}/test_data_set/1/output_0.npy`);
   });
 
-  it('test_data_set_2 (fused ops)', async function() {
+  it('test_data_set_2 (fused ops)', async () => {
     await testTinyYoloV2(
         fusedGraph, `${testDataDir}/test_data_set/2/input_0.npy`,
         `${testDataDir}/test_data_set/2/output_0.npy`);

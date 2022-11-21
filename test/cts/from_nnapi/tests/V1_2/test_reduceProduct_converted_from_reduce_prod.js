@@ -2,10 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
-  const context = navigator.ml.createContext();
+describe('CTS converted from NNAPI CTS', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('test reduceProduct converted from reduce_prod test', function() {
+  it('test reduceProduct converted from reduce_prod test', async () => {
     // Converted test case (from: V1_2/reduce_prod.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [3, 2]});
@@ -14,13 +17,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const param1 = false;
     const expected = [2, 12, -30];
     const output0 = builder.reduceProduct(input0, {'axes': param, 'keepDimensions': param1});
-    const graph = builder.build({output0});
+    const graph = await builder.build({output0});
     const outputs = {output0: new Float32Array(utils.sizeOfShape([3]))};
-    graph.compute({'input0': input0Data}, outputs);
+    await context.compute(graph, {'input0': input0Data}, outputs);
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test reduceProduct converted from reduce_prod_relaxed test', function() {
+  it('test reduceProduct converted from reduce_prod_relaxed test', async () => {
     // Converted test case (from: V1_2/reduce_prod.mod.py)
     const builder = new MLGraphBuilder(context);
     const input0 = builder.input('input0', {type: 'float32', dimensions: [3, 2]});
@@ -29,13 +32,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const param1 = false;
     const expected = [2, 12, -30];
     const output0 = builder.reduceProduct(input0, {'axes': param, 'keepDimensions': param1});
-    const graph = builder.build({output0});
+    const graph = await builder.build({output0});
     const outputs = {output0: new Float32Array(utils.sizeOfShape([3]))};
-    graph.compute({'input0': input0Data}, outputs);
+    await context.compute(graph, {'input0': input0Data}, outputs);
     utils.checkValue(outputs.output0, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test reduceProduct converted from reduce_prod_2 test', function() {
+  it('test reduceProduct converted from reduce_prod_2 test', async () => {
     // Converted test case (from: V1_2/reduce_prod.mod.py)
     const builder = new MLGraphBuilder(context);
     const input01 = builder.input('input01', {type: 'float32', dimensions: [1]});
@@ -44,13 +47,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const param3 = true;
     const expected = [9.527];
     const output01 = builder.reduceProduct(input01, {'axes': param2, 'keepDimensions': param3});
-    const graph = builder.build({output01});
+    const graph = await builder.build({output01});
     const outputs = {output01: new Float32Array(utils.sizeOfShape([1]))};
-    graph.compute({'input01': input01Data}, outputs);
+    await context.compute(graph, {'input01': input01Data}, outputs);
     utils.checkValue(outputs.output01, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test reduceProduct converted from reduce_prod_relaxed_2 test', function() {
+  it('test reduceProduct converted from reduce_prod_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/reduce_prod.mod.py)
     const builder = new MLGraphBuilder(context);
     const input01 = builder.input('input01', {type: 'float32', dimensions: [1]});
@@ -59,13 +62,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const param3 = true;
     const expected = [9.527];
     const output01 = builder.reduceProduct(input01, {'axes': param2, 'keepDimensions': param3});
-    const graph = builder.build({output01});
+    const graph = await builder.build({output01});
     const outputs = {output01: new Float32Array(utils.sizeOfShape([1]))};
-    graph.compute({'input01': input01Data}, outputs);
+    await context.compute(graph, {'input01': input01Data}, outputs);
     utils.checkValue(outputs.output01, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test reduceProduct converted from reduce_prod_4 test', function() {
+  it('test reduceProduct converted from reduce_prod_4 test', async () => {
     // Converted test case (from: V1_2/reduce_prod.mod.py)
     const builder = new MLGraphBuilder(context);
     const input03 = builder.input('input03', {type: 'float32', dimensions: [4, 3, 2]});
@@ -74,13 +77,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = true;
     const expected = [774.592, 1197.504, 668.89152];
     const output03 = builder.reduceProduct(input03, {'axes': param6, 'keepDimensions': param7});
-    const graph = builder.build({output03});
+    const graph = await builder.build({output03});
     const outputs = {output03: new Float32Array(utils.sizeOfShape([1, 3, 1]))};
-    graph.compute({'input03': input03Data}, outputs);
+    await context.compute(graph, {'input03': input03Data}, outputs);
     utils.checkValue(outputs.output03, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test reduceProduct converted from reduce_prod_relaxed_4 test', function() {
+  it('test reduceProduct converted from reduce_prod_relaxed_4 test', async () => {
     // Converted test case (from: V1_2/reduce_prod.mod.py)
     const builder = new MLGraphBuilder(context);
     const input03 = builder.input('input03', {type: 'float32', dimensions: [4, 3, 2]});
@@ -89,9 +92,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const param7 = true;
     const expected = [774.592, 1197.504, 668.89152];
     const output03 = builder.reduceProduct(input03, {'axes': param6, 'keepDimensions': param7});
-    const graph = builder.build({output03});
+    const graph = await builder.build({output03});
     const outputs = {output03: new Float32Array(utils.sizeOfShape([1, 3, 1]))};
-    graph.compute({'input03': input03Data}, outputs);
+    await context.compute(graph, {'input03': input03Data}, outputs);
     utils.checkValue(outputs.output03, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });

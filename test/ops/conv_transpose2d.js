@@ -1,10 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test convTranspose2d', function() {
-  const context = navigator.ml.createContext();
+describe('test convTranspose2d', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  function testConvTranspose2d(
+  async function testConvTranspose2d(
       input, filter, expected, options = {}, bias = undefined,
       activation = undefined, fusion = false, activationOptions = {}) {
     const builder = new MLGraphBuilder(context);
@@ -38,14 +41,14 @@ describe('test convTranspose2d', function() {
         y = utils.createActivation(builder, activation, y, activationOptions);
       }
     }
-    const graph = builder.build({y});
+    const graph = await builder.build({y});
     const inputs = {'x': input.data};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.y, expected.data);
   }
 
-  it('convTranspose2d default', function() {
+  it('convTranspose2d default', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -63,10 +66,10 @@ describe('test convTranspose2d', function() {
         15., 9.,  20., 33., 24., 13., 6.,  13., 21., 15., 8.,
       ],
     };
-    testConvTranspose2d(input, filter, expected);
+    await testConvTranspose2d(input, filter, expected);
   });
 
-  it('convTranspose2d nchw hwoi', function() {
+  it('convTranspose2d nchw hwoi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -88,10 +91,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d nchw ohwi', function() {
+  it('convTranspose2d nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -113,10 +116,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d nhwc iohw', function() {
+  it('convTranspose2d nhwc iohw', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -138,10 +141,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d nhwc hwoi', function() {
+  it('convTranspose2d nhwc hwoi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -163,10 +166,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d nhwc ohwi', function() {
+  it('convTranspose2d nhwc ohwi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -188,10 +191,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes default', function() {
+  it('convTranspose2d outputSizes default', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -219,10 +222,10 @@ describe('test convTranspose2d', function() {
       strides: [3, 2],
       outputSizes: [10, 8],
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes nchw hwoi', function() {
+  it('convTranspose2d outputSizes nchw hwoi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -252,10 +255,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes nchw ohwi', function() {
+  it('convTranspose2d outputSizes nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -285,10 +288,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes nhwc iohw', function() {
+  it('convTranspose2d outputSizes nhwc iohw', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -317,10 +320,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes nhwc hwoi', function() {
+  it('convTranspose2d outputSizes nhwc hwoi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -349,10 +352,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes nhwc ohwi', function() {
+  it('convTranspose2d outputSizes nhwc ohwi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -381,10 +384,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d out pad default', function() {
+  it('convTranspose2d out pad default', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -412,10 +415,10 @@ describe('test convTranspose2d', function() {
       strides: [3, 2],
       outputPadding: [1, 1],
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d out pad nchw hwoi', function() {
+  it('convTranspose2d out pad nchw hwoi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -445,10 +448,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d out pad nchw ohwi', function() {
+  it('convTranspose2d out pad nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -478,10 +481,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d out pad nhwc iohw', function() {
+  it('convTranspose2d out pad nhwc iohw', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -510,10 +513,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d out pad nhwc hwoi', function() {
+  it('convTranspose2d out pad nhwc hwoi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -542,10 +545,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d out pad nhwc ohwi', function() {
+  it('convTranspose2d out pad nhwc ohwi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -574,10 +577,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-upper default', function() {
+  it('convTranspose2d autopad same-upper default', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -600,10 +603,10 @@ describe('test convTranspose2d', function() {
       autoPad: 'same-upper',
       strides: [2, 2],
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-upper nchw hwoi', function() {
+  it('convTranspose2d autopad same-upper nchw hwoi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -628,10 +631,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-upper nchw ohwi', function() {
+  it('convTranspose2d autopad same-upper nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -656,10 +659,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-upper nhwc iohw', function() {
+  it('convTranspose2d autopad same-upper nhwc iohw', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -683,10 +686,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-upper nhwc hwoi', function() {
+  it('convTranspose2d autopad same-upper nhwc hwoi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -710,10 +713,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-upper nhwc ohwi', function() {
+  it('convTranspose2d autopad same-upper nhwc ohwi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -737,10 +740,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit default padding', function() {
+  it('convTranspose2d autopad explicit default padding', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -772,10 +775,10 @@ describe('test convTranspose2d', function() {
       autoPad: 'explicit',
       strides: [2, 2],
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit nchw iohw', function() {
+  it('convTranspose2d autopad explicit nchw iohw', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -808,10 +811,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit nchw hwoi', function() {
+  it('convTranspose2d autopad explicit nchw hwoi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -844,10 +847,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit nchw ohwi', function() {
+  it('convTranspose2d autopad explicit nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -880,10 +883,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit nhwc iohw', function() {
+  it('convTranspose2d autopad explicit nhwc iohw', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -908,10 +911,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit nhwc hwoi', function() {
+  it('convTranspose2d autopad explicit nhwc hwoi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -936,10 +939,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad explicit nhwc ohwi', function() {
+  it('convTranspose2d autopad explicit nhwc ohwi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -964,10 +967,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-lower nchw iohw', function() {
+  it('convTranspose2d autopad same-lower nchw iohw', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1000,10 +1003,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-lower nchw hwoi', function() {
+  it('convTranspose2d autopad same-lower nchw hwoi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1036,10 +1039,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-lower nchw ohwi', function() {
+  it('convTranspose2d autopad same-lower nchw ohwi', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1072,10 +1075,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nchw',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-lower nhwc iohw', function() {
+  it('convTranspose2d autopad same-lower nhwc iohw', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1102,10 +1105,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'iohw',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-lower nhwc hwoi', function() {
+  it('convTranspose2d autopad same-lower nhwc hwoi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1132,10 +1135,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'hwoi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d autopad same-lower nhwc ohwi', function() {
+  it('convTranspose2d autopad same-lower nhwc ohwi', async () => {
     const input = {
       shape: [1, 3, 3, 1],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1162,10 +1165,10 @@ describe('test convTranspose2d', function() {
       inputLayout: 'nhwc',
       filterLayout: 'ohwi',
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d outputSizes ignored output padding', function() {
+  it('convTranspose2d outputSizes ignored output padding', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1194,10 +1197,10 @@ describe('test convTranspose2d', function() {
       outputPadding: [1, 1],
       outputSizes: [10, 8],
     };
-    testConvTranspose2d(input, filter, expected, options);
+    await testConvTranspose2d(input, filter, expected, options);
   });
 
-  it('convTranspose2d bias nchw iohw', function() {
+  it('convTranspose2d bias nchw iohw', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1224,10 +1227,10 @@ describe('test convTranspose2d', function() {
         10, 21, 34, 25, 14, 7, 14, 22, 16, 9,
       ],
     };
-    testConvTranspose2d(input, filter, expected, options, bias);
+    await testConvTranspose2d(input, filter, expected, options, bias);
   });
 
-  it('convTranspose2d activation nchw iohw', function() {
+  it('convTranspose2d activation nchw iohw', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1250,10 +1253,11 @@ describe('test convTranspose2d', function() {
         9, 20, 33, 24, 13, 6, 13, 21, 15, 8,
       ],
     };
-    testConvTranspose2d(input, filter, expected, options, undefined, 'relu');
+    await testConvTranspose2d(
+        input, filter, expected, options, undefined, 'relu');
   });
 
-  it('convTranspose2d bias activation nchw iohw', function() {
+  it('convTranspose2d bias activation nchw iohw', async () => {
     const input = {
       shape: [1, 1, 3, 3],
       data: new Float32Array([0, 1, 2, 3, 4, 5, 6, 7, 8]),
@@ -1281,6 +1285,7 @@ describe('test convTranspose2d', function() {
         6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
       ],
     };
-    testConvTranspose2d(input, filter, expected, options, bias, activation);
+    await testConvTranspose2d(
+        input, filter, expected, options, bias, activation);
   });
 });

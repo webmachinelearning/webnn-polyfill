@@ -1,25 +1,28 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test pow', function() {
-  const context = navigator.ml.createContext();
+describe('test pow', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
   async function testSqrt(input, expected, shape) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.constant(
         {type: 'float32', dimensions: [1]}, new Float32Array([0.5]));
     const z = builder.pow(x, y);
-    const graph = builder.build({z});
+    const graph = await builder.build({z});
     const inputs = {'x': new Float32Array(input)};
     const outputs = {'z': new Float32Array(utils.sizeOfShape(shape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.z, expected);
   }
-  it('sqrt 1d', async function() {
+  it('sqrt 1d', async () => {
     testSqrt([1, 4, 9], [1, 2, 3], [3]);
   });
 
-  it('sqrt 3d', async function() {
+  it('sqrt 3d', async () => {
     testSqrt(
         [
           0.33435354, 0.57139647, 0.03689031, 0.7820907,  0.7718887,
@@ -52,42 +55,42 @@ describe('test pow', function() {
         [3, 4, 5]);
   });
 
-  it('pow 1d', async function() {
+  it('pow 1d', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
         {type: 'float32', dimensions: [3]}, new Float32Array([4, 5, 6]));
     const z = builder.pow(x, y);
-    const graph = builder.build({z});
+    const graph = await builder.build({z});
     const inputs = {'x': new Float32Array([1, 2, 3])};
     const outputs = {'z': new Float32Array(3)};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.z, [1., 32., 729.]);
   });
 
-  it('pow broadcast with 1d of [3] and 1d of [1]', async function() {
+  it('pow broadcast with 1d of [3] and 1d of [1]', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [3]});
     const y = builder.constant(
         {type: 'float32', dimensions: [1]}, new Float32Array([2]));
     const z = builder.pow(x, y);
-    const graph = builder.build({z});
+    const graph = await builder.build({z});
     const inputs = {'x': new Float32Array([1, 2, 3])};
     const outputs = {'z': new Float32Array(3)};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.z, [1., 4., 9.]);
   });
 
-  it('pow broadcast with 2d of [2, 3] and 1d of [3]', async function() {
+  it('pow broadcast with 2d of [2, 3] and 1d of [3]', async () => {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
     const y = builder.constant(
         {type: 'float32', dimensions: [3]}, new Float32Array([1, 2, 3]));
     const z = builder.pow(x, y);
-    const graph = builder.build({z});
+    const graph = await builder.build({z});
     const inputs = {'x': new Float32Array([1, 2, 3, 4, 5, 6])};
     const outputs = {'z': new Float32Array(utils.sizeOfShape([2, 3]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.z, [1., 4., 27., 4., 25., 216.]);
   });
 });

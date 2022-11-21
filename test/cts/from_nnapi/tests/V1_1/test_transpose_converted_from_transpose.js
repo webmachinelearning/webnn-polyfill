@@ -2,10 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
-  const context = navigator.ml.createContext();
+describe('CTS converted from NNAPI CTS', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('test transpose converted from transpose test', function() {
+  it('test transpose converted from transpose test', async () => {
     // Converted test case (from: V1_1/transpose.mod.py)
     const builder = new MLGraphBuilder(context);
     const input = builder.input('input', {type: 'float32', dimensions: [1, 2, 2, 1]});
@@ -13,9 +16,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const perms = [0, 2, 1, 3];
     const expected = [1.0, 3.0, 2.0, 4.0];
     const output = builder.transpose(input, {'permutation': perms});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const outputs = {output: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    graph.compute({'input': inputData}, outputs);
+    await context.compute(graph, {'input': inputData}, outputs);
     utils.checkValue(outputs.output, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 });

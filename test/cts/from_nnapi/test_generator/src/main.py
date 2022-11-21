@@ -42,7 +42,7 @@ def DumpAllInOneCtsTest(test, cts):
                 with SmartOpen(generatedTestPath, mode="r") as readFile:
                     fileText = readFile.readlines()
                     for (lineNum, lineText) in enumerate(fileText):
-                        if lineNum in range(6, len(fileText) - 2):
+                        if lineNum in range(9, len(fileText) - 2):
                             aioTest.write(lineText)
         IndentedPrint("});", file=aioTest)
         IndentedPrint("/* eslint-disable max-len */", file=aioTest)

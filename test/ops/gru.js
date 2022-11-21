@@ -1,10 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test gru', function() {
-  const context = navigator.ml.createContext();
+describe('test gru', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('gruCell defaults', function() {
+  it('gruCell defaults', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 2;
@@ -22,12 +25,12 @@ describe('test gru', function() {
         new Float32Array(batchSize * hiddenSize).fill(0));
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize);
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.12397027,
       0.12397027,
@@ -48,7 +51,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with bias', function() {
+  it('gruCell with bias', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -69,12 +72,12 @@ describe('test gru', function() {
         new Float32Array(3 * hiddenSize).fill(0.1));
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize, {bias});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.20053662,
       0.20053662,
@@ -89,7 +92,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with recurrentBias', function() {
+  it('gruCell with recurrentBias', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -111,12 +114,12 @@ describe('test gru', function() {
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {recurrentBias});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.14985296,
       0.14985296,
@@ -131,7 +134,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with explict resetAfter true', function() {
+  it('gruCell with explict resetAfter true', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -157,12 +160,12 @@ describe('test gru', function() {
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.90645754,
       1.90645754,
@@ -177,7 +180,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with resetAfter false', function() {
+  it('gruCell with resetAfter false', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -203,12 +206,12 @@ describe('test gru', function() {
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.90685618,
       1.90685618,
@@ -223,7 +226,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with default zrn layout', function() {
+  it('gruCell with default zrn layout', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -260,12 +263,12 @@ describe('test gru', function() {
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -280,7 +283,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with explict zrn layout', function() {
+  it('gruCell with explict zrn layout', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -318,12 +321,12 @@ describe('test gru', function() {
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter, layout});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -338,7 +341,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with rzn layout', function() {
+  it('gruCell with rzn layout', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -376,12 +379,12 @@ describe('test gru', function() {
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter, layout});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -396,7 +399,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gruCell with [tanh, sigmoid] activations', function() {
+  it('gruCell with [tanh, sigmoid] activations', async () => {
     const builder = new MLGraphBuilder(context);
     const batchSize = 3;
     const inputSize = 3;
@@ -438,12 +441,12 @@ describe('test gru', function() {
           resetAfter,
           activations: [builder.tanh(), builder.sigmoid()],
         });
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.99940538,
       1.99962664,
@@ -458,7 +461,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with 1 step', function() {
+  it('gru with 1 step', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 1;
     const numDirections = 1;
@@ -506,13 +509,13 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, resetAfter, layout});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -527,7 +530,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with 2 steps', function() {
+  it('gru with 2 steps', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -561,7 +564,7 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -570,7 +573,7 @@ describe('test gru', function() {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -591,7 +594,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with explict returnSequence false', function() {
+  it('gru with explict returnSequence false', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -626,7 +629,7 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, returnSequence});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -635,7 +638,7 @@ describe('test gru', function() {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -656,7 +659,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with returnSequence true', function() {
+  it('gru with returnSequence true', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -691,7 +694,8 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, returnSequence});
-    const graph = builder.build({output0: operands[0], output1: operands[1]});
+    const graph = await builder.build(
+        {output0: operands[0], output1: operands[1]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -702,7 +706,7 @@ describe('test gru', function() {
       'output1': new Float32Array(
           utils.sizeOfShape([steps, numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       [
         0.22391089,
@@ -759,7 +763,7 @@ describe('test gru', function() {
     }
   });
 
-  it('gru with explict forward direction', function() {
+  it('gru with explict forward direction', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -794,7 +798,7 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, direction});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -803,7 +807,7 @@ describe('test gru', function() {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -824,7 +828,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with backward direction', function() {
+  it('gru with backward direction', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -859,7 +863,7 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, direction});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -868,7 +872,7 @@ describe('test gru', function() {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.22227009,
       0.22227009,
@@ -889,7 +893,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru with both direction', function() {
+  it('gru with both direction', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 2;
@@ -924,7 +928,7 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, direction});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -933,7 +937,7 @@ describe('test gru', function() {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.2239109,
       0.2239109,
@@ -969,7 +973,7 @@ describe('test gru', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('gru without initialHiddenState', function() {
+  it('gru without initialHiddenState', async () => {
     const builder = new MLGraphBuilder(context);
     const steps = 2;
     const numDirections = 1;
@@ -1000,7 +1004,7 @@ describe('test gru', function() {
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias});
-    const graph = builder.build({output: operands[0]});
+    const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
           [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]),
@@ -1009,7 +1013,7 @@ describe('test gru', function() {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,

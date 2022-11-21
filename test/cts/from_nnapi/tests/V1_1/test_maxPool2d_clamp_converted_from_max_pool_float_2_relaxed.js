@@ -2,10 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
-  const context = navigator.ml.createContext();
+describe('CTS converted from NNAPI CTS', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('test maxPool2d + clamp converted from max_pool_float_2_relaxed test', function() {
+  it('test maxPool2d + clamp converted from max_pool_float_2_relaxed test', async () => {
     // Converted test case (from: V1_1/max_pool_float_2_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
     const i0 = builder.input('i0', {type: 'float32', dimensions: [5, 50, 70, 3]});
@@ -16,9 +19,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const expected = [20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20];
     const interOut0 = builder.maxPool2d(i0, {'padding': [padding, padding, padding, padding], 'strides': [stride, stride], 'windowDimensions': [filter, filter], 'layout': 'nhwc'});
     const output = builder.clamp(interOut0);
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const outputs = {output: new Float32Array(utils.sizeOfShape([5, 2, 3, 3]))};
-    graph.compute({'i0': i0Data}, outputs);
+    await context.compute(graph, {'i0': i0Data}, outputs);
     utils.checkValue(outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });

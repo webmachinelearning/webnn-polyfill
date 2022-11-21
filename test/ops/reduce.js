@@ -1,22 +1,25 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test reduce', function() {
-  const context = navigator.ml.createContext();
+describe('test reduce', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  function testReduce(op, options, input, expected) {
+  async function testReduce(op, options, input, expected) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const y = builder['reduce' + op](x, options);
-    const graph = builder.build({y});
+    const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.values)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.y, expected.values);
   }
 
-  it('reduceLogSumExp default', function() {
-    testReduce(
+  it('reduceLogSumExp default', async () => {
+    await testReduce(
         'LogSumExp', {}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -24,8 +27,8 @@ describe('test reduce', function() {
         {shape: [], values: [11.458669]});
   });
 
-  it('reduceLogSumExp default axes keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp default axes keep dims', async () => {
+    await testReduce(
         'LogSumExp', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -33,8 +36,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [11.458669]});
   });
 
-  it('reduceLogSumExp axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp axes0 do not keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -45,8 +48,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp axes1 do not keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -64,8 +67,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp axes2 do not keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -83,8 +86,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp negative axes do not keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -102,8 +105,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp axes0 keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp axes0 keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -114,8 +117,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp axes1 keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp axes1 keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -133,8 +136,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp axes2 keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp axes2 keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -152,8 +155,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceLogSumExp negative axes keep dims', function() {
-    testReduce(
+  it('reduceLogSumExp negative axes keep dims', async () => {
+    await testReduce(
         'LogSumExp', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -171,8 +174,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceMax default', function() {
-    testReduce(
+  it('reduceMax default', async () => {
+    await testReduce(
         'Max', {}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -180,8 +183,8 @@ describe('test reduce', function() {
         {shape: [], values: [600.]});
   });
 
-  it('reduceMax default axes keep dims', function() {
-    testReduce(
+  it('reduceMax default axes keep dims', async () => {
+    await testReduce(
         'Max', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -189,8 +192,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [600.]});
   });
 
-  it('reduceMax axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceMax axes0 do not keep dims', async () => {
+    await testReduce(
         'Max', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -198,8 +201,8 @@ describe('test reduce', function() {
         {shape: [2, 2], values: [500., 100., 600., 400.]});
   });
 
-  it('reduceMax axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceMax axes1 do not keep dims', async () => {
+    await testReduce(
         'Max', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -207,8 +210,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [200., 100., 300., 400., 600., 6.]});
   });
 
-  it('reduceMax axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceMax axes2 do not keep dims', async () => {
+    await testReduce(
         'Max', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -216,8 +219,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
   });
 
-  it('reduceMax negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceMax negative axes do not keep dims', async () => {
+    await testReduce(
         'Max', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -225,8 +228,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
   });
 
-  it('reduceMax axes0 keep dims', function() {
-    testReduce(
+  it('reduceMax axes0 keep dims', async () => {
+    await testReduce(
         'Max', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -234,8 +237,8 @@ describe('test reduce', function() {
         {shape: [1, 2, 2], values: [500., 100., 600., 400.]});
   });
 
-  it('reduceMax axes1 keep dims', function() {
-    testReduce(
+  it('reduceMax axes1 keep dims', async () => {
+    await testReduce(
         'Max', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -243,8 +246,8 @@ describe('test reduce', function() {
         {shape: [3, 1, 2], values: [200., 100., 300., 400., 600., 6.]});
   });
 
-  it('reduceMax axes2 keep dims', function() {
-    testReduce(
+  it('reduceMax axes2 keep dims', async () => {
+    await testReduce(
         'Max', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -252,8 +255,8 @@ describe('test reduce', function() {
         {shape: [3, 2, 1], values: [100., 200., 300., 400., 500., 600.]});
   });
 
-  it('reduceMax negative axes keep dims', function() {
-    testReduce(
+  it('reduceMax negative axes keep dims', async () => {
+    await testReduce(
         'Max', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -261,8 +264,8 @@ describe('test reduce', function() {
         {shape: [3, 2, 1], values: [100., 200., 300., 400., 500., 600.]});
   });
 
-  it('reduceMean default', function() {
-    testReduce(
+  it('reduceMean default', async () => {
+    await testReduce(
         'Mean', {}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -270,8 +273,8 @@ describe('test reduce', function() {
         {shape: [], values: [18.25]});
   });
 
-  it('reduceMean default axes keep dims', function() {
-    testReduce(
+  it('reduceMean default axes keep dims', async () => {
+    await testReduce(
         'Mean', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -279,8 +282,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [18.25]});
   });
 
-  it('reduceMean axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceMean axes0 do not keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -288,8 +291,8 @@ describe('test reduce', function() {
         {shape: [2, 2], values: [30., 1., 40., 2.]});
   });
 
-  it('reduceMean axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceMean axes1 do not keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -297,8 +300,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [12.5, 1.5, 35., 1.5, 57.5, 1.5]});
   });
 
-  it('reduceMean axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceMean axes2 do not keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -306,8 +309,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
-  it('reduceMean negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceMean negative axes do not keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -315,8 +318,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
-  it('reduceMean axes0 keep dims', function() {
-    testReduce(
+  it('reduceMean axes0 keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -324,8 +327,8 @@ describe('test reduce', function() {
         {shape: [1, 2, 2], values: [30., 1., 40., 2.]});
   });
 
-  it('reduceMean axes1 keep dims', function() {
-    testReduce(
+  it('reduceMean axes1 keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -333,8 +336,8 @@ describe('test reduce', function() {
         {shape: [3, 1, 2], values: [12.5, 1.5, 35., 1.5, 57.5, 1.5]});
   });
 
-  it('reduceMean axes2 keep dims', function() {
-    testReduce(
+  it('reduceMean axes2 keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -342,8 +345,8 @@ describe('test reduce', function() {
         {shape: [3, 2, 1], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
-  it('reduceMean negative axes keep dims', function() {
-    testReduce(
+  it('reduceMean negative axes keep dims', async () => {
+    await testReduce(
         'Mean', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
@@ -351,8 +354,8 @@ describe('test reduce', function() {
         {shape: [3, 2, 1], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
-  it('reduceMin default', function() {
-    testReduce(
+  it('reduceMin default', async () => {
+    await testReduce(
         'Min', {}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -360,8 +363,8 @@ describe('test reduce', function() {
         {shape: [], values: [1.]});
   });
 
-  it('reduceMin default axes keep dims', function() {
-    testReduce(
+  it('reduceMin default axes keep dims', async () => {
+    await testReduce(
         'Min', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -369,8 +372,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [1.]});
   });
 
-  it('reduceMin axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceMin axes0 do not keep dims', async () => {
+    await testReduce(
         'Min', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -378,8 +381,8 @@ describe('test reduce', function() {
         {shape: [2, 2], values: [1., 3., 4., 2.]});
   });
 
-  it('reduceMin axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceMin axes1 do not keep dims', async () => {
+    await testReduce(
         'Min', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -387,8 +390,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [1., 2., 4., 3., 500., 5.]});
   });
 
-  it('reduceMin axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceMin axes2 do not keep dims', async () => {
+    await testReduce(
         'Min', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -396,8 +399,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
   });
 
-  it('reduceMin negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceMin negative axes do not keep dims', async () => {
+    await testReduce(
         'Min', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -405,8 +408,8 @@ describe('test reduce', function() {
         {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
   });
 
-  it('reduceMin axes0 keep dims', function() {
-    testReduce(
+  it('reduceMin axes0 keep dims', async () => {
+    await testReduce(
         'Min', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -414,8 +417,8 @@ describe('test reduce', function() {
         {shape: [1, 2, 2], values: [1., 3., 4., 2.]});
   });
 
-  it('reduceMin axes1 keep dims', function() {
-    testReduce(
+  it('reduceMin axes1 keep dims', async () => {
+    await testReduce(
         'Min', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -423,8 +426,8 @@ describe('test reduce', function() {
         {shape: [3, 1, 2], values: [1., 2., 4., 3., 500., 5.]});
   });
 
-  it('reduceMin axes2 keep dims', function() {
-    testReduce(
+  it('reduceMin axes2 keep dims', async () => {
+    await testReduce(
         'Min', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -432,8 +435,8 @@ describe('test reduce', function() {
         {shape: [3, 2, 1], values: [1., 2., 3., 4., 5., 6.]});
   });
 
-  it('reduceMin negative axes keep dims', function() {
-    testReduce(
+  it('reduceMin negative axes keep dims', async () => {
+    await testReduce(
         'Min', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
@@ -441,8 +444,8 @@ describe('test reduce', function() {
         {shape: [3, 2, 1], values: [1., 2., 3., 4., 5., 6.]});
   });
 
-  it('reduceProduct default', function() {
-    testReduce(
+  it('reduceProduct default', async () => {
+    await testReduce(
         'Product', {}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -450,8 +453,8 @@ describe('test reduce', function() {
         {shape: [], values: [0.]});
   });
 
-  it('reduceProduct default axes keep dims', function() {
-    testReduce(
+  it('reduceProduct default axes keep dims', async () => {
+    await testReduce(
         'Product', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -459,8 +462,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [0.]});
   });
 
-  it('reduceProduct axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceProduct axes0 do not keep dims', async () => {
+    await testReduce(
         'Product', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -471,8 +474,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceProduct axes1 do not keep dims', async () => {
+    await testReduce(
         'Product', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -483,8 +486,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceProduct axes2 do not keep dims', async () => {
+    await testReduce(
         'Product', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -495,8 +498,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceProduct negative axes do not keep dims', async () => {
+    await testReduce(
         'Product', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -507,8 +510,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct axes0 keep dims', function() {
-    testReduce(
+  it('reduceProduct axes0 keep dims', async () => {
+    await testReduce(
         'Product', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -519,8 +522,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct axes1 keep dims', function() {
-    testReduce(
+  it('reduceProduct axes1 keep dims', async () => {
+    await testReduce(
         'Product', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -531,8 +534,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct axes2 keep dims', function() {
-    testReduce(
+  it('reduceProduct axes2 keep dims', async () => {
+    await testReduce(
         'Product', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -543,8 +546,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceProduct negative axes keep dims', function() {
-    testReduce(
+  it('reduceProduct negative axes keep dims', async () => {
+    await testReduce(
         'Product', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -555,8 +558,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum default', function() {
-    testReduce(
+  it('reduceSum default', async () => {
+    await testReduce(
         'Sum', {}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -564,8 +567,8 @@ describe('test reduce', function() {
         {shape: [], values: [66.]});
   });
 
-  it('reduceSum default axes keep dims', function() {
-    testReduce(
+  it('reduceSum default axes keep dims', async () => {
+    await testReduce(
         'Sum', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -573,8 +576,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [66.]});
   });
 
-  it('reduceSum axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceSum axes0 do not keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -585,8 +588,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceSum axes1 do not keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -597,8 +600,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceSum axes2 do not keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -609,8 +612,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceSum negative axes do not keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -621,8 +624,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum axes0 keep dims', function() {
-    testReduce(
+  it('reduceSum axes0 keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -633,8 +636,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum axes1 keep dims', function() {
-    testReduce(
+  it('reduceSum axes1 keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -645,8 +648,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum axes2 keep dims', function() {
-    testReduce(
+  it('reduceSum axes2 keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -657,8 +660,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceSum negative axes keep dims', function() {
-    testReduce(
+  it('reduceSum negative axes keep dims', async () => {
+    await testReduce(
         'Sum', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
@@ -669,8 +672,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 default', function() {
-    testReduce(
+  it('reduceL1 default', async () => {
+    await testReduce(
         'L1', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
@@ -685,8 +688,8 @@ describe('test reduce', function() {
         {shape: [], values: [39.778313]});
   });
 
-  it('reduceL1 default axes keep dims', function() {
-    testReduce(
+  it('reduceL1 default axes keep dims', async () => {
+    await testReduce(
         'L1', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
@@ -701,8 +704,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [39.778313]});
   });
 
-  it('reduceL1 axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceL1 axes0 do not keep dims', async () => {
+    await testReduce(
         'L1', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -723,8 +726,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceL1 axes1 do not keep dims', async () => {
+    await testReduce(
         'L1', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -746,8 +749,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceL1 axes2 do not keep dims', async () => {
+    await testReduce(
         'L1', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -769,8 +772,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceL1 negative axes do not keep dims', async () => {
+    await testReduce(
         'L1', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -792,8 +795,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 axes0 keep dims', function() {
-    testReduce(
+  it('reduceL1 axes0 keep dims', async () => {
+    await testReduce(
         'L1', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -814,8 +817,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 axes1 keep dims', function() {
-    testReduce(
+  it('reduceL1 axes1 keep dims', async () => {
+    await testReduce(
         'L1', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -837,8 +840,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 axes2 keep dims', function() {
-    testReduce(
+  it('reduceL1 axes2 keep dims', async () => {
+    await testReduce(
         'L1', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -860,8 +863,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL1 negative axes keep dims', function() {
-    testReduce(
+  it('reduceL1 negative axes keep dims', async () => {
+    await testReduce(
         'L1', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -883,8 +886,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 default', function() {
-    testReduce(
+  it('reduceL2 default', async () => {
+    await testReduce(
         'L2', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
@@ -899,8 +902,8 @@ describe('test reduce', function() {
         {shape: [], values: [14.970192]});
   });
 
-  it('reduceL2 default axes keep dims', function() {
-    testReduce(
+  it('reduceL2 default axes keep dims', async () => {
+    await testReduce(
         'L2', {keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
@@ -915,8 +918,8 @@ describe('test reduce', function() {
         {shape: [1, 1, 1], values: [14.970192]});
   });
 
-  it('reduceL2 axes0 do not keep dims', function() {
-    testReduce(
+  it('reduceL2 axes0 do not keep dims', async () => {
+    await testReduce(
         'L2', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -937,8 +940,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 axes1 do not keep dims', function() {
-    testReduce(
+  it('reduceL2 axes1 do not keep dims', async () => {
+    await testReduce(
         'L2', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -960,8 +963,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 axes2 do not keep dims', function() {
-    testReduce(
+  it('reduceL2 axes2 do not keep dims', async () => {
+    await testReduce(
         'L2', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -983,8 +986,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 negative axes do not keep dims', function() {
-    testReduce(
+  it('reduceL2 negative axes do not keep dims', async () => {
+    await testReduce(
         'L2', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -1006,8 +1009,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 axes0 keep dims', function() {
-    testReduce(
+  it('reduceL2 axes0 keep dims', async () => {
+    await testReduce(
         'L2', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -1028,8 +1031,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 axes1 keep dims', function() {
-    testReduce(
+  it('reduceL2 axes1 keep dims', async () => {
+    await testReduce(
         'L2', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -1051,8 +1054,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 axes2 keep dims', function() {
-    testReduce(
+  it('reduceL2 axes2 keep dims', async () => {
+    await testReduce(
         'L2', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
@@ -1074,8 +1077,8 @@ describe('test reduce', function() {
         });
   });
 
-  it('reduceL2 negative axes keep dims', function() {
-    testReduce(
+  it('reduceL2 negative axes keep dims', async () => {
+    await testReduce(
         'L2', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [

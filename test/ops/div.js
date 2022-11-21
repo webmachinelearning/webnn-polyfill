@@ -1,15 +1,18 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test div', function() {
-  const context = navigator.ml.createContext();
+describe('test div', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('div', function() {
+  it('div', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.div(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         0.5270042,   0.4537819,   -1.8297404,  0.03700572,  0.76790243,
@@ -41,7 +44,7 @@ describe('test div', function() {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       5.2773511e-01,  1.4511688e+00,  -2.0733004e+00, 2.5239782e-02,
       1.2193620e+00,  1.0799783e+00,  -2.5929454e-01, -9.8252831e+00,
@@ -62,12 +65,12 @@ describe('test div', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('div broadcast', function() {
+  it('div broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.div(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         2.3807454,   0.33057675,  0.94924647,  -1.5023966,  -1.7776669,
@@ -92,7 +95,7 @@ describe('test div', function() {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       1.825482,    0.20777069,  0.49395692,  -0.832231,   -1.0311644,
       -0.40846005, 0.68554676,  -0.18017694, -0.44017738, 0.11483412,

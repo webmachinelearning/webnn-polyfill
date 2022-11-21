@@ -168,7 +168,30 @@ export async function setPolyfillBackend(backend) {
     // https://github.com/webmachinelearning/webnn-polyfill/pull/32#issuecomment-763825323
     backend = 'cpu';
   }
-  const tf = navigator.ml.createContext().tf;
+  const context = await navigator.ml.createContext();
+  await readyPolyfillBackend(context, backend);
+}
+
+export async function setPolyfillBackendSW(backend) {
+  if (!backend) {
+    // Use cpu by default for accuracy reason
+    // See more details at:
+    // https://github.com/webmachinelearning/webnn-polyfill/pull/32#issuecomment-763825323
+    backend = 'cpu';
+  }
+  const worker = new Worker('worker_context.js');
+  worker.postMessage('');
+  const context = await new Promise((resolve, reject) => {
+    // Receive a message from the worker
+    worker.onmessage = function(event) {
+      resolve(event.data);
+    };
+  });
+  await readyPolyfillBackend(context, backend);
+}
+
+async function readyPolyfillBackend(context, backend) {
+  const tf = context.tf;
   if (tf) {
     const backends = ['webgl', 'webgpu', 'cpu', 'wasm'];
     if (!backends.includes(backend)) {

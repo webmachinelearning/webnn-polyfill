@@ -2,10 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
-  const context = navigator.ml.createContext();
+describe('CTS converted from NNAPI CTS', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('test matmul + add + clamp converted from fully_connected_float_large test', function() {
+  it('test matmul + add + clamp converted from fully_connected_float_large test', async () => {
     // Converted test case (from: V1_0/fully_connected_float_large.mod.py)
     const builder = new MLGraphBuilder(context);
     const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 5]});
@@ -16,9 +19,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.matmul(op1, op2);
     const interOut1 = builder.add(interOut0, b0);
     const op3 = builder.clamp(interOut1);
-    const graph = builder.build({op3});
+    const graph = await builder.build({op3});
     const outputs = {op3: new Float32Array(utils.sizeOfShape([1, 1]))};
-    graph.compute({'op1': op1Data}, outputs);
+    await context.compute(graph, {'op1': op1Data}, outputs);
     utils.checkValue(outputs.op3, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 });
