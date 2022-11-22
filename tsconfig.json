@@ -9,6 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "declaration": false,
     "noEmit": true,
+    "skipLibCheck": true,
     "target": "es2017",
     "lib": [
       "es2017",
