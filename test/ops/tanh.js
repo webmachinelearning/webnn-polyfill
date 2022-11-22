@@ -1,24 +1,27 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test tanh', function() {
-  const context = navigator.ml.createContext();
-  function testTanh(input, expected, shape) {
+describe('test tanh', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
+  async function testTanh(input, expected, shape) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: shape});
     const y = builder.tanh(x);
-    const graph = builder.build({y});
+    const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(shape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.y, expected);
   }
-  it('tanh 1d', function() {
-    testTanh([-1, 0, 1], [-0.76159418, 0., 0.76159418], [3]);
+  it('tanh 1d', async () => {
+    await testTanh([-1, 0, 1], [-0.76159418, 0., 0.76159418], [3]);
   });
 
-  it('tanh 3d', function() {
-    testTanh(
+  it('tanh 3d', async () => {
+    await testTanh(
         [
           0.15102264,  -1.1556778,  -0.0657572,  -0.04362043, 1.13937,
           0.5458485,   -1.1451102,  0.3929889,   0.56226826,  -0.68606883,

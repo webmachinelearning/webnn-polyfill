@@ -89,6 +89,7 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ml.ml-1.html#createcontext" class="tsd-kind-icon">create<wbr>Context</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ml.ml-1.html#createcontextsync" class="tsd-kind-icon">create<wbr>Context<wbr>Sync</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,13 +101,36 @@
 					<a name="createcontext" class="tsd-anchor"></a>
 					<h3>create<wbr>Context</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Context<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_context.mlcontextoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">MLContextOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_context.mlcontext.html" class="tsd-signature-type" data-tsd-kind="Class">MLContext</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Context<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_context.mlcontextoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">MLContextOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="nn_context.mlcontext.html" class="tsd-signature-type" data-tsd-kind="Class">MLContext</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/ml.ts#L11">ml.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/ml.ts#L12">ml.ts:12</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>options: <a href="../interfaces/nn_context.mlcontextoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">MLContextOptions</a><span class="tsd-signature-symbol"> = {}</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="nn_context.mlcontext.html" class="tsd-signature-type" data-tsd-kind="Class">MLContext</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="createcontextsync" class="tsd-anchor"></a>
+					<h3>create<wbr>Context<wbr>Sync</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Context<wbr>Sync<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/nn_context.mlcontextoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">MLContextOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_context.mlcontext.html" class="tsd-signature-type" data-tsd-kind="Class">MLContext</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/ml.ts#L24">ml.ts:24</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -159,6 +183,9 @@
 						<ul>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ml.ml-1.html#createcontext" class="tsd-kind-icon">create<wbr>Context</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ml.ml-1.html#createcontextsync" class="tsd-kind-icon">create<wbr>Context<wbr>Sync</a>
 							</li>
 						</ul>
 					</li>

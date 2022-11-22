@@ -1,10 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test add', function() {
-  const context = navigator.ml.createContext();
+describe('test add', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('add constant and input', function() {
+  it('add constant and input', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.constant(
@@ -23,7 +26,7 @@ describe('test add', function() {
           -0.2566791,  -0.5464537,  1.4351872,   0.5705938,   -0.30327085,
         ]));
     const c = builder.add(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         0.08939514,  -1.5887482,  0.8545348,   0.20523034,  -0.41728342,
@@ -41,7 +44,7 @@ describe('test add', function() {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       -0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387,
       2.9300475,   0.84765005,  1.2585825,   -1.7465117,  2.0591164,
@@ -59,12 +62,12 @@ describe('test add', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('add two inputs', function() {
+  it('add two inputs', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.add(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         0.08939514,  -1.5887482,  0.8545348,   0.20523034,  -0.41728342,
@@ -96,7 +99,7 @@ describe('test add', function() {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       -0.48879138, -2.0812354,  0.6382897,   0.07346585,  -0.93846387,
       2.9300475,   0.84765005,  1.2585825,   -1.7465117,  2.0591164,
@@ -114,12 +117,12 @@ describe('test add', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('add broadcast', function() {
+  it('add broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.add(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         -0.08539673, 0.11800674,  -1.2358714,  0.30089188,  -0.73443925,
@@ -144,7 +147,7 @@ describe('test add', function() {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.5484205,   1.7485408, -2.6178582, -0.7418642,  0.32369673,
       2.123247,    1.7987677, -3.585476,  0.0313431,   0.7035562,

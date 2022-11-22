@@ -1,24 +1,27 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test instanceNormalization', function() {
-  const context = navigator.ml.createContext();
+describe('test instanceNormalization', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('instanceNormalization default', function() {
+  it('instanceNormalization default', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
         builder.input('input', {type: 'float32', dimensions: inputShape});
     const output = builder.instanceNormalization(input);
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([-1, 0, 1, 2, 3, 4])};
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [-1.2247356, 0., 1.2247356, -1.2247356, 0., 1.2247356];
     utils.checkValue(outputs.output, expected);
   });
 
-  it('instanceNormalization with scale', function() {
+  it('instanceNormalization with scale', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -26,15 +29,15 @@ describe('test instanceNormalization', function() {
     const desc = {type: 'float32', dimensions: [2]};
     const scale = builder.constant(desc, new Float32Array([1.0, 1.5]));
     const output = builder.instanceNormalization(input, {scale});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([-1, 0, 1, 2, 3, 4])};
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [-1.2247356, 0., 1.2247356, -1.8371035, 0., 1.8371034];
     utils.checkValue(outputs.output, expected);
   });
 
-  it('instanceNormalization with bias', function() {
+  it('instanceNormalization with bias', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -42,15 +45,15 @@ describe('test instanceNormalization', function() {
     const desc = {type: 'float32', dimensions: [2]};
     const bias = builder.constant(desc, new Float32Array([0, 1]));
     const output = builder.instanceNormalization(input, {bias});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([-1, 0, 1, 2, 3, 4])};
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [-1.2247356, 0., 1.2247356, -0.2247356, 1., 2.2247356];
     utils.checkValue(outputs.output, expected);
   });
 
-  it('instanceNormalization with scale and bias', function() {
+  it('instanceNormalization with scale and bias', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
@@ -59,15 +62,15 @@ describe('test instanceNormalization', function() {
     const scale = builder.constant(desc, new Float32Array([1.0, 1.5]));
     const bias = builder.constant(desc, new Float32Array([0, 1]));
     const output = builder.instanceNormalization(input, {scale, bias});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([-1, 0, 1, 2, 3, 4])};
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [-1.2247356, 0., 1.2247356, -0.8371035, 1., 2.8371034];
     utils.checkValue(outputs.output, expected);
   });
 
-  it('batchNormalization with epsilon', function() {
+  it('batchNormalization with epsilon', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
@@ -79,7 +82,7 @@ describe('test instanceNormalization', function() {
         desc, new Float32Array([0.36079535, 2.3073995, -0.12267359]));
     const epsilon = 1e-2;
     const output = builder.instanceNormalization(input, {scale, bias, epsilon});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {
       'input': new Float32Array([
         0.23991525,  -1.3108366,  -0.8056796,  -0.20892623, 0.4869082,
@@ -109,7 +112,7 @@ describe('test instanceNormalization', function() {
       ]),
     };
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       4.94363964e-01,  -5.80250263e-01, -2.30195075e-01, 1.83333233e-01,
       6.65521026e-01,  8.00373435e-01,  7.36193061e-01,  6.46518111e-01,
@@ -145,7 +148,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('batchNormalization nchw', function() {
+  it('batchNormalization nchw', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
@@ -159,7 +162,7 @@ describe('test instanceNormalization', function() {
     const layout = 'nchw';
     const output =
         builder.instanceNormalization(input, {scale, bias, epsilon, layout});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {
       'input': new Float32Array([
         0.23991525,  -1.3108366,  -0.8056796,  -0.20892623, 0.4869082,
@@ -189,7 +192,7 @@ describe('test instanceNormalization', function() {
       ]),
     };
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       4.94363964e-01,  -5.80250263e-01, -2.30195075e-01, 1.83333233e-01,
       6.65521026e-01,  8.00373435e-01,  7.36193061e-01,  6.46518111e-01,
@@ -225,7 +228,7 @@ describe('test instanceNormalization', function() {
     utils.checkValue(outputs.output, expected);
   });
 
-  it('batchNormalization nhwc', function() {
+  it('batchNormalization nhwc', async () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 4, 5, 3];
     const input =
@@ -239,7 +242,7 @@ describe('test instanceNormalization', function() {
     const layout = 'nhwc';
     const output =
         builder.instanceNormalization(input, {scale, bias, epsilon, layout});
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {
       'input': new Float32Array([
         0.2399153,  -2.0593688, -0.2192519,
@@ -285,7 +288,7 @@ describe('test instanceNormalization', function() {
       ]),
     };
     const outputs = {'output': new Float32Array(utils.sizeOfShape(inputShape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       4.94363964e-01,  4.69082165e+00, -7.73530304e-02,
       -5.80250263e-01, 2.78269839e+00, -6.95866644e-02,

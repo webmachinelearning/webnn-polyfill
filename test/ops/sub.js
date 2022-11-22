@@ -1,15 +1,18 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test sub', function() {
-  const context = navigator.ml.createContext();
+describe('test sub', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('sub', function() {
+  it('sub', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
     const c = builder.sub(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         1.7640524,   0.4001572,  0.978738,    2.2408931,   1.867558,
@@ -41,7 +44,7 @@ describe('test sub', function() {
       ]),
     };
     const outputs = {'c': new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       2.436513,   0.7597104,   1.7918843,   3.9671757,  1.6901319,
       -0.5754969, 2.5802867,   -0.61413944, 0.80407953, 0.35865313,
@@ -59,12 +62,12 @@ describe('test sub', function() {
     utils.checkValue(outputs.c, expected);
   });
 
-  it('sub broadcast', function() {
+  it('sub broadcast', async () => {
     const builder = new MLGraphBuilder(context);
     const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
     const b = builder.input('b', {type: 'float32', dimensions: [5]});
     const c = builder.sub(a, b);
-    const graph = builder.build({c});
+    const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
         0.37642553,  -1.0994008,  0.2982382,   1.3263859,   -0.69456786,
@@ -89,7 +92,7 @@ describe('test sub', function() {
       ]),
     };
     const outputs = {'c': new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     const expected = [
       0.73041946,  0.27555048, 0.9418566,   3.549789,   -1.3197993,
       0.20435938,  0.9397977,  2.4928823,   2.895698,   -0.21776962,

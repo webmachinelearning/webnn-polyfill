@@ -2,10 +2,13 @@
 import * as utils from '../../../../utils.js';
 
 /* eslint-disable max-len */
-describe('CTS converted from NNAPI CTS', function() {
-  const context = navigator.ml.createContext();
+describe('CTS converted from NNAPI CTS', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -23,13 +26,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
-    graph.compute({'op12': op12Data}, outputs);
+    await context.compute(graph, {'op12': op12Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_relaxed test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -47,13 +50,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
-    graph.compute({'op12': op12Data}, outputs);
+    await context.compute(graph, {'op12': op12Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -73,13 +76,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
-    graph.compute({'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -99,13 +102,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 2]))};
-    graph.compute({'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -123,13 +126,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 2, 1, 1]))};
-    graph.compute({'op12': op12Data}, outputs);
+    await context.compute(graph, {'op12': op12Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_relaxed test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -147,13 +150,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 2, 1, 1]))};
-    graph.compute({'op12': op12Data}, outputs);
+    await context.compute(graph, {'op12': op12Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -173,13 +176,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 2, 1, 1]))};
-    graph.compute({'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op12 = builder.input('op12', {type: 'float32', dimensions: [1, 2, 2, 2]});
@@ -199,13 +202,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op12, op22, {'padding': [param15, param16, param13, param14], 'strides': [param18, param17], 'inputLayout': layout, 'groups': 2, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op32);
     const op42 = builder.clamp(interOut1);
-    const graph = builder.build({op42});
+    const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 2, 1, 1]))};
-    graph.compute({'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
     utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -223,13 +226,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 1, 1, 4]))};
-    graph.compute({'op13': op13Data}, outputs);
+    await context.compute(graph, {'op13': op13Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_relaxed_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -247,13 +250,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 1, 1, 4]))};
-    graph.compute({'op13': op13Data}, outputs);
+    await context.compute(graph, {'op13': op13Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -273,13 +276,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 1, 1, 4]))};
-    graph.compute({'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nhwc_weight_as_input_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 2, 2, 4]});
@@ -299,13 +302,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 1, 1, 4]))};
-    graph.compute({'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -323,13 +326,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 4, 1, 1]))};
-    graph.compute({'op13': op13Data}, outputs);
+    await context.compute(graph, {'op13': op13Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_relaxed_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -347,13 +350,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 4, 1, 1]))};
-    graph.compute({'op13': op13Data}, outputs);
+    await context.compute(graph, {'op13': op13Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -373,13 +376,13 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 4, 1, 1]))};
-    graph.compute({'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
-  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed_2 test', function() {
+  it('test conv2d + add + clamp converted from depthwise_conv2d_v1_2_large_nchw_weight_as_input_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/depthwise_conv2d_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
     const op13 = builder.input('op13', {type: 'float32', dimensions: [1, 4, 2, 2]});
@@ -399,9 +402,9 @@ describe('CTS converted from NNAPI CTS', function() {
     const interOut0 = builder.conv2d(op13, op23, {'padding': [param23, param24, param21, param22], 'strides': [param26, param25], 'inputLayout': layout, 'groups': 4, 'filterLayout': 'ihwo'});
     const interOut1 = builder.add(interOut0, op33);
     const op43 = builder.clamp(interOut1);
-    const graph = builder.build({op43});
+    const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 4, 1, 1]))};
-    graph.compute({'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
     utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });

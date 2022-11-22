@@ -1,10 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test batchNormalization', function() {
-  const context = navigator.ml.createContext();
+describe('test batchNormalization', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  function testBatchNorm(
+  async function testBatchNorm(
       input, mean, variance, expected, scale = undefined, bias = undefined,
       options = {}, activation = undefined) {
     const builder = new MLGraphBuilder(context);
@@ -26,16 +29,16 @@ describe('test batchNormalization', function() {
       options.activation = utils.createActivation(builder, activation);
     }
     const output = builder.batchNormalization(x, m, v, options);
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const inputs = {'input': input.data};
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape(input.shape)),
     };
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.output, expected);
   }
 
-  it('batchNormalization nchw', function() {
+  it('batchNormalization nchw', async () => {
     const input = {
       shape: [1, 2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -57,27 +60,28 @@ describe('test batchNormalization', function() {
       data: new Float32Array([0, 1]),
     };
     let expected = [-0.999995, 0., 0.999995, -0.22474074, 1., 2.2247407];
-    testBatchNorm(input, mean, variance, expected, scale, bias);
+    await testBatchNorm(input, mean, variance, expected, scale, bias);
 
     expected = [0., 0., 0.999995, 0., 1., 2.2247407];
-    testBatchNorm(input, mean, variance, expected, scale, bias, {}, 'relu');
+    await testBatchNorm(
+        input, mean, variance, expected, scale, bias, {}, 'relu');
 
     let expectedScale = [-0.999995, 0., 0.999995, -1.22474, 0., 1.22474];
-    testBatchNorm(input, mean, variance, expectedScale, scale);
+    await testBatchNorm(input, mean, variance, expectedScale, scale);
 
     expectedScale = [0., 0., 0.999995, 0., 0., 1.22474];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expectedScale, scale, undefined, {}, 'relu');
 
     let expectedBias = [-0.999995, 0., 0.999995, 0.183506, 1., 1.816494];
-    testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
+    await testBatchNorm(input, mean, variance, expectedBias, undefined, bias);
 
     expectedBias = [0., 0., 0.999995, 0.183506, 1., 1.816494];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expectedBias, undefined, bias, {}, 'relu');
   });
 
-  it('batchNormalization 3D input axis=0', function() {
+  it('batchNormalization 3D input axis=0', async () => {
     const input = {
       shape: [3, 1, 2],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -106,11 +110,11 @@ describe('test batchNormalization', function() {
       -2.241580424529414,
       -0.8277202830196093,
     ];
-    testBatchNorm(input, mean, variance, expected, scale, bias,
+    await testBatchNorm(input, mean, variance, expected, scale, bias,
         {epsilon: 1e-3, axis: 0});
   });
 
-  it('batchNormalization 3D input axis=2', function() {
+  it('batchNormalization 3D input axis=2', async () => {
     const input = {
       shape: [2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -139,11 +143,11 @@ describe('test batchNormalization', function() {
       1,
       -0.8277202830196093,
     ];
-    testBatchNorm(input, mean, variance, expected, scale, bias,
+    await testBatchNorm(input, mean, variance, expected, scale, bias,
         {epsilon: 1e-3, axis: 2});
   });
 
-  it('batchNormalization nhwc', function() {
+  it('batchNormalization nhwc', async () => {
     const input = {
       shape: [1, 1, 3, 2],
       data: new Float32Array([-1, 2, 0, 3, 1, 4]),
@@ -165,32 +169,33 @@ describe('test batchNormalization', function() {
       data: new Float32Array([0, 1]),
     };
     let expected = [-0.999995, -0.22474074, 0., 1., 0.999995, 2.2247407];
-    testBatchNorm(input, mean, variance, expected, scale, bias, {axis: 3});
+    await testBatchNorm(
+        input, mean, variance, expected, scale, bias, {axis: 3});
 
     expected = [0., 0., 0., 1., 0.999995, 2.2247407];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expected, scale, bias, {axis: 3}, 'relu');
 
     let expectedScale = [-0.999995, -1.22474, 0., 0., 0.999995, 1.22474];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expectedScale, scale, undefined, {axis: 3});
 
     expectedScale = [0., 0., 0., 0., 0.999995, 1.22474];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expectedScale, scale, undefined, {axis: 3},
         'relu');
 
     let expectedBias = [-0.999995, 0.183506, 0., 1., 0.999995, 1.816494];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expectedBias, undefined, bias, {axis: 3});
 
     expectedBias = [0., 0.183506, 0., 1., 0.999995, 1.816494];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expectedBias, undefined, bias, {axis: 3},
         'relu');
   });
 
-  it('batchNormalization without options', function() {
+  it('batchNormalization without options', async () => {
     const input = {
       shape: [1, 2, 1, 3],
       data: new Float32Array([-1, 0, 1, 2, 3, 4]),
@@ -205,10 +210,10 @@ describe('test batchNormalization', function() {
     };
 
     const expected = [-0.999995, 0., 0.999995, -0.816494, 0., 0.816494];
-    testBatchNorm(input, mean, variance, expected);
+    await testBatchNorm(input, mean, variance, expected);
   });
 
-  it('batchNormalization with epsilon', function() {
+  it('batchNormalization with epsilon', async () => {
     const input = {
       shape: [2, 3, 4, 5],
       data: new Float32Array([
@@ -286,7 +291,7 @@ describe('test batchNormalization', function() {
       -5.8637255e-01, -3.0367374e-01, -2.7111509e-01, -3.7675196e-01,
       -3.5137540e-01, -1.3970569e-02, 3.7042797e-04,  -3.5802066e-01,
     ];
-    testBatchNorm(
+    await testBatchNorm(
         input, mean, variance, expected, scale, bias, {epsilon: 1e-2});
   });
 });

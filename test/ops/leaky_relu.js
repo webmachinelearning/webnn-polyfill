@@ -1,24 +1,27 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test leakyRelu', function() {
-  const context = navigator.ml.createContext();
+describe('test leakyRelu', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  function testLeakyRelu(input, expected, options = {}) {
+  async function testLeakyRelu(input, expected, options = {}) {
     const builder = new MLGraphBuilder(context);
     const x = builder.input('x', {type: 'float32', dimensions: input.shape});
     const y = builder.leakyRelu(x, options);
-    const graph = builder.build({y});
+    const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.value)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(input.shape))};
-    graph.compute(inputs, outputs);
+    await context.compute(graph, inputs, outputs);
     utils.checkValue(outputs.y, expected);
   }
 
-  it('leakyRelu', function() {
-    testLeakyRelu(
+  it('leakyRelu', async () => {
+    await testLeakyRelu(
         {shape: [3], value: [-1, 0, 1]}, [-0.1, 0., 1.], {alpha: 0.1});
-    testLeakyRelu(
+    await testLeakyRelu(
         {
           shape: [3, 4, 5],
           value: [
@@ -53,8 +56,8 @@ describe('test leakyRelu', function() {
         {alpha: 0.1});
   });
 
-  it('leakyRelu default', function() {
-    testLeakyRelu(
+  it('leakyRelu default', async () => {
+    await testLeakyRelu(
         {
           shape: [3, 4, 5],
           value: [

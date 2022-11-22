@@ -99,6 +99,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#averagepool2d" class="tsd-kind-icon">average<wbr>Pool2d</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#batchnormalization" class="tsd-kind-icon">batch<wbr>Normalization</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#build" class="tsd-kind-icon">build</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#buildsync" class="tsd-kind-icon">build<wbr>Sync</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#ceil" class="tsd-kind-icon">ceil</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#clamp" class="tsd-kind-icon">clamp</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_graph_builder.mlgraphbuilder.html#concat" class="tsd-kind-icon">concat</a></li>
@@ -164,7 +165,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L304">nn/graph_builder.ts:304</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L304">nn/graph_builder.ts:304</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -190,7 +191,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L484">nn/graph_builder.ts:484</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L495">nn/graph_builder.ts:495</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -218,7 +219,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L424">nn/graph_builder.ts:424</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L435">nn/graph_builder.ts:435</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -249,7 +250,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L699">nn/graph_builder.ts:699</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L710">nn/graph_builder.ts:710</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -280,7 +281,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L357">nn/graph_builder.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L368">nn/graph_builder.ts:368</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -311,18 +312,46 @@
 					<a name="build" class="tsd-anchor"></a>
 					<h3>build</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span>outputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nn_operand.mloperand.html" class="tsd-signature-type" data-tsd-kind="Class">MLOperand</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_graph.mlgraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a></li>
+						<li class="tsd-signature tsd-kind-icon">build<span class="tsd-signature-symbol">(</span>outputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nn_operand.mloperand.html" class="tsd-signature-type" data-tsd-kind="Class">MLOperand</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="nn_graph.mlgraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L320">nn/graph_builder.ts:320</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L320">nn/graph_builder.ts:320</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p><a href="https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-build">spec</a></p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>outputs: <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nn_operand.mloperand.html" class="tsd-signature-type" data-tsd-kind="Class">MLOperand</a><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="nn_graph.mlgraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="buildsync" class="tsd-anchor"></a>
+					<h3>build<wbr>Sync</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">build<wbr>Sync<span class="tsd-signature-symbol">(</span>outputs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="nn_operand.mloperand.html" class="tsd-signature-type" data-tsd-kind="Class">MLOperand</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="nn_graph.mlgraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L328">nn/graph_builder.ts:328</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p><a href="https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-buildsync">spec</a></p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -345,7 +374,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L492">nn/graph_builder.ts:492</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L503">nn/graph_builder.ts:503</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -374,7 +403,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L369">nn/graph_builder.ts:369</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L380">nn/graph_builder.ts:380</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -396,7 +425,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L370">nn/graph_builder.ts:370</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L381">nn/graph_builder.ts:381</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -419,7 +448,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L387">nn/graph_builder.ts:387</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L398">nn/graph_builder.ts:398</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -451,7 +480,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L334">nn/graph_builder.ts:334</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L345">nn/graph_builder.ts:345</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -473,7 +502,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L338">nn/graph_builder.ts:338</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L349">nn/graph_builder.ts:349</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -504,7 +533,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L395">nn/graph_builder.ts:395</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L406">nn/graph_builder.ts:406</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -538,7 +567,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L408">nn/graph_builder.ts:408</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L419">nn/graph_builder.ts:419</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -572,7 +601,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L500">nn/graph_builder.ts:500</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L511">nn/graph_builder.ts:511</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -600,7 +629,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L448">nn/graph_builder.ts:448</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L459">nn/graph_builder.ts:459</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -631,7 +660,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L508">nn/graph_builder.ts:508</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L519">nn/graph_builder.ts:519</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -659,7 +688,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L516">nn/graph_builder.ts:516</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L527">nn/graph_builder.ts:527</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -687,7 +716,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L613">nn/graph_builder.ts:613</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L624">nn/graph_builder.ts:624</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -721,7 +750,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L621">nn/graph_builder.ts:621</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L632">nn/graph_builder.ts:632</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -764,7 +793,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L635">nn/graph_builder.ts:635</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L646">nn/graph_builder.ts:646</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -808,7 +837,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L556">nn/graph_builder.ts:556</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L567">nn/graph_builder.ts:567</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -827,7 +856,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L557">nn/graph_builder.ts:557</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L568">nn/graph_builder.ts:568</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/nn_operation.mloperator.html" class="tsd-signature-type" data-tsd-kind="Interface">MLOperator</a></h4>
@@ -844,7 +873,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L327">nn/graph_builder.ts:327</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L338">nn/graph_builder.ts:338</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -875,7 +904,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L652">nn/graph_builder.ts:652</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L663">nn/graph_builder.ts:663</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -906,7 +935,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L707">nn/graph_builder.ts:707</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L718">nn/graph_builder.ts:718</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -938,7 +967,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L662">nn/graph_builder.ts:662</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L673">nn/graph_builder.ts:673</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -960,7 +989,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L663">nn/graph_builder.ts:663</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L674">nn/graph_builder.ts:674</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -983,7 +1012,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L524">nn/graph_builder.ts:524</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L535">nn/graph_builder.ts:535</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1011,7 +1040,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L680">nn/graph_builder.ts:680</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L691">nn/graph_builder.ts:691</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1042,7 +1071,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L456">nn/graph_builder.ts:456</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L467">nn/graph_builder.ts:467</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1073,7 +1102,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L715">nn/graph_builder.ts:715</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L726">nn/graph_builder.ts:726</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1104,7 +1133,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L464">nn/graph_builder.ts:464</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L475">nn/graph_builder.ts:475</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1135,7 +1164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L440">nn/graph_builder.ts:440</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L451">nn/graph_builder.ts:451</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1166,7 +1195,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L532">nn/graph_builder.ts:532</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L543">nn/graph_builder.ts:543</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1194,7 +1223,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L688">nn/graph_builder.ts:688</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L699">nn/graph_builder.ts:699</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1228,7 +1257,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L473">nn/graph_builder.ts:473</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L484">nn/graph_builder.ts:484</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1259,7 +1288,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L726">nn/graph_builder.ts:726</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L737">nn/graph_builder.ts:737</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1290,7 +1319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L734">nn/graph_builder.ts:734</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L745">nn/graph_builder.ts:745</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1321,7 +1350,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L742">nn/graph_builder.ts:742</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L753">nn/graph_builder.ts:753</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1352,7 +1381,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L750">nn/graph_builder.ts:750</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L761">nn/graph_builder.ts:761</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1383,7 +1412,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L758">nn/graph_builder.ts:758</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L769">nn/graph_builder.ts:769</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1414,7 +1443,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L766">nn/graph_builder.ts:766</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L777">nn/graph_builder.ts:777</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1445,7 +1474,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L774">nn/graph_builder.ts:774</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L785">nn/graph_builder.ts:785</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1476,7 +1505,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L782">nn/graph_builder.ts:782</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L793">nn/graph_builder.ts:793</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1508,7 +1537,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L570">nn/graph_builder.ts:570</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L581">nn/graph_builder.ts:581</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1527,7 +1556,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L571">nn/graph_builder.ts:571</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L582">nn/graph_builder.ts:582</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/nn_operation.mloperator.html" class="tsd-signature-type" data-tsd-kind="Interface">MLOperator</a></h4>
@@ -1544,7 +1573,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L791">nn/graph_builder.ts:791</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L802">nn/graph_builder.ts:802</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1575,7 +1604,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L799">nn/graph_builder.ts:799</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L810">nn/graph_builder.ts:810</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1607,7 +1636,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L584">nn/graph_builder.ts:584</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L595">nn/graph_builder.ts:595</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1626,7 +1655,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L585">nn/graph_builder.ts:585</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L596">nn/graph_builder.ts:596</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/nn_operation.mloperator.html" class="tsd-signature-type" data-tsd-kind="Interface">MLOperator</a></h4>
@@ -1643,7 +1672,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L540">nn/graph_builder.ts:540</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L551">nn/graph_builder.ts:551</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1671,7 +1700,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L807">nn/graph_builder.ts:807</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L818">nn/graph_builder.ts:818</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1708,7 +1737,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L817">nn/graph_builder.ts:817</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L828">nn/graph_builder.ts:828</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1736,7 +1765,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L825">nn/graph_builder.ts:825</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L836">nn/graph_builder.ts:836</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1770,7 +1799,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L835">nn/graph_builder.ts:835</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L846">nn/graph_builder.ts:846</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1801,7 +1830,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L432">nn/graph_builder.ts:432</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L443">nn/graph_builder.ts:443</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1832,7 +1861,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L548">nn/graph_builder.ts:548</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L559">nn/graph_builder.ts:559</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1861,7 +1890,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L598">nn/graph_builder.ts:598</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L609">nn/graph_builder.ts:609</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1880,7 +1909,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L599">nn/graph_builder.ts:599</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L610">nn/graph_builder.ts:610</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/nn_operation.mloperator.html" class="tsd-signature-type" data-tsd-kind="Interface">MLOperator</a></h4>
@@ -1897,7 +1926,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/09c8026/src/nn/graph_builder.ts#L843">nn/graph_builder.ts:843</a></li>
+									<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/7f42089/src/nn/graph_builder.ts#L854">nn/graph_builder.ts:854</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2000,6 +2029,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="nn_graph_builder.mlgraphbuilder.html#build" class="tsd-kind-icon">build</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="nn_graph_builder.mlgraphbuilder.html#buildsync" class="tsd-kind-icon">build<wbr>Sync</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="nn_graph_builder.mlgraphbuilder.html#ceil" class="tsd-kind-icon">ceil</a>

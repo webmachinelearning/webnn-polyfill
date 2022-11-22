@@ -1,10 +1,13 @@
 'use strict';
 import * as utils from '../utils.js';
 
-describe('test concat', function() {
-  const context = navigator.ml.createContext();
+describe('test concat', () => {
+  let context;
+  before(async () => {
+    context = await navigator.ml.createContext();
+  });
 
-  function testConcatInputs(tensors, expected) {
+  async function testConcatInputs(tensors, expected) {
     const builder = new MLGraphBuilder(context);
     const inputs = [];
     const namedInputs = {};
@@ -13,34 +16,34 @@ describe('test concat', function() {
       namedInputs['input' + i] = new Float32Array(tensors[i].value);
     }
     const output = builder.concat(inputs, expected.axis);
-    const graph = builder.build({output});
+    const graph = await builder.build({output});
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape(expected.shape)),
     };
-    graph.compute(namedInputs, outputs);
+    await context.compute(graph, namedInputs, outputs);
     utils.checkValue(outputs.output, expected.value);
   }
 
-  it('concat 1d with two inputs', function() {
+  it('concat 1d with two inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
     ];
     const expected = {axis: 0, shape: [4], value: [1, 2, 3, 4]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 1d with three inputs', function() {
+  it('concat 1d with three inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
       {desc: {type: 'float32', dimensions: [2]}, value: [5, 6]},
     ];
     const expected = {axis: 0, shape: [6], value: [1, 2, 3, 4, 5, 6]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 1d with four inputs', function() {
+  it('concat 1d with four inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
@@ -48,10 +51,10 @@ describe('test concat', function() {
       {desc: {type: 'float32', dimensions: [2]}, value: [7, 8]},
     ];
     const expected = {axis: 0, shape: [8], value: [1, 2, 3, 4, 5, 6, 7, 8]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 1d with five inputs', function() {
+  it('concat 1d with five inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
@@ -66,10 +69,10 @@ describe('test concat', function() {
         1, 2, 3, 4, 5,
         6, 7, 8, 9, 10,
       ]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d with two inputs', function() {
+  it('concat 2d with two inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [1, 2, 3, 4]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [5, 6, 7, 8]},
@@ -79,20 +82,20 @@ describe('test concat', function() {
       {axis: 1, shape: [2, 4], value: [1, 2, 5, 6, 3, 4, 7, 8]},
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 2d axis=0 with two inputs', function() {
+  it('concat 2d axis=0 with two inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
     ];
     const expected = {axis: 0, shape: [3, 2], value: [1, 2, 3, 4, 5, 6]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=0 with three inputs', function() {
+  it('concat 2d axis=0 with three inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
@@ -108,10 +111,10 @@ describe('test concat', function() {
         1, 2, 3, 4, 5, 6,
         7, 8, 9, 10, 11, 12,
       ]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=0 with four inputs', function() {
+  it('concat 2d axis=0 with four inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
@@ -129,10 +132,10 @@ describe('test concat', function() {
         7, 8, 9, 10, 11, 12,
         13, 14, 15, 16,
       ]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=0 with five inputs', function() {
+  it('concat 2d axis=0 with five inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
@@ -151,29 +154,29 @@ describe('test concat', function() {
         7, 8, 9, 10, 11, 12,
         13, 14, 15, 16, 17, 18,
       ]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=1 with two inputs', function() {
+  it('concat 2d axis=1 with two inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
     ];
     const expected = {axis: 1, shape: [2, 3], value: [1, 3, 4, 2, 5, 6]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=1 with three inputs', function() {
+  it('concat 2d axis=1 with three inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
       {desc: {type: 'float32', dimensions: [2, 1]}, value: [7, 8]},
     ];
     const expected = {axis: 1, shape: [2, 4], value: [1, 3, 4, 7, 2, 5, 6, 8]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=1 with four inputs', function() {
+  it('concat 2d axis=1 with four inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
@@ -187,10 +190,10 @@ describe('test concat', function() {
         1, 3, 4, 7, 9, 10,
         2, 5, 6, 8, 11, 12,
       ]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 2d axis=1 with five inputs', function() {
+  it('concat 2d axis=1 with five inputs', async () => {
     const tensors = [
       {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
       {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
@@ -205,10 +208,10 @@ describe('test concat', function() {
         1, 3, 4, 7, 9, 10, 13,
         2, 5, 6, 8, 11, 12, 14,
       ]};
-    testConcatInputs(tensors, expected);
+    await testConcatInputs(tensors, expected);
   });
 
-  it('concat 3d with two inputs', function() {
+  it('concat 3d with two inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2]},
@@ -237,11 +240,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 3d with three inputs', function() {
+  it('concat 3d with three inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2]},
@@ -286,11 +289,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 3d with four inputs', function() {
+  it('concat 3d with four inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2]},
@@ -342,11 +345,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 3d with five inputs', function() {
+  it('concat 3d with five inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2]},
@@ -405,11 +408,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 4d with two inputs', function() {
+  it('concat 4d with two inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
@@ -469,11 +472,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 4d with three inputs', function() {
+  it('concat 4d with three inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
@@ -548,11 +551,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 4d with four inputs', function() {
+  it('concat 4d with four inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
@@ -642,11 +645,11 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 
-  it('concat 4d with five inputs', function() {
+  it('concat 4d with five inputs', async () => {
     const tensors = [
       {
         desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
@@ -751,7 +754,7 @@ describe('test concat', function() {
       },
     ];
     for (const test of expected) {
-      testConcatInputs(tensors, test);
+      await testConcatInputs(tensors, test);
     }
   });
 });
