@@ -6,7 +6,7 @@ const config = {
   entry: ['./src/main.js'],
   output: {
     filename: 'webnn-polyfill.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
   },
 	module: {
 		rules: [
@@ -46,9 +46,6 @@ const config = {
     disableHostCheck: true,
     // serve bundle files from /dist/ without writing to disk
     publicPath: '/dist/',
-  },
-  node: {
-    fs: 'empty'
   },
   optimization: {
     minimize: true,
