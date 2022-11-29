@@ -6,7 +6,7 @@ const config = {
   entry: ['./src/main.js'],
   output: {
     filename: 'webnn-polyfill.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist')
   },
 	module: {
 		rules: [
