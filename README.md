@@ -10,18 +10,22 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 
 ## Backends
 
-The implementation of this webnn-polyfill is based on [TensorFlow.js](https://github.com/tensorflow/tfjs) that supports following 4 backends.
+The implementation of this webnn-polyfill is based on [TensorFlow.js](https://github.com/tensorflow/tfjs) that supports the following 4 backends:
 
 * [TensorFlow.js CPU Backend](https://github.com/tensorflow/tfjs/blob/master/tfjs-backend-cpu), pure-JS backend for Node.js and the browser.
 * [TensorFlow.js WebGL Backend](https://github.com/tensorflow/tfjs/blob/master/tfjs-backend-webgl), WebGL backend for the browser.
 * [TensorFlow.js WASM Backend](https://github.com/tensorflow/tfjs/blob/master/tfjs-backend-wasm), WebAssembly backend for the browser.
 
-If not set, tests under the webnn-polyfill use CPU as default backend, as which has higher numerical precision than other backends. Tests may fail under WASM backend as some ops have not been implemented/supported in WASM backend.
+#### Notes
 
-* For node test, we only support CPU backend.
-* For browser test, you can set backend by passing a URL parameter: `backend`, it accepts `cpu`, `webgl` and `wasm`. e.g. `?backend=webgl`.
+* CPU backend is the default for running tests due to its higher numerical precision.
+* CPU backend is the only supported backend for Node.js.
+* WASM backend does not support all the ops and some test failures are thus expected.
 
-If not set, the built `webnn-polyfill.js` uses WebGL as default backend, you can set backend by referring to following code snippet:
+#### Changing the backend
+
+* When running tests in the browser, you can set the backend by passing a URL parameter `backend` that accept values `cpu`, `webgl` and `wasm`. e.g. [`?backend=webgl`](https://webmachinelearning.github.io/webnn-polyfill/test/?backend=webgl).
+* When using the pre-built `webnn-polyfill.js` WebGL is the default backend. You can change the backend in your code as follows:
 
 ```js
     const backend = 'cpu';
@@ -29,6 +33,7 @@ If not set, the built `webnn-polyfill.js` uses WebGL as default backend, you can
     await tf.setBackend(backend);
     await tf.ready();
 ```
+Please refer to the [`setPolyfillBackend()`](https://github.com/webmachinelearning/webnn-polyfill/search?q=setPolyfillBackend) usage in tests for concrete examples on how to best implement backend switching for your project.
 
 ## Usage
 
@@ -48,7 +53,7 @@ import '@webmachinelearning/webnn-polyfill';
 
 ### Samples
 
-WebNN provides various [Samples](https://github.com/webmachinelearning/webnn-samples) built with WebNN API, which would use WebNN Polyfill on browsers where WebNN API is not implemented yet.
+[Web Machine Learning Community Group](https://webmachinelearning.github.io/community/) provides various [Samples](https://webmachinelearning.github.io/webnn-samples-intro/) ([GitHub repo](https://github.com/webmachinelearning/webnn-samples)) that make use of the WebNN API. These samples fall back to the webnn-polyfill if the browser does not have a native implementation of the WebNN API available by default.
 
 ## Build and Test
 
@@ -135,4 +140,4 @@ Open the web browser and navigate to http://localhost:8080/test/cts.html
 
 ## License
 
-This project is following [Apache License Version 2.0](./LICENSE).
+This project is licensed under the [Apache License Version 2.0](./LICENSE).
