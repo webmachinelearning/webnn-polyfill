@@ -47,9 +47,6 @@ const config = {
     // serve bundle files from /dist/ without writing to disk
     publicPath: '/dist/',
   },
-  node: {
-    fs: 'empty'
-  },
   optimization: {
     minimize: true,
     minimizer: [
