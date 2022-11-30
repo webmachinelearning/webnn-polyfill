@@ -1,6 +1,6 @@
 {
   "name": "@webmachinelearning/webnn-polyfill",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "WebNN API polyfill",
   "main": "dist/webnn-polyfill.js",
   "jsdelivr": "dist/webnn-polyfill.js",
@@ -15,6 +15,7 @@
     "start": "http-server",
     "build": "webpack",
     "build-production": "cross-env NODE_ENV=production webpack",
+    "prepublishOnly": "cross-env NODE_ENV=production webpack",
     "build-docs": "typedoc --options typedoc.json",
     "lint-ts": "eslint . --config .eslintrc.js --ext .ts",
     "lint-js": "eslint . --no-eslintrc --config .eslintrcforjs.js --ext .js",
