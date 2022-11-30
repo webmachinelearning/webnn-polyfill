@@ -33,6 +33,26 @@ If not set, the built `webnn-polyfill.js` uses WebGL as default backend, you can
 
 ** Note: Regarding to browser test using `webgpu` backend, please use Chrome Canary browser for Windows platform or Chrome Dev browser for Linux platform with flag "--enable-unsafe-webgpu" enabled.
 
+## Usage
+
+### Import the packages
+
+#### Via NPM
+
+```js
+import '@webmachinelearning/webnn-polyfill';
+```
+
+#### Via a script tag
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@webmachinelearning/webnn-polyfill/dist/webnn-polyfill.js"></script>
+```
+
+### Samples
+
+WebNN provides various [Samples](https://github.com/webmachinelearning/webnn-samples) built with WebNN API, which would use WebNN Polyfill on browsers where WebNN API is not implemented yet.
+
 ## Build and Test
 
 ### Setup
