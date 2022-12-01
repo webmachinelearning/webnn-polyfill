@@ -1,6 +1,6 @@
 {
   "name": "@webmachinelearning/webnn-polyfill",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "WebNN API polyfill",
   "main": "dist/webnn-polyfill.js",
   "jsdelivr": "dist/webnn-polyfill.js",
