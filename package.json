@@ -1,13 +1,12 @@
 {
   "name": "@webmachinelearning/webnn-polyfill",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "WebNN API polyfill",
   "main": "dist/webnn-polyfill.js",
   "jsdelivr": "dist/webnn-polyfill.js",
   "unpkg": "dist/webnn-polyfill.js",
   "directories": {
-    "src": "src",
-    "test": "test"
+    "src": "src"
   },
   "scripts": {
     "watch": "webpack --watch",
