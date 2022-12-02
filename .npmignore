@@ -1,0 +1,16 @@
+.babelrc
+.clang-format
+.eslintrc.js
+.eslintrcforjs.js
+.github
+.gitignore
+.gitmodules
+docs
+node_modules
+node_setup.js
+package-lock.json
+test
+test-data
+tsconfig.json
+typedoc.json
+webpack.config.js
