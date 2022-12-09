@@ -10,7 +10,7 @@ A JavaScript implementation of the [Web Neural Network API](https://webmachinele
 
 ## Backends
 
-The implementation of this webnn-polyfill is based on [TensorFlow.js](https://github.com/tensorflow/tfjs) that supports the following 4 backends:
+The implementation of this webnn-polyfill is based on [TensorFlow.js](https://github.com/tensorflow/tfjs) that supports the following 3 backends:
 
 * [TensorFlow.js CPU Backend](https://github.com/tensorflow/tfjs/blob/master/tfjs-backend-cpu), pure-JS backend for Node.js and the browser.
 * [TensorFlow.js WebGL Backend](https://github.com/tensorflow/tfjs/blob/master/tfjs-backend-webgl), WebGL backend for the browser.
@@ -18,22 +18,8 @@ The implementation of this webnn-polyfill is based on [TensorFlow.js](https://gi
 
 #### Notes
 
-* CPU backend is the default for running tests due to its higher numerical precision.
 * CPU backend is the only supported backend for Node.js.
 * WASM backend does not support all the ops and some test failures are thus expected.
-
-#### Changing the backend
-
-* When running tests in the browser, you can set the backend by passing a URL parameter `backend` that accept values `cpu`, `webgl` and `wasm`. e.g. [`?backend=webgl`](https://webmachinelearning.github.io/webnn-polyfill/test/?backend=webgl).
-* When using the pre-built `webnn-polyfill.js` WebGL is the default backend. You can change the backend in your code as follows:
-
-```js
-    const backend = 'cpu';
-    const tf = navigator.ml.createContext().tf;
-    await tf.setBackend(backend);
-    await tf.ready();
-```
-Please refer to the [`setPolyfillBackend()`](https://github.com/webmachinelearning/webnn-polyfill/search?q=setPolyfillBackend) usage in tests for concrete examples on how to best implement backend switching for your project.
 
 ## Usage
 
@@ -50,6 +36,31 @@ import '@webmachinelearning/webnn-polyfill';
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@webmachinelearning/webnn-polyfill/dist/webnn-polyfill.js"></script>
 ```
+
+### Set backend
+
+WebNN Polyfill requires setting backend to enable TensorFlow.js.
+
+* When running in Node.js, recommend using CPU backend for its higher numerical precision.
+```js
+    const backend = 'cpu';
+    const context = await navigator.ml.createContext();
+    const tf = context.tf;
+    await tf.setBackend(backend);
+    await tf.ready();
+```
+
+* When running in browsers, recommend using WebGL backend for better performance.
+
+```js
+    const backend = 'webgl'; // 'cpu' or 'wasm'
+    const context = await navigator.ml.createContext();
+    const tf = context.tf;
+    await tf.setBackend(backend);
+    await tf.ready();
+```
+
+Please refer to the [`setPolyfillBackend()`](https://github.com/webmachinelearning/webnn-polyfill/search?q=setPolyfillBackend) usage in tests for concrete examples on how to best implement backend switching for your project.
 
 ### Samples
 
@@ -91,6 +102,9 @@ import '@webmachinelearning/webnn-polyfill';
 ```
 
 Open the web browser and navigate to http://localhost:8080/test
+
+Default backend is CPU backend, you could change to use WebGL backend by `http://localhost:8080/test?backend=webgl`,<br>
+or use Wasm backend by `http://localhost:8080/test?backend=wasm`
 
 #### Run only CTS tests in node.js.
 
