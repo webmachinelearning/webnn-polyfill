@@ -1,4 +1,3 @@
-global.navigator = {};
 require('./dist/webnn-polyfill.js');
 global.chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
