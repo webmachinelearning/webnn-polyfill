@@ -4,6 +4,11 @@ import {MLGraph} from './nn/graph';
 import {MLGraphBuilder} from './nn/graph_builder';
 import {MLOperand} from './nn/operand';
 
+// for running in Node.js
+if (typeof navigator == 'undefined') {
+  global.navigator = {};
+}
+
 if (navigator.ml == null) {
   navigator.ml = new ML();
 }
