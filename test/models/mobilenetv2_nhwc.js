@@ -37,7 +37,7 @@ describe('test mobilenetv2 nhwc', function() {
       if (!fusedConv) {
         const add = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, -1]));
+            builder.reshape(bias, [1, 1, 1, null]));
         // `relu6` in TFLite equals to `clamp` in WebNN API
         if (relu6) {
           return builder.clamp(add, {
@@ -139,7 +139,7 @@ describe('test mobilenetv2 nhwc', function() {
       const conv4 = await buildConv(
           averagePool2d, '222', 'Logits_Conv2d_1c_1x1_Conv2D', false,
           {autoPad, filterLayout});
-      const reshape = builder.reshape(conv4, [1, -1]);
+      const reshape = builder.reshape(conv4, [1, null]);
       const softmax = builder.softmax(reshape);
       const mobileNetGraph = await builder.build({softmax});
       return mobileNetGraph;

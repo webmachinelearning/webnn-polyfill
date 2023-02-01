@@ -124,7 +124,7 @@ describe('test mobilenetv2 batchnorm nchw', function() {
       const conv0Weight = await utils.buildConstantFromNpy(
           builder, new URL(conv0WeightUrl, url));
       const conv0 = builder.conv2d(pool0, conv0Weight);
-      const reshape0 = builder.reshape(conv0, [1, -1]);
+      const reshape0 = builder.reshape(conv0, [1, null]);
       const mobileNetGraph = await builder.build({reshape0});
       return mobileNetGraph;
     }

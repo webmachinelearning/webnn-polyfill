@@ -55,7 +55,7 @@ describe('test resnet50v2 nhwc', function() {
       if (!fusedConv) {
         const add = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, -1]));
+            builder.reshape(bias, [1, 1, 1, null]));
         if (relu) {
           return builder.relu(add);
         }
@@ -179,7 +179,7 @@ describe('test resnet50v2 nhwc', function() {
           fusedBn, {keepDimensions: true, axes: [1, 2]});
       const conv2 = await buildConv(
           mean, ['', '', 'logits'], {autoPad}, false);
-      const reshape = builder.reshape(conv2, [1, -1]);
+      const reshape = builder.reshape(conv2, [1, null]);
       const softmax = builder.softmax(reshape);
       const resNetGraph = await builder.build({softmax});
       return resNetGraph;

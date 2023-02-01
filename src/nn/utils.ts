@@ -23,6 +23,12 @@ export function isIntegerArray(array: number[]): boolean {
   return array instanceof Array && array.every(v => isInteger(v));
 }
 
+export function isPositiveIntegerOrNullArray(array: Array<(number | null)>):
+  boolean {
+  return array instanceof Array &&
+      array.every(v => (isInteger(v) && v > 0) || v === null);
+}
+
 export function isTypedArray(array: MLBufferView): boolean {
   return array instanceof Float32Array || array instanceof Int32Array ||
       array instanceof Uint32Array || array instanceof Int16Array ||
