@@ -3,7 +3,7 @@ import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
 import {MLAutoPad, MLConv2dOptions, MLConv2dFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
 import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
-import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
+import {FusedOperation, MLActivation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 import {Clamp} from './clamp';
@@ -21,7 +21,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private inputLayout_?: MLInputOperandLayout;
   private filterLayout_?: MLConv2dFilterOperandLayout;
   private autoPad_?: MLAutoPad;
-  private activation_?: MLOperator;
+  private activation_?: MLActivation;
   private fusedActivation_?: tf.fused.Activation;
   private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
@@ -48,7 +48,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       filterLayout: 
       MLConv2dFilterOperandLayout = MLConv2dFilterOperandLayout.oihw,
       autoPad: MLAutoPad = MLAutoPad.explicit, bias: MLOperand = undefined,
-      activation: MLOperator = undefined) {
+      activation: MLActivation = undefined) {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
@@ -104,7 +104,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     }
   }
 
-  isRelu6(activation: MLOperator): boolean {
+  isRelu6(activation: MLActivation): boolean {
     if (activation instanceof Clamp) {
       const clamp = activation;
       if (Math.abs(clamp.minValue - 0.0) < 1e-5 &&
