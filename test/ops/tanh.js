@@ -13,8 +13,8 @@ describe('test tanh', () => {
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(shape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, expected);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, expected);
   }
   it('tanh 1d', async () => {
     await testTanh([-1, 0, 1], [-0.76159418, 0., 0.76159418], [3]);

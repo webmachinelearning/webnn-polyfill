@@ -44,8 +44,8 @@ describe('test conv2d', () => {
     const graph = await builder.build({y});
     const inputs = {'x': input.data};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, expected.data);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, expected.data);
   }
 
   it('conv2d with padding default', async () => {

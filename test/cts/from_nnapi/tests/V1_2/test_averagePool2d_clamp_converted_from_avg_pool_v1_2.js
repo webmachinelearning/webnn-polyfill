@@ -27,8 +27,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.clamp(interOut0);
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed test', async () => {
@@ -50,8 +50,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.clamp(interOut0);
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw test', async () => {
@@ -73,8 +73,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.clamp(interOut0);
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 1, 2, 2]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed test', async () => {
@@ -96,8 +96,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.clamp(interOut0);
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 1, 2, 2]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_2 test', async () => {
@@ -119,8 +119,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op41 = builder.clamp(interOut0);
     const graph = await builder.build({op41});
     const outputs = {op41: new Float32Array(utils.sizeOfShape([5, 16, 18, 3]))};
-    await context.compute(graph, {'op11': op11Data}, outputs);
-    utils.checkValue(outputs.op41, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op11': op11Data}, outputs);
+    utils.checkValue(computeResult.outputs.op41, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_2 test', async () => {
@@ -142,8 +142,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op41 = builder.clamp(interOut0);
     const graph = await builder.build({op41});
     const outputs = {op41: new Float32Array(utils.sizeOfShape([5, 16, 18, 3]))};
-    await context.compute(graph, {'op11': op11Data}, outputs);
-    utils.checkValue(outputs.op41, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op11': op11Data}, outputs);
+    utils.checkValue(computeResult.outputs.op41, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_2 test', async () => {
@@ -165,8 +165,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op41 = builder.clamp(interOut0);
     const graph = await builder.build({op41});
     const outputs = {op41: new Float32Array(utils.sizeOfShape([5, 3, 16, 18]))};
-    await context.compute(graph, {'op11': op11Data}, outputs);
-    utils.checkValue(outputs.op41, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op11': op11Data}, outputs);
+    utils.checkValue(computeResult.outputs.op41, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_2 test', async () => {
@@ -188,8 +188,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op41 = builder.clamp(interOut0);
     const graph = await builder.build({op41});
     const outputs = {op41: new Float32Array(utils.sizeOfShape([5, 3, 16, 18]))};
-    await context.compute(graph, {'op11': op11Data}, outputs);
-    utils.checkValue(outputs.op41, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op11': op11Data}, outputs);
+    utils.checkValue(computeResult.outputs.op41, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_3 test', async () => {
@@ -211,8 +211,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.clamp(interOut0);
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 96, 86, 1]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_3 test', async () => {
@@ -234,8 +234,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.clamp(interOut0);
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 96, 86, 1]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_3 test', async () => {
@@ -257,8 +257,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.clamp(interOut0);
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 96, 86]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_3 test', async () => {
@@ -280,8 +280,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.clamp(interOut0);
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 96, 86]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_4 test', async () => {
@@ -303,8 +303,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([5, 11, 13, 3]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nhwc_relaxed_4 test', async () => {
@@ -326,8 +326,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([5, 11, 13, 3]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_4 test', async () => {
@@ -349,8 +349,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([5, 3, 11, 13]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test averagePool2d + clamp converted from avg_pool_v1_2_nchw_relaxed_4 test', async () => {
@@ -372,8 +372,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.clamp(interOut0, {minValue: 0, maxValue: 6});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([5, 3, 11, 13]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

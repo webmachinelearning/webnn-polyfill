@@ -22,8 +22,8 @@ describe('test reshape', () => {
       'y': new Float32Array(
           utils.sizeOfShape(expectedShape ? expectedShape : newShape)),
     };
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, inputBuffer);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, inputBuffer);
   }
 
   it('reshape reordered_all_dims', async () => {

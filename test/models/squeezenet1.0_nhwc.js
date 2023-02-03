@@ -108,11 +108,11 @@ describe('test squeezenet1.0 nhwc', function() {
           await utils.createTypedArrayFromNpy(new URL(inputFile, url)),
     };
     const outputs = {'softmax': new Float32Array(utils.sizeOfShape([1, 1001]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.softmax, expected, utils.modelFp32AccuracyCriteria);
+        result.outputs.softmax, expected, utils.modelFp32AccuracyCriteria);
   }
 
   it('test_data_set_0', async () => {

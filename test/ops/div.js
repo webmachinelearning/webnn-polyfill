@@ -44,7 +44,7 @@ describe('test div', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       5.2773511e-01,  1.4511688e+00,  -2.0733004e+00, 2.5239782e-02,
       1.2193620e+00,  1.0799783e+00,  -2.5929454e-01, -9.8252831e+00,
@@ -62,7 +62,7 @@ describe('test div', () => {
       -1.7981808e-01, -1.2775406e-01, -1.6185527e-01, -1.0920159e+00,
       6.6838908e-01,  5.8823064e-02,  -2.7353122e+00, -5.8215268e-02,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 
   it('div broadcast', async () => {
@@ -95,7 +95,7 @@ describe('test div', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.825482,    0.20777069,  0.49395692,  -0.832231,   -1.0311644,
       -0.40846005, 0.68554676,  -0.18017694, -0.44017738, 0.11483412,
@@ -110,6 +110,6 @@ describe('test div', () => {
       -0.7575694,  -0.7401512,  -0.593321,   0.9721494,   -0.07714208,
       -0.5871168,  0.3493175,   0.00538545,  0.39885238,  -1.0581895,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 });

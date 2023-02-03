@@ -20,8 +20,8 @@ describe('test concat', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape(expected.shape)),
     };
-    await context.compute(graph, namedInputs, outputs);
-    utils.checkValue(outputs.output, expected.value);
+    const result = await context.compute(graph, namedInputs, outputs);
+    utils.checkValue(result.outputs.output, expected.value);
   }
 
   it('concat 1d with two inputs', async () => {

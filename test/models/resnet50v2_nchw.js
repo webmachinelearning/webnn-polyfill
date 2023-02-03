@@ -196,11 +196,11 @@ describe('test resnet50v2 nchw', function() {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
     const outputs = {
       'gemm': new Float32Array(utils.sizeOfShape([1, 1000]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.gemm, expected,
+        result.outputs.gemm, expected,
         // refer to onnx
         // https://github.com/onnx/models/blob/master/workflow_scripts/ort_test_dir_utils.py#L239
         new utils.AccuracyCriterion(1e-3, 1e-3));

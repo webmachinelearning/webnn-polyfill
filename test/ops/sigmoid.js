@@ -13,8 +13,8 @@ describe('test sigmoid', () => {
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(shape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, expected);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, expected);
   }
   it('sigmoid 1d', async () => {
     testSigmoid([-1, 0, 1], [0.26894143, 0.5, 0.7310586], [3]);

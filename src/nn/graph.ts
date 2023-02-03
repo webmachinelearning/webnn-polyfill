@@ -17,6 +17,14 @@ import * as utils from './utils';
  */
 export type MLNamedArrayBufferViews = Record<string, ArrayBufferView>;
 
+/**
+ * [spec] https://webmachinelearning.github.io/webnn/#dictdef-mlcomputeresult
+ */
+export interface MLComputeResult {
+  inputs: MLNamedArrayBufferViews;
+  outputs: MLNamedArrayBufferViews;
+}
+
 /** @internal */
 class OperandTensor {
   ref: number;
@@ -192,7 +200,7 @@ export class MLGraph {
   /** @internal */
   async compute(
     inputs: MLNamedArrayBufferViews,
-    outputs: MLNamedArrayBufferViews): Promise<void> {
+    outputs: MLNamedArrayBufferViews): Promise<MLComputeResult> {
     const outputTensors: tf.TensorContainerObject =
         this.computeOutputTensors(inputs, outputs);
     // Setup the outputs.
@@ -204,6 +212,7 @@ export class MLGraph {
       resource.set(await tensor.data());
       tf.dispose(tensor);
     }
+    return {inputs, outputs};
   }
 
   /** @internal */

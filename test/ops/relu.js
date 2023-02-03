@@ -29,7 +29,7 @@ describe('test relu', () => {
       ]),
     };
     const outputs = {'y': new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.,        0.6447428, 0.,         0.,         0.9777725, 0.,
       0.,        0.,        1.3725083,  0.,         0.,        0.,
@@ -42,6 +42,6 @@ describe('test relu', () => {
       0.,        1.1774449, 0.8999488,  0.,         1.0122099, 0.,
       0.,        0.,        1.4515465,  0.,         2.0361354, 0.7899623,
     ];
-    utils.checkValue(outputs.y, expected);
+    utils.checkValue(result.outputs.y, expected);
   });
 });

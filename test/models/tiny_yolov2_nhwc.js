@@ -110,11 +110,11 @@ describe('test tinyYolov2 nhwc', function() {
     const outputs = {
       'conv': new Float32Array(utils.sizeOfShape([1, 13, 13, 125])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.conv, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+        result.outputs.conv, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   }
 
   it('test_data_set_0', async () => {

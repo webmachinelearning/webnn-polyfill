@@ -17,8 +17,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op2 = builder.softmax(op1);
     const graph = await builder.build({op2});
     const outputs = {op2: new Float32Array(utils.sizeOfShape([2, 5]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op2, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test softmax converted from softmax_v1_2_axis_dim2_axis1_neg test', async () => {
@@ -30,8 +30,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op2 = builder.softmax(op1);
     const graph = await builder.build({op2});
     const outputs = {op2: new Float32Array(utils.sizeOfShape([2, 5]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op2, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1 test', async () => {
@@ -43,8 +43,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op2 = builder.softmax(op1);
     const graph = await builder.build({op2});
     const outputs = {op2: new Float32Array(utils.sizeOfShape([2, 5]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test softmax converted from softmax_v1_2_axis_relaxed_dim2_axis1_neg test', async () => {
@@ -56,8 +56,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op2 = builder.softmax(op1);
     const graph = await builder.build({op2});
     const outputs = {op2: new Float32Array(utils.sizeOfShape([2, 5]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */
