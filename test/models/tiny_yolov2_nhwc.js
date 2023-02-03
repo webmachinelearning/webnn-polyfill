@@ -38,7 +38,7 @@ describe('test tinyYolov2 nhwc', function() {
       if (!fused) {
         let conv = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, -1]));
+            builder.reshape(bias, [1, 1, 1, null]));
         if (leakyRelu) {
           conv = builder.leakyRelu(conv, {alpha: 0.10000000149011612});
         }

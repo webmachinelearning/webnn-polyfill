@@ -164,7 +164,7 @@ describe('test resnet50v2 nchw', function() {
 
       const bn3 = await buildBatchNorm(bottleneck16, '2', '');
       const pool2 = await builder.averagePool2d(bn3);
-      const reshape = builder.reshape(pool2, [1, -1]);
+      const reshape = builder.reshape(pool2, [1, null]);
       const gemm = await buildGemm(reshape, '0');
       const resNetGraph = await builder.build({gemm});
       return resNetGraph;

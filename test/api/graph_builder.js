@@ -538,13 +538,13 @@ describe('test MLGraphBuilder', () => {
 
   it('builder.reshape should return an operand', () => {
     const x = builder.input('x', {type: 'float32', dimensions: [4, 4]});
-    expect(builder.reshape(x, [1, -1])).to.be.an.instanceof(MLOperand);
+    expect(builder.reshape(x, [1, null])).to.be.an.instanceof(MLOperand);
   });
 
   it('builder.reshape should throw for invalid parameters', () => {
-    expect(() => builder.reshape(1, [1, -1])).to.throw(Error);
-    expect(() => builder.reshape('x', [1, -1])).to.throw(Error);
-    expect(() => builder.reshape({}, [1, -1])).to.throw(Error);
+    expect(() => builder.reshape(1, [1, null])).to.throw(Error);
+    expect(() => builder.reshape('x', [1, null])).to.throw(Error);
+    expect(() => builder.reshape({}, [1, null])).to.throw(Error);
     const x = builder.input('x', {type: 'float32', dimensions: [4, 4]});
     expect(() => builder.reshape(x)).to.throw(Error);
     expect(() => builder.reshape(x, [])).to.throw(Error);
