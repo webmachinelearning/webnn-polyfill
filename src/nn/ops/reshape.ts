@@ -6,15 +6,15 @@ import * as utils from '../utils';
 
 export class Reshape extends SingleOutputOperation {
   private input_: MLOperand;
-  private newShape_: number[];
+  private newShape_: Array<(number | null)>;
   private needCheckOutputShape_ = true;
 
-  constructor(input: MLOperand, newShape: number[]) {
+  constructor(input: MLOperand, newShape: Array<(number | null)>) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
     utils.assert(
-        utils.isIntegerArray(newShape) && newShape.length !== 0,
+        utils.isPositiveIntegerOrNullArray(newShape) && newShape.length !== 0,
         'The newShape parameter is invalid.');
     this.newShape_ = newShape;
   }
@@ -25,17 +25,15 @@ export class Reshape extends SingleOutputOperation {
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    const output: tf.Tensor = tf.reshape(input, this.newShape_);
+    const outputShape: Array<(number | null)> = this.newShape_.slice();
+    const nullPosition = outputShape.indexOf(null);
+    if (nullPosition !== -1) {
+      outputShape[nullPosition] = -1;
+      outputShape[nullPosition] =
+          utils.product(input.shape) / utils.product(outputShape) * -1;
+    }
+    const output: tf.Tensor = tf.reshape(input, outputShape);
     if (this.needCheckOutputShape_) {
-      // The output shape is specified by the newShape argument
-      const outputShape: number[] = this.newShape_.slice();
-      if (outputShape.indexOf(-1) !== -1) {
-        // Only one component of newShape can be the special value of -1.
-        // The values of the output tensor are the same as values of the input
-        // tensor.
-        outputShape[outputShape.indexOf(-1)] =
-            utils.product(input.shape) / utils.product(outputShape) * -1;
-      }
       utils.checkShape(output.shape, outputShape);
       this.needCheckOutputShape_ = false;
     }

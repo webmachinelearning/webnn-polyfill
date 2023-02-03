@@ -630,8 +630,12 @@ def DumpCtsTest(example, test, fused):
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
                     varValue = inputFeedDict[op]
                     if len(varValue) != 0 and varValue[0] is not None:
-                        IndentedPrint('const %s = %s;' % (op, varValue),
-                                      indent=4, file=test)
+                        if nnapiOp == 'RESHAPE':
+                            IndentedPrint(('const %s = %s;' % (op, varValue)).replace('-1', 'null'),
+                                          indent=4, file=test)
+                        else:
+                            IndentedPrint('const %s = %s;' % (op, varValue),
+                                          indent=4, file=test)
                 elif rule == md.MappingRule.OPERAND_ARRAY:
                     varValue = inputFeedDict[op]
                     if len(varValue) != 0:
@@ -678,8 +682,12 @@ def DumpCtsTest(example, test, fused):
                 elif rule == md.MappingRule.OPERAND_VARIABLE:
                     varValue = curParamsList[curParamsList.index(op)].value
                     if len(varValue) != 0 and varValue[0] is not None:
-                        IndentedPrint('const %s = %s;' % (op, varValue),
-                                      indent=4, file=test)
+                        if nnapiOp == 'RESHAPE':
+                            IndentedPrint(('const %s = %s;' % (op, varValue)).replace('-1', 'null'),
+                                        indent=4, file=test)
+                        else:
+                            IndentedPrint('const %s = %s;' % (op, varValue),
+                                        indent=4, file=test)
                 elif rule == md.MappingRule.OPERAND_ARRAY:
                     varValue = curParamsList[curParamsList.index(op)].value
                     if len(varValue) != 0:

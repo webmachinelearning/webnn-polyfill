@@ -33,7 +33,7 @@ describe('test conv2d', () => {
       if (b !== undefined) {
         if (options.inputLayout === undefined ||
             options.inputLayout === 'nchw') {
-          b = builder.reshape(b, [1, -1, 1, 1]);
+          b = builder.reshape(b, [1, null, 1, 1]);
         }
         y = builder.add(y, b);
       }

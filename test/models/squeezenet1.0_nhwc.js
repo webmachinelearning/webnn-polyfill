@@ -36,7 +36,7 @@ describe('test squeezenet1.0 nhwc', function() {
       if (fusedConv === false) {
         return builder.relu(builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, -1])));
+            builder.reshape(bias, [1, 1, 1, null])));
       } else {
         options.bias = bias;
         options.activation = builder.relu();
@@ -76,7 +76,7 @@ describe('test squeezenet1.0 nhwc', function() {
       const conv10 = await buildConv(fire9, 'conv10');
       const averagePool2d =
           builder.averagePool2d(conv10, {windowDimensions: [13, 13], layout});
-      const reshape = builder.reshape(averagePool2d, [1, -1]);
+      const reshape = builder.reshape(averagePool2d, [1, null]);
       const softmax = builder.softmax(reshape);
       const squeezeNetGraph = await builder.build({softmax});
       return squeezeNetGraph;

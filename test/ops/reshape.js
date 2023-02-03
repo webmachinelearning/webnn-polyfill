@@ -46,11 +46,11 @@ describe('test reshape', () => {
     await testReshape([2, 3, 4], [24]);
   });
 
-  it('reshape [2, 3, 4] to negative_dim [2, -1, 2]', async () => {
-    await testReshape([2, 3, 4], [2, -1, 2], [2, 6, 2]);
+  it('reshape [2, 3, 4] to [2, null, 2]', async () => {
+    await testReshape([2, 3, 4], [2, null, 2], [2, 6, 2]);
   });
 
-  it('reshape [2, 3, 4] to negative_dim [-1, 2, 3, 4]', async () => {
-    await testReshape([2, 3, 4], [-1, 2, 3, 4], [1, 2, 3, 4]);
+  it('reshape [2, 3, 4] to [null, 2, 3, 4]', async () => {
+    await testReshape([2, 3, 4], [null, 2, 3, 4], [1, 2, 3, 4]);
   });
 });

@@ -33,7 +33,7 @@ describe('test mobilenetv2 nchw', function() {
       if (!fusedConv) {
         const conv = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, -1, 1, 1]));
+            builder.reshape(bias, [1, null, 1, 1]));
         if (relu6) {
           return builder.clamp(
               conv,
@@ -129,7 +129,7 @@ describe('test mobilenetv2 nchw', function() {
 
       const conv3 = await buildConv(bottleneck15, '95', true);
       const pool = builder.averagePool2d(conv3);
-      const reshape = builder.reshape(pool, [1, -1]);
+      const reshape = builder.reshape(pool, [1, null]);
       const gemm = await buildGemm(reshape, '104');
       const mobileNetGraph = await builder.build({gemm});
       return mobileNetGraph;

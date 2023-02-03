@@ -39,7 +39,7 @@ describe('test tinyYolov2 nchw', function() {
       }
       let conv = builder.conv2d(input, weight, options);
       if (useBias && !fused) {
-        conv = builder.add(conv, builder.reshape(bias, [1, -1, 1, 1]));
+        conv = builder.add(conv, builder.reshape(bias, [1, null, 1, 1]));
       }
       return conv;
     }
