@@ -2,10 +2,10 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {MLClampOptions} from '../graph_builder';
 import {MLOperand} from '../operand';
-import {UnaryMLOperator} from './unary';
+import {UnaryMLActivation} from './unary';
 import * as utils from '../utils';
 
-export class Clamp extends UnaryMLOperator {
+export class Clamp extends UnaryMLActivation {
   private minValue_?: number;
   private maxValue_?: number;
 
