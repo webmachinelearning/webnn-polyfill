@@ -18,10 +18,10 @@ describe('test hardSwish', async () => {
       ]),
     };
     const outputs = {'y': new Float32Array(utils.sizeOfShape([2, 3]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0., 0., 0., 0.36, 2.991006, 3.001,
     ];
-    utils.checkValue(outputs.y, expected);
+    utils.checkValue(result.outputs.y, expected);
   });
 });

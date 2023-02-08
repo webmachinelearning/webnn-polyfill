@@ -14,8 +14,8 @@ describe('test resample2d', () => {
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.values)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, expected.values);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, expected.values);
   }
 
   it('resample2d upsample scales linear', async () => {

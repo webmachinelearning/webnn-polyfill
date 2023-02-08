@@ -19,9 +19,9 @@ describe('CTS converted from NNAPI CTS', () => {
     const [output0, output1, output2] = builder.split(input0, numSplits, {'axis': axis});
     const graph = await builder.build({output0, output1, output2});
     const outputs = {output0: new Int32Array(utils.sizeOfShape([2, 1])), output1: new Int32Array(utils.sizeOfShape([2, 1])), output2: new Int32Array(utils.sizeOfShape([2, 1]))};
-    await context.compute(graph, {'input0': input0Data}, outputs);
+    const computeResult = await context.compute(graph, {'input0': input0Data}, outputs);
     for (let i = 0; i < 3; i++) {
-      utils.checkValue(outputs[['output0', 'output1', 'output2'][i]], expected[i], utils.ctsFp32RestrictAccuracyCriteria);
+      utils.checkValue(computeResult.outputs[['output0', 'output1', 'output2'][i]], expected[i], utils.ctsFp32RestrictAccuracyCriteria);
     }
   });
 
@@ -36,9 +36,9 @@ describe('CTS converted from NNAPI CTS', () => {
     const [output0, output1, output2] = builder.split(input0, numSplits, {'axis': axis});
     const graph = await builder.build({output0, output1, output2});
     const outputs = {output0: new Int32Array(utils.sizeOfShape([2, 1])), output1: new Int32Array(utils.sizeOfShape([2, 1])), output2: new Int32Array(utils.sizeOfShape([2, 1]))};
-    await context.compute(graph, {'input0': input0Data}, outputs);
+    const computeResult = await context.compute(graph, {'input0': input0Data}, outputs);
     for (let i = 0; i < 3; i++) {
-      utils.checkValue(outputs[['output0', 'output1', 'output2'][i]], expected[i], utils.ctsFp32RelaxedAccuracyCriteria);
+      utils.checkValue(computeResult.outputs[['output0', 'output1', 'output2'][i]], expected[i], utils.ctsFp32RelaxedAccuracyCriteria);
     }
   });
 });

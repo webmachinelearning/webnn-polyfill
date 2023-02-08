@@ -21,8 +21,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op3 = builder.clamp(interOut1);
     const graph = await builder.build({op3});
     const outputs = {op3: new Float32Array(utils.sizeOfShape([3, 1]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op3, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op3, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test matmul + add + clamp converted from fully_connected_v1_2_relaxed test', async () => {
@@ -38,8 +38,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op3 = builder.clamp(interOut1);
     const graph = await builder.build({op3});
     const outputs = {op3: new Float32Array(utils.sizeOfShape([3, 1]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op3, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op3, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

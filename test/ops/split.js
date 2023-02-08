@@ -24,9 +24,9 @@ describe('test split', () => {
       outputs[`split${i}`] =
           new Float32Array(utils.sizeOfShape(expectedArray[i].shape));
     }
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     for (let i = 0; i < splittedOperands.length; ++i) {
-      utils.checkValue(outputs[`split${i}`], expectedArray[i].value);
+      utils.checkValue(result.outputs[`split${i}`], expectedArray[i].value);
     }
   }
 

@@ -47,7 +47,7 @@ describe('test mul', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.1491189e+00,  9.4631165e-03,  1.6490275e+00,  -2.4890469e-02,
       8.1811851e-01,  1.6337387e-01,  -7.8853898e-02, -1.2602202e+00,
@@ -65,7 +65,7 @@ describe('test mul', () => {
       1.2045124e+00,  -4.8655939e-01, 6.5835893e-01,  -3.1707945e-01,
       5.6562103e-02,  -8.3017206e-01, 1.8555066e-02,  2.1769990e-01,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 
   it('mul two inputs', async () => {
@@ -108,7 +108,7 @@ describe('test mul', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.1491189e+00,  9.4631165e-03,  1.6490275e+00,  -2.4890469e-02,
       8.1811851e-01,  1.6337387e-01,  -7.8853898e-02, -1.2602202e+00,
@@ -126,7 +126,7 @@ describe('test mul', () => {
       1.2045124e+00,  -4.8655939e-01, 6.5835893e-01,  -3.1707945e-01,
       5.6562103e-02,  -8.3017206e-01, 1.8555066e-02,  2.1769990e-01,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 
   it('mul broadcast', async () => {
@@ -159,7 +159,7 @@ describe('test mul', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       -0.05412592, 0.192414,    1.707958,    -0.31375682, -0.7771366,
       0.9440262,   0.2743106,   3.045193,    -1.1200235,  -0.37519363,
@@ -174,6 +174,6 @@ describe('test mul', () => {
       -0.5392565,  -2.1754124,  -0.7557713,  0.15043499,  -0.16643268,
       0.20531811,  1.9038703,   -0.04174223, -0.9528061,  1.129644,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 });

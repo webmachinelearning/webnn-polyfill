@@ -29,7 +29,7 @@ describe('test softmax', () => {
       ]),
     };
     const outputs = {'y': new Float32Array(utils.sizeOfShape([3, 4]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.32165375,
       0.36157736,
@@ -44,6 +44,6 @@ describe('test softmax', () => {
       0.35717794,
       0.21167983,
     ];
-    utils.checkValue(outputs.y, expected);
+    utils.checkValue(result.outputs.y, expected);
   });
 });

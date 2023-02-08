@@ -44,7 +44,7 @@ describe('test min', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       -0.3013072,  -0.09710764, 0.11072686,  0.57673335,  -0.9459303,
       -0.4660466,  -0.51731133, -1.1046865,  -0.7237214,  -2.4551184,
@@ -59,7 +59,7 @@ describe('test min', () => {
       -0.3274254,  -0.24440259, -0.5514492,  -1.3384086,  -1.0613606,
       -0.6608337,  0.30539933,  -1.529869,   -0.70533603, -2.1911235,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 
   it('min broadcast', async () => {
@@ -92,7 +92,7 @@ describe('test min', () => {
       ]),
     };
     const outputs = {c: new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.09259097,  -1.302236,  0.27485028,  0.83395857,  -0.83993983,
       -0.10002025, -1.302236,  0.27485028,  0.7070375,   -0.83993983,
@@ -107,6 +107,6 @@ describe('test min', () => {
       -0.5055633,  -1.302236,  0.00957129,  0.41766334,  -0.83993983,
       0.3123349,   -1.302236,  -0.26201916, -1.6016098,  -0.83993983,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 });

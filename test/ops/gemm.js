@@ -24,8 +24,8 @@ describe('test gemm', () => {
     const graph = await builder.build({c});
     const inputs = {'a': new Float32Array(A.value)};
     const outputs = {'c': new Float32Array(utils.sizeOfShape(expected.shape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.c, expected.value);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.c, expected.value);
   }
 
   it('gemm all attributes', async () => {

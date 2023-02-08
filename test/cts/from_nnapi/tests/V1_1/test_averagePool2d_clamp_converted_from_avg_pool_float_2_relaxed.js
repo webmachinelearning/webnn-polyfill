@@ -21,8 +21,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output = builder.clamp(interOut0);
     const graph = await builder.build({output});
     const outputs = {output: new Float32Array(utils.sizeOfShape([5, 16, 18, 3]))};
-    await context.compute(graph, {'i0': i0Data}, outputs);
-    utils.checkValue(outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'i0': i0Data}, outputs);
+    utils.checkValue(computeResult.outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

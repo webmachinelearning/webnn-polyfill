@@ -44,7 +44,7 @@ describe('test sub', () => {
       ]),
     };
     const outputs = {'c': new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       2.436513,   0.7597104,   1.7918843,   3.9671757,  1.6901319,
       -0.5754969, 2.5802867,   -0.61413944, 0.80407953, 0.35865313,
@@ -59,7 +59,7 @@ describe('test sub', () => {
       -2.7630255, -0.51914215, 0.35042053,  -3.0906973, 0.23982115,
       -0.3741245, -0.88073474, 0.45748198,  -1.2484014, -1.2849479,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 
   it('sub broadcast', async () => {
@@ -92,7 +92,7 @@ describe('test sub', () => {
       ]),
     };
     const outputs = {'c': new Float32Array(utils.sizeOfShape([3, 4, 5]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.73041946,  0.27555048, 0.9418566,   3.549789,   -1.3197993,
       0.20435938,  0.9397977,  2.4928823,   2.895698,   -0.21776962,
@@ -107,6 +107,6 @@ describe('test sub', () => {
       1.2748528,   1.6936789,  1.500449,    1.5723777,  -1.6594744,
       1.0355884,   0.5715416,  -0.0459314,  1.7678707,  -0.60775226,
     ];
-    utils.checkValue(outputs.c, expected);
+    utils.checkValue(result.outputs.c, expected);
   });
 });

@@ -26,8 +26,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nhwc_relaxed test', async () => {
@@ -48,8 +48,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nhwc_weight_as_input test', async () => {
@@ -72,8 +72,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nhwc_weight_as_input_relaxed test', async () => {
@@ -96,8 +96,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 2, 2, 1]))};
-    await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nchw test', async () => {
@@ -118,8 +118,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 1, 2, 2]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nchw_relaxed test', async () => {
@@ -140,8 +140,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 1, 2, 2]))};
-    await context.compute(graph, {'op1': op1Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nchw_weight_as_input test', async () => {
@@ -164,8 +164,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 1, 2, 2]))};
-    await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_nchw_weight_as_input_relaxed test', async () => {
@@ -188,8 +188,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op4 = builder.conv2d(op1, op2, {'bias': op3, 'padding': [param2, param3, param, param1], 'strides': [param5, param4], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op4});
     const outputs = {op4: new Float32Array(utils.sizeOfShape([1, 1, 2, 2]))};
-    await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
-    utils.checkValue(outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op1': op1Data, 'op2': op2Data, 'op3': op3Data}, outputs);
+    utils.checkValue(computeResult.outputs.op4, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nhwc test', async () => {
@@ -210,8 +210,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 3]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nhwc_relaxed test', async () => {
@@ -232,8 +232,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 3]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nhwc_weight_as_input test', async () => {
@@ -256,8 +256,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 3]))};
-    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nhwc_weight_as_input_relaxed test', async () => {
@@ -280,8 +280,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 1, 1, 3]))};
-    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nchw test', async () => {
@@ -302,8 +302,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 3, 1, 1]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nchw_relaxed test', async () => {
@@ -324,8 +324,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 3, 1, 1]))};
-    await context.compute(graph, {'op12': op12Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nchw_weight_as_input test', async () => {
@@ -348,8 +348,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 3, 1, 1]))};
-    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_channel_nchw_weight_as_input_relaxed test', async () => {
@@ -372,8 +372,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op42 = builder.conv2d(op12, op22, {'bias': op32, 'padding': [param13, param14, param11, param12], 'strides': [param16, param15], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op42});
     const outputs = {op42: new Float32Array(utils.sizeOfShape([1, 3, 1, 1]))};
-    await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
-    utils.checkValue(outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op12': op12Data, 'op22': op22Data, 'op32': op32Data}, outputs);
+    utils.checkValue(computeResult.outputs.op42, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nhwc test', async () => {
@@ -394,8 +394,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 2, 3, 3]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nhwc_relaxed test', async () => {
@@ -416,8 +416,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 2, 3, 3]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nhwc_weight_as_input test', async () => {
@@ -440,8 +440,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 2, 3, 3]))};
-    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nhwc_weight_as_input_relaxed test', async () => {
@@ -464,8 +464,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 2, 3, 3]))};
-    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nchw test', async () => {
@@ -486,8 +486,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 3, 2, 3]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nchw_relaxed test', async () => {
@@ -508,8 +508,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 3, 2, 3]))};
-    await context.compute(graph, {'op13': op13Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nchw_weight_as_input test', async () => {
@@ -532,8 +532,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 3, 2, 3]))};
-    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test conv2d (fused ops) converted from conv2d_v1_2_large_nchw_weight_as_input_relaxed test', async () => {
@@ -556,8 +556,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const op43 = builder.conv2d(op13, op23, {'bias': op33, 'padding': [param20, param21, param18, param19], 'strides': [param23, param22], 'inputLayout': layout, 'filterLayout': 'ohwi'});
     const graph = await builder.build({op43});
     const outputs = {op43: new Float32Array(utils.sizeOfShape([1, 3, 2, 3]))};
-    await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
-    utils.checkValue(outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'op13': op13Data, 'op23': op23Data, 'op33': op33Data}, outputs);
+    utils.checkValue(computeResult.outputs.op43, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

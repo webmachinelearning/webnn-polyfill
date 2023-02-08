@@ -207,11 +207,13 @@ describe('test resnet101v2 nhwc', function() {
       'input': await utils.createTypedArrayFromNpy(new URL(inputFile, url))};
     const outputs = {
       'reshape': new Float32Array(utils.sizeOfShape([1, 1001]))};
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.reshape, expected, utils.ctsFp32RestrictAccuracyCriteria);
+        result.outputs.reshape,
+        expected,
+        utils.ctsFp32RestrictAccuracyCriteria);
   }
 
   it('test_data_set_0', async () => {

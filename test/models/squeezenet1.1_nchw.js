@@ -103,11 +103,11 @@ describe('test squeezenet1.1 nchw', function() {
     const outputs = {
       'reshape0': new Float32Array(utils.sizeOfShape([1, 1000])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.reshape0, expected, utils.modelFp32AccuracyCriteria);
+        result.outputs.reshape0, expected, utils.modelFp32AccuracyCriteria);
   }
 
   it('test_data_set_0', async () => {

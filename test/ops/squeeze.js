@@ -19,8 +19,8 @@ describe('test squeeze', () => {
     }
     const inputs = {'x': inputBuffer};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expectedShape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, inputBuffer);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, inputBuffer);
   }
 
   it('squeeze one dimension by default', async () => {
