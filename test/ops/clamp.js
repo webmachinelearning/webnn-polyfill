@@ -14,8 +14,8 @@ describe('test clamp', () => {
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(inputValue)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(inputShape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, expected);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, expected);
   }
 
   it('clamp', async () => {

@@ -30,7 +30,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.12397027,
       0.12397027,
@@ -48,7 +48,7 @@ describe('test gru', () => {
       0.19991654,
       0.19991654,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with bias', async () => {
@@ -77,7 +77,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.20053662,
       0.20053662,
@@ -89,7 +89,7 @@ describe('test gru', () => {
       0.07484276,
       0.07484276,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with recurrentBias', async () => {
@@ -119,7 +119,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.14985296,
       0.14985296,
@@ -131,7 +131,7 @@ describe('test gru', () => {
       0.03221882,
       0.03221882,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with explict resetAfter true', async () => {
@@ -165,7 +165,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.90645754,
       1.90645754,
@@ -177,7 +177,7 @@ describe('test gru', () => {
       1.983688,
       1.983688,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with resetAfter false', async () => {
@@ -211,7 +211,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.90685618,
       1.90685618,
@@ -223,7 +223,7 @@ describe('test gru', () => {
       1.98368835,
       1.98368835,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with default zrn layout', async () => {
@@ -268,7 +268,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -280,7 +280,7 @@ describe('test gru', () => {
       1.99804044,
       1.9902072,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with explict zrn layout', async () => {
@@ -326,7 +326,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -338,7 +338,7 @@ describe('test gru', () => {
       1.99804044,
       1.9902072,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with rzn layout', async () => {
@@ -384,7 +384,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -396,7 +396,7 @@ describe('test gru', () => {
       1.99804044,
       1.9902072,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gruCell with [tanh, sigmoid] activations', async () => {
@@ -446,7 +446,7 @@ describe('test gru', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape([batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.99940538,
       1.99962664,
@@ -458,7 +458,7 @@ describe('test gru', () => {
       1.99999189,
       1.99979985,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru with 1 step', async () => {
@@ -515,7 +515,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       1.98016739,
       1.9812535,
@@ -527,7 +527,7 @@ describe('test gru', () => {
       1.99804044,
       1.9902072,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru with 2 steps', async () => {
@@ -573,7 +573,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -591,7 +591,7 @@ describe('test gru', () => {
       0.0797327,
       0.0797327,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru with explict returnSequence false', async () => {
@@ -638,7 +638,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -656,7 +656,7 @@ describe('test gru', () => {
       0.0797327,
       0.0797327,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru with returnSequence true', async () => {
@@ -706,7 +706,7 @@ describe('test gru', () => {
       'output1': new Float32Array(
           utils.sizeOfShape([steps, numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       [
         0.22391089,
@@ -759,7 +759,7 @@ describe('test gru', () => {
       ],
     ];
     for (let i = 0; i < expected.length; ++i) {
-      utils.checkValue(outputs[`output${i}`], expected[i]);
+      utils.checkValue(result.outputs[`output${i}`], expected[i]);
     }
   });
 
@@ -807,7 +807,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -825,7 +825,7 @@ describe('test gru', () => {
       0.0797327,
       0.0797327,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru with backward direction', async () => {
@@ -872,7 +872,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.22227009,
       0.22227009,
@@ -890,7 +890,7 @@ describe('test gru', () => {
       0.07972924,
       0.07972924,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru with both direction', async () => {
@@ -937,7 +937,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.2239109,
       0.2239109,
@@ -970,7 +970,7 @@ describe('test gru', () => {
       0.07972924,
       0.07972924,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 
   it('gru without initialHiddenState', async () => {
@@ -1013,7 +1013,7 @@ describe('test gru', () => {
       'output': new Float32Array(
           utils.sizeOfShape([numDirections, batchSize, hiddenSize])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected = [
       0.22391089,
       0.22391089,
@@ -1031,6 +1031,6 @@ describe('test gru', () => {
       0.0797327,
       0.0797327,
     ];
-    utils.checkValue(outputs.output, expected);
+    utils.checkValue(result.outputs.output, expected);
   });
 });

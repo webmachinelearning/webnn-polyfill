@@ -141,11 +141,11 @@ describe('test tinyYolov2 nchw', function() {
     const outputs = {
       'conv': new Float32Array(utils.sizeOfShape([1, 125, 13, 13])),
     };
-    await context.compute(graph, inputs, outputs);
+    const result = await context.compute(graph, inputs, outputs);
     const expected =
         await utils.createTypedArrayFromNpy(new URL(expectedFile, url));
     utils.checkValue(
-        outputs.conv, expected,
+        result.outputs.conv, expected,
         // refer to onnx
         // https://github.com/onnx/models/blob/master/workflow_scripts/ort_test_dir_utils.py#L239
         new utils.AccuracyCriterion(1e-3, 1e-3));

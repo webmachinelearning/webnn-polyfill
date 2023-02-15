@@ -2,9 +2,9 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {MLGruCellOptions, MLGruOptions, MLRecurrentNetworkDirection, MLRecurrentNetworkWeightLayout} from '../graph_builder';
 import {MLOperand, OutputOperand} from '../operand';
-import {MLOperator, Operation, SingleOutputOperation} from '../operation';
+import {MLActivation, Operation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
-import {UnaryMLOperator} from './unary';
+import {UnaryMLActivation} from './unary';
 
 export class Gru extends Operation {
   private input_: MLOperand;
@@ -19,7 +19,7 @@ export class Gru extends Operation {
   private returnSequence_: boolean;
   private direction_: MLRecurrentNetworkDirection;
   private layout_: MLRecurrentNetworkWeightLayout;
-  private activations_: MLOperator[];
+  private activations_: MLActivation[];
   private needCheckOutputShape_ = true;
 
   constructor(
@@ -58,7 +58,8 @@ export class Gru extends Operation {
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
       activations:
-          MLOperator[] = [this.builder.sigmoid(), this.builder.tanh()]): void {
+          MLActivation[] = [this.builder.sigmoid(), this.builder.tanh()]):
+  void {
     utils.validateOptionalOperand(bias);
     this.bias_ = bias;
     utils.validateOptionalOperand(recurrentBias);
@@ -83,7 +84,7 @@ export class Gru extends Operation {
     this.layout_ = layout;
     utils.assert(
         activations instanceof Array && activations.length === 2 &&
-            activations.every(a => a instanceof UnaryMLOperator),
+            activations.every(a => a instanceof UnaryMLActivation),
         'The activations parameter is invalid.');
     this.activations_ = activations;
   }
@@ -217,7 +218,7 @@ export class GruCell extends SingleOutputOperation {
   private recurrentBias_?: MLOperand;
   private resetAfter_: boolean;
   private layout_: MLRecurrentNetworkWeightLayout;
-  private activations_: MLOperator[];
+  private activations_: MLActivation[];
   private needCheckOutputShape_ = true;
 
   constructor(
@@ -247,7 +248,7 @@ export class GruCell extends SingleOutputOperation {
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
       activations:
-          MLOperator[] = [this.builder.sigmoid(), this.builder.tanh()]) {
+          MLActivation[] = [this.builder.sigmoid(), this.builder.tanh()]) {
     utils.validateOptionalOperand(bias);
     this.bias_ = bias;
     utils.validateOptionalOperand(recurrentBias);
@@ -262,7 +263,7 @@ export class GruCell extends SingleOutputOperation {
     this.layout_ = layout;
     utils.assert(
         activations instanceof Array && activations.length === 2 &&
-            activations.every(a => a instanceof UnaryMLOperator),
+            activations.every(a => a instanceof UnaryMLActivation),
         'The activations parameter is invalid.');
     this.activations_ = activations;
   }
@@ -281,7 +282,7 @@ export class GruCell extends SingleOutputOperation {
 
   static compute(
       input: tf.Tensor, weight: tf.Tensor, recurrentWeight: tf.Tensor,
-      hiddenState: tf.Tensor, hiddenSize: number, activations: MLOperator[],
+      hiddenState: tf.Tensor, hiddenSize: number, activations: MLActivation[],
       bias?: tf.Tensor, recurrentBias?: tf.Tensor, resetAfter = true,
       layout:
           MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn):
@@ -291,8 +292,8 @@ export class GruCell extends SingleOutputOperation {
     const starts = layout === MLRecurrentNetworkWeightLayout.zrn ?
         {z: 0, r: hiddenSize, n: 2 * hiddenSize} :
         /*rzn*/ {r: 0, z: hiddenSize, n: 2 * hiddenSize};
-    const activation0: UnaryMLOperator = activations[0] as UnaryMLOperator;
-    const activation1: UnaryMLOperator = activations[1] as UnaryMLOperator;
+    const activation0: UnaryMLActivation = activations[0] as UnaryMLActivation;
+    const activation1: UnaryMLActivation = activations[1] as UnaryMLActivation;
     // update gate
     const z = activation0.runOp(tf.add(
         tf.add(

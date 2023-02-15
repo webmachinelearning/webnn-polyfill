@@ -5,7 +5,7 @@ import * as wasm from '@tensorflow/tfjs-backend-wasm';
 
 import * as tf from '@tensorflow/tfjs-core';
 
-import { MLGraph, MLNamedArrayBufferViews } from './graph';
+import { MLComputeResult, MLGraph, MLNamedArrayBufferViews } from './graph';
 import * as utils from './utils';
 
 
@@ -84,8 +84,9 @@ export class MLContext {
   async compute(
       graph: MLGraph,
       inputs: MLNamedArrayBufferViews,
-      outputs: MLNamedArrayBufferViews): Promise<void> {
-    await graph.compute(inputs, outputs);
+      outputs: MLNamedArrayBufferViews): Promise<MLComputeResult> {
+    const result = await graph.compute(inputs, outputs);
+    return result;
   }
 
   /**

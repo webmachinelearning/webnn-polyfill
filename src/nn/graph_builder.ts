@@ -1,7 +1,7 @@
 import {MLContext} from './context';
 import {MLGraph} from './graph';
 import {ConstantOperand, InputOperand, MLOperand, MLOperandDescriptor, MLOperandType} from './operand';
-import {MLOperator} from './operation';
+import {MLActivation} from './operation';
 import {BatchNormalization} from './ops/batch_norm';
 import {Add, Div, MatMul, Max, Min, Mul, Pow, Sub} from './ops/binary';
 import {Clamp} from './ops/clamp';
@@ -42,7 +42,7 @@ export interface MLBatchNormalizationOptions {
   bias?: MLOperand;
   axis?: number;
   epsilon?: number;
-  activation?: MLOperator;
+  activation?: MLActivation;
 }
 
 /**
@@ -84,7 +84,7 @@ export interface MLConv2dOptions {
   inputLayout?: MLInputOperandLayout;
   filterLayout?: MLConv2dFilterOperandLayout;
   bias?: MLOperand;
-  activation?: MLOperator;
+  activation?: MLActivation;
 }
 
 /**
@@ -110,7 +110,7 @@ export interface MLConvTranspose2dOptions {
   inputLayout?: MLInputOperandLayout;
   filterLayout?: MLConvTranspose2dFilterOperandLayout;
   bias?: MLOperand;
-  activation?: MLOperator;
+  activation?: MLActivation;
 }
 
 /**
@@ -152,7 +152,7 @@ export interface MLGruOptions {
   returnSequence?: boolean;
   direction?: MLRecurrentNetworkDirection;
   layout?: MLRecurrentNetworkWeightLayout;
-  activations?: MLOperator[];
+  activations?: MLActivation[];
 }
 
 /**
@@ -163,7 +163,7 @@ export interface MLGruCellOptions {
   recurrentBias?: MLOperand;
   resetAfter?: boolean;
   layout?: MLRecurrentNetworkWeightLayout;
-  activations?: MLOperator[];
+  activations?: MLActivation[];
 }
 
 /**
@@ -378,10 +378,10 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-clamp)
    */
   clamp(x: MLOperand, options: MLClampOptions): MLOperand;
-  clamp(options: MLClampOptions): MLOperator;
+  clamp(options: MLClampOptions): MLActivation;
   clamp(
       operandOrOptions: MLOperand|MLClampOptions = {},
-      options: MLClampOptions = {}): MLOperand|MLOperator {
+      options: MLClampOptions = {}): MLOperand|MLActivation {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
       this.validateOperandBuilder([x]);
@@ -565,8 +565,8 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-hard-swish)
    */
   hardSwish(input: MLOperand): MLOperand;
-  hardSwish(): MLOperator;
-  hardSwish(input: MLOperand = undefined): MLOperand|MLOperator {
+  hardSwish(): MLActivation;
+  hardSwish(input: MLOperand = undefined): MLOperand|MLActivation {
     if (input === undefined) {
       return new HardSwish(undefined);
     } else {
@@ -579,8 +579,8 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-relu)
    */
   relu(input: MLOperand): MLOperand;
-  relu(): MLOperator;
-  relu(input: MLOperand = undefined): MLOperand|MLOperator {
+  relu(): MLActivation;
+  relu(input: MLOperand = undefined): MLOperand|MLActivation {
     if (input === undefined) {
       return new Relu(undefined);
     } else {
@@ -593,8 +593,8 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-sigmoid)
    */
   sigmoid(input: MLOperand): MLOperand;
-  sigmoid(): MLOperator;
-  sigmoid(input: MLOperand = undefined): MLOperand|MLOperator {
+  sigmoid(): MLActivation;
+  sigmoid(input: MLOperand = undefined): MLOperand|MLActivation {
     if (input === undefined) {
       return new Sigmoid(undefined);
     } else {
@@ -607,8 +607,8 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-tanh)
    */
   tanh(input: MLOperand): MLOperand;
-  tanh(): MLOperator;
-  tanh(input: MLOperand = undefined): MLOperand|MLOperator {
+  tanh(): MLActivation;
+  tanh(input: MLOperand = undefined): MLOperand|MLActivation {
     if (input === undefined) {
       return new Tanh(undefined);
     } else {
@@ -671,10 +671,10 @@ export class MLGraphBuilder {
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-leakyrelu)
    */
   leakyRelu(x: MLOperand, options: MLLeakyReluOptions): MLOperand;
-  leakyRelu(options: MLLeakyReluOptions): MLOperator;
+  leakyRelu(options: MLLeakyReluOptions): MLActivation;
   leakyRelu(
       operandOrOptions: MLOperand|MLLeakyReluOptions = {},
-      options: MLLeakyReluOptions = {}): MLOperand|MLOperator {
+      options: MLLeakyReluOptions = {}): MLOperand|MLActivation {
     if (operandOrOptions instanceof MLOperand) {
       const x = operandOrOptions;
       this.validateOperandBuilder([x]);

@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLOperand, OutputOperand} from '../operand';
-import {MLOperator, SingleOutputOperation} from '../operation';
+import {MLActivation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export abstract class Unary extends SingleOutputOperation {
@@ -92,7 +92,7 @@ export class Tan extends Unary {
   }
 }
 
-export abstract class UnaryMLOperator extends Unary implements MLOperator {
+export abstract class UnaryMLActivation extends Unary implements MLActivation {
   apply(x: MLOperand): OutputOperand {
     this.builder_ = x.builder;
     utils.validateOperand(x);
@@ -102,25 +102,25 @@ export abstract class UnaryMLOperator extends Unary implements MLOperator {
   }
 }
 
-export class Sigmoid extends UnaryMLOperator {
+export class Sigmoid extends UnaryMLActivation {
   runOp(x: tf.Tensor): tf.Tensor {
     return tf.sigmoid(x);
   }
 }
 
-export class Tanh extends UnaryMLOperator {
+export class Tanh extends UnaryMLActivation {
   runOp(x: tf.Tensor): tf.Tensor {
     return tf.tanh(x);
   }
 }
 
-export class Relu extends UnaryMLOperator {
+export class Relu extends UnaryMLActivation {
   runOp(x: tf.Tensor): tf.Tensor {
     return tf.relu(x);
   }
 }
 
-export class HardSwish extends UnaryMLOperator {
+export class HardSwish extends UnaryMLActivation {
   runOp(x: tf.Tensor): tf.Tensor {
     return tf.div(
       tf.mul(

@@ -3,7 +3,7 @@ import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
 import {MLAutoPad, MLConvTranspose2dOptions, MLConvTranspose2dFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
 import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
-import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
+import {FusedOperation, MLActivation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 import {Clamp} from './clamp';
@@ -24,7 +24,7 @@ export class ConvTranspose2d extends SingleOutputOperation
   private autoPad_?: MLAutoPad;
   private outputPadding_?: [number, number];
   private outputSizes_?: [number, number];
-  private activation_?: MLOperator;
+  private activation_?: MLActivation;
   private fusedActivation_?: tf.fused.Activation;
   private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
@@ -55,7 +55,7 @@ export class ConvTranspose2d extends SingleOutputOperation
       autoPad: MLAutoPad = MLAutoPad.explicit,
       outputPadding: [number, number] = [0, 0],
       outputSizes: [number, number] = undefined, bias: MLOperand = undefined,
-      activation: MLOperator = undefined) {
+      activation: MLActivation = undefined) {
 
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
@@ -133,7 +133,7 @@ export class ConvTranspose2d extends SingleOutputOperation
     }
   }
 
-  isRelu6(activation: MLOperator): boolean {
+  isRelu6(activation: MLActivation): boolean {
     if (activation instanceof Clamp) {
       const clamp = activation;
       if (Math.abs(clamp.minValue - 0.0) < 1e-5 &&

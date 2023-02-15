@@ -34,8 +34,8 @@ describe('test batchNormalization', () => {
     const outputs = {
       'output': new Float32Array(utils.sizeOfShape(input.shape)),
     };
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.output, expected);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.output, expected);
   }
 
   it('batchNormalization nchw', async () => {

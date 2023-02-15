@@ -5,9 +5,9 @@ import {MLGraphBuilder} from './graph_builder';
 import {MLOperand, OutputOperand} from './operand';
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#api-mloperator)
+ * [spec](https://webmachinelearning.github.io/webnn/#api-mlactivation)
  */
-export interface MLOperator {
+export interface MLActivation {
   /** @internal */
   apply(input: MLOperand): OutputOperand;
 

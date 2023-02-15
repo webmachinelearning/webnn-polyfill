@@ -19,8 +19,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output0 = builder.reduceMin(input0, {'axes': param, 'keepDimensions': param1});
     const graph = await builder.build({output0});
     const outputs = {output0: new Float32Array(utils.sizeOfShape([3]))};
-    await context.compute(graph, {'input0': input0Data}, outputs);
-    utils.checkValue(outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'input0': input0Data}, outputs);
+    utils.checkValue(computeResult.outputs.output0, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test reduceMin converted from reduce_min_relaxed test', async () => {
@@ -34,8 +34,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output0 = builder.reduceMin(input0, {'axes': param, 'keepDimensions': param1});
     const graph = await builder.build({output0});
     const outputs = {output0: new Float32Array(utils.sizeOfShape([3]))};
-    await context.compute(graph, {'input0': input0Data}, outputs);
-    utils.checkValue(outputs.output0, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'input0': input0Data}, outputs);
+    utils.checkValue(computeResult.outputs.output0, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test reduceMin converted from reduce_min_2 test', async () => {
@@ -49,8 +49,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output01 = builder.reduceMin(input01, {'axes': param2, 'keepDimensions': param3});
     const graph = await builder.build({output01});
     const outputs = {output01: new Float32Array(utils.sizeOfShape([1]))};
-    await context.compute(graph, {'input01': input01Data}, outputs);
-    utils.checkValue(outputs.output01, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'input01': input01Data}, outputs);
+    utils.checkValue(computeResult.outputs.output01, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test reduceMin converted from reduce_min_relaxed_2 test', async () => {
@@ -64,8 +64,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output01 = builder.reduceMin(input01, {'axes': param2, 'keepDimensions': param3});
     const graph = await builder.build({output01});
     const outputs = {output01: new Float32Array(utils.sizeOfShape([1]))};
-    await context.compute(graph, {'input01': input01Data}, outputs);
-    utils.checkValue(outputs.output01, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'input01': input01Data}, outputs);
+    utils.checkValue(computeResult.outputs.output01, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test reduceMin converted from reduce_min_4 test', async () => {
@@ -79,8 +79,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output03 = builder.reduceMin(input03, {'axes': param6, 'keepDimensions': param7});
     const graph = await builder.build({output03});
     const outputs = {output03: new Float32Array(utils.sizeOfShape([1, 3, 1]))};
-    await context.compute(graph, {'input03': input03Data}, outputs);
-    utils.checkValue(outputs.output03, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'input03': input03Data}, outputs);
+    utils.checkValue(computeResult.outputs.output03, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test reduceMin converted from reduce_min_relaxed_4 test', async () => {
@@ -94,8 +94,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output03 = builder.reduceMin(input03, {'axes': param6, 'keepDimensions': param7});
     const graph = await builder.build({output03});
     const outputs = {output03: new Float32Array(utils.sizeOfShape([1, 3, 1]))};
-    await context.compute(graph, {'input03': input03Data}, outputs);
-    utils.checkValue(outputs.output03, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'input03': input03Data}, outputs);
+    utils.checkValue(computeResult.outputs.output03, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

@@ -3,9 +3,9 @@ import * as tf from '@tensorflow/tfjs-core';
 import {MLOperand} from '../operand';
 import * as utils from '../utils';
 
-import {UnaryMLOperator} from './unary';
+import {UnaryMLActivation} from './unary';
 
-export class LeakyRelu extends UnaryMLOperator {
+export class LeakyRelu extends UnaryMLActivation {
   private alpha_?: number;
 
   get alpha(): number {

@@ -15,8 +15,8 @@ describe('test transpose', () => {
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(inputData)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expectedShape))};
-    await context.compute(graph, inputs, outputs);
-    utils.checkValue(outputs.y, expected);
+    const result = await context.compute(graph, inputs, outputs);
+    utils.checkValue(result.outputs.y, expected);
   }
 
   it('transpose default', async () => {

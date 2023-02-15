@@ -19,8 +19,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output = builder.pow(base, exponent);
     const graph = await builder.build({output});
     const outputs = {output: new Float32Array(utils.sizeOfShape([2, 1]))};
-    await context.compute(graph, {'base': baseData, 'exponent': exponentData}, outputs);
-    utils.checkValue(outputs.output, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'base': baseData, 'exponent': exponentData}, outputs);
+    utils.checkValue(computeResult.outputs.output, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test pow converted from pow_relaxed test', async () => {
@@ -34,8 +34,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output = builder.pow(base, exponent);
     const graph = await builder.build({output});
     const outputs = {output: new Float32Array(utils.sizeOfShape([2, 1]))};
-    await context.compute(graph, {'base': baseData, 'exponent': exponentData}, outputs);
-    utils.checkValue(outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'base': baseData, 'exponent': exponentData}, outputs);
+    utils.checkValue(computeResult.outputs.output, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test pow converted from pow_2 test', async () => {
@@ -49,8 +49,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output1 = builder.pow(base, exponent1);
     const graph = await builder.build({output1});
     const outputs = {output1: new Float32Array(utils.sizeOfShape([2, 2]))};
-    await context.compute(graph, {'base': baseData, 'exponent1': exponent1Data}, outputs);
-    utils.checkValue(outputs.output1, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'base': baseData, 'exponent1': exponent1Data}, outputs);
+    utils.checkValue(computeResult.outputs.output1, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test pow converted from pow_relaxed_2 test', async () => {
@@ -64,8 +64,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output1 = builder.pow(base, exponent1);
     const graph = await builder.build({output1});
     const outputs = {output1: new Float32Array(utils.sizeOfShape([2, 2]))};
-    await context.compute(graph, {'base': baseData, 'exponent1': exponent1Data}, outputs);
-    utils.checkValue(outputs.output1, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'base': baseData, 'exponent1': exponent1Data}, outputs);
+    utils.checkValue(computeResult.outputs.output1, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 
   it('test pow converted from pow_3 test', async () => {
@@ -79,8 +79,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output2 = builder.pow(base, exponent2);
     const graph = await builder.build({output2});
     const outputs = {output2: new Float32Array(utils.sizeOfShape([3, 2, 2]))};
-    await context.compute(graph, {'base': baseData, 'exponent2': exponent2Data}, outputs);
-    utils.checkValue(outputs.output2, expected, utils.ctsFp32RestrictAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'base': baseData, 'exponent2': exponent2Data}, outputs);
+    utils.checkValue(computeResult.outputs.output2, expected, utils.ctsFp32RestrictAccuracyCriteria);
   });
 
   it('test pow converted from pow_relaxed_3 test', async () => {
@@ -94,8 +94,8 @@ describe('CTS converted from NNAPI CTS', () => {
     const output2 = builder.pow(base, exponent2);
     const graph = await builder.build({output2});
     const outputs = {output2: new Float32Array(utils.sizeOfShape([3, 2, 2]))};
-    await context.compute(graph, {'base': baseData, 'exponent2': exponent2Data}, outputs);
-    utils.checkValue(outputs.output2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
+    const computeResult = await context.compute(graph, {'base': baseData, 'exponent2': exponent2Data}, outputs);
+    utils.checkValue(computeResult.outputs.output2, expected, utils.ctsFp32RelaxedAccuracyCriteria);
   });
 });
 /* eslint-disable max-len */

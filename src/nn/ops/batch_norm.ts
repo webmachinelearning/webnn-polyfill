@@ -2,7 +2,7 @@ import * as tf from '@tensorflow/tfjs-core';
 
 import {MLBatchNormalizationOptions} from '../graph_builder';
 import {MLOperand, OutputOperand} from '../operand';
-import {FusedOperation, MLOperator, SingleOutputOperation} from '../operation';
+import {FusedOperation, MLActivation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export class BatchNormalization extends SingleOutputOperation implements
@@ -14,7 +14,7 @@ export class BatchNormalization extends SingleOutputOperation implements
   private bias_?: MLOperand;
   private axis_?: number;
   private epsilon_?: number;
-  private activation_?: MLOperator;
+  private activation_?: MLActivation;
   private needCheckOutputShape_ = true;
 
   constructor(
