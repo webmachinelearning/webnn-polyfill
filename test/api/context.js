@@ -293,7 +293,7 @@ describe('test MLContext.compute', () => {
         }
       });
 
-  it.only('MLGraph should be immutable after creation', async () => {
+  it('MLGraph should be immutable after creation', async () => {
     const builder = new MLGraphBuilder(context);
     const desc = {type: 'float32', dimensions: [2, 2]};
     const a = builder.input('a', desc);
