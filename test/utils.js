@@ -199,6 +199,10 @@ async function readyPolyfillBackend(context, backend) {
         console.warn(`webnn-polyfill doesn't support ${backend} backend.`);
       }
     } else {
+      if (backend === 'wasm') {
+        const wasm = context.wasm;
+        wasm.setWasmPaths(`https://unpkg.com/@tensorflow/tfjs-backend-wasm@${tf.version_core}/dist/`);
+      }
       if (!(await tf.setBackend(backend))) {
         console.error(`Failed to set tf.js backend ${backend}.`);
       }
