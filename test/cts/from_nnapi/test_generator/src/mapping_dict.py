@@ -685,6 +685,21 @@ MappingDict = {
             }
         ]
     },
+    'PRELU': {
+        'webnnOperation': 'prelu',
+        'insList': [
+            {
+                'name': 'input0',
+                'mappingParamIndex': 0,
+                'mappingRuleType': 0
+            },
+            {
+                'name': 'input1',
+                'mappingParamIndex': 1,
+                'mappingRuleType': 0
+            }
+        ]
+    },
     'POW': {
         'webnnOperation': 'pow',
         'insList': [
