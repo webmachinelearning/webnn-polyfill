@@ -696,10 +696,13 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-pad)
    */
-  pad(input: MLOperand, padding: MLOperand,
+  pad(
+      input: MLOperand,
+      beginningPadding: [number, number],
+      endingPadding: [number, number],
       options: MLPadOptions = {}): MLOperand {
-    this.validateOperandBuilder([input, padding]);
-    return (new Pad(input, padding, options)).output;
+    this.validateOperandBuilder([input]);
+    return (new Pad(input, beginningPadding, endingPadding, options)).output;
   }
 
   // start of pooling operations

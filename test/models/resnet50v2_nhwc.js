@@ -106,10 +106,7 @@ describe('test resnet50v2 nhwc', function() {
       if (!downsample && shortcut) {
         residual = builder.maxPool2d(
             input, {windowDimensions: [1, 1], strides, layout, autoPad});
-        const padding = builder.constant(
-            {type: 'int32', dimensions: [4, 2]},
-            new Int32Array([0, 0, 1, 1, 1, 1, 0, 0]));
-        const pad = builder.pad(conv1, padding);
+        const pad = builder.pad(conv1, [0, 1, 1, 0], [0, 1, 1, 0]);
         conv2 = await buildConv(pad, nameIndices.concat(['2']), {strides});
       } else {
         conv2 = await buildConv(
@@ -121,13 +118,9 @@ describe('test resnet50v2 nhwc', function() {
     }
 
     async function buildResNet() {
-      const padding = builder.constant(
-          {type: 'int32', dimensions: [4, 2]},
-          new Int32Array([0, 0, 3, 3, 3, 3, 0, 0]));
-
       const input = builder.input('input',
           {type: 'float32', dimensions: [1, 224, 224, 3]});
-      const pad = builder.pad(input, padding);
+      const pad = builder.pad(input, [0, 3, 3, 0], [0, 3, 3, 0]);
       const conv1 = await buildConv(pad, ['', '', '1'], {strides}, false);
       const pool = builder.maxPool2d(
           conv1, {windowDimensions: [3, 3], strides, layout, autoPad});
