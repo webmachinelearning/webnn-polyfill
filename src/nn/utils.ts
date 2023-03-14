@@ -19,8 +19,16 @@ export function isInteger(value: unknown): boolean {
   return typeof value === 'number' && Number.isInteger(value);
 }
 
+export function isUnsignedInteger(value: unknown): boolean {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0;
+}
+
 export function isIntegerArray(array: number[]): boolean {
   return array instanceof Array && array.every(v => isInteger(v));
+}
+
+export function isUnsignedIntegerArray(array: number[]): boolean {
+  return array instanceof Array && array.every(v => isUnsignedInteger(v));
 }
 
 export function isPositiveIntegerOrNullArray(array: Array<(number | null)>):

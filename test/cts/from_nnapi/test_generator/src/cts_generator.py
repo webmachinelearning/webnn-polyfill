@@ -303,6 +303,14 @@ def PrintConstant(oprand, operation, opInsList, opInsInfoList, layout,
               (oprand, opDesc, oprand.type.mappingTypedArrayType, opValue)
     IndentedPrint(operand, indent=4, file=test)
 
+def PrintBeginningPaddingAndEndingPadding(paddingValues):
+    # split original padding into beginningPadding and endingPadding
+    indexs = range(len(paddingValues))
+    beginningPadding = [paddingValues[i] for i in indexs if i % 2 == 0]
+    endingPadding = [paddingValues[i] for i in indexs if i % 2 == 1]
+    IndentedPrint('const beginningPadding = %s;' % beginningPadding, indent=4, file=test)
+    IndentedPrint('const endingPadding = %s;' % endingPadding, indent=4, file=test)
+
 def CheckDefaultParameterValue(op, inputFeedDict, paramsList):
     flag = False
     value = None
@@ -401,9 +409,12 @@ def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList):
         elif operation == 'RESIZE_BILINEAR':
             targetValue['mode'] = 'linear'
 
-def GetWebNNParamsString(params):
+def GetWebNNParamsString(params, operation):
     paramsList = [p[1] for p in params]
     paramsStr = '%s' % paramsList
+    if operation in ['PAD', 'PAD_V2']:
+        # replace original 2nd padding parameter with 'beginningPadding, endingPadding'
+        paramsStr = paramsStr.replace(str(params[1][1]), 'beginningPadding, endingPadding')
     return paramsStr[1:-1]
 
 def PrintMappedReluOpertions(fusedReluMappedInfo, outputOp, operandName):
@@ -657,42 +668,46 @@ def DumpCtsTest(example, test, fused):
             opInsDict = nnapiOpInsList[curOpInsList.index(op)]
             mappingParamIndex = opInsDict['mappingParamIndex']
             if mappingParamIndex != -1:
-                rule = md.MappingRule(opInsDict['mappingRuleType'])
-                if rule == md.MappingRule.OPERAND_OPERAND:
-                    PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
-                                  layout, test, fused, size)
-                elif rule == md.MappingRule.VARIABLE_VARIABLE:
-                    varValue = curParamsList[curParamsList.index(op)].value[0]
-                    if opInsDict['name'] == 'layout':
-                        if varValue:
-                            varValue = "'nchw'"
-                        else:
-                            varValue = "'nhwc'"
-                    if type(varValue) is bool:
-                        # Python use True/False, JavaScript use true/false as boolean value
-                        if varValue:
-                            IndentedPrint('const %s = true;' % op, indent=4,
-                                          file=test)
-                        else:
-                            IndentedPrint('const %s = false;' % op, indent=4,
-                                          file=test)
-                    else:
-                        IndentedPrint('const %s = %s;' % (op, varValue),
-                                      indent=4, file=test)
-                elif rule == md.MappingRule.OPERAND_VARIABLE:
+                if nnapiOp in ['PAD', 'PAD_V2'] and opInsDict['name'].startswith('padding'):
                     varValue = curParamsList[curParamsList.index(op)].value
-                    if len(varValue) != 0 and varValue[0] is not None:
-                        if nnapiOp == 'RESHAPE':
-                            IndentedPrint(('const %s = %s;' % (op, varValue)).replace('-1', 'null'),
-                                        indent=4, file=test)
+                    PrintBeginningPaddingAndEndingPadding(varValue)
+                else:
+                    rule = md.MappingRule(opInsDict['mappingRuleType'])
+                    if rule == md.MappingRule.OPERAND_OPERAND:
+                        PrintConstant(op, nnapiOp, curOpInsList, nnapiOpInsList,
+                                    layout, test, fused, size)
+                    elif rule == md.MappingRule.VARIABLE_VARIABLE:
+                        varValue = curParamsList[curParamsList.index(op)].value[0]
+                        if opInsDict['name'] == 'layout':
+                            if varValue:
+                                varValue = "'nchw'"
+                            else:
+                                varValue = "'nhwc'"
+                        if type(varValue) is bool:
+                            # Python use True/False, JavaScript use true/false as boolean value
+                            if varValue:
+                                IndentedPrint('const %s = true;' % op, indent=4,
+                                            file=test)
+                            else:
+                                IndentedPrint('const %s = false;' % op, indent=4,
+                                            file=test)
                         else:
                             IndentedPrint('const %s = %s;' % (op, varValue),
                                         indent=4, file=test)
-                elif rule == md.MappingRule.OPERAND_ARRAY:
-                    varValue = curParamsList[curParamsList.index(op)].value
-                    if len(varValue) != 0:
-                        IndentedPrint('const %s = %s;' % (op, varValue),
-                                      indent=4, file=test)
+                    elif rule == md.MappingRule.OPERAND_VARIABLE:
+                        varValue = curParamsList[curParamsList.index(op)].value
+                        if len(varValue) != 0 and varValue[0] is not None:
+                            if nnapiOp == 'RESHAPE':
+                                IndentedPrint(('const %s = %s;' % (op, varValue)).replace('-1', 'null'),
+                                            indent=4, file=test)
+                            else:
+                                IndentedPrint('const %s = %s;' % (op, varValue),
+                                            indent=4, file=test)
+                    elif rule == md.MappingRule.OPERAND_ARRAY:
+                        varValue = curParamsList[curParamsList.index(op)].value
+                        if len(varValue) != 0:
+                            IndentedPrint('const %s = %s;' % (op, varValue),
+                                        indent=4, file=test)
             else:
                 if opInsDict['name'] == 'bias':
                     biasOp = op
@@ -728,7 +743,7 @@ def DumpCtsTest(example, test, fused):
                                                     nnapiOp)
         UpdateWebNNOperationOptionalParamValue(nnapiOp, mappingParams[-1][1],
                                                optionsKeyValueList)
-        webnnParamsStr = GetWebNNParamsString(mappingParams)
+        webnnParamsStr = GetWebNNParamsString(mappingParams, nnapiOp)
         if nnapiOp == 'SQRT':
             exponent = "const exponent = builder.constant({type: 'float32'," + \
                 " dimensions: [1]}, new Float32Array([0.5]));"

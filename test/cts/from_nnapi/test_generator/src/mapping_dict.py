@@ -660,7 +660,7 @@ MappingDict = {
             {
                 'name': 'padding',
                 'mappingParamIndex': 1,
-                'mappingRuleType': 0
+                'mappingRuleType': 3
             }
         ]
     },
@@ -675,11 +675,11 @@ MappingDict = {
             {
                 'name': 'padding',
                 'mappingParamIndex': 1,
-                'mappingRuleType': 0
+                'mappingRuleType': 3
             },
             {
                 'name': 'value',
-                'mappingParamIndex': 2,
+                'mappingParamIndex': 3,
                 'optionsDictKey': 'value',
                 'mappingRuleType': 1
             }
