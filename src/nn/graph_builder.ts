@@ -14,6 +14,7 @@ import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
 import {Pad} from './ops/pad';
 import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
+import {PRelu} from './ops/prelu';
 import {ReduceL1, ReduceL2, ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
 import {Resample2d} from './ops/resample2d';
 import {Reshape} from './ops/reshape';
@@ -728,6 +729,14 @@ export class MLGraphBuilder {
     return (new MaxPool2d(input, options)).output;
   }
   // end of pooling operations
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-prelu)
+   */
+  prelu(x: MLOperand, slope: MLOperand) : MLOperand {
+    this.validateOperandBuilder([x, slope]);
+    return (new PRelu(x, slope)).output;
+  }
 
   // start of reduction operations
   // https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-reduce

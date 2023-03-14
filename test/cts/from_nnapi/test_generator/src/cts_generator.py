@@ -771,7 +771,7 @@ def DumpCtsTest(example, test, fused):
         elif len(curOutputsList) > 1:
             IndentedPrint('for (let i = 0; i < %d; i++) {' % \
                           len(curOutputsList), indent=4, file=test)
-            dataStr = 'outputs[%s[i]]' % ['%s' % k for k in outputOp]
+            dataStr = 'computeResult.outputs[%s[i]]' % ['%s' % k for k in outputOp]
             IndentedPrint(
                 "utils.checkValue(%s, expected[i], %s);" % \
                 (dataStr, criteria), indent=6, file=test)

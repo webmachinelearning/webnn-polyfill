@@ -34,6 +34,7 @@ NNAPI operations to the tests for such WebNN API operations.
 | FULLY_CONNECTED               | matmul [+ add+ relu/clamp]           |
 | PAD                           | pad                                  |
 | PAD_V2                        | pad                                  |
+| PRELU                         | prelu                                |
 | AVERAGE_POOL_2D               | averagePool2d [+ relu/clamp]         |
 | L2_POOL_2D                    | l2Pool2d  [+ relu/clamp]             |
 | MAX_POOL_2D                   | maxPool2d  [+ relu/clamp]            |
