@@ -353,7 +353,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     await testConv2d(input, filter, expected);
   });
@@ -372,7 +372,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     const options = {
       inputLayout: 'nchw',
@@ -395,7 +395,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     const options = {
       inputLayout: 'nchw',
@@ -418,7 +418,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     const options = {
       inputLayout: 'nchw',
@@ -445,7 +445,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     await testConv2d(input, filter, expected, options);
   });
@@ -468,7 +468,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     await testConv2d(input, filter, expected, options);
   });
@@ -491,7 +491,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     await testConv2d(input, filter, expected, options);
   });
@@ -514,7 +514,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [54., 63., 72., 99., 108., 117., 144., 153., 162.],
+      data: [54, 63, 72, 99, 108, 117, 144, 153, 162],
     };
     await testConv2d(input, filter, expected, options);
   });
@@ -533,7 +533,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 4, 3],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -556,7 +556,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 4, 3],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -581,7 +581,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 4, 3],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -606,7 +606,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 4, 3],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -631,7 +631,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 4, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -656,7 +656,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 4, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -681,7 +681,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 4, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -706,7 +706,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 4, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 123., 198., 141., 112., 177., 124.],
+      data: [12, 27, 24, 63, 108, 81, 123, 198, 141, 112, 177, 124],
     };
     const options = {
       padding: [1, 1, 1, 1],
@@ -929,7 +929,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -952,7 +952,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -977,7 +977,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -1002,7 +1002,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -1027,7 +1027,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -1052,7 +1052,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -1077,7 +1077,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -1102,7 +1102,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 3, 3, 1],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-lower',
@@ -1127,7 +1127,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 3, 3],
-      data: [12., 27., 24., 63., 108., 81., 72., 117., 84.],
+      data: [12, 27, 24, 63, 108, 81, 72, 117, 84],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1164,7 +1164,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 2, 2],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1203,7 +1203,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 2, 2],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1242,7 +1242,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 1, 2, 2],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1281,7 +1281,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 2, 2, 1],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1320,7 +1320,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 2, 2, 1],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1359,7 +1359,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 2, 2, 1],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -1398,7 +1398,7 @@ describe('test conv2d', () => {
     };
     const expected = {
       shape: [1, 2, 2, 1],
-      data: [45., 39., 66., 50.],
+      data: [45, 39, 66, 50],
     };
     const options = {
       autoPad: 'same-upper',
@@ -2299,8 +2299,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2308,8 +2308,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2403,8 +2403,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2412,8 +2412,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2443,8 +2443,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2452,8 +2452,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2483,8 +2483,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2492,8 +2492,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 1, 5, 5],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2523,8 +2523,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2532,8 +2532,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2627,8 +2627,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2636,8 +2636,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2667,8 +2667,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2676,8 +2676,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
@@ -2707,8 +2707,8 @@ describe('test conv2d', () => {
     let expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0.,  0., 0., 0.,  0.,  0.,  0.,  0., 0.,  0.,  0.,  0., 8.,
-        17., 0., 0., 44., 53., 62., 11., 0., 11., 17., 23., 0.,
+        0,  0, 0, 0,  0,  0,  0,  0, 0,  0,  0,  0, 8,
+        17, 0, 0, 44, 53, 62, 11, 0, 11, 17, 23, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu');
@@ -2716,8 +2716,8 @@ describe('test conv2d', () => {
     expected = {
       shape: [1, 5, 5, 1],
       data: [
-        0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 6.,
-        6., 0., 0., 6., 6., 6., 6., 0., 6., 6., 6., 0.,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6,
+        6, 0, 0, 6, 6, 6, 6, 0, 6, 6, 6, 0,
       ],
     };
     await testConv2d(input, filter, expected, options, bias, 'relu6', true);
