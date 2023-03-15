@@ -15,7 +15,8 @@ export class Concat extends SingleOutputOperation {
         inputs.every(input => input instanceof MLOperand),
         'The parameter is not an operand.');
     this.inputs_ = inputs;
-    utils.assert(utils.isInteger(axis), 'The axis parameter is invalid.');
+    utils.assert(
+        utils.isUnsignedInteger(axis), 'The axis parameter is invalid.');
     this.axis_ = axis;
   }
 

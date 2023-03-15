@@ -21,7 +21,7 @@ export class Split extends Operation {
         'The splits parameter is invalid.');
     this.splits_ = splits;
     utils.assert(
-        options.axis === undefined || utils.isInteger(options.axis),
+        options.axis === undefined || utils.isUnsignedInteger(options.axis),
         'The options.axis is invalid.');
     this.axis_ = options.axis ?? 0;
 
@@ -41,7 +41,7 @@ export class Split extends Operation {
     const input: tf.Tensor = inputTensors.get(this.input_);
     const outputs = tf.split(input, this.splits_, this.axis_);
     if (this.needCheckOutputShape_) {
-      const axis = this.axis_ >= 0 ? this.axis_ : this.axis_ + input.rank;
+      const axis = this.axis_;
       let sliceSizes = [];
       if (typeof this.splits_ === 'number') {
         sliceSizes =

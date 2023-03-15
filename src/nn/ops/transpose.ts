@@ -15,7 +15,7 @@ export class Transpose extends SingleOutputOperation {
     this.input_ = input;
     if (permutation !== undefined) {
       utils.assert(
-          utils.isIntegerArray(permutation) && permutation.length !== 0,
+          utils.isUnsignedIntegerArray(permutation) && permutation.length !== 0,
           'The permutation parameter is invalid.');
     }
     this.permutation_ = permutation;
