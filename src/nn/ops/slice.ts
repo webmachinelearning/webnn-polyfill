@@ -27,7 +27,7 @@ export class Slice extends SingleOutputOperation {
         sizes.length === sizes.length,
         'The length of sizes is not equal to the length of sizes.))');
     utils.assert(
-        axes === undefined || utils.isIntegerArray(axes),
+        axes === undefined || utils.isUnsignedIntegerArray(axes),
         'The axes parameter is invalid.');
     if (axes !== undefined) {
       utils.assert(
@@ -51,8 +51,8 @@ export class Slice extends SingleOutputOperation {
       }
     }
     utils.assert(
-        this.axes_.every(axis => axis < rank && axis >= -rank),
-        'The value of axes is invalid.');
+        this.axes_.every(axis => axis < rank && axis >= 0),
+        `The axes must be in range [0, ${rank}).`);
     utils.assert(
         this.starts_.length === this.axes_.length,
         'The length of starts is invalid.');
@@ -63,10 +63,7 @@ export class Slice extends SingleOutputOperation {
     const begin: number[] = new Array(this.axes_.length).fill(0);
     const size: number[] = new Array(this.axes_.length).fill(-1);
     for (let i = 0; i < this.axes_.length; ++i) {
-      let axis = this.axes_[i];
-      if (axis < 0) {
-        axis = rank + axis;
-      }
+      const axis = this.axes_[i];
       begin[axis] = this.starts_[i] >= 0 ? this.starts_[i] :
           this.starts_[i] + input.shape[axis];
       size[axis] = this.sizes_[i];
@@ -75,7 +72,7 @@ export class Slice extends SingleOutputOperation {
     if (this.needCheckOutputShape_) {
       const outputShape = input.shape.slice();
       for (let i = 0; i < this.axes_.length; ++i) {
-        const axis = this.axes_[i] >= 0 ? this.axes_[i] : this.axes_[i] + rank;
+        const axis = this.axes_[i];
         const size = input.shape[axis];
         const start = this.starts_[i];
         const sliceSize = this.sizes_[i];

@@ -33,8 +33,9 @@ export class Resample2d extends SingleOutputOperation {
     }
     if (options.axes !== undefined) {
       utils.assert(
-          utils.isIntegerArray(options.axes) && options.axes.length === 2 &&
-              utils.isValidResample2dAxes(options.axes),
+          utils.isUnsignedIntegerArray(options.axes) &&
+          options.axes.length === 2 &&
+          utils.isValidResample2dAxes(options.axes),
           'The axes parameter is invalid.');
       this.axes_ = options.axes;
     }

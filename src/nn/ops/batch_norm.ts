@@ -33,7 +33,8 @@ export class BatchNormalization extends SingleOutputOperation implements
     this.bias_ = options.bias;
     if (options.axis !== undefined) {
       const axis = options.axis;
-      utils.assert(utils.isInteger(axis), 'The axis parameter is invalid.');
+      utils.assert(
+          utils.isUnsignedInteger(axis), 'The axis parameter is invalid.');
       this.axis_ = axis;
     } else {
       this.axis_ = 1;
@@ -70,10 +71,8 @@ export class BatchNormalization extends SingleOutputOperation implements
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     const input: tf.Tensor = inputTensors.get(this.input_);
-    utils.assert(
-        this.axis_ < input.rank && this.axis_ >= -input.rank,
-        'The axis parameter is invalid.');
-    const axis = this.axis_ >= 0 ? this.axis_ : input.rank + this.axis_;
+    utils.assert(this.axis_ < input.rank, 'The axis parameter is invalid.');
+    const axis = this.axis_;
     const mean: tf.Tensor = inputTensors.get(this.mean_);
     utils.assert(mean.rank === 1, 'The mean operand is not 1-D.');
     const variance: tf.Tensor = inputTensors.get(this.variance_);

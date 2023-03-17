@@ -86,25 +86,6 @@ describe('test reduce', () => {
         });
   });
 
-  it('reduceLogSumExp negative axes do not keep dims', async () => {
-    await testReduce(
-        'LogSumExp', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2],
-          values: [
-            1.31326169,
-            3.31326169,
-            5.31326169,
-            7.31326169,
-            9.31326169,
-            11.31326169,
-          ],
-        });
-  });
-
   it('reduceLogSumExp axes0 keep dims', async () => {
     await testReduce(
         'LogSumExp', {axes: [0], keepDimensions: true}, {
@@ -139,25 +120,6 @@ describe('test reduce', () => {
   it('reduceLogSumExp axes2 keep dims', async () => {
     await testReduce(
         'LogSumExp', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [
-            1.31326169,
-            3.31326169,
-            5.31326169,
-            7.31326169,
-            9.31326169,
-            11.31326169,
-          ],
-        });
-  });
-
-  it('reduceLogSumExp negative axes keep dims', async () => {
-    await testReduce(
-        'LogSumExp', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
         },
@@ -219,15 +181,6 @@ describe('test reduce', () => {
         {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
   });
 
-  it('reduceMax negative axes do not keep dims', async () => {
-    await testReduce(
-        'Max', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2], values: [100., 200., 300., 400., 500., 600.]});
-  });
-
   it('reduceMax axes0 keep dims', async () => {
     await testReduce(
         'Max', {axes: [0], keepDimensions: true}, {
@@ -249,15 +202,6 @@ describe('test reduce', () => {
   it('reduceMax axes2 keep dims', async () => {
     await testReduce(
         'Max', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2, 1], values: [100., 200., 300., 400., 500., 600.]});
-  });
-
-  it('reduceMax negative axes keep dims', async () => {
-    await testReduce(
-        'Max', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
         },
@@ -309,15 +253,6 @@ describe('test reduce', () => {
         {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
   });
 
-  it('reduceMean negative axes do not keep dims', async () => {
-    await testReduce(
-        'Mean', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
-        },
-        {shape: [3, 2], values: [3., 11., 15.5, 21., 28., 31.]});
-  });
-
   it('reduceMean axes0 keep dims', async () => {
     await testReduce(
         'Mean', {axes: [0], keepDimensions: true}, {
@@ -339,15 +274,6 @@ describe('test reduce', () => {
   it('reduceMean axes2 keep dims', async () => {
     await testReduce(
         'Mean', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
-        },
-        {shape: [3, 2, 1], values: [3., 11., 15.5, 21., 28., 31.]});
-  });
-
-  it('reduceMean negative axes keep dims', async () => {
-    await testReduce(
-        'Mean', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [5., 1., 20., 2., 30., 1., 40., 2., 55., 1., 60., 2.],
         },
@@ -399,15 +325,6 @@ describe('test reduce', () => {
         {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
   });
 
-  it('reduceMin negative axes do not keep dims', async () => {
-    await testReduce(
-        'Min', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2], values: [1., 2., 3., 4., 5., 6.]});
-  });
-
   it('reduceMin axes0 keep dims', async () => {
     await testReduce(
         'Min', {axes: [0], keepDimensions: true}, {
@@ -429,15 +346,6 @@ describe('test reduce', () => {
   it('reduceMin axes2 keep dims', async () => {
     await testReduce(
         'Min', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
-        },
-        {shape: [3, 2, 1], values: [1., 2., 3., 4., 5., 6.]});
-  });
-
-  it('reduceMin negative axes keep dims', async () => {
-    await testReduce(
-        'Min', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [1., 100., 200., 2., 300., 3., 4., 400., 500., 5., 600., 6.],
         },
@@ -498,18 +406,6 @@ describe('test reduce', () => {
         });
   });
 
-  it('reduceProduct negative axes do not keep dims', async () => {
-    await testReduce(
-        'Product', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2],
-          values: [0., 6., 20., 42., 72., 110.],
-        });
-  });
-
   it('reduceProduct axes0 keep dims', async () => {
     await testReduce(
         'Product', {axes: [0], keepDimensions: true}, {
@@ -537,18 +433,6 @@ describe('test reduce', () => {
   it('reduceProduct axes2 keep dims', async () => {
     await testReduce(
         'Product', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [0., 6., 20., 42., 72., 110.],
-        });
-  });
-
-  it('reduceProduct negative axes keep dims', async () => {
-    await testReduce(
-        'Product', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
         },
@@ -612,18 +496,6 @@ describe('test reduce', () => {
         });
   });
 
-  it('reduceSum negative axes do not keep dims', async () => {
-    await testReduce(
-        'Sum', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2],
-          values: [1., 5., 9., 13., 17., 21.],
-        });
-  });
-
   it('reduceSum axes0 keep dims', async () => {
     await testReduce(
         'Sum', {axes: [0], keepDimensions: true}, {
@@ -651,18 +523,6 @@ describe('test reduce', () => {
   it('reduceSum axes2 keep dims', async () => {
     await testReduce(
         'Sum', {axes: [2], keepDimensions: true}, {
-          shape: [3, 2, 2],
-          values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [1., 5., 9., 13., 17., 21.],
-        });
-  });
-
-  it('reduceSum negative axes keep dims', async () => {
-    await testReduce(
-        'Sum', {axes: [-1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [0., 1., 2., 3., 4., 5., 6., 7., 8., 9., 10., 11.],
         },
@@ -772,29 +632,6 @@ describe('test reduce', () => {
         });
   });
 
-  it('reduceL1 negative axes do not keep dims', async () => {
-    await testReduce(
-        'L1', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [
-            0.9762701,  4.303787,
-            2.0552676,  0.89766365,
-            -1.526904,  2.9178822,
-            -1.2482557, 7.83546,
-            9.273255,   -2.3311696,
-            5.834501,   0.5778984,
-          ],
-        },
-        {
-          shape: [3, 2],
-          values: [
-            5.2800574, 2.9529312,
-            4.444786,  9.083715,
-            11.604425, 6.4123993,
-          ],
-        });
-  });
-
   it('reduceL1 axes0 keep dims', async () => {
     await testReduce(
         'L1', {axes: [0], keepDimensions: false}, {
@@ -843,29 +680,6 @@ describe('test reduce', () => {
   it('reduceL1 axes2 keep dims', async () => {
     await testReduce(
         'L1', {axes: [2], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [
-            0.9762701,  4.303787,
-            2.0552676,  0.89766365,
-            -1.526904,  2.9178822,
-            -1.2482557, 7.83546,
-            9.273255,   -2.3311696,
-            5.834501,   0.5778984,
-          ],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [
-            5.2800574, 2.9529312,
-            4.444786,  9.083715,
-            11.604425, 6.4123993,
-          ],
-        });
-  });
-
-  it('reduceL1 negative axes keep dims', async () => {
-    await testReduce(
-        'L1', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -986,29 +800,6 @@ describe('test reduce', () => {
         });
   });
 
-  it('reduceL2 negative axes do not keep dims', async () => {
-    await testReduce(
-        'L2', {axes: [-1], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [
-            0.9762701,  4.303787,
-            2.0552676,  0.89766365,
-            -1.526904,  2.9178822,
-            -1.2482557, 7.83546,
-            9.273255,   -2.3311696,
-            5.834501,   0.5778984,
-          ],
-        },
-        {
-          shape: [3, 2],
-          values: [
-            4.413127,  2.2427495,
-            3.2932465, 7.934266,
-            9.561779,  5.863051,
-          ],
-        });
-  });
-
   it('reduceL2 axes0 keep dims', async () => {
     await testReduce(
         'L2', {axes: [0], keepDimensions: false}, {
@@ -1057,29 +848,6 @@ describe('test reduce', () => {
   it('reduceL2 axes2 keep dims', async () => {
     await testReduce(
         'L2', {axes: [2], keepDimensions: false}, {
-          shape: [3, 2, 2],
-          values: [
-            0.9762701,  4.303787,
-            2.0552676,  0.89766365,
-            -1.526904,  2.9178822,
-            -1.2482557, 7.83546,
-            9.273255,   -2.3311696,
-            5.834501,   0.5778984,
-          ],
-        },
-        {
-          shape: [3, 2, 1],
-          values: [
-            4.413127,  2.2427495,
-            3.2932465, 7.934266,
-            9.561779,  5.863051,
-          ],
-        });
-  });
-
-  it('reduceL2 negative axes keep dims', async () => {
-    await testReduce(
-        'L2', {axes: [-1], keepDimensions: false}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
