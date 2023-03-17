@@ -132,6 +132,16 @@ def SupportedConvertReduce(inOprand, paramsList, insList):
 
     return flag
 
+def UpdateReduceAxes(axes, rank):
+    updatedAxes = []
+
+    for axis in axes:
+        if axis < 0:
+            axis += rank
+        updatedAxes.append(axis)
+
+    return updatedAxes
+
 def GetOperandIndex(opInfoList, opName):
     index = 0
     found = False
@@ -692,6 +702,10 @@ def DumpCtsTest(example, test, fused):
                                 IndentedPrint('const %s = false;' % op, indent=4,
                                             file=test)
                         else:
+                            if nnapiOp == 'SPLIT' and mappingParamIndex == 2:
+                                if varValue < 0:
+                                    # update negative axis in range [0, r)
+                                    varValue += len(curInputsList[0].dimensions)
                             IndentedPrint('const %s = %s;' % (op, varValue),
                                         indent=4, file=test)
                     elif rule == md.MappingRule.OPERAND_VARIABLE:
@@ -706,6 +720,9 @@ def DumpCtsTest(example, test, fused):
                     elif rule == md.MappingRule.OPERAND_ARRAY:
                         varValue = curParamsList[curParamsList.index(op)].value
                         if len(varValue) != 0:
+                            if nnapiOp.startswith('REDUCE'):
+                                # update negative axis in range [0, r)
+                                varValue = UpdateReduceAxes(varValue, len(curInputsList[0].dimensions))
                             IndentedPrint('const %s = %s;' % (op, varValue),
                                         indent=4, file=test)
             else:

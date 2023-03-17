@@ -206,7 +206,7 @@ export function validateOptionalOperand(input: MLOperand, name = ''): void {
 export function validateAxes(axes: number[], rank: number): boolean {
   if (typeof axes !== 'undefined' && axes.length > 0) {
     for (let i = 0; i < axes.length; ++i) {
-      if (axes[i] >= rank || axes[i] < -rank) {
+      if (axes[i] >= rank || axes[i] < 0) {
         return false;
       }
     }

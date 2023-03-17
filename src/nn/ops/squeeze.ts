@@ -15,7 +15,7 @@ export class Squeeze extends SingleOutputOperation {
     this.input_ = input;
     if (axes !== undefined) {
       utils.assert(
-          utils.isIntegerArray(axes) && axes.length !== 0,
+          utils.isUnsignedIntegerArray(axes) && axes.length !== 0,
           'The axes parameter is invalid.');
     }
     this.axes_ = axes;
