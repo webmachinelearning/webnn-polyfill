@@ -60,6 +60,34 @@ WebNN Polyfill requires setting backend to enable TensorFlow.js.
     await tf.ready();
 ```
 
+* When running in browsers with WASM backend.
+
+```js
+    const backend = 'wasm';
+    const context = await navigator.ml.createContext();
+    const wasm = context.wasm;
+
+    // 1- Enforce use Wasm SIMD binary
+    wasm.setWasmPath(`${path}/tfjs-backend-wasm-simd.wasm`);
+
+    // 2- Use Wasm SIMD + Threads bianry if supported both SIMD and Threads
+    // 2.1- Configure by the path to the directory where the WASM binaries are located
+    //        wasm.setWasmPaths(`https://unpkg.com/@tensorflow/tfjs-backend-wasm@${tf.version_core}/dist/`);
+    //      or mapping from names of WASM binaries to custom full paths specifying the locations of those binaries
+    //        wasm.setWasmPaths({
+    //          'tfjs-backend-wasm.wasm': 'renamed.wasm',
+    //          'tfjs-backend-wasm-simd.wasm': 'renamed-simd.wasm',
+    //          'tfjs-backend-wasm-threaded-simd.wasm': 'renamed-threaded-simd.wasm'
+    //        });
+    wasm.setWasmPaths(${prefixOrFileMap}); 
+    // 2.2- Configure threads number manually, or it will use the number of logical CPU cores as the threads count by default
+    wasm.setThreadsCount(n); // n can be 1, 2, ...
+
+    const tf = context.tf;
+    await tf.setBackend(backend);
+    await tf.ready();
+```
+
 Please refer to the [`setPolyfillBackend()`](https://github.com/webmachinelearning/webnn-polyfill/search?q=setPolyfillBackend) usage in tests for concrete examples on how to best implement backend switching for your project.
 
 ### Samples
