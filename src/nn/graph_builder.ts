@@ -27,7 +27,7 @@ import {Softplus} from './ops/softplus';
 import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
-import {Abs, Ceil, Cos, Exp, Floor, HardSwish, Log, Neg, Relu, Sigmoid, Sin, Tan, Tanh} from './ops/unary';
+import {Abs, Ceil, Cos, Exp, Floor, HardSwish, Log, Neg, Relu, Sigmoid, Sin, Tan, Tanh, Softsign} from './ops/unary';
 import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
@@ -948,6 +948,14 @@ export class MLGraphBuilder {
       const options = operandOrOptions;
       return (new Softplus(undefined, options.steepness));
     }
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-softsign)
+   */
+  softsign(x: MLOperand): MLOperand {
+    this.validateOperandBuilder([x]);
+    return (new Softsign(x)).output;
   }
 
   /**
