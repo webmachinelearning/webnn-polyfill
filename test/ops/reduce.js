@@ -18,6 +18,146 @@ describe('test reduce', () => {
     utils.checkValue(result.outputs.y, expected.values);
   }
 
+  it('reduceLogSum default', async () => {
+    await testReduce(
+        'LogSum', {}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {shape: [], values: [4.189654742]});
+  });
+
+  it('reduceLogSum default axes keep dims', async () => {
+    await testReduce(
+        'LogSum', {keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {shape: [1, 1, 1], values: [4.189654742]});
+  });
+
+  it('reduceLogSum axes0 do not keep dims', async () => {
+    await testReduce(
+        'LogSum', {axes: [0], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [2, 2],
+          values: [
+            2.48490665, 2.708050201,
+            2.890371758, 3.044522438,
+          ],
+        });
+  });
+
+  it('reduceLogSum axes1 do not keep dims', async () => {
+    await testReduce(
+        'LogSum', {axes: [1], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 2],
+          values: [
+            0.693147181, 1.386294361,
+            2.302585093, 2.48490665,
+            2.890371758, 2.995732274,
+          ],
+        });
+  });
+
+  it('reduceLogSum axes2 do not keep dims', async () => {
+    await testReduce(
+        'LogSum', {axes: [2], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        },
+        {
+          shape: [3, 2],
+          values: [
+            0, 1.609437912,
+            2.197224577, 2.564949357,
+            2.833213344, 3.044522438,
+          ],
+        });
+  });
+
+  it('reduceLogSum axes0 keep dims', async () => {
+    await testReduce(
+        'LogSum', {axes: [0], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [1, 2, 2],
+          values: [
+            2.48490665, 2.708050201,
+            2.890371758, 3.044522438,
+          ],
+        });
+  });
+
+  it('reduceLogSum axes1 keep dims', async () => {
+    await testReduce(
+        'LogSum', {axes: [1], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 1, 2],
+          values: [
+            0.693147181, 1.386294361,
+            2.302585093, 2.48490665,
+            2.890371758, 2.995732274,
+          ],
+        });
+  });
+
+  it('reduceLogSum axes2 keep dims', async () => {
+    await testReduce(
+        'LogSum', {axes: [2], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 2, 1],
+          values: [
+            0, 1.609437912,
+            2.197224577, 2.564949357,
+            2.833213344, 3.044522438,
+          ],
+        });
+  });
+
   it('reduceLogSumExp default', async () => {
     await testReduce(
         'LogSumExp', {}, {
@@ -40,11 +180,18 @@ describe('test reduce', () => {
     await testReduce(
         'LogSumExp', {axes: [0], keepDimensions: false}, {
           shape: [3, 2, 2],
-          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
         },
         {
           shape: [2, 2],
-          values: [8.0184793, 9.0184793, 10.0184793, 11.0184793],
+          values: [
+            8.0184793, 9.0184793,
+            10.0184793, 11.0184793,
+          ],
         });
   });
 
@@ -52,7 +199,11 @@ describe('test reduce', () => {
     await testReduce(
         'LogSumExp', {axes: [1], keepDimensions: false}, {
           shape: [3, 2, 2],
-          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
         },
         {
           shape: [3, 2],
@@ -71,7 +222,11 @@ describe('test reduce', () => {
     await testReduce(
         'LogSumExp', {axes: [2], keepDimensions: false}, {
           shape: [3, 2, 2],
-          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
         },
         {
           shape: [3, 2],
@@ -90,11 +245,18 @@ describe('test reduce', () => {
     await testReduce(
         'LogSumExp', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
-          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
         },
         {
-          shape: [1, 2, 2],
-          values: [8.0184793, 9.0184793, 10.0184793, 11.0184793],
+          shape: [2, 2],
+          values: [
+            8.0184793, 9.0184793,
+            10.0184793, 11.0184793,
+          ],
         });
   });
 
@@ -529,6 +691,128 @@ describe('test reduce', () => {
         {
           shape: [3, 2, 1],
           values: [1, 5, 9, 13, 17, 21],
+        });
+  });
+
+  it('reduceSumSquare default', async () => {
+    await testReduce(
+        'SumSquare', {}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {shape: [], values: [506]});
+  });
+
+  it('reduceSumSquare default axes keep dims', async () => {
+    await testReduce(
+        'SumSquare', {keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {shape: [1, 1, 1], values: [506]});
+  });
+
+  it('reduceSumSquare axes0 do not keep dims', async () => {
+    await testReduce(
+        'SumSquare', {axes: [0], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [2, 2],
+          values: [80, 107, 140, 179],
+        });
+  });
+
+  it('reduceSumSquare axes1 do not keep dims', async () => {
+    await testReduce(
+        'SumSquare', {axes: [1], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 2],
+          values: [4, 10, 52, 74, 164, 202],
+        });
+  });
+
+  it('reduceSumSquare axes2 do not keep dims', async () => {
+    await testReduce(
+        'SumSquare', {axes: [2], keepDimensions: false}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 2],
+          values: [1, 13, 41, 85, 145, 221],
+        });
+  });
+
+  it('reduceSumSquare axes0 keep dims', async () => {
+    await testReduce(
+        'SumSquare', {axes: [0], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [1, 2, 2],
+          values: [80, 107, 140, 179],
+        });
+  });
+
+  it('reduceSumSquare axes1 keep dims', async () => {
+    await testReduce(
+        'SumSquare', {axes: [1], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 1, 2],
+          values: [4, 10, 52, 74, 164, 202],
+        });
+  });
+
+  it('reduceSumSquare axes2 keep dims', async () => {
+    await testReduce(
+        'SumSquare', {axes: [2], keepDimensions: true}, {
+          shape: [3, 2, 2],
+          values: [
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+          ],
+        },
+        {
+          shape: [3, 2, 1],
+          values: [1, 13, 41, 85, 145, 221],
         });
   });
 
