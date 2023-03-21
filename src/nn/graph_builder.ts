@@ -20,6 +20,7 @@ import {Resample2d} from './ops/resample2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
 import {Softmax} from './ops/softmax';
+import {Softplus} from './ops/softplus';
 import {Split} from './ops/split';
 import {Squeeze} from './ops/squeeze';
 import {Transpose} from './ops/transpose';
@@ -256,6 +257,13 @@ export interface MLResample2dOptions {
  */
 export interface MLSliceOptions {
   axes?: number[];
+}
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlsoftplusoptions)
+ */
+export interface MLSoftplusOptions {
+  steepness ?: number;
 }
 
 /**
@@ -840,6 +848,24 @@ export class MLGraphBuilder {
   softmax(x: MLOperand): MLOperand {
     this.validateOperandBuilder([x]);
     return (new Softmax(x)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-softplus)
+   */
+  softplus(x: MLOperand, options: MLSoftplusOptions): MLOperand;
+  softplus(options: MLSoftplusOptions): MLActivation;
+  softplus(
+      operandOrOptions: MLOperand|MLSoftplusOptions = {},
+      options: MLSoftplusOptions = {}): MLOperand|MLActivation {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x]);
+      return (new Softplus(x, options.steepness)).output;
+    } else {
+      const options = operandOrOptions;
+      return (new Softplus(undefined, options.steepness));
+    }
   }
 
   /**
