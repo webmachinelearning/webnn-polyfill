@@ -818,7 +818,7 @@ describe('test reduce', () => {
 
   it('reduceL1 default', async () => {
     await testReduce(
-        'L1', {keepDimensions: true}, {
+        'L1', {}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -918,7 +918,7 @@ describe('test reduce', () => {
 
   it('reduceL1 axes0 keep dims', async () => {
     await testReduce(
-        'L1', {axes: [0], keepDimensions: false}, {
+        'L1', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -940,7 +940,7 @@ describe('test reduce', () => {
 
   it('reduceL1 axes1 keep dims', async () => {
     await testReduce(
-        'L1', {axes: [1], keepDimensions: false}, {
+        'L1', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -963,7 +963,7 @@ describe('test reduce', () => {
 
   it('reduceL1 axes2 keep dims', async () => {
     await testReduce(
-        'L1', {axes: [2], keepDimensions: false}, {
+        'L1', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -986,7 +986,7 @@ describe('test reduce', () => {
 
   it('reduceL2 default', async () => {
     await testReduce(
-        'L2', {keepDimensions: true}, {
+        'L2', {}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -1086,7 +1086,7 @@ describe('test reduce', () => {
 
   it('reduceL2 axes0 keep dims', async () => {
     await testReduce(
-        'L2', {axes: [0], keepDimensions: false}, {
+        'L2', {axes: [0], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -1108,7 +1108,7 @@ describe('test reduce', () => {
 
   it('reduceL2 axes1 keep dims', async () => {
     await testReduce(
-        'L2', {axes: [1], keepDimensions: false}, {
+        'L2', {axes: [1], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
@@ -1131,7 +1131,7 @@ describe('test reduce', () => {
 
   it('reduceL2 axes2 keep dims', async () => {
     await testReduce(
-        'L2', {axes: [2], keepDimensions: false}, {
+        'L2', {axes: [2], keepDimensions: true}, {
           shape: [3, 2, 2],
           values: [
             0.9762701,  4.303787,
