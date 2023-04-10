@@ -64,6 +64,24 @@ abstract class Reduce extends SingleOutputOperation {
       tf.Tensor;
 }
 
+export class ReduceL1 extends Reduce {
+  runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
+    return tf.sum(tf.abs(input), axes, keepDimensions);
+  }
+}
+
+export class ReduceL2 extends Reduce {
+  runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
+    return tf.sqrt(tf.sum(tf.pow(input, 2), axes, keepDimensions));
+  }
+}
+
+export class ReduceLogSum extends Reduce {
+  runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
+    return tf.log(tf.sum(input, axes, keepDimensions));
+  }
+}
+
 export class ReduceLogSumExp extends Reduce {
   runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
     return tf.logSumExp(input, axes, keepDimensions);
@@ -100,14 +118,8 @@ export class ReduceSum extends Reduce {
   }
 }
 
-export class ReduceL1 extends Reduce {
+export class ReduceSumSquare extends Reduce {
   runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
-    return tf.sum(tf.abs(input), axes, keepDimensions);
-  }
-}
-
-export class ReduceL2 extends Reduce {
-  runOp(input: tf.Tensor, axes: number[], keepDimensions: boolean): tf.Tensor {
-    return tf.sqrt(tf.sum(tf.pow(input, 2), axes, keepDimensions));
+    return tf.sum(tf.pow(input, 2), axes, keepDimensions);
   }
 }

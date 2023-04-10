@@ -18,7 +18,7 @@ import {Linear} from './ops/linear';
 import {Pad} from './ops/pad';
 import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
 import {PRelu} from './ops/prelu';
-import {ReduceL1, ReduceL2, ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum} from './ops/reduce';
+import {ReduceL1, ReduceL2, ReduceLogSum, ReduceLogSumExp, ReduceMax, ReduceMean, ReduceMin, ReduceProduct, ReduceSum, ReduceSumSquare} from './ops/reduce';
 import {Resample2d} from './ops/resample2d';
 import {Reshape} from './ops/reshape';
 import {Slice} from './ops/slice';
@@ -850,6 +850,14 @@ export class MLGraphBuilder {
   }
 
   /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-reducelogsum)
+   */
+  reduceLogSum(input: MLOperand, options: MLReduceOptions = {}): MLOperand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceLogSum(input, options)).output;
+  }
+
+  /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-reducelogsumexp)
    */
   reduceLogSumExp(input: MLOperand, options: MLReduceOptions = {}): MLOperand {
@@ -895,6 +903,14 @@ export class MLGraphBuilder {
   reduceSum(input: MLOperand, options: MLReduceOptions = {}): MLOperand {
     this.validateOperandBuilder([input]);
     return (new ReduceSum(input, options)).output;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-reducesumsquare)
+   */
+  reduceSumSquare(input: MLOperand, options: MLReduceOptions = {}): MLOperand {
+    this.validateOperandBuilder([input]);
+    return (new ReduceSumSquare(input, options)).output;
   }
   // end of reduction operations
 
