@@ -133,3 +133,9 @@ export class HardSwish extends UnaryMLActivation {
       6);
   }
 }
+
+export class Softsign extends Unary {
+  runOp(x: tf.Tensor): tf.Tensor {
+    return tf.div(x, tf.add(tf.abs(x), 1));
+  }
+}
