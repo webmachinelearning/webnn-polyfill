@@ -8,6 +8,7 @@ import {Clamp} from './ops/clamp';
 import {Concat} from './ops/concat';
 import {Conv2d} from './ops/conv2d';
 import {ConvTranspose2d} from './ops/conv_transpose2d';
+import {Elu} from './ops/elu';
 import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
 import {InstanceNormalization} from './ops/instance_norm';
@@ -140,6 +141,13 @@ export enum MLRecurrentNetworkDirection {
   'forward' = 'forward',
   'backward' = 'backward',
   'both' = 'both',
+}
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mleluoptions)
+ */
+export interface MLEluOptions {
+  alpha?: number;
 }
 
 /**
@@ -618,6 +626,25 @@ export class MLGraphBuilder {
     }
   }
   // end of element-wise unary operations
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-elu)
+   */
+  elu(x: MLOperand, options: MLEluOptions): MLOperand;
+  elu(options: MLEluOptions): MLActivation;
+  elu(
+      operandOrOptions: MLOperand|MLEluOptions = {},
+      options: MLEluOptions = {}): MLOperand|MLActivation {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x]);
+      return (new Elu(x, options.alpha)).output;
+    } else {
+      const options = operandOrOptions;
+      return (new Elu(undefined, options.alpha));
+    }
+  }
+
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-gemm)
