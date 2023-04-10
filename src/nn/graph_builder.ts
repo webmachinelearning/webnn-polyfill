@@ -14,6 +14,7 @@ import {Gru, GruCell} from './ops/gru';
 import {HardSigmoid} from './ops/hard_sigmoid';
 import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
+import {Linear} from './ops/linear';
 import {Pad} from './ops/pad';
 import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
 import {PRelu} from './ops/prelu';
@@ -199,6 +200,14 @@ export interface MLInstanceNormalizationOptions {
  */
 export interface MLLeakyReluOptions {
   alpha?: number;
+}
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mllinearoptions)
+ */
+export interface MLLinearOptions {
+  alpha?: number;
+  beta?: number;
 }
 
 /**
@@ -738,6 +747,24 @@ export class MLGraphBuilder {
     } else {
       const options = operandOrOptions;
       return (new LeakyRelu(undefined, options.alpha));
+    }
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-linear)
+   */
+  linear(x: MLOperand, options: MLLinearOptions): MLOperand;
+  linear(options: MLLinearOptions): MLActivation;
+  linear(
+      operandOrOptions: MLOperand|MLLinearOptions = {},
+      options: MLLinearOptions = {}): MLOperand|MLActivation {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x]);
+      return (new Linear(x, options)).output;
+    } else {
+      const options = operandOrOptions;
+      return (new Linear(undefined, options));
     }
   }
 
