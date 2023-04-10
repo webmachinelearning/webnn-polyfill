@@ -11,6 +11,7 @@ import {ConvTranspose2d} from './ops/conv_transpose2d';
 import {Elu} from './ops/elu';
 import {Gemm} from './ops/gemm';
 import {Gru, GruCell} from './ops/gru';
+import {HardSigmoid} from './ops/hard_sigmoid';
 import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
 import {Pad} from './ops/pad';
@@ -173,6 +174,14 @@ export interface MLGruCellOptions {
   resetAfter?: boolean;
   layout?: MLRecurrentNetworkWeightLayout;
   activations?: MLActivation[];
+}
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlhardsigmoidoptions)
+ */
+export interface MLHardSigmoidOptions {
+  alpha?: number;
+  beta?: number;
 }
 
 /**
@@ -569,6 +578,25 @@ export class MLGraphBuilder {
     this.validateOperandBuilder([x]);
     return (new Tan(x)).output;
   }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-hard-sigmoid)
+   */
+  hardSigmoid(x: MLOperand, options: MLHardSigmoidOptions): MLOperand;
+  hardSigmoid(options: MLHardSigmoidOptions): MLActivation;
+  hardSigmoid(
+      operandOrOptions: MLOperand|MLHardSigmoidOptions = {},
+      options: MLHardSigmoidOptions = {}): MLOperand|MLActivation {
+    if (operandOrOptions instanceof MLOperand) {
+      const x = operandOrOptions;
+      this.validateOperandBuilder([x]);
+      return (new HardSigmoid(x, options)).output;
+    } else {
+      const options = operandOrOptions;
+      return (new HardSigmoid(undefined, options));
+    }
+  }
+
 
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-hard-swish)
