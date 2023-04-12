@@ -279,13 +279,6 @@ export interface MLResample2dOptions {
 }
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlsliceoptions)
- */
-export interface MLSliceOptions {
-  axes?: number[];
-}
-
-/**
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mlsoftplusoptions)
  */
 export interface MLSoftplusOptions {
@@ -933,11 +926,9 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-slice)
    */
-  slice(
-      input: MLOperand, starts: number[], sizes: number[],
-      options: MLSliceOptions = {}): MLOperand {
+  slice(input: MLOperand, starts: number[], sizes: number[]): MLOperand {
     this.validateOperandBuilder([input]);
-    return (new Slice(input, starts, sizes, options.axes)).output;
+    return (new Slice(input, starts, sizes)).output;
   }
 
   /**
