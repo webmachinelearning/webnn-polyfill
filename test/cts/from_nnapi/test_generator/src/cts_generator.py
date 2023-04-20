@@ -419,6 +419,16 @@ def UpdateWebNNOperationOptionalParamValue(operation, targetValue, kvList):
         elif operation == 'RESIZE_BILINEAR':
             targetValue['mode'] = 'linear'
 
+def UpdateSliceSizes(sizes, dimensions):
+    if sizes.count(-1) > 0:
+        index = sizes.index(-1)
+        # update sizes[index] of -1 with input dimensions[index]
+        sizes[index] = dimensions[index]
+        UpdateSliceSizes(sizes, dimensions)
+    else:
+        # no need to update sizes without -1
+        pass
+
 def GetWebNNParamsString(params, operation):
     paramsList = [p[1] for p in params]
     paramsStr = '%s' % paramsList
@@ -635,6 +645,7 @@ def DumpCtsTest(example, test, fused):
         IndentedPrint("const builder = new MLGraphBuilder(context);",
                       indent=4, file=test)
         computeParamsList = []
+        sliceInputDimensions = []
         # Create operand(s) by ModelBuilder.input
         for op in curInputsList:
             opInsDict = nnapiOpInsList[curOpInsList.index(op)]
@@ -642,6 +653,9 @@ def DumpCtsTest(example, test, fused):
             if mappingParamIndex != -1:
                 rule = md.MappingRule(opInsDict['mappingRuleType'])
                 if rule == md.MappingRule.OPERAND_OPERAND:
+                    if nnapiOp == 'SLICE' and mappingParamIndex == 0:
+                        # save input dimensions to update sizes
+                        sliceInputDimensions = op.type.dimensions
                     PrintInputOperand(op, nnapiOp, curOpInsList, nnapiOpInsList,
                                       layout, test, fused)
                     PrintInputData(op, nnapiOp, curOpInsList,
@@ -660,6 +674,9 @@ def DumpCtsTest(example, test, fused):
                 elif rule == md.MappingRule.OPERAND_ARRAY:
                     varValue = inputFeedDict[op]
                     if len(varValue) != 0:
+                        if nnapiOp == 'SLICE' and mappingParamIndex == 2:
+                            # sizes paramter
+                            UpdateSliceSizes(varValue, sliceInputDimensions)
                         IndentedPrint('const %s = %s;' % (op, varValue),
                                       indent=4, file=test)
                 if nnapiOp == 'INSTANCE_NORMALIZATION' and opInsDict['name'] == 'input':
