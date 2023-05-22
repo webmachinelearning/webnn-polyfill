@@ -44,8 +44,8 @@ describe('test lstm', () => {
           1, 2, 1, 2, 1, 2, 1, 2,
         ]));
     const peepholeWeight = builder.constant(
-        {type: 'float32', dimensions: [4 * hiddenSize]},
-        new Float32Array(4 * hiddenSize).fill(0));
+        {type: 'float32', dimensions: [3 * hiddenSize]},
+        new Float32Array(3 * hiddenSize).fill(0));
     const activations = [
       builder.relu(),
       builder.relu(),
@@ -112,8 +112,8 @@ describe('test lstm', () => {
           1, 2, 1, 2, 1, 2, 1, 2,
         ]));
     const peepholeWeight = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 4 * hiddenSize]},
-        new Float32Array(4 * hiddenSize).fill(0));
+        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        new Float32Array(3 * hiddenSize).fill(0));
     const initialHiddenState = builder.constant(
         {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(0));
@@ -193,8 +193,8 @@ describe('test lstm', () => {
           1, 2, 1, 2, 1, 2, 1, 2,
         ]));
     const peepholeWeight = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 4 * hiddenSize]},
-        new Float32Array(4 * hiddenSize).fill(0));
+        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        new Float32Array(3 * hiddenSize).fill(0));
     const initialHiddenState = builder.constant(
         {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(0));

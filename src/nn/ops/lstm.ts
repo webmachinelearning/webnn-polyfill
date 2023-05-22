@@ -180,7 +180,7 @@ export class Lstm extends Operation {
           undefined);
       currentPeepholeWeight.push(peepholeWeight ?
           (tf.squeeze(
-              tf.slice(peepholeWeight, [dir, 0], [1, 4 * hiddenSize]), [0])) :
+              tf.slice(peepholeWeight, [dir, 0], [1, 3 * hiddenSize]), [0])) :
           undefined);
     }
 
@@ -359,14 +359,16 @@ export class LstmCell extends Operation {
         const zero = tf.scalar(0);
         const starts = layout === MLLstmWeightLayout.iofg ?
         {i: 0, o: hiddenSize, f: 2 * hiddenSize, g: 3 * hiddenSize} :
-        /*ifog*/ {i: 0, f: hiddenSize, o: 2 * hiddenSize, g: 3 * hiddenSize};
+        /*ifgo*/ {i: 0, f: hiddenSize, g: 2 * hiddenSize, 0: 3 * hiddenSize};
 
         // input gate (i)
         const i = activation0.runOp(tf.add(
             tf.mul(
               cellState,
+              // The pack ordering of the weight vectors is for the 
+              // input (i), output (o), and forget (f) gate respectively.
               (peepholeWeight ?
-                  tf.slice(peepholeWeight, [starts.i], [hiddenSize]) : zero)),
+                  tf.slice(peepholeWeight, [0], [hiddenSize]) : zero)),
             tf.add(
               tf.add(
                 (bias ? tf.slice(bias, [starts.i], [hiddenSize]) : zero),
@@ -388,7 +390,7 @@ export class LstmCell extends Operation {
             tf.mul(
               cellState,
               (peepholeWeight ?
-                  tf.slice(peepholeWeight, [starts.f], [hiddenSize]) :
+                  tf.slice(peepholeWeight, [2 * hiddenSize], [hiddenSize]) :
                   zero)),
             tf.add(
               tf.add(
@@ -430,7 +432,7 @@ export class LstmCell extends Operation {
             tf.mul(
               cellState,
               (peepholeWeight ?
-                  tf.slice(peepholeWeight, [starts.o], [hiddenSize]) :
+                  tf.slice(peepholeWeight, [hiddenSize], [hiddenSize]) :
                   zero)),
             tf.add(
               tf.add(
