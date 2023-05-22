@@ -359,7 +359,7 @@ export class LstmCell extends Operation {
         const zero = tf.scalar(0);
         const starts = layout === MLLstmWeightLayout.iofg ?
         {i: 0, o: hiddenSize, f: 2 * hiddenSize, g: 3 * hiddenSize} :
-        /*ifgo*/ {i: 0, f: hiddenSize, g: 2 * hiddenSize, 0: 3 * hiddenSize};
+        /*ifgo*/ {i: 0, f: hiddenSize, g: 2 * hiddenSize, o: 3 * hiddenSize};
 
         // input gate (i)
         const i = activation0.runOp(tf.add(
