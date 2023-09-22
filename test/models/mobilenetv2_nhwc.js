@@ -87,7 +87,7 @@ describe('test mobilenetv2 nhwc', function() {
       const autoPad = 'same-upper';
       const filterLayout = 'ohwi';
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 224, 224, 3]});
+          'input', {dataType: 'float32', dimensions: [1, 224, 224, 3]});
       const conv0 = await buildConv(
           data, '90', 'Conv_Conv2D', true, {strides, autoPad, filterLayout});
       const conv1 = await buildConv(

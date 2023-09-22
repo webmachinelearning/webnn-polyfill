@@ -9,7 +9,7 @@ describe('test squeeze', () => {
 
   async function testSqueeze(oldShape, axes, expectedShape) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: oldShape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: oldShape});
     const y = builder.squeeze(x, {axes});
     const graph = await builder.build({y});
     const bufferSize = utils.sizeOfShape(oldShape);

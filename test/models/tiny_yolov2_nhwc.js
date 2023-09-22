@@ -60,7 +60,7 @@ describe('test tinyYolov2 nhwc', function() {
         layout: 'nhwc',
       };
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 416, 416, 3]});
+          'input', {dataType: 'float32', dimensions: [1, 416, 416, 3]});
       const conv1 = await buildConv(data, '1');
       const pool1 = builder.maxPool2d(conv1, poolOptions);
       const conv2 = await buildConv(pool1, '2');

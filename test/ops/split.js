@@ -11,7 +11,7 @@ describe('test split', () => {
       inputShape, inputValue, expectedArray, splits, axis = undefined) {
     const builder = new MLGraphBuilder(context);
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
     const splittedOperands = builder.split(input, splits, {axis});
     const namedOperands = {};
     for (let i = 0; i < splittedOperands.length; ++i) {

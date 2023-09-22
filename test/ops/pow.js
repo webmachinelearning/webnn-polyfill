@@ -8,9 +8,9 @@ describe('test pow', () => {
   });
   async function testSqrt(input, expected, shape) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: shape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: shape});
     const y = builder.constant(
-        {type: 'float32', dimensions: [1]}, new Float32Array([0.5]));
+        {dataType: 'float32', dimensions: [1]}, new Float32Array([0.5]));
     const z = builder.pow(x, y);
     const graph = await builder.build({z});
     const inputs = {'x': new Float32Array(input)};
@@ -57,9 +57,9 @@ describe('test pow', () => {
 
   it('pow 1d', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [3]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [3]});
     const y = builder.constant(
-        {type: 'float32', dimensions: [3]}, new Float32Array([4, 5, 6]));
+        {dataType: 'float32', dimensions: [3]}, new Float32Array([4, 5, 6]));
     const z = builder.pow(x, y);
     const graph = await builder.build({z});
     const inputs = {'x': new Float32Array([1, 2, 3])};
@@ -70,9 +70,9 @@ describe('test pow', () => {
 
   it('pow broadcast with 1d of [3] and 1d of [1]', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [3]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [3]});
     const y = builder.constant(
-        {type: 'float32', dimensions: [1]}, new Float32Array([2]));
+        {dataType: 'float32', dimensions: [1]}, new Float32Array([2]));
     const z = builder.pow(x, y);
     const graph = await builder.build({z});
     const inputs = {'x': new Float32Array([1, 2, 3])};
@@ -83,9 +83,9 @@ describe('test pow', () => {
 
   it('pow broadcast with 2d of [2, 3] and 1d of [3]', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [2, 3]});
     const y = builder.constant(
-        {type: 'float32', dimensions: [3]}, new Float32Array([1, 2, 3]));
+        {dataType: 'float32', dimensions: [3]}, new Float32Array([1, 2, 3]));
     const z = builder.pow(x, y);
     const graph = await builder.build({z});
     const inputs = {'x': new Float32Array([1, 2, 3, 4, 5, 6])};

@@ -8,7 +8,7 @@ describe('test tanh', () => {
   });
   async function testTanh(input, expected, shape) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: shape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: shape});
     const y = builder.tanh(x);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input)};

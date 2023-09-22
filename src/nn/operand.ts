@@ -4,9 +4,9 @@ import {ArrayBufferView} from './types';
 import * as utils from './utils';
 
 /**
- * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype)
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mloperanddatatype)
  */
-export enum MLOperandType {
+export enum MLOperandDataType {
   'float32' = 'float32',
   'float16' = 'float16',
   'int32' = 'int32',
@@ -19,7 +19,7 @@ export enum MLOperandType {
  * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mloperanddescriptor)
  */
 export interface MLOperandDescriptor {
-  type: MLOperandType;
+  dataType: MLOperandDataType;
   dimensions: number[];
 }
 
@@ -61,11 +61,13 @@ export class ConstantOperand extends MLOperand {
   readonly value: number|ArrayBufferView;
 
   static createScalar(
-      value: number, type: MLOperandType = MLOperandType.float32,
+      value: number, dataType: MLOperandDataType = MLOperandDataType.float32,
       builder: MLGraphBuilder): ConstantOperand {
-    utils.assert(type in MLOperandType, 'The operand type is invalid.');
-    utils.validateValueType(value, type);
-    return new ConstantOperand({type} as MLOperandDescriptor, value, builder);
+    utils.assert(
+        dataType in MLOperandDataType, 'The operand data type is invalid.');
+    utils.validateValueType(value, dataType);
+    return new ConstantOperand(
+        {dataType} as MLOperandDescriptor, value, builder);
   }
 
   static createTensor(
@@ -76,7 +78,7 @@ export class ConstantOperand extends MLOperand {
         'Only ArrayBufferView value type is supported.');
     const array = value as ArrayBufferView;
     utils.validateOperandDescriptor(desc);
-    utils.validateTypedArray(array, desc.type, desc.dimensions);
+    utils.validateTypedArray(array, desc.dataType, desc.dimensions);
     return new ConstantOperand(desc, array.slice(), builder);
   }
 

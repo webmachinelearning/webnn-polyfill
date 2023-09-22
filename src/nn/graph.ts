@@ -146,7 +146,8 @@ export class MLGraph {
       utils.assert(
           utils.isTypedArray(resource),
           'Only resource of ArrayBufferView type is supported.');
-      utils.validateTypedArray(resource, inputOperand.desc.type, dimensions);
+      utils.validateTypedArray(
+          resource, inputOperand.desc.dataType, dimensions);
     }
   }
 
@@ -178,7 +179,7 @@ export class MLGraph {
       for (const inputName of this.inputs_.keys()) {
         const inputOperand = this.inputs_.get(inputName);
         const typedArrayConstructor =
-            utils.getTypedArray(inputOperand.desc.type);
+            utils.getTypedArray(inputOperand.desc.dataType);
         const inputBuffer = new typedArrayConstructor(
             utils.sizeFromDimensions(inputOperand.desc.dimensions));
         inputs[inputName] = inputBuffer;
@@ -208,7 +209,7 @@ export class MLGraph {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
       const resource = outputs[outputName] ;
-      utils.validateTypedArray(resource, desc.type, desc.dimensions);
+      utils.validateTypedArray(resource, desc.dataType, desc.dimensions);
       resource.set(await tensor.data());
       tf.dispose(tensor);
     }
@@ -226,7 +227,7 @@ export class MLGraph {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
       const resource = outputs[outputName] ;
-      utils.validateTypedArray(resource, desc.type, desc.dimensions);
+      utils.validateTypedArray(resource, desc.dataType, desc.dimensions);
       resource.set(tensor.dataSync());
       tf.dispose(tensor);
     }

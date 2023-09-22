@@ -56,7 +56,7 @@ describe('test squeezenet1.0 nhwc', function() {
       const strides = [2, 2];
       const layout = 'nhwc';
       const placeholder = builder.input(
-          'placeholder', {type: 'float32', dimensions: [1, 224, 224, 3]});
+          'placeholder', {dataType: 'float32', dimensions: [1, 224, 224, 3]});
       const conv1 = await buildConv(
           placeholder, 'conv1', {strides, autoPad: 'same-upper'});
       const maxpool1 =

@@ -10,7 +10,7 @@ describe('test slice', () => {
   async function testSlice(
       inputShape, inputData, starts, sizes, expectedShape, expected) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: inputShape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: inputShape});
     const y = builder.slice(x, starts, sizes);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(inputData)};

@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test pad converted from pad_v2_1_float test', async () => {
     // Converted test case (from: V1_2/pad_v2_1_float.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 3, 1]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [1, 2, 3, 1]});
     const input0Data = new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
     const beginningPadding = [0, 0, 1, 0];
     const endingPadding = [0, 2, 3, 0];
@@ -27,7 +27,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test pad converted from pad_v2_1_float_relaxed test', async () => {
     // Converted test case (from: V1_2/pad_v2_1_float.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 3, 1]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [1, 2, 3, 1]});
     const input0Data = new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
     const beginningPadding = [0, 0, 1, 0];
     const endingPadding = [0, 2, 3, 0];

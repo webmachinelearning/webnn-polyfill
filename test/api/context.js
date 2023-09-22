@@ -71,7 +71,7 @@ describe('test MLContext', () => {
 });
 
 describe('test MLContext.compute', () => {
-  const desc = {type: 'float32', dimensions: [2, 2]};
+  const desc = {dataType: 'float32', dimensions: [2, 2]};
   const bufferA = new Float32Array(4).fill(1);
   const bufferB = new Float32Array(4).fill(1);
   const bufferC = new Float32Array(4);
@@ -89,10 +89,10 @@ describe('test MLContext.compute', () => {
     b = builder.input('b', desc);
     c = builder.matmul(a, b);
     d = builder.constant(
-        {type: 'float32', dimensions: [2, 2]}, new Float32Array(4).fill(1));
+        {dataType: 'float32', dimensions: [2, 2]}, new Float32Array(4).fill(1));
     e = builder.add(c, d);
-    x = builder.input('x', {type: 'float32', dimensions: [3, 2]});
-    y = builder.input('y', {type: 'float32', dimensions: [2, 4]});
+    x = builder.input('x', {dataType: 'float32', dimensions: [3, 2]});
+    y = builder.input('y', {dataType: 'float32', dimensions: [2, 4]});
     z = builder.matmul(x, y);
   });
 
@@ -295,10 +295,11 @@ describe('test MLContext.compute', () => {
 
   it('MLGraph should be immutable after creation', async () => {
     const builder = new MLGraphBuilder(context);
-    const desc = {type: 'float32', dimensions: [2, 2]};
+    const desc = {dataType: 'float32', dimensions: [2, 2]};
     const a = builder.input('a', desc);
     const bufferB = new Float32Array(4).fill(1);
-    let b = builder.constant({type: 'float32', dimensions: [2, 2]}, bufferB);
+    let b = builder.constant(
+        {dataType: 'float32', dimensions: [2, 2]}, bufferB);
     const c = builder.matmul(a, b);
     const bufferA = new Float32Array(4).fill(1);
     const expectedC = [2, 2, 2, 2];
@@ -314,7 +315,7 @@ describe('test MLContext.compute', () => {
     utils.checkValue(resultUpdatedBData.outputs.c, expectedC);
 
     // Replace b with a new constant should not impact graph compute.
-    b = builder.constant({type: 'float32', dimensions: [2, 2]}, bufferB);
+    b = builder.constant({dataType: 'float32', dimensions: [2, 2]}, bufferB);
     const resultUpdatedB = await context.compute(graph, inputs, outputs);
     utils.checkValue(resultUpdatedB.outputs.c, expectedC);
 
@@ -345,29 +346,32 @@ describe('test MLContext.compute', () => {
       const hiddenSize = 5;
       const input = builder.input(
           'input',
-          {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+          {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
       const weight = builder.constant(
           {
-            type: 'float32',
+            dataType: 'float32',
             dimensions: [numDirections, 3 * hiddenSize, inputSize],
           },
           new Float32Array(numDirections * 3 * hiddenSize * inputSize)
               .fill(0.1));
       const recurrentWeight = builder.constant(
           {
-            type: 'float32',
+            dataType: 'float32',
             dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
           },
           new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
               .fill(0.1));
       const initialHiddenState = builder.constant(
-          {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+          {
+            dataType: 'float32',
+            dimensions: [numDirections, batchSize, hiddenSize],
+          },
           new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
       const bias = builder.constant(
-          {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+          {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
           new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
       const recurrentBias = builder.constant(
-          {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+          {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
           new Float32Array(numDirections * 3 * hiddenSize).fill(0));
       const operands = builder.gru(
           input, weight, recurrentWeight, steps, hiddenSize,

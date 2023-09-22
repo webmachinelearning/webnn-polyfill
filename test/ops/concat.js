@@ -26,8 +26,8 @@ describe('test concat', () => {
 
   it('concat 1d with two inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [3, 4]},
     ];
     const expected = {axis: 0, shape: [4], value: [1, 2, 3, 4]};
     await testConcatInputs(tensors, expected);
@@ -35,9 +35,9 @@ describe('test concat', () => {
 
   it('concat 1d with three inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [3, 4]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [5, 6]},
     ];
     const expected = {axis: 0, shape: [6], value: [1, 2, 3, 4, 5, 6]};
     await testConcatInputs(tensors, expected);
@@ -45,10 +45,10 @@ describe('test concat', () => {
 
   it('concat 1d with four inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [5, 6]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [7, 8]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [3, 4]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [7, 8]},
     ];
     const expected = {axis: 0, shape: [8], value: [1, 2, 3, 4, 5, 6, 7, 8]};
     await testConcatInputs(tensors, expected);
@@ -56,11 +56,11 @@ describe('test concat', () => {
 
   it('concat 1d with five inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [3, 4]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [5, 6]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [7, 8]},
-      {desc: {type: 'float32', dimensions: [2]}, value: [9, 10]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [3, 4]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [7, 8]},
+      {desc: {dataType: 'float32', dimensions: [2]}, value: [9, 10]},
     ];
     const expected = {
       axis: 0,
@@ -74,8 +74,8 @@ describe('test concat', () => {
 
   it('concat 2d with two inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [1, 2, 3, 4]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [5, 6, 7, 8]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [1, 2, 3, 4]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [5, 6, 7, 8]},
     ];
     const expected = [
       {axis: 0, shape: [4, 2], value: [1, 2, 3, 4, 5, 6, 7, 8]},
@@ -88,8 +88,8 @@ describe('test concat', () => {
 
   it('concat 2d axis=0 with two inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [1, 2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
     ];
     const expected = {axis: 0, shape: [3, 2], value: [1, 2, 3, 4, 5, 6]};
     await testConcatInputs(tensors, expected);
@@ -97,10 +97,10 @@ describe('test concat', () => {
 
   it('concat 2d axis=0 with three inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [1, 2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
       {
-        desc: {type: 'float32', dimensions: [3, 2]},
+        desc: {dataType: 'float32', dimensions: [3, 2]},
         value: [7, 8, 9, 10, 11, 12],
       },
     ];
@@ -116,13 +116,16 @@ describe('test concat', () => {
 
   it('concat 2d axis=0 with four inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [1, 2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
       {
-        desc: {type: 'float32', dimensions: [3, 2]},
+        desc: {dataType: 'float32', dimensions: [3, 2]},
         value: [7, 8, 9, 10, 11, 12],
       },
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [13, 14, 15, 16]},
+      {
+        desc: {dataType: 'float32', dimensions: [2, 2]},
+        value: [13, 14, 15, 16],
+      },
     ];
     const expected = {
       axis: 0,
@@ -137,14 +140,17 @@ describe('test concat', () => {
 
   it('concat 2d axis=0 with five inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [1, 2]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [1, 2]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
       {
-        desc: {type: 'float32', dimensions: [3, 2]},
+        desc: {dataType: 'float32', dimensions: [3, 2]},
         value: [7, 8, 9, 10, 11, 12],
       },
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [13, 14, 15, 16]},
-      {desc: {type: 'float32', dimensions: [1, 2]}, value: [17, 18]},
+      {
+        desc: {dataType: 'float32', dimensions: [2, 2]},
+        value: [13, 14, 15, 16],
+      },
+      {desc: {dataType: 'float32', dimensions: [1, 2]}, value: [17, 18]},
     ];
     const expected = {
       axis: 0,
@@ -159,8 +165,8 @@ describe('test concat', () => {
 
   it('concat 2d axis=1 with two inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
     ];
     const expected = {axis: 1, shape: [2, 3], value: [1, 3, 4, 2, 5, 6]};
     await testConcatInputs(tensors, expected);
@@ -168,9 +174,9 @@ describe('test concat', () => {
 
   it('concat 2d axis=1 with three inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [7, 8]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [7, 8]},
     ];
     const expected = {axis: 1, shape: [2, 4], value: [1, 3, 4, 7, 2, 5, 6, 8]};
     await testConcatInputs(tensors, expected);
@@ -178,10 +184,10 @@ describe('test concat', () => {
 
   it('concat 2d axis=1 with four inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [7, 8]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [9, 10, 11, 12]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [7, 8]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [9, 10, 11, 12]},
     ];
     const expected = {
       axis: 1,
@@ -195,11 +201,11 @@ describe('test concat', () => {
 
   it('concat 2d axis=1 with five inputs', async () => {
     const tensors = [
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [1, 2]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [7, 8]},
-      {desc: {type: 'float32', dimensions: [2, 2]}, value: [9, 10, 11, 12]},
-      {desc: {type: 'float32', dimensions: [2, 1]}, value: [13, 14]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [1, 2]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [3, 4, 5, 6]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [7, 8]},
+      {desc: {dataType: 'float32', dimensions: [2, 2]}, value: [9, 10, 11, 12]},
+      {desc: {dataType: 'float32', dimensions: [2, 1]}, value: [13, 14]},
     ];
     const expected = {
       axis: 1,
@@ -214,11 +220,11 @@ describe('test concat', () => {
   it('concat 3d with two inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [1, 2, 3, 4, 5, 6, 7, 8],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [9, 10, 11, 12, 13, 14, 15, 16],
       },
     ];
@@ -247,15 +253,15 @@ describe('test concat', () => {
   it('concat 3d with three inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [1, 2, 3, 4, 5, 6, 7, 8],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [9, 10, 11, 12, 13, 14, 15, 16],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [17, 18, 19, 20, 21, 22, 23, 24],
       },
     ];
@@ -296,19 +302,19 @@ describe('test concat', () => {
   it('concat 3d with four inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [1, 2, 3, 4, 5, 6, 7, 8],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [9, 10, 11, 12, 13, 14, 15, 16],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [17, 18, 19, 20, 21, 22, 23, 24],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [25, 26, 27, 28, 29, 30, 31, 32],
       },
     ];
@@ -352,23 +358,23 @@ describe('test concat', () => {
   it('concat 3d with five inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [1, 2, 3, 4, 5, 6, 7, 8],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [9, 10, 11, 12, 13, 14, 15, 16],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [17, 18, 19, 20, 21, 22, 23, 24],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [25, 26, 27, 28, 29, 30, 31, 32],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2]},
         value: [33, 34, 35, 36, 37, 38, 39, 40],
       },
     ];
@@ -415,14 +421,14 @@ describe('test concat', () => {
   it('concat 4d with two inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           1, 2, 3, 4, 5, 6, 7, 8,
           9, 10, 11, 12, 13, 14, 15, 16,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           17, 18, 19, 20, 21, 22, 23, 24,
           25, 26, 27, 28, 29, 30, 31, 32,
@@ -479,21 +485,21 @@ describe('test concat', () => {
   it('concat 4d with three inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           1, 2, 3, 4, 5, 6, 7, 8,
           9, 10, 11, 12, 13, 14, 15, 16,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           17, 18, 19, 20, 21, 22, 23, 24,
           25, 26, 27, 28, 29, 30, 31, 32,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           33, 34, 35, 36, 37, 38, 39, 40,
           41, 42, 43, 44, 45, 46, 47, 48,
@@ -558,28 +564,28 @@ describe('test concat', () => {
   it('concat 4d with four inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           1, 2, 3, 4, 5, 6, 7, 8,
           9, 10, 11, 12, 13, 14, 15, 16,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           17, 18, 19, 20, 21, 22, 23, 24,
           25, 26, 27, 28, 29, 30, 31, 32,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           33, 34, 35, 36, 37, 38, 39, 40,
           41, 42, 43, 44, 45, 46, 47, 48,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           49, 50, 51, 52, 53, 54, 55, 56,
           57, 58, 59, 60, 61, 62, 63, 64,
@@ -652,35 +658,35 @@ describe('test concat', () => {
   it('concat 4d with five inputs', async () => {
     const tensors = [
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           1, 2, 3, 4, 5, 6, 7, 8,
           9, 10, 11, 12, 13, 14, 15, 16,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           17, 18, 19, 20, 21, 22, 23, 24,
           25, 26, 27, 28, 29, 30, 31, 32,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           33, 34, 35, 36, 37, 38, 39, 40,
           41, 42, 43, 44, 45, 46, 47, 48,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           49, 50, 51, 52, 53, 54, 55, 56,
           57, 58, 59, 60, 61, 62, 63, 64,
         ],
       },
       {
-        desc: {type: 'float32', dimensions: [2, 2, 2, 2]},
+        desc: {dataType: 'float32', dimensions: [2, 2, 2, 2]},
         value: [
           65, 66, 67, 68, 69, 70, 71, 72,
           73, 74, 75, 76, 77, 78, 79, 80,

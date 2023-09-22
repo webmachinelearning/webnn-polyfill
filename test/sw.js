@@ -11,7 +11,7 @@ onmessage = (message) => {
     const outputs = message.data[2];
     const context = navigator.ml.createContextSync();
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: shape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: shape});
     const y = builder.relu(x);
     const graph = builder.buildSync({y});
     context.computeSync(graph, inputs, outputs);

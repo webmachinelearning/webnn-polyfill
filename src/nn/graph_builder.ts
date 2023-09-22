@@ -1,6 +1,6 @@
 import {MLContext} from './context';
 import {MLGraph} from './graph';
-import {ConstantOperand, InputOperand, MLOperand, MLOperandDescriptor, MLOperandType} from './operand';
+import {ConstantOperand, InputOperand, MLOperand, MLOperandDescriptor, MLOperandDataType} from './operand';
 import {MLActivation} from './operation';
 import {BatchNormalization} from './ops/batch_norm';
 import {Add, Div, MatMul, Max, Min, Mul, Pow, Sub} from './ops/binary';
@@ -374,16 +374,16 @@ export class MLGraphBuilder {
   /**
    * [spec](https://webmachinelearning.github.io/webnn/#dom-mlgraphbuilder-constant-value-type)
    */
-  constant(value: number, type?: MLOperandType): MLOperand;
+  constant(value: number, dataType?: MLOperandDataType): MLOperand;
   constant(
       descOrValue: MLOperandDescriptor|number,
-      valueOrType: MLBufferView|MLOperandType): ConstantOperand {
+      valueOrType: MLBufferView|MLOperandDataType): ConstantOperand {
     if (typeof descOrValue === 'number') {
       if (valueOrType === undefined) {
-        valueOrType = MLOperandType.float32;
+        valueOrType = MLOperandDataType.float32;
       }
       return ConstantOperand.createScalar(
-          descOrValue, valueOrType as MLOperandType, this);
+          descOrValue, valueOrType as MLOperandDataType, this);
     } else {
       return ConstantOperand.createTensor(
           descOrValue, valueOrType as MLBufferView, this);

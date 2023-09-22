@@ -9,7 +9,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 4, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 4, 4]});
     const windowDimensions = [3, 3];
     const y = builder.maxPool2d(x, {windowDimensions});
     const graph = await builder.build({y});
@@ -25,7 +26,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 4, 4, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 4, 4, 1]});
     const windowDimensions = [3, 3];
     const layout = 'nhwc';
     const y = builder.maxPool2d(x, {windowDimensions, layout});
@@ -42,7 +44,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d dilations default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 4, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 4, 4]});
     const windowDimensions = [2, 2];
     const dilations = [2, 2];
     const y = builder.maxPool2d(x, {windowDimensions, dilations});
@@ -59,7 +62,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d dilations nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 4, 4, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 4, 4, 1]});
     const windowDimensions = [2, 2];
     const dilations = [2, 2];
     const layout = 'nhwc';
@@ -77,7 +81,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d pads default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
     const y = builder.maxPool2d(x, {windowDimensions, padding});
@@ -99,7 +104,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d pads nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
     const layout = 'nhwc';
@@ -122,7 +128,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad same-upper default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
     const autoPad = 'same-upper';
     const y = builder.maxPool2d(x, {windowDimensions, autoPad});
@@ -144,7 +151,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad explicit nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [2, 1, 2, 1];
     const strides = [2, 2];
@@ -185,7 +193,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad explicit outputSizes=[3,3] nhwc ', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -220,7 +229,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad explicit outputSizes=[4,4] nhwc ', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -262,7 +272,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad explicit roundingType=floor nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -297,7 +308,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad explicit roundingType=ceil nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -339,7 +351,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad same-lower nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const strides = [2, 2];
     const autoPad = 'same-lower';
@@ -379,7 +392,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d autoPad same-upper nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [5, 5];
     const autoPad = 'same-upper';
     const layout = 'nhwc';
@@ -402,7 +416,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d strides default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
     const y = builder.maxPool2d(x, {windowDimensions, strides});
@@ -421,7 +436,8 @@ describe('test pool2d', () => {
 
   it('maxPool2d strides nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
     const layout = 'nhwc';
@@ -441,7 +457,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 4, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 4, 4]});
     const windowDimensions = [3, 3];
     const y = builder.averagePool2d(x, {windowDimensions});
     const graph = await builder.build({y});
@@ -457,7 +474,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 4, 4, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 4, 4, 1]});
     const windowDimensions = [3, 3];
     const layout = 'nhwc';
     const y = builder.averagePool2d(x, {windowDimensions, layout});
@@ -474,7 +492,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d pads default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
     const layout = 'nhwc';
@@ -497,7 +516,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d pads nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [5, 5];
     const padding = [2, 2, 2, 2];
     const layout = 'nhwc';
@@ -520,7 +540,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad same-upper default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [5, 5];
     const autoPad = 'same-upper';
     const y = builder.averagePool2d(x, {windowDimensions, autoPad});
@@ -542,7 +563,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad same-upper nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [5, 5];
     const autoPad = 'same-upper';
     const layout = 'nhwc';
@@ -565,7 +587,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad explicit nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [2, 1, 2, 1];
     const strides = [2, 2];
@@ -606,7 +629,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad explicit outputSizes=[3,3] nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -641,7 +665,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad explicit outputSizes=[4,4] nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -685,7 +710,7 @@ describe('test pool2d', () => {
       async () => {
         const builder = new MLGraphBuilder(context);
         const x =
-          builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+          builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
         const windowDimensions = [4, 4];
         const padding = [1, 1, 1, 1];
         const strides = [2, 2];
@@ -729,7 +754,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad explicit roundingType=ceil nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const padding = [1, 1, 1, 1];
     const strides = [2, 2];
@@ -771,7 +797,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d autoPad same-lower nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 7, 7, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 7, 7, 1]});
     const windowDimensions = [4, 4];
     const strides = [2, 2];
     const autoPad = 'same-lower';
@@ -811,7 +838,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d strides default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 5, 5]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 5, 5]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
     const y = builder.averagePool2d(x, {windowDimensions, strides});
@@ -830,7 +858,8 @@ describe('test pool2d', () => {
 
   it('averagePool2d strides nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 1]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
     const layout = 'nhwc';
@@ -850,7 +879,8 @@ describe('test pool2d', () => {
 
   it('global averagePool2d default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 3, 5, 5]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 3, 5, 5]});
     const y = builder.averagePool2d(x);
     const graph = await builder.build({y});
     const inputs = {
@@ -880,7 +910,8 @@ describe('test pool2d', () => {
 
   it('global averagePool2d nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 5, 5, 3]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 5, 5, 3]});
     const layout = 'nhwc';
     const y = builder.averagePool2d(x, {layout});
     const graph = await builder.build({y});
@@ -911,7 +942,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d strides default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 2, 4]});
     const windowDimensions = [2, 2];
     const y = builder.l2Pool2d(x, {windowDimensions});
     const graph = await builder.build({y});
@@ -927,7 +959,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d strides', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 2, 4]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
     const y = builder.l2Pool2d(x, {windowDimensions, strides});
@@ -944,7 +977,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d strides nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 2, 4, 1]});
     const windowDimensions = [2, 2];
     const strides = [2, 2];
     const layout = 'nhwc';
@@ -962,7 +996,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d pads default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 2, 4]});
     const windowDimensions = [3, 3];
     const strides = [3, 3];
     const padding = [1, 0, 1, 1];
@@ -980,7 +1015,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d pads outputSizes=[3,3]', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 7, 7]});
     const windowDimensions = [4, 4];
     const strides = [2, 2];
     const padding = [1, 1, 1, 1];
@@ -1014,7 +1050,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d pads outputSizes=[4,4]', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 7, 7]});
     const windowDimensions = [4, 4];
     const strides = [2, 2];
     const padding = [1, 1, 1, 1];
@@ -1055,7 +1092,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d pads roundingType=floor', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 7, 7]});
     const windowDimensions = [4, 4];
     const strides = [2, 2];
     const padding = [1, 1, 1, 1];
@@ -1089,7 +1127,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d pads roundingType=ceil', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 7, 7]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 7, 7]});
     const windowDimensions = [4, 4];
     const strides = [2, 2];
     const padding = [1, 1, 1, 1];
@@ -1130,7 +1169,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d pads nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 2, 4, 1]});
     const windowDimensions = [3, 3];
     const strides = [3, 3];
     const padding = [1, 0, 1, 1];
@@ -1149,7 +1189,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d same-upper default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 2, 4]});
     const windowDimensions = [3, 3];
     const strides = [3, 3];
     const autoPad = 'same-upper';
@@ -1167,7 +1208,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d same-lower default', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 1, 2, 4]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 1, 2, 4]});
     const windowDimensions = [3, 3];
     const strides = [3, 3];
     const autoPad = 'same-lower';
@@ -1185,7 +1227,8 @@ describe('test pool2d', () => {
 
   it.skip('l2Pool2d same-lower nhwc', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [1, 2, 4, 1]});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: [1, 2, 4, 1]});
     const windowDimensions = [3, 3];
     const strides = [3, 3];
     const autoPad = 'same-lower';

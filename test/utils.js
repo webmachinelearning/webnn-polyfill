@@ -41,7 +41,7 @@ export function almostEqual(a, b, criteria) {
  * @param {number} value
  * @param {string} dataType A data type string, like "float32", "int8",
  *     more data type strings, please see:
- *     https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype
+ *     https://webmachinelearning.github.io/webnn/#enumdef-mloperanddatatype
  * @return {number} A 64-bit signed integer.
  */
 export function getBitwise(value, dataType) {
@@ -65,7 +65,7 @@ export function getBitwise(value, dataType) {
  * @param {number} nulp A BigInt value.
  * @param {string} dataType A data type string, default "float32",
  *     more data type strings, please see:
- *     https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype
+ *     https://webmachinelearning.github.io/webnn/#enumdef-mloperanddatatype
  * @return {Boolean} A boolean value:
  *     true: The distance between a and b is greater than given ULP distance.
  *     false: The distance between a and b is less than or equal to given ULP
@@ -141,7 +141,7 @@ export async function createTypedArrayFromNpy(fileName) {
 export async function buildConstantFromNpy(builder, fileName) {
   const data = await readFromNpy(fileName);
   return builder.constant(
-      {type: data.type, dimensions: data.dimensions}, data.buffer);
+      {dataType: data.type, dimensions: data.dimensions}, data.buffer);
 }
 
 // Refer to Implicit padding algorithms of Android NNAPI:

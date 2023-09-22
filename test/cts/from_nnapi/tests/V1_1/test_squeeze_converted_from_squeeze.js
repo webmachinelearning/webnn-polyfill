@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test squeeze converted from squeeze test', async () => {
     // Converted test case (from: V1_1/squeeze.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input = builder.input('input', {type: 'float32', dimensions: [4, 1, 1, 2]});
+    const input = builder.input('input', {dataType: 'float32', dimensions: [4, 1, 1, 2]});
     const inputData = new Float32Array([1.4, 2.3, 3.2, 4.1, 5.4, 6.3, 7.2, 8.1]);
     const squeezeDims = [1, 2];
     const expected = [1.4, 2.3, 3.2, 4.1, 5.4, 6.3, 7.2, 8.1];

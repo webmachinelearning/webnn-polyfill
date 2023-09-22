@@ -267,9 +267,9 @@ def GetWebNNOperandDesc(oprand, operation, opInsList, opInsInfoList, layout,
                     operandDims = [1, operandDims[0], 1, 1]
 
     if operation == 'INSTANCE_NORMALIZATION' and size != None:
-        operandDesc = "{type: '%s', dimensions: [%d]}" % (operandType, size)
+        operandDesc = "{dataType: '%s', dimensions: [%d]}" % (operandType, size)
     else:
-        operandDesc = "{type: '%s', dimensions: %s}" % (operandType, operandDims)
+        operandDesc = "{dataType: '%s', dimensions: %s}" % (operandType, operandDims)
     return operandDesc
 
 def PrintInputOperand(oprand, operation, opInsList, opInsInfoList, layout,
@@ -779,7 +779,7 @@ def DumpCtsTest(example, test, fused):
                                                optionsKeyValueList)
         webnnParamsStr = GetWebNNParamsString(mappingParams, nnapiOp)
         if nnapiOp == 'SQRT':
-            exponent = "const exponent = builder.constant({type: 'float32'," + \
+            exponent = "const exponent = builder.constant({dataType: 'float32'," + \
                 " dimensions: [1]}, new Float32Array([0.5]));"
             IndentedPrint(exponent, indent=4, file=test)
             webnnParamsStr = ', '.join([webnnParamsStr, 'exponent'])

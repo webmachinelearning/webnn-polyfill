@@ -9,7 +9,8 @@ describe('test linear', async () => {
 
   async function testLinear(input, expected, options = {}) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: input.shape});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: input.shape});
     const y = builder.linear(x, options);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.value)};

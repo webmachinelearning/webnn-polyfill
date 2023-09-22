@@ -10,7 +10,8 @@ describe('test pad', () => {
   async function testPad(
       input, beginningPadding, endingPadding, options, expected) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: input.shape});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: input.shape});
     const y = builder.pad(x, beginningPadding, endingPadding, options);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.values)};

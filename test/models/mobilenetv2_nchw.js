@@ -88,7 +88,7 @@ describe('test mobilenetv2 nchw', function() {
 
     async function buildMobileNet() {
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 3, 224, 224]});
+          'input', {dataType: 'float32', dimensions: [1, 3, 224, 224]});
       const conv0 = await buildConv(
           data, '0', true, {padding: [1, 1, 1, 1], strides: [2, 2]});
       const conv1 = await buildConv(

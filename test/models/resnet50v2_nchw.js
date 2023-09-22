@@ -114,7 +114,7 @@ describe('test resnet50v2 nchw', function() {
 
     async function buildResNet() {
       const data =
-          builder.input('input', {type: 'float32', dimensions: [1, 3, 224, 224]});
+          builder.input('input', {dataType: 'float32', dimensions: [1, 3, 224, 224]});
       const bn1 = await buildBatchNorm(data, '0', '', false);
       const conv0 = await buildConv(
           bn1, '0', '', {padding: [3, 3, 3, 3], strides: [2, 2]});

@@ -51,7 +51,7 @@ describe('test squeezenet1.1 nchw', function() {
 
     async function buildSqueezeNet() {
       const data = builder.input(
-          'data', {type: 'float32', dimensions: [1, 3, 224, 224]});
+          'data', {dataType: 'float32', dimensions: [1, 3, 224, 224]});
       const conv0 = await buildConv(data, 'conv0', {strides: [2, 2]});
       const pool0 =
           builder.maxPool2d(conv0, {windowDimensions: [3, 3], strides: [2, 2]});

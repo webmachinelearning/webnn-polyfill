@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test l2Pool2d + clamp converted from l2_pool_float test', async () => {
     // Converted test case (from: V1_0/l2_pool_float.mod.py)
     const builder = new MLGraphBuilder(context);
-    const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const op1 = builder.input('op1', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const op1Data = new Float32Array([1.0, 2.0, 3.0, 4.0]);
     const pad0 = 0;
     const cons1 = 1;

@@ -11,13 +11,14 @@ describe('test conv2d', () => {
       input, filter, expected, options = {}, bias = undefined,
       activation = undefined, fusion = false, activationOptions = {}) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: input.shape});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: input.shape});
     const w = builder.constant(
-        {type: 'float32', dimensions: filter.shape}, filter.data);
+        {dataType: 'float32', dimensions: filter.shape}, filter.data);
     let b;
     if (bias !== undefined) {
       b = builder.constant(
-          {type: 'float32', dimensions: bias.shape}, bias.data);
+          {dataType: 'float32', dimensions: bias.shape}, bias.data);
     }
     if (fusion) {
       if (b !== undefined) {

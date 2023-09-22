@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input = builder.input('input', {type: 'float32', dimensions: [4]});
+    const input = builder.input('input', {dataType: 'float32', dimensions: [4]});
     const inputData = new Float32Array([1, 2, 3, 4]);
     const begin = [1];
     const size = [2];
@@ -26,7 +26,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input = builder.input('input', {type: 'float32', dimensions: [4]});
+    const input = builder.input('input', {dataType: 'float32', dimensions: [4]});
     const inputData = new Float32Array([1, 2, 3, 4]);
     const begin = [1];
     const size = [2];
@@ -41,7 +41,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_2 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input1 = builder.input('input1', {type: 'float32', dimensions: [2, 3]});
+    const input1 = builder.input('input1', {dataType: 'float32', dimensions: [2, 3]});
     const input1Data = new Float32Array([1, 2, 3, 4, 5, 6]);
     const begin1 = [1, 0];
     const size1 = [1, 2];
@@ -56,7 +56,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input1 = builder.input('input1', {type: 'float32', dimensions: [2, 3]});
+    const input1 = builder.input('input1', {dataType: 'float32', dimensions: [2, 3]});
     const input1Data = new Float32Array([1, 2, 3, 4, 5, 6]);
     const begin1 = [1, 0];
     const size1 = [1, 2];
@@ -71,7 +71,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_3 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input2 = builder.input('input2', {type: 'float32', dimensions: [2, 3, 2]});
+    const input2 = builder.input('input2', {dataType: 'float32', dimensions: [2, 3, 2]});
     const input2Data = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const begin2 = [0, 0, 0];
     const size2 = [2, 3, 2];
@@ -86,7 +86,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed_3 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input2 = builder.input('input2', {type: 'float32', dimensions: [2, 3, 2]});
+    const input2 = builder.input('input2', {dataType: 'float32', dimensions: [2, 3, 2]});
     const input2Data = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const begin2 = [0, 0, 0];
     const size2 = [2, 3, 2];
@@ -101,7 +101,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_4 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input3 = builder.input('input3', {type: 'float32', dimensions: [4, 1, 1, 1]});
+    const input3 = builder.input('input3', {dataType: 'float32', dimensions: [4, 1, 1, 1]});
     const input3Data = new Float32Array([1, 2, 3, 4]);
     const begin3 = [1, 0, 0, 0];
     const size3 = [3, 1, 1, 1];
@@ -116,7 +116,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed_4 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input3 = builder.input('input3', {type: 'float32', dimensions: [4, 1, 1, 1]});
+    const input3 = builder.input('input3', {dataType: 'float32', dimensions: [4, 1, 1, 1]});
     const input3Data = new Float32Array([1, 2, 3, 4]);
     const begin3 = [1, 0, 0, 0];
     const size3 = [3, 1, 1, 1];
@@ -131,7 +131,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_5 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input4 = builder.input('input4', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input4 = builder.input('input4', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input4Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin4 = [1, 0, 0, 0];
     const size4 = [1, 1, 3, 1];
@@ -146,7 +146,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed_5 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input4 = builder.input('input4', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input4 = builder.input('input4', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input4Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin4 = [1, 0, 0, 0];
     const size4 = [1, 1, 3, 1];
@@ -161,7 +161,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_float16_5 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input4 = builder.input('input4', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input4 = builder.input('input4', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input4Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin4 = [1, 0, 0, 0];
     const size4 = [1, 1, 3, 1];
@@ -176,7 +176,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_6 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input5 = builder.input('input5', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input5 = builder.input('input5', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input5Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin5 = [1, 0, 0, 0];
     const size5 = [2, 1, 3, 1];
@@ -191,7 +191,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed_6 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input5 = builder.input('input5', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input5 = builder.input('input5', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input5Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin5 = [1, 0, 0, 0];
     const size5 = [2, 1, 3, 1];
@@ -206,7 +206,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_float16_6 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input5 = builder.input('input5', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input5 = builder.input('input5', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input5Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin5 = [1, 0, 0, 0];
     const size5 = [2, 1, 3, 1];
@@ -221,7 +221,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_8 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input7 = builder.input('input7', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input7 = builder.input('input7', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input7Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin7 = [1, 0, 0, 0];
     const size7 = [2, 1, 3, 1];
@@ -236,7 +236,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_relaxed_8 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input7 = builder.input('input7', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input7 = builder.input('input7', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input7Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin7 = [1, 0, 0, 0];
     const size7 = [2, 1, 3, 1];
@@ -251,7 +251,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test slice converted from slice_float16_8 test', async () => {
     // Converted test case (from: V1_2/slice.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input7 = builder.input('input7', {type: 'int32', dimensions: [3, 2, 3, 1]});
+    const input7 = builder.input('input7', {dataType: 'int32', dimensions: [3, 2, 3, 1]});
     const input7Data = new Int32Array([1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6]);
     const begin7 = [1, 0, 0, 0];
     const size7 = [2, 1, 3, 1];

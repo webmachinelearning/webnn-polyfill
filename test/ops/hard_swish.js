@@ -9,7 +9,7 @@ describe('test hardSwish', async () => {
 
   it('hardSwish', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [2, 3]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [2, 3]});
     const y = builder.hardSwish(x);
     const graph = await builder.build({y});
     const inputs = {

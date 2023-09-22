@@ -8,7 +8,7 @@ describe('test element-wise unary operations', () => {
   });
   async function test(op, input, expected, shape) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: shape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: shape});
     const y = builder[op](x);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input)};

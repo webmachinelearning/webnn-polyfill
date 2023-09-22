@@ -79,10 +79,10 @@ describe('test tinyYolov2 nchw', function() {
 
     async function buildTinyYolo() {
       const mulScale = builder.constant(
-          {type: 'float32', dimensions: [1]},
+          {dataType: 'float32', dimensions: [1]},
           new Float32Array([0.003921568859368563]));
       const addBias = builder.constant(
-          {type: 'float32', dimensions: [3, 1, 1]},
+          {dataType: 'float32', dimensions: [3, 1, 1]},
           new Float32Array([0, 0, 0]));
       const poolOptions = {
         windowDimensions: [2, 2],
@@ -90,7 +90,7 @@ describe('test tinyYolov2 nchw', function() {
         autoPad: 'same-upper',
       };
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 3, 416, 416]});
+          'input', {dataType: 'float32', dimensions: [1, 3, 416, 416]});
       const mul = builder.mul(data, mulScale);
       const add = builder.add(mul, addBias);
       const conv0 = await buildConvolutional(add, '');

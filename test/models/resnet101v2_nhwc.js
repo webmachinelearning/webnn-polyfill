@@ -121,7 +121,7 @@ describe('test resnet101v2 nhwc', function() {
 
     async function buildResNet() {
       const input = builder.input('input',
-          {type: 'float32', dimensions: [1, 299, 299, 3]});
+          {dataType: 'float32', dimensions: [1, 299, 299, 3]});
       const pad = builder.pad(input, [0, 3, 3, 0], [0, 3, 3, 0]);
       const conv1 = await buildConv(pad, ['', '', '1'], {strides}, false);
       const pool = builder.maxPool2d(

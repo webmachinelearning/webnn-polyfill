@@ -11,7 +11,7 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
     const output = builder.instanceNormalization(input);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([-1, 0, 1, 2, 3, 4])};
@@ -25,8 +25,8 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
-    const desc = {type: 'float32', dimensions: [2]};
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
+    const desc = {dataType: 'float32', dimensions: [2]};
     const scale = builder.constant(desc, new Float32Array([1.0, 1.5]));
     const output = builder.instanceNormalization(input, {scale});
     const graph = await builder.build({output});
@@ -41,8 +41,8 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
-    const desc = {type: 'float32', dimensions: [2]};
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
+    const desc = {dataType: 'float32', dimensions: [2]};
     const bias = builder.constant(desc, new Float32Array([0, 1]));
     const output = builder.instanceNormalization(input, {bias});
     const graph = await builder.build({output});
@@ -57,8 +57,8 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [1, 2, 1, 3];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
-    const desc = {type: 'float32', dimensions: [2]};
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
+    const desc = {dataType: 'float32', dimensions: [2]};
     const scale = builder.constant(desc, new Float32Array([1.0, 1.5]));
     const bias = builder.constant(desc, new Float32Array([0, 1]));
     const output = builder.instanceNormalization(input, {scale, bias});
@@ -74,8 +74,8 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
-    const desc = {type: 'float32', dimensions: [3]};
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
+    const desc = {dataType: 'float32', dimensions: [3]};
     const scale = builder.constant(
         desc, new Float32Array([0.55290383, -1.1786512, -0.12353817]));
     const bias = builder.constant(
@@ -152,8 +152,8 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 3, 4, 5];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
-    const desc = {type: 'float32', dimensions: [3]};
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
+    const desc = {dataType: 'float32', dimensions: [3]};
     const scale = builder.constant(
         desc, new Float32Array([0.55290383, -1.1786512, -0.12353817]));
     const bias = builder.constant(
@@ -232,8 +232,8 @@ describe('test instanceNormalization', () => {
     const builder = new MLGraphBuilder(context);
     const inputShape = [2, 4, 5, 3];
     const input =
-        builder.input('input', {type: 'float32', dimensions: inputShape});
-    const desc = {type: 'float32', dimensions: [3]};
+        builder.input('input', {dataType: 'float32', dimensions: inputShape});
+    const desc = {dataType: 'float32', dimensions: [3]};
     const scale = builder.constant(
         desc, new Float32Array([0.55290383, -1.1786512, -0.12353817]));
     const bias = builder.constant(
