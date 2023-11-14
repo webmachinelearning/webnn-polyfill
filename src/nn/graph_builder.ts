@@ -15,6 +15,7 @@ import {HardSigmoid} from './ops/hard_sigmoid';
 import {InstanceNormalization} from './ops/instance_norm';
 import {LeakyRelu} from './ops/leaky_relu';
 import {Linear} from './ops/linear';
+import {Lstm, LstmCell} from './ops/lstm';
 import {Pad} from './ops/pad';
 import {AveragePool2d, L2Pool2d, MaxPool2d} from './ops/pool2d';
 import {PRelu} from './ops/prelu';
@@ -212,7 +213,41 @@ export interface MLLinearOptions {
 }
 
 /**
+ * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mllstmweightlayout)
+ */
+export enum MLLstmWeightLayout {
+  'iofg' = 'iofg', // input-output-forget-cell gate ordering
+  'ifgo' = 'ifgo'  // input-forget-cell-output gate ordering
+}
+
+/**
  * [spec](https://webmachinelearning.github.io/webnn/#enumdef-mlpaddingmode)
+ */
+export interface MLLstmOptions {
+  bias?: MLOperand;
+  recurrentBias?: MLOperand;
+  peepholeWeight?: MLOperand;
+  initialHiddenState?: MLOperand;
+  initialCellState?: MLOperand;
+  returnSequence?: boolean;
+  direction?: MLRecurrentNetworkDirection;
+  layout?: MLLstmWeightLayout;
+  activations?: MLActivation[];
+}
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mllstmcelloptions)
+ */
+export interface MLLstmCellOptions {
+  bias?: MLOperand;
+  recurrentBias?: MLOperand;
+  peepholeWeight?: MLOperand;
+  layout?: MLLstmWeightLayout;
+  activations?: MLActivation[];
+}
+
+/**
+ * [spec](https://webmachinelearning.github.io/webnn/#dictdef-mllstmoptions)
  */
 export enum MLPaddingMode {
   'constant' = 'constant',
@@ -767,6 +802,38 @@ export class MLGraphBuilder {
       const options = operandOrOptions;
       return (new Linear(undefined, options));
     }
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-lstm)
+   */
+  lstm(input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
+       steps: number, hiddenSize: number, options: MLLstmOptions = {}):
+  MLOperand[] {
+    this.validateOperandBuilder([
+      input, weight, recurrentWeight, options.bias, options.recurrentBias,
+      options.peepholeWeight, options.initialHiddenState,
+      options.initialCellState
+    ]);
+    return (new Lstm(
+                input, weight, recurrentWeight, steps, hiddenSize, options))
+        .outputs;
+  }
+
+  /**
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlgraphbuilder-lstmcell)
+   */
+  lstmCell(input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
+           hiddenState: MLOperand, cellState: MLOperand, hiddenSize: number,
+           options: MLLstmCellOptions = {}): MLOperand[] {
+    this.validateOperandBuilder([
+      input, weight, recurrentWeight, hiddenState, cellState, options.bias,
+      options.recurrentBias, options.peepholeWeight
+    ]);
+    return (new LstmCell(
+                input, weight, recurrentWeight, hiddenState, cellState,
+                hiddenSize, options))
+        .outputs;
   }
 
   /**
