@@ -1,8 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
-import {MLAutoPad, MLBufferView} from './graph_builder';
-import {MLOperand, MLOperandDescriptor, MLOperandType} from './operand';
+import {MLOperand, MLOperandDescriptor, MLOperandDataType} from './operand';
 import {ArrayBufferView as TypedArray} from './types';
 
 export function assert(expr: boolean, msg: string): void {
@@ -37,7 +36,7 @@ export function isPositiveIntegerOrNullArray(array: Array<(number | null)>):
       array.every(v => (isInteger(v) && v > 0) || v === null);
 }
 
-export function isTypedArray(array: MLBufferView): boolean {
+export function isTypedArray(array: ArrayBufferView): boolean {
   return array instanceof Float32Array || array instanceof Int32Array ||
       array instanceof Uint32Array || array instanceof Int16Array ||
       array instanceof Uint16Array || array instanceof Int8Array ||
@@ -56,7 +55,7 @@ export function isValidResample2dAxes(array: number[]): boolean {
   }
 }
 
-export function getTypedArray(type: MLOperandType): Float32ArrayConstructor|
+export function getTypedArray(type: MLOperandDataType): Float32ArrayConstructor|
     Int32ArrayConstructor|Uint32ArrayConstructor|Uint16ArrayConstructor|
     Int8ArrayConstructor|Uint8ArrayConstructor {
   if (type === 'float32') {
@@ -97,7 +96,7 @@ export function cloneTypedArray(value: TypedArray): TypedArray {
   return array;
 }
 
-export function getDataType(type: MLOperandType): tf.DataType {
+export function getDataType(type: MLOperandDataType): tf.DataType {
   if (type === 'float32') {
     return 'float32';
   } else if (type === 'int32') {
@@ -109,17 +108,17 @@ export function getDataType(type: MLOperandType): tf.DataType {
 
 export function createOperandDescriptorFromTensor(tensor: tf.Tensor):
     MLOperandDescriptor {
-  let type: MLOperandType;
+  let dataType: MLOperandDataType;
   if (tensor.dtype === 'float32') {
-    type = MLOperandType.float32;
+    dataType = MLOperandDataType.float32;
   } else if (tensor.dtype === 'int32') {
-    type = MLOperandType.int32;
+    dataType = MLOperandDataType.int32;
   }
-  return {type, dimensions: tensor.shape} as MLOperandDescriptor;
+  return {dataType, dimensions: tensor.shape} as MLOperandDescriptor;
 }
 
 export function validateOperandDescriptor(desc: MLOperandDescriptor): void {
-  assert(desc.type in MLOperandType, 'The operand type is invalid.');
+  assert(desc.dataType in MLOperandDataType, 'The operand type is invalid.');
   if (desc.dimensions) {
     assert(isIntegerArray(desc.dimensions), 'The dimensions is invalid.');
   }
@@ -130,7 +129,7 @@ export function isDyanmicShape(dimensions: number[]): boolean {
 }
 
 export function validateTypedArray(
-    value: TypedArray, type: MLOperandType, dimensions: number[]): void {
+    value: TypedArray, type: MLOperandDataType, dimensions: number[]): void {
   assert(isTypedArray(value), 'The value is not a typed array.');
   assert(value instanceof getTypedArray(type), 'The type of value is invalid.');
   assert(
@@ -140,17 +139,18 @@ export function validateTypedArray(
           'is expected.');
 }
 
-export function validateValueType(value: number, type: MLOperandType): void {
-  if (type === MLOperandType.int32) {
+export function validateValueType(value: number, type: MLOperandDataType):
+ void {
+  if (type === MLOperandDataType.int32) {
     assert(Number.isInteger(value), 'the value is not an int32.');
-  } else if (type === MLOperandType.uint32) {
+  } else if (type === MLOperandDataType.uint32) {
     assert(
         Number.isInteger(value) && value >= 0, 'the value is not an uint32.');
-  } else if (type === MLOperandType.int8) {
+  } else if (type === MLOperandDataType.int8) {
     assert(
         Number.isInteger(value) && value >= -128 && value <= 127,
         'the value is not an int8.');
-  } else if (type === MLOperandType.uint8) {
+  } else if (type === MLOperandDataType.uint8) {
     assert(
         Number.isInteger(value) && value >= 0 && value <= 255,
         'the value is not an uint8.');
@@ -159,22 +159,22 @@ export function validateValueType(value: number, type: MLOperandType): void {
 
 export function createTensor(
     desc: MLOperandDescriptor,
-    value: MLBufferView|number): tf.Tensor {
-  const dtype: tf.DataType = getDataType(desc.type);
+    value: ArrayBufferView|number): tf.Tensor {
+  const dtype: tf.DataType = getDataType(desc.dataType);
   if (desc.dimensions !== undefined) {
     assert(
-        isTypedArray(value as MLBufferView),
+        isTypedArray(value as ArrayBufferView),
         'Only ArrayBufferView value is supported.');
     const array = value as TypedArray;
-    validateTypedArray(array, desc.type, desc.dimensions);
+    validateTypedArray(array, desc.dataType, desc.dimensions);
     const clonedArray = cloneTypedArray(array);
     return tf.tensor(clonedArray, desc.dimensions, dtype);
   } else {
     if (typeof value === 'number') {
-      validateValueType(value, desc.type);
+      validateValueType(value, desc.dataType);
       return tf.scalar(value, dtype);
     } else {
-      validateTypedArray(value as TypedArray, desc.type, desc.dimensions);
+      validateTypedArray(value as TypedArray, desc.dataType, desc.dimensions);
       return tf.scalar((value as TypedArray)[0], dtype);
     }
   }
@@ -232,94 +232,17 @@ export function checkShape(actual: number[], expected: number[]): void {
 }
 
 export function getPaddings(
-    input: tf.Tensor4D, filter: tf.Tensor4D,
-    padding: [number, number, number, number], strides: [number, number],
-    dilations: [number, number], autoPad: MLAutoPad,
-    outputPadding?: [number, number]): ExplicitPadding {
+    padding: [number, number, number, number]): ExplicitPadding {
   // input layout: NHWC
   // WebNN padding:
   //   [beginning_height, ending_height, beginning_width, ending_width]
   // tf.conv2d NHWC should be in the following form:
   //   [[0, 0], [pad_top,pad_bottom], [pad_left, pad_right], [0, 0]]
-  let resultPadding: ExplicitPadding;
-  if (autoPad === MLAutoPad.explicit) {
-    resultPadding = [
+  const resultPadding: ExplicitPadding = [
       [0, 0], [padding[0], padding[1]], [padding[2], padding[3]], [0, 0]
     ] as ExplicitPadding;
-  } else {
-    resultPadding = [[0, 0], [0, 0], [0, 0], [0, 0]];
-    const totalPadding: [number, number] = [0, 0];
-    if (outputPadding === undefined) {
-      // conv2d
-      for (let i = 0; i < 2; ++i) {
-        // totalPadding = beginning padding + ending padding
-        // SAME_UPPER or SAME_LOWER mean pad the input so that
-        //   output size = ceil(input size / strides)
-        // output size = 1 +
-        //     (input size - filter size - (filter size - 1) * (dilation - 1) +
-        //      beginning padding + ending padding) / stride
-        totalPadding[i] =
-            strides[i] * (Math.ceil(input.shape[1 + i] / strides[i]) - 1) +
-            ((filter.shape[i] - 1) * dilations[i] + 1) - input.shape[1 + i];
-      }
-    } else {
-      // convTranspose2d
-      for (let i = 0; i < 2; ++i) {
-        // totalPadding = beginning padding + ending padding
-        // SAME_UPPER or SAME_LOWER mean pad the input so that
-        //   output size = input size * strides
-        // output size = (input size - 1) * stride + filter size +
-        //     (filter size - 1) * (dilation - 1) - beginning padding -
-        //     ending padding + output padding
-        totalPadding[i] = (input.shape[1 + i] - 1) * strides[i] +
-            filter.shape[i] + (filter.shape[i] - 1) * (dilations[i] - 1) +
-            outputPadding[i] - input.shape[1 + i] * strides[i];
-      }
-    }
-    if (autoPad === MLAutoPad['same-upper']) {
-      // Calculate the explicit paddings for 'same-upper'
-      for (let i = 0; i < 2; ++i) {
-        resultPadding[i + 1][0] =
-            totalPadding[i] - Math.ceil(totalPadding[i] / 2);
-        resultPadding[i + 1][1] = Math.ceil(totalPadding[i] / 2);
-      }
-    } else {
-      // Calculate the explicit paddings for 'same-lower'
-      for (let i = 0; i < 2; ++i) {
-        resultPadding[i + 1][0] =
-            totalPadding[i] - Math.floor(totalPadding[i] / 2);
-        resultPadding[i + 1][1] = Math.floor(totalPadding[i] / 2);
-      }
-    }
-  }
+
   return resultPadding;
-}
-
-export function computeImplicitPaddingForAutoPad(
-    autoPad: MLAutoPad, dilation: number, inputSize: number,
-    filterSize: number, stride: number, paddingBegin: number,
-    paddingEnd: number): [number, number] {
-  const outSize = (inputSize + stride - 1) / stride;
-  const dilatedFilter = filterSize + (filterSize - 1) * (dilation - 1);
-  const neededInput = (outSize - 1) * stride + dilatedFilter;
-  const totalPadding = neededInput > inputSize ? neededInput - inputSize : 0;
-
-  switch(autoPad) {
-    case MLAutoPad['same-upper']: {
-      paddingBegin = Math.floor(totalPadding / 2);
-      paddingEnd = Math.floor((totalPadding + 1) / 2);
-      break;
-    }
-    case MLAutoPad['same-lower']: {
-      paddingBegin = Math.floor((totalPadding + 1) / 2);
-      paddingEnd = Math.floor(totalPadding / 2);
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-  return [paddingBegin, paddingEnd];
 }
 
 export function getBroadcastShape(shapeA: number[], shapeB: number[]):

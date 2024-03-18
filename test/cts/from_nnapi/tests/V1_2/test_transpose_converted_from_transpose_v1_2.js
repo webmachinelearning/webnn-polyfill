@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test transpose converted from transpose_v1_2 test', async () => {
     // Converted test case (from: V1_2/transpose_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input = builder.input('input', {type: 'float32', dimensions: [2, 2]});
+    const input = builder.input('input', {dataType: 'float32', dimensions: [2, 2]});
     const inputData = new Float32Array([1.0, 2.0, 3.0, 4.0]);
     const expected = [1.0, 3.0, 2.0, 4.0];
     const output = builder.transpose(input);
@@ -24,7 +24,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test transpose converted from transpose_v1_2_relaxed test', async () => {
     // Converted test case (from: V1_2/transpose_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input = builder.input('input', {type: 'float32', dimensions: [2, 2]});
+    const input = builder.input('input', {dataType: 'float32', dimensions: [2, 2]});
     const inputData = new Float32Array([1.0, 2.0, 3.0, 4.0]);
     const expected = [1.0, 3.0, 2.0, 4.0];
     const output = builder.transpose(input);

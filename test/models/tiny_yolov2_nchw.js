@@ -28,6 +28,11 @@ describe('test tinyYolov2 nchw', function() {
       const weight =
           await utils.buildConstantFromNpy(builder, new URL(weightName, url));
       const options = {autoPad: 'same-upper'};
+      options.padding =
+          utils.computePadding2DForAutoPad(
+              /* nchw */[input.shape()[2], input.shape()[3]],
+              /* oihw */[weight.shape()[2], weight.shape()[3]],
+              options.strides, options.dilations, options.autoPad);
       let bias;
       if (useBias) {
         const biasName = prefix + '_B.npy';
@@ -39,7 +44,8 @@ describe('test tinyYolov2 nchw', function() {
       }
       let conv = builder.conv2d(input, weight, options);
       if (useBias && !fused) {
-        conv = builder.add(conv, builder.reshape(bias, [1, null, 1, 1]));
+        conv = builder.add(conv,
+            builder.reshape(bias, [1, bias.shape()[0], 1, 1]));
       }
       return conv;
     }
@@ -79,10 +85,10 @@ describe('test tinyYolov2 nchw', function() {
 
     async function buildTinyYolo() {
       const mulScale = builder.constant(
-          {type: 'float32', dimensions: [1]},
+          {dataType: 'float32', dimensions: [1]},
           new Float32Array([0.003921568859368563]));
       const addBias = builder.constant(
-          {type: 'float32', dimensions: [3, 1, 1]},
+          {dataType: 'float32', dimensions: [3, 1, 1]},
           new Float32Array([0, 0, 0]));
       const poolOptions = {
         windowDimensions: [2, 2],
@@ -90,22 +96,23 @@ describe('test tinyYolov2 nchw', function() {
         autoPad: 'same-upper',
       };
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 3, 416, 416]});
+          'input', {dataType: 'float32', dimensions: [1, 3, 416, 416]});
       const mul = builder.mul(data, mulScale);
       const add = builder.add(mul, addBias);
       const conv0 = await buildConvolutional(add, '');
-      const pool0 = builder.maxPool2d(conv0, poolOptions);
+      const pool0 = utils.buildMaxPool2d(conv0, poolOptions, builder, 'nchw');
       const conv1 = await buildConvolutional(pool0, '1');
-      const pool1 = builder.maxPool2d(conv1, poolOptions);
+      const pool1 = utils.buildMaxPool2d(conv1, poolOptions, builder, 'nchw');
       const conv2 = await buildConvolutional(pool1, '2');
-      const pool2 = builder.maxPool2d(conv2, poolOptions);
+      const pool2 = utils.buildMaxPool2d(conv2, poolOptions, builder, 'nchw');
       const conv3 = await buildConvolutional(pool2, '3');
-      const pool3 = builder.maxPool2d(conv3, poolOptions);
+      const pool3 = utils.buildMaxPool2d(conv3, poolOptions, builder, 'nchw');
       const conv4 = await buildConvolutional(pool3, '4');
-      const pool4 = builder.maxPool2d(conv4, poolOptions);
+      const pool4 = utils.buildMaxPool2d(conv4, poolOptions, builder, 'nchw');
       const conv5 = await buildConvolutional(pool4, '5');
-      const pool5 = builder.maxPool2d(
-          conv5, {windowDimensions: [2, 2], autoPad: 'same-upper'});
+      const pool5 = utils.buildMaxPool2d(
+          conv5, {windowDimensions: [2, 2], autoPad: 'same-upper'}, builder,
+          'nchw');
       const conv6 = await buildConvolutional(pool5, '6');
       const conv7 = await buildConvolutional(conv6, '7');
       const conv = await buildConv(conv7, '8', true);

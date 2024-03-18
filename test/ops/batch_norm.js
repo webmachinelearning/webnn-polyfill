@@ -12,23 +12,25 @@ describe('test batchNormalization', () => {
       options = {}, activation = undefined) {
     const builder = new MLGraphBuilder(context);
     const x =
-        builder.input('input', {type: 'float32', dimensions: input.shape});
-    const m =
-        builder.constant({type: 'float32', dimensions: mean.shape}, mean.data);
+        builder.input('input', {dataType: 'float32', dimensions: input.shape});
+    const m = builder.constant(
+        {dataType: 'float32', dimensions: mean.shape}, mean.data);
     const v = builder.constant(
-        {type: 'float32', dimensions: variance.shape}, variance.data);
+        {dataType: 'float32', dimensions: variance.shape}, variance.data);
     if (scale !== undefined) {
       options.scale = builder.constant(
-          {type: 'float32', dimensions: scale.shape}, scale.data);
+          {dataType: 'float32', dimensions: scale.shape}, scale.data);
     }
     if (bias !== undefined) {
       options.bias = builder.constant(
-          {type: 'float32', dimensions: bias.shape}, bias.data);
+          {dataType: 'float32', dimensions: bias.shape}, bias.data);
     }
     if (activation !== undefined) {
       options.activation = utils.createActivation(builder, activation);
     }
     const output = builder.batchNormalization(x, m, v, options);
+    utils.checkDataType(output.dataType(), x.dataType());
+    utils.checkShape(output.shape(), x.shape());
     const graph = await builder.build({output});
     const inputs = {'input': input.data};
     const outputs = {

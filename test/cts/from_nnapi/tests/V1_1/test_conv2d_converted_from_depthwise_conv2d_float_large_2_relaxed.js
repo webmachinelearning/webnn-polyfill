@@ -11,10 +11,10 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test conv2d (fused ops) converted from depthwise_conv2d_float_large_2_relaxed test', async () => {
     // Converted test case (from: V1_1/depthwise_conv2d_float_large_2_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
-    const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 4]});
+    const op1 = builder.input('op1', {dataType: 'float32', dimensions: [1, 2, 2, 4]});
     const op1Data = new Float32Array([10, 21, 10, 0, 10, 22, 20, 0, 10, 23, 30, 0, 10, 24, 40, 0]);
-    const op2 = builder.constant({type: 'float32', dimensions: [1, 2, 2, 4]}, new Float32Array([0.25, 0, 10, 100, 0.25, 1, 20, 100, 0.25, 0, 30, 100, 0.25, 1, 40, 100]));
-    const op3 = builder.constant({type: 'float32', dimensions: [4]}, new Float32Array([6000, 7000, 8000, 9000]));
+    const op2 = builder.constant({dataType: 'float32', dimensions: [1, 2, 2, 4]}, new Float32Array([0.25, 0, 10, 100, 0.25, 1, 20, 100, 0.25, 0, 30, 100, 0.25, 1, 40, 100]));
+    const op3 = builder.constant({dataType: 'float32', dimensions: [4]}, new Float32Array([6000, 7000, 8000, 9000]));
     const pad0 = 0;
     const stride = 1;
     const expected = [6010, 7046, 11000, 9000];

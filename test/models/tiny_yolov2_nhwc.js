@@ -33,12 +33,15 @@ describe('test tinyYolov2 nhwc', function() {
       const options = {
         inputLayout: 'nhwc',
         filterLayout: 'ohwi',
-        autoPad: 'same-upper',
       };
+      options.padding = utils.computePadding2DForAutoPad(
+          /* nhwc */[input.shape()[1], input.shape()[2]],
+          /* ohwi */[weights.shape()[1], weights.shape()[2]],
+          options.strides, options.dilations, 'same-upper');
       if (!fused) {
         let conv = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, null]));
+            builder.reshape(bias, [1, 1, 1, bias.shape()[0]]));
         if (leakyRelu) {
           conv = builder.leakyRelu(conv, {alpha: 0.10000000149011612});
         }
@@ -60,21 +63,22 @@ describe('test tinyYolov2 nhwc', function() {
         layout: 'nhwc',
       };
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 416, 416, 3]});
+          'input', {dataType: 'float32', dimensions: [1, 416, 416, 3]});
       const conv1 = await buildConv(data, '1');
-      const pool1 = builder.maxPool2d(conv1, poolOptions);
+      const pool1 = utils.buildMaxPool2d(conv1, poolOptions, builder);
       const conv2 = await buildConv(pool1, '2');
-      const pool2 = builder.maxPool2d(conv2, poolOptions);
+      const pool2 = utils.buildMaxPool2d(conv2, poolOptions, builder);
       const conv3 = await buildConv(pool2, '3');
-      const pool3 = builder.maxPool2d(conv3, poolOptions);
+      const pool3 = utils.buildMaxPool2d(conv3, poolOptions, builder);
       const conv4 = await buildConv(pool3, '4');
-      const pool4 = builder.maxPool2d(conv4, poolOptions);
+      const pool4 = utils.buildMaxPool2d(conv4, poolOptions, builder);
       const conv5 = await buildConv(pool4, '5');
-      const pool5 = builder.maxPool2d(conv5, poolOptions);
+      const pool5 = utils.buildMaxPool2d(conv5, poolOptions, builder);
       const conv6 = await buildConv(pool5, '6');
-      const pool6 = builder.maxPool2d(
+      const pool6 = utils.buildMaxPool2d(
           conv6,
-          {windowDimensions: [2, 2], autoPad: 'same-upper', layout: 'nhwc'});
+          {windowDimensions: [2, 2], autoPad: 'same-upper', layout: 'nhwc'},
+          builder);
       const conv7 = await buildConv(pool6, '7');
       const conv8 = await buildConv(conv7, '8');
       const conv = await buildConv(conv8, '9', false);

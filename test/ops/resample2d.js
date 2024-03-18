@@ -9,8 +9,11 @@ describe('test resample2d', () => {
 
   async function testResample2d(input, options, expected) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: input.shape});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: input.shape});
     const y = builder.resample2d(x, options);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), expected.shape);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.values)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};

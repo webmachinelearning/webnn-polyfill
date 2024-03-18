@@ -33,7 +33,7 @@ describe('test squeezenet1.1 nchw', function() {
       if (!fusedConv) {
         return builder.relu(builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, null, 1, 1])));
+            builder.reshape(bias, [1, bias.shape()[0], 1, 1])));
       } else {
         options.bias = bias;
         options.activation = builder.relu();
@@ -51,7 +51,7 @@ describe('test squeezenet1.1 nchw', function() {
 
     async function buildSqueezeNet() {
       const data = builder.input(
-          'data', {type: 'float32', dimensions: [1, 3, 224, 224]});
+          'data', {dataType: 'float32', dimensions: [1, 3, 224, 224]});
       const conv0 = await buildConv(data, 'conv0', {strides: [2, 2]});
       const pool0 =
           builder.maxPool2d(conv0, {windowDimensions: [3, 3], strides: [2, 2]});
@@ -70,7 +70,7 @@ describe('test squeezenet1.1 nchw', function() {
       const conv25 = await buildConv(fire7, 'conv25');
       const pool3 = builder.averagePool2d(
           conv25, {windowDimensions: [13, 13], strides: [13, 13]});
-      const reshape0 = builder.reshape(pool3, [1, null]);
+      const reshape0 = builder.reshape(pool3, [1, 1000]);
       const squeezeNetGraph = await builder.build({reshape0});
       return squeezeNetGraph;
     }

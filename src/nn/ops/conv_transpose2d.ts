@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
-import {MLAutoPad, MLConvTranspose2dOptions, MLConvTranspose2dFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
+import {MLConvTranspose2dOptions, MLConvTranspose2dFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
 import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
 import {FusedOperation, MLActivation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -16,12 +16,12 @@ export class ConvTranspose2d extends SingleOutputOperation
   private filter_: MLOperand;
   private bias_: MLOperand;
   private padding_?: [number, number, number, number];
+  private tfPadding_: ExplicitPadding;
   private strides_?: [number, number];
   private dilations_?: [number, number];
   private groups_?: number;
   private inputLayout_?: MLInputOperandLayout;
   private filterLayout_?: MLConvTranspose2dFilterOperandLayout;
-  private autoPad_?: MLAutoPad;
   private outputPadding_?: [number, number];
   private outputSizes_?: [number, number];
   private activation_?: MLActivation;
@@ -29,6 +29,7 @@ export class ConvTranspose2d extends SingleOutputOperation
   private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
   private needCheckOutputShape_ = true;
+  private outputShape_: [number, number, number, number];
 
   constructor(
       input: MLOperand, filter: MLOperand,
@@ -41,9 +42,11 @@ export class ConvTranspose2d extends SingleOutputOperation
 
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
-        options.inputLayout, options.filterLayout, options.autoPad,
+        options.inputLayout, options.filterLayout,
         options.outputPadding, options.outputSizes,
         options.bias, options.activation);
+
+    this.createOutput();
   }
 
   private initOptions(
@@ -52,7 +55,6 @@ export class ConvTranspose2d extends SingleOutputOperation
       groups = 1, inputLayout: MLInputOperandLayout = MLInputOperandLayout.nchw,
       filterLayout: MLConvTranspose2dFilterOperandLayout =
       MLConvTranspose2dFilterOperandLayout.iohw,
-      autoPad: MLAutoPad = MLAutoPad.explicit,
       outputPadding: [number, number] = [0, 0],
       outputSizes: [number, number] = undefined, bias: MLOperand = undefined,
       activation: MLActivation = undefined) {
@@ -88,9 +90,6 @@ export class ConvTranspose2d extends SingleOutputOperation
         filterLayout in MLConvTranspose2dFilterOperandLayout,
         'The filter layout parameter is invalid.');
     this.filterLayout_ = filterLayout;
-
-    utils.assert(autoPad in MLAutoPad, 'The autoPad parameter is invalid.');
-    this.autoPad_ = autoPad;
 
     utils.assert(
         outputSizes === undefined ||
@@ -160,6 +159,68 @@ export class ConvTranspose2d extends SingleOutputOperation
     return inputs;
   }
 
+  createOutput(): void {
+    let batches, channels, inputHeight, inputWidth, filterHeight, filterWidth;
+    this.tfPadding_ = utils.getPaddings(this.padding_);
+    const inputShape = this.input_.shape();
+
+    const filterShape = this.filter_.shape();
+    if (this.filterLayout_ === MLConvTranspose2dFilterOperandLayout.iohw) {
+      channels = filterShape[1];
+      filterHeight = filterShape[2];
+      filterWidth = filterShape[3];
+    } else if (
+        this.filterLayout_ === MLConvTranspose2dFilterOperandLayout.hwoi) {
+      filterHeight = filterShape[0];
+      filterWidth = filterShape[1];
+      channels = filterShape[2];
+    } else if (
+        this.filterLayout_ === MLConvTranspose2dFilterOperandLayout.ohwi) {
+      channels = filterShape[0];
+      filterHeight = filterShape[1];
+      filterWidth = filterShape[2];
+    }
+
+    if (this.inputLayout_ === MLInputOperandLayout.nchw) {
+      [batches, , inputHeight, inputWidth] = inputShape;
+      this.outputShape_ = [batches, channels, 0, 0];
+    } else {
+      // nhwc layout
+      [batches, inputHeight, inputWidth, ] = inputShape;
+      // tf.convTranspose2d outputShape: [batch, height, width, outDepth]
+      this.outputShape_ = [batches, 0, 0, channels];
+    }
+
+    let outputHeight, outputWidth;
+    if (this.outputSizes_ !== undefined) {
+      [outputHeight, outputWidth] = this.outputSizes_;
+    } else {
+      // output size = (input size - 1) * stride + filter size +
+      //               (filter size - 1) * (dilations - 1) -
+      //               beginning padding - ending padding + output padding
+      // outputSize = (inputSize - 1) * stride + (filterSize - 1) * dilation
+      //              + 1 - beginningPadding - endingPadding + outputPadding
+      outputHeight = (inputHeight - 1) * this.strides_[0] +
+        (filterHeight - 1) * this.dilations_[0] + 1 -
+        this.tfPadding_[1][0] - this.tfPadding_[1][1] + this.outputPadding_[0];
+      outputWidth = (inputWidth - 1) * this.strides_[1] +
+        (filterWidth - 1) * this.dilations_[1] + 1 -
+        this.tfPadding_[2][0] - this.tfPadding_[2][1] + this.outputPadding_[1];
+    }
+
+    if (this.inputLayout_ === MLInputOperandLayout.nchw) {
+      this.outputShape_[2] = outputHeight;
+      this.outputShape_[3] = outputWidth;
+    } else {
+      // nhwc
+      this.outputShape_[1] = outputHeight;
+      this.outputShape_[2] = outputWidth;
+    }
+
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
+  }
+
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     let filter: tf.Tensor4D;
@@ -194,29 +255,12 @@ export class ConvTranspose2d extends SingleOutputOperation
     } else {
       filter = this.filterTensor_;
     }
-    const padding: ExplicitPadding = utils.getPaddings(
-        input, filter, this.padding_, this.strides_,
-        this.dilations_, this.autoPad_, this.outputPadding_);
-    let output;
-    // tf.convTranspose2d outputShape: [batch, height, width, outDepth]
-    const outputShape: [number, number, number, number] =
-        [input.shape[0], 0, 0, filter.shape[2]];
-    if (this.outputSizes_ !== undefined) {
-      outputShape[1] = this.outputSizes_[0];
-      outputShape[2] = this.outputSizes_[1];
-    } else {
-      // output size = (input size - 1) * stride + filter size +
-      //               (filter size - 1) * (dilations - 1) -
-      //               beginning padding - ending padding + output padding
-      for (let i = 0; i < 2; ++i) {
-        outputShape[i + 1] =
-            (input.shape[i + 1] - 1) * this.strides_[i] + filter.shape[i] +
-            (filter.shape[i] - 1) * (this.dilations_[i] - 1) -
-            padding[i + 1][0] - padding[i + 1][1] + this.outputPadding_[i];
-      }
-    }
-    output = tf.conv2dTranspose(
-        input, filter, outputShape, this.strides_, padding);
+    const outputShape = this.inputLayout_ === MLInputOperandLayout.nhwc ?
+      this.outputShape_ : [this.outputShape_[0], this.outputShape_[2],
+                           this.outputShape_[3], this.outputShape_[1]];
+    let output = tf.conv2dTranspose(
+        input, filter, outputShape as [number, number, number, number],
+        this.strides_, this.tfPadding_);
     if (bias) {
       // output is still nhwc
       output = tf.add(output, bias);
@@ -232,15 +276,12 @@ export class ConvTranspose2d extends SingleOutputOperation
     } else if (this.fusedActivation_ !== undefined) {
       utils.assert(false, `The ${this.fusedActivation_} is un supported.`);
     }
-    let expectedShape = outputShape.slice();
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {
       // nhwc -> nchw
       output = tf.transpose(output, [0, 3, 1, 2]);
-      expectedShape =
-        [outputShape[0], outputShape[3], outputShape[1], outputShape[2]];
     }
     if (this.needCheckOutputShape_) {
-      utils.checkShape(output.shape, expectedShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
     return output;

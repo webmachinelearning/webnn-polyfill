@@ -9,8 +9,10 @@ describe('test clamp', () => {
 
   async function testClamp(inputShape, inputValue, expected, options = {}) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: inputShape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: inputShape});
     const y = builder.clamp(x, options);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), x.shape());
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(inputValue)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(inputShape))};

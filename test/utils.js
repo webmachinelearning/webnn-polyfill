@@ -41,7 +41,7 @@ export function almostEqual(a, b, criteria) {
  * @param {number} value
  * @param {string} dataType A data type string, like "float32", "int8",
  *     more data type strings, please see:
- *     https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype
+ *     https://webmachinelearning.github.io/webnn/#enumdef-mloperanddatatype
  * @return {number} A 64-bit signed integer.
  */
 export function getBitwise(value, dataType) {
@@ -65,7 +65,7 @@ export function getBitwise(value, dataType) {
  * @param {number} nulp A BigInt value.
  * @param {string} dataType A data type string, default "float32",
  *     more data type strings, please see:
- *     https://webmachinelearning.github.io/webnn/#enumdef-mloperandtype
+ *     https://webmachinelearning.github.io/webnn/#enumdef-mloperanddatatype
  * @return {Boolean} A boolean value:
  *     true: The distance between a and b is greater than given ULP distance.
  *     false: The distance between a and b is less than or equal to given ULP
@@ -92,6 +92,11 @@ export function sizeOfShape(array) {
       (accumulator, currentValue) => accumulator * currentValue, 1);
 }
 
+export function checkDataType(dataType, expectedDataType) {
+  // console.log(`${dataType.length} -- ${expectedDataType.length}`)
+  assert.isTrue(dataType === expectedDataType);
+}
+
 export function checkShape(shape, expected) {
   assert.isTrue(shape.length === expected.length);
   for (let i = 0; i < shape.length; ++i) {
@@ -101,17 +106,17 @@ export function checkShape(shape, expected) {
 
 async function readFromNpy(fileName) {
   const dataTypeMap = new Map([
-    ['f2', {type: 'float16', array: Uint16Array}],
-    ['f4', {type: 'float32', array: Float32Array}],
-    ['f8', {type: 'float64', array: Float64Array}],
-    ['i1', {type: 'int8', array: Int8Array}],
-    ['i2', {type: 'int16', array: Int16Array}],
-    ['i4', {type: 'int32', array: Int32Array}],
-    ['i8', {type: 'int64', array: BigInt64Array}],
-    ['u1', {type: 'uint8', array: Uint8Array}],
-    ['u2', {type: 'uint16', array: Uint16Array}],
-    ['u4', {type: 'uint32', array: Uint32Array}],
-    ['u8', {type: 'uint64', array: BigUint64Array}],
+    ['f2', {dataType: 'float16', array: Uint16Array}],
+    ['f4', {dataType: 'float32', array: Float32Array}],
+    ['f8', {dataType: 'float64', array: Float64Array}],
+    ['i1', {dataType: 'int8', array: Int8Array}],
+    ['i2', {dataType: 'int16', array: Int16Array}],
+    ['i4', {dataType: 'int32', array: Int32Array}],
+    ['i8', {dataType: 'int64', array: BigInt64Array}],
+    ['u1', {dataType: 'uint8', array: Uint8Array}],
+    ['u2', {dataType: 'uint16', array: Uint16Array}],
+    ['u4', {dataType: 'uint32', array: Uint32Array}],
+    ['u8', {dataType: 'uint64', array: BigUint64Array}],
   ]);
   let buffer;
   if (typeof fs !== 'undefined') {
@@ -125,12 +130,12 @@ async function readFromNpy(fileName) {
     throw new Error(`Data type ${npArray.dataType} is not supported.`);
   }
   const dimensions = npArray.shape;
-  const type = dataTypeMap.get(npArray.dataType).type;
+  const dataType = dataTypeMap.get(npArray.dataType).dataType;
   const TypedArrayConstructor = dataTypeMap.get(npArray.dataType).array;
   const dataView = new Uint8Array(npArray.data.buffer);
   const dataView2 = dataView.slice();
   const typedArray = new TypedArrayConstructor(dataView2.buffer);
-  return {buffer: typedArray, type, dimensions};
+  return {buffer: typedArray, dataType, dimensions};
 }
 
 export async function createTypedArrayFromNpy(fileName) {
@@ -141,7 +146,7 @@ export async function createTypedArrayFromNpy(fileName) {
 export async function buildConstantFromNpy(builder, fileName) {
   const data = await readFromNpy(fileName);
   return builder.constant(
-      {type: data.type, dimensions: data.dimensions}, data.buffer);
+      {dataType: data.dataType, dimensions: data.dimensions}, data.buffer);
 }
 
 // Refer to Implicit padding algorithms of Android NNAPI:
@@ -226,4 +231,78 @@ export function createActivation(
   } else {
     assert(false, `activation ${activation} is not supported`);
   }
+}
+
+// Derive from
+// https://github.com/webmachinelearning/webnn-baseline/blob/main/src/lib/compute-padding.js
+/**
+ * Compute the beginning and ending pad given input, filter and stride sizes.
+ * @param {String} autoPad
+ * @param {Number} inputSize
+ * @param {Number} effectiveFilterSize
+ * @param {Number} stride
+ * @param {Number} outputPadding
+ * @return {Array} [paddingBegin, paddingEnd]
+ */
+function computePadding1DForAutoPad(
+    autoPad, inputSize, effectiveFilterSize, stride, outputPadding) {
+  let totalPadding;
+  if (outputPadding === undefined) {
+  // for conv2d
+    const outSize = Math.ceil(inputSize / stride);
+    const neededInput = (outSize - 1) * stride + effectiveFilterSize;
+    totalPadding = neededInput > inputSize ? neededInput - inputSize : 0;
+  } else {
+  // for convTranspose2d
+  // totalPadding = beginning padding + ending padding
+  // SAME_UPPER or SAME_LOWER mean pad the input so that
+  //   output size = input size * strides
+  // output size = (input size - 1) * stride + effectiveFilterSize
+  //     - beginning padding - ending padding + output padding
+    totalPadding = (inputSize - 1) * stride + effectiveFilterSize +
+      outputPadding - inputSize * stride;
+  }
+  let paddingBegin;
+  let paddingEnd;
+  switch (autoPad) {
+    case 'same-upper':
+      paddingBegin = Math.floor(totalPadding / 2);
+      paddingEnd = Math.floor((totalPadding + 1) / 2);
+      break;
+    case 'same-lower':
+      paddingBegin = Math.floor((totalPadding + 1) / 2);
+      paddingEnd = Math.floor(totalPadding / 2);
+      break;
+    default:
+      throw new Error('The autoPad is invalid.');
+  }
+  return [paddingBegin, paddingEnd];
+}
+
+// Compute explicit padding given input sizes, filter sizes, strides, dilations
+// and auto pad mode 'same-upper' or 'same-lower'.
+export function computePadding2DForAutoPad(
+    inputSizes, filterSizes, strides, dilations, autoPad = 'same-upper') {
+  const [inputHeight, inputWidth] = inputSizes;
+  const [filterHeight, filterWidth] = filterSizes;
+  const [strideHeight, strideWidth] = strides ? strides : [1, 1];
+  const [dilationHeight, dilationWidth] = dilations ? dilations: [1, 1];
+  const effectiveFilterHeight = (filterHeight - 1) * dilationHeight + 1;
+  const effectiveFilterWidth = (filterWidth - 1) * dilationWidth + 1;
+  const [beginningPaddingHeight, endingPaddingHeight] =
+    computePadding1DForAutoPad(
+        autoPad, inputHeight, effectiveFilterHeight, strideHeight);
+  const [beginningPaddingWidth, endingPaddingWidth] =
+    computePadding1DForAutoPad(
+        autoPad, inputWidth, effectiveFilterWidth, strideWidth);
+  return [beginningPaddingHeight, endingPaddingHeight,
+    beginningPaddingWidth, endingPaddingWidth];
+}
+
+export function buildMaxPool2d(input, options, builder, layout = 'nhwc') {
+  const inputSizes = layout =='nhwc' ? [input.shape()[1], input.shape()[2]] :
+      [input.shape()[2], input.shape()[3]];
+  options.padding = computePadding2DForAutoPad(
+      inputSizes, options.windowDimensions, options.strides, options.dilations);
+  return builder.maxPool2d(input, options);
 }

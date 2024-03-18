@@ -1,12 +1,13 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
 export abstract class Binary extends SingleOutputOperation {
   private a_: MLOperand;
   private b_: MLOperand;
+  private outputShape_: number[];
   private needCheckOutputShape_ = true;
 
   constructor(a: MLOperand, b: MLOperand) {
@@ -15,6 +16,34 @@ export abstract class Binary extends SingleOutputOperation {
     this.a_ = a;
     utils.validateOperand(b);
     this.b_ = b;
+    this.createOutput();
+  }
+
+  createOutput(): void {
+    if (this instanceof MatMul) {
+      const rankA = this.a_.rank();
+      const rankB = this.b_.rank();
+      if (rankA === 1 && rankB === 1) {
+        this.outputShape_ = []; // scalar
+      } else if (rankA >= 2 && rankB === 1) {
+        this.outputShape_ = this.a_.shape().slice();
+        this.outputShape_[rankA - 1] = 1;
+      } else if (rankA === 1 && rankB >= 2) {
+        this.outputShape_ = this.b_.shape().slice();
+        this.outputShape_[rankB - 2] = 1;
+      } else if (rankA >= 2 && rankB >= 2) {
+        this.outputShape_ = utils.getBroadcastShape(
+          this.a_.shape().slice(0, -2),
+          this.b_.shape().slice(0, -2));
+        this.outputShape_.push(this.a_.shape()[rankA - 2]);
+        this.outputShape_.push(this.b_.shape()[rankB - 1]);
+      }
+    } else {
+      this.outputShape_ = utils.getBroadcastShape(
+          this.a_.shape(), this.b_.shape());
+    }
+    this.outputs_.push(new OutputOperand(this,
+        {dataType: this.a_.dataType(), dimensions: this.outputShape_}));
   }
 
   inputs(): MLOperand[] {
@@ -26,28 +55,7 @@ export abstract class Binary extends SingleOutputOperation {
     const b: tf.Tensor = inputTensors.get(this.b_);
     const output = this.runOp(a, b);
     if (this.needCheckOutputShape_) {
-      let outputShape: number[];
-      if (this instanceof MatMul) {
-        const rankA = a.rank;
-        const rankB = b.rank;
-        if (rankA === 1 && rankB === 1) {
-          outputShape = []; // scalar
-        } else if (rankA >= 2 && rankB === 1) {
-          outputShape = a.shape.slice();
-          outputShape[rankA - 1] = 1;
-        } else if (rankA === 1 && rankB >= 2) {
-          outputShape = b.shape.slice();
-          outputShape[rankB - 2] = 1;
-        } else if (rankA >= 2 && rankB >= 2) {
-          outputShape = utils.getBroadcastShape(a.shape.slice(0, -2),
-              b.shape.slice(0, -2));
-          outputShape.push(a.shape[rankA - 2]);
-          outputShape.push(b.shape[rankB - 1]);
-        }
-      } else {
-        outputShape = utils.getBroadcastShape(a.shape, b.shape);
-      }
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
     return output;

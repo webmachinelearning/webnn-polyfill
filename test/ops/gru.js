@@ -13,18 +13,20 @@ describe('test gru', () => {
     const inputSize = 2;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(0));
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize);
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6])};
     const outputs = {
@@ -57,21 +59,23 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(0.1));
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize, {bias});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -98,22 +102,24 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(0));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {recurrentBias});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -140,26 +146,28 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(2));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const resetAfter = true;
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -186,26 +194,28 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(2));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const resetAfter = false;
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -232,18 +242,18 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(2));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array([
           1.9853785,
           2.2497437,
@@ -257,12 +267,14 @@ describe('test gru', () => {
         ]),
     );
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const resetAfter = true;
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -289,18 +301,18 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(2));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array([
           1.9853785,
           2.2497437,
@@ -314,13 +326,15 @@ describe('test gru', () => {
         ]),
     );
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const resetAfter = true;
     const layout = 'zrn';
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter, layout});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -347,18 +361,18 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(2));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array([
           0.3148022,
           -0.4366297,
@@ -372,13 +386,15 @@ describe('test gru', () => {
         ]),
     );
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const resetAfter = true;
     const layout = 'rzn';
     const output = builder.gruCell(
         input, weight, recurrentWeight, hiddenState, hiddenSize,
         {bias, recurrentBias, resetAfter, layout});
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -405,18 +421,18 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [batchSize, inputSize]});
+        'input', {dataType: 'float32', dimensions: [batchSize, inputSize]});
     const weight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, inputSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, inputSize]},
         new Float32Array(3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize, hiddenSize]},
         new Float32Array(3 * hiddenSize * hiddenSize).fill(0.1));
     const hiddenState = builder.constant(
-        {type: 'float32', dimensions: [batchSize, hiddenSize]},
+        {dataType: 'float32', dimensions: [batchSize, hiddenSize]},
         new Float32Array(batchSize * hiddenSize).fill(2));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array([
           1.9853785,
           2.2497437,
@@ -430,7 +446,7 @@ describe('test gru', () => {
         ]),
     );
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [3 * hiddenSize]},
         new Float32Array(3 * hiddenSize).fill(1));
     const resetAfter = true;
     const output = builder.gruCell(
@@ -441,6 +457,8 @@ describe('test gru', () => {
           resetAfter,
           activations: [builder.tanh(), builder.sigmoid()],
         });
+    utils.checkDataType(output.dataType(), input.dataType());
+    utils.checkShape(output.shape(), [batchSize, hiddenSize]);
     const graph = await builder.build({output});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -469,23 +487,24 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 3;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize)
             .fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array([
           0.3148022,
           -0.4366297,
@@ -499,16 +518,22 @@ describe('test gru', () => {
         ]),
     );
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(2));
     const resetAfter = true;
     const layout = 'rzn';
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, resetAfter, layout});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {'input': new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9])};
     const outputs = {
@@ -538,32 +563,39 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
@@ -602,33 +634,40 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const returnSequence = false;
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, returnSequence});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
@@ -667,33 +706,43 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const returnSequence = true;
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, returnSequence});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
+    utils.checkDataType(operands[1].dataType(), input.dataType());
+    utils.checkShape(
+        operands[1].shape(), [steps, numDirections, batchSize, hiddenSize]);
     const graph = await builder.build(
         {output0: operands[0], output1: operands[1]});
     const inputs = {
@@ -771,33 +820,40 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const direction = 'forward';
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, direction});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
@@ -836,33 +892,40 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const direction = 'backward';
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, direction});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
@@ -901,33 +964,40 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const initialHiddenState = builder.constant(
-        {type: 'float32', dimensions: [numDirections, batchSize, hiddenSize]},
+        {
+          dataType: 'float32',
+          dimensions: [numDirections, batchSize, hiddenSize],
+        },
         new Float32Array(numDirections * batchSize * hiddenSize).fill(0));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const direction = 'both';
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias, initialHiddenState, direction});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(
@@ -981,29 +1051,34 @@ describe('test gru', () => {
     const inputSize = 3;
     const hiddenSize = 5;
     const input = builder.input(
-        'input', {type: 'float32', dimensions: [steps, batchSize, inputSize]});
+        'input',
+        {dataType: 'float32', dimensions: [steps, batchSize, inputSize]});
     const weight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, inputSize],
         },
-        new Float32Array(numDirections * 3 * hiddenSize * inputSize).fill(0.1));
+        new Float32Array(numDirections * 3 * hiddenSize * inputSize)
+            .fill(0.1));
     const recurrentWeight = builder.constant(
         {
-          type: 'float32',
+          dataType: 'float32',
           dimensions: [numDirections, 3 * hiddenSize, hiddenSize],
         },
         new Float32Array(numDirections * 3 * hiddenSize * hiddenSize)
             .fill(0.1));
     const bias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0.1));
     const recurrentBias = builder.constant(
-        {type: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
+        {dataType: 'float32', dimensions: [numDirections, 3 * hiddenSize]},
         new Float32Array(numDirections * 3 * hiddenSize).fill(0));
     const operands = builder.gru(
         input, weight, recurrentWeight, steps, hiddenSize,
         {bias, recurrentBias});
+    utils.checkDataType(operands[0].dataType(), input.dataType());
+    utils.checkShape(
+        operands[0].shape(), [numDirections, batchSize, hiddenSize]);
     const graph = await builder.build({output: operands[0]});
     const inputs = {
       'input': new Float32Array(

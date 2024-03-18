@@ -63,14 +63,6 @@ export abstract class Operation {
 export abstract class SingleOutputOperation extends Operation {
   constructor(builder: MLGraphBuilder) {
     super(builder);
-    if (builder) {
-      this.createOutput();
-    }
-  }
-
-  protected createOutput(): void {
-    // Operation produces 1 output operand by default.
-    this.outputs_.push(new OutputOperand(this));
   }
 
   get output(): OutputOperand {
@@ -80,6 +72,8 @@ export abstract class SingleOutputOperation extends Operation {
   computeImpl(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor[] {
     return [this.run(inputTensors)];
   }
+
+  abstract createOutput(): void;
 
   abstract run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor;
 }

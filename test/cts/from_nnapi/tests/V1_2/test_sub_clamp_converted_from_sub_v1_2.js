@@ -11,9 +11,9 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test sub + clamp converted from sub_v1_2_none test', async () => {
     // Converted test case (from: V1_2/sub_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input0Data = new Float32Array([2.0, -4.0, 8.0, -16.0]);
-    const input1 = builder.input('input1', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input1 = builder.input('input1', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input1Data = new Float32Array([2.0, -2.0, -4.0, 4.0]);
     const expected = [0.0, -2.0, 12.0, -20.0];
     const interOut0 = builder.sub(input0, input1);
@@ -27,9 +27,9 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test sub + clamp converted from sub_v1_2_relu test', async () => {
     // Converted test case (from: V1_2/sub_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input0Data = new Float32Array([2.0, -4.0, 8.0, -16.0]);
-    const input1 = builder.input('input1', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input1 = builder.input('input1', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input1Data = new Float32Array([2.0, -2.0, -4.0, 4.0]);
     const expected = [0.0, 0.0, 12.0, 0.0];
     const interOut0 = builder.sub(input0, input1);
@@ -43,9 +43,9 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test sub + clamp converted from sub_v1_2_relu1 test', async () => {
     // Converted test case (from: V1_2/sub_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input0Data = new Float32Array([2.0, -4.0, 8.0, -16.0]);
-    const input1 = builder.input('input1', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input1 = builder.input('input1', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input1Data = new Float32Array([2.0, -2.0, -4.0, 4.0]);
     const expected = [0.0, -1.0, 1.0, -1.0];
     const interOut0 = builder.sub(input0, input1);
@@ -59,9 +59,9 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test sub + clamp converted from sub_v1_2_relu6 test', async () => {
     // Converted test case (from: V1_2/sub_v1_2.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input0Data = new Float32Array([2.0, -4.0, 8.0, -16.0]);
-    const input1 = builder.input('input1', {type: 'float32', dimensions: [1, 2, 2, 1]});
+    const input1 = builder.input('input1', {dataType: 'float32', dimensions: [1, 2, 2, 1]});
     const input1Data = new Float32Array([2.0, -2.0, -4.0, 4.0]);
     const expected = [0.0, 0.0, 6.0, 0.0];
     const interOut0 = builder.sub(input0, input1);

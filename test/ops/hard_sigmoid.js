@@ -9,8 +9,11 @@ describe('test hardSigmoid', async () => {
 
   async function testHardSigmoid(input, expected, options = {}) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: input.shape});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: input.shape});
     const y = builder.hardSigmoid(x, options);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), x.shape());
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.value)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(input.shape))};

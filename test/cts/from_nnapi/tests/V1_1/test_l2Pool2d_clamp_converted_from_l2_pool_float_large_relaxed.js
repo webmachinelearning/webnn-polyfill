@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test l2Pool2d + clamp converted from l2_pool_float_large_relaxed test', async () => {
     // Converted test case (from: V1_1/l2_pool_float_large_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
-    const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2, 2, 3]});
+    const op1 = builder.input('op1', {dataType: 'float32', dimensions: [1, 2, 2, 3]});
     const op1Data = new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0]);
     const pad0 = 0;
     const strideWidth = 1;

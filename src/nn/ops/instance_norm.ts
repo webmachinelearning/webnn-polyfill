@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLInputOperandLayout, MLInstanceNormalizationOptions} from '../graph_builder';
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -37,6 +37,8 @@ export class InstanceNormalization extends SingleOutputOperation {
     } else {
       this.layout_ = MLInputOperandLayout.nchw;
     }
+
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
@@ -48,6 +50,10 @@ export class InstanceNormalization extends SingleOutputOperation {
       inputs.push(this.bias_);
     }
     return inputs;
+  }
+
+  createOutput(): void {
+    this.outputs_.push(new OutputOperand(this, this.input_.desc));
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {

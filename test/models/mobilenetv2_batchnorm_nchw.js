@@ -80,7 +80,7 @@ describe('test mobilenetv2 batchnorm nchw', function() {
       const padding = [1, 1, 1, 1];
       const strides = [2, 2];
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 3, 224, 224]});
+          'input', {dataType: 'float32', dimensions: [1, 3, 224, 224]});
       const batch0 =
           await buildConvBatchNorm(data, '0', '', true, {strides, padding});
       const bottleneck0 = await buildLinearBottleneck(

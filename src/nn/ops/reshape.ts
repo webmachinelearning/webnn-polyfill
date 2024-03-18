@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -17,10 +17,16 @@ export class Reshape extends SingleOutputOperation {
         utils.isPositiveIntegerOrNullArray(newShape) && newShape.length !== 0,
         'The newShape parameter is invalid.');
     this.newShape_ = newShape;
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
     return [this.input_];
+  }
+
+  createOutput(): void {
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.newShape_}));
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {

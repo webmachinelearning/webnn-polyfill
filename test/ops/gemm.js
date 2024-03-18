@@ -9,18 +9,21 @@ describe('test gemm', () => {
 
   async function testGemm(A, B, expected, C = undefined, options = {}) {
     const builder = new MLGraphBuilder(context);
-    const a = builder.input('a', {type: 'float32', dimensions: A.shape});
+    const a = builder.input('a', {dataType: 'float32', dimensions: A.shape});
     const b = builder.constant(
-        {type: 'float32', dimensions: B.shape}, new Float32Array(B.value));
+        {dataType: 'float32', dimensions: B.shape}, new Float32Array(B.value));
     if (C !== undefined) {
       if (typeof C === 'number') {
         options.c = builder.constant(C);
       } else {
         options.c = builder.constant(
-            {type: 'float32', dimensions: C.shape}, new Float32Array(C.value));
+            {dataType: 'float32', dimensions: C.shape},
+            new Float32Array(C.value));
       }
     }
     const c = builder.gemm(a, b, options);
+    utils.checkDataType(c.dataType(), a.dataType());
+    utils.checkShape(c.shape(), expected.shape);
     const graph = await builder.build({c});
     const inputs = {'a': new Float32Array(A.value)};
     const outputs = {'c': new Float32Array(utils.sizeOfShape(expected.shape))};

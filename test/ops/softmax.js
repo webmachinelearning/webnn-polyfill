@@ -9,8 +9,10 @@ describe('test softmax', () => {
 
   it('softmax', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [3, 4]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [3, 4]});
     const y = builder.softmax(x);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), x.shape());
     const graph = await builder.build({y});
     const inputs = {
       'x': new Float32Array([

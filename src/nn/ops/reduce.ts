@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLReduceOptions} from '../graph_builder';
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -10,6 +10,7 @@ abstract class Reduce extends SingleOutputOperation {
   private axes_?: number[];
   private keepDimensions_?: boolean;
   private needCheckOutputShape_ = true;
+  private outputShape_: number[];
 
   constructor(input: MLOperand, options: MLReduceOptions = {}) {
     super(input.builder);
@@ -31,10 +32,26 @@ abstract class Reduce extends SingleOutputOperation {
     } else {
       this.keepDimensions_ = false;
     }
+
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
     return [this.input_];
+  }
+
+  createOutput(): void {
+    const inpAxes = this.axes_ ?? [...Array(this.input_.rank()).keys()];
+    this.outputShape_ = this.input_.shape().slice();
+    for (let i = 0; i < inpAxes.length; ++i) {
+      this.outputShape_[inpAxes[i]] = 1;
+    }
+    if (!this.keepDimensions_) {
+      this.outputShape_ = this.outputShape_.filter((dim, axis) =>
+        !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+    }
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
@@ -45,16 +62,7 @@ abstract class Reduce extends SingleOutputOperation {
         `The axes must be in range [0, ${input.rank})`);
     const output = this.runOp(input, this.axes_, this.keepDimensions_);
     if (this.needCheckOutputShape_) {
-      const inpAxes = this.axes_ ?? [...Array(input.rank).keys()];
-      let outputShape = input.shape.slice();
-      for (let i = 0; i < inpAxes.length; ++i) {
-        outputShape[inpAxes[i]] = 1;
-      }
-      if (!this.keepDimensions_) {
-        outputShape = outputShape.filter((dim, axis) =>
-          !(dim === 1 && inpAxes.indexOf(axis) !== -1));
-      }
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
     return output;
