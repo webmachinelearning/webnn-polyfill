@@ -46,7 +46,11 @@ export class MLOperand {
   }
 
   shape(): number[] {
-    return this.desc.dimensions ?? [];
+    let resultShape: number[] = [];
+    if (this.desc.dimensions) {
+      resultShape = this.desc.dimensions.slice();
+    }
+    return resultShape;
   }
 
   rank(): number {
