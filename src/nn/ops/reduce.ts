@@ -47,8 +47,7 @@ abstract class Reduce extends SingleOutputOperation {
       this.outputShape_[inpAxes[i]] = 1;
     }
     if (!this.keepDimensions_) {
-      this.outputShape_ = this.outputShape_.filter((dim, axis) =>
-        !(dim === 1 && inpAxes.indexOf(axis) !== -1));
+      this.outputShape_ = this.outputShape_.filter((dim) => dim !== 1);
     }
     this.outputs_.push(new OutputOperand(this,
       {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
