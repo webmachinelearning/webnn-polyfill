@@ -26,19 +26,8 @@ export abstract class Pool extends SingleOutputOperation {
     utils.validateOperand(input);
     this.input_ = input;
 
-    let windowDimensions: [number, number];
-    if (options.windowDimensions === undefined) {
-      if (options.layout === MLInputOperandLayout.nhwc) {
-        windowDimensions = input.shape().slice(1, 3) as [number, number];
-      } else {
-        // nchw
-        windowDimensions = input.shape().slice(2) as [number, number];
-      }
-    } else {
-      windowDimensions = options.windowDimensions;
-    }
     this.initOptions(
-        windowDimensions, options.padding, options.strides,
+        options.windowDimensions, options.padding, options.strides,
         options.dilations, options.layout, options.roundingType,
         options.outputSizes);
     this.createOutput();
@@ -52,10 +41,20 @@ export abstract class Pool extends SingleOutputOperation {
       roundingType: MLRoundingType = MLRoundingType.floor,
       outputSizes: [number, number] = undefined) {
     utils.assert(
+      layout in MLInputOperandLayout, 'The layout parameter is invalid.');
+    this.layout_ = layout;
+
+    if (windowDimensions) {
+      utils.assert(
         utils.isUnsignedIntegerArray(windowDimensions) &&
         windowDimensions.length === 2,
-        'The padding parameter is invalid.');
-    this.windowDimensions_ = windowDimensions;
+        'The windowDimensions parameter is invalid.');
+      this.windowDimensions_ = windowDimensions;
+    } else {
+      this.windowDimensions_ = layout === MLInputOperandLayout.nchw ?
+          this.input_.shape().slice(2) as [number, number] :
+          this.input_.shape().slice(1, 3) as [number, number];
+    }
 
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
@@ -107,13 +106,19 @@ export abstract class Pool extends SingleOutputOperation {
         this.input_.shape() as [number, number, number, number],
         dimRoundingMode);
     }
+
     const inputShape = this.input_.shape();
-    if (this.layout_ === MLInputOperandLayout.nchw) {
-      this.outputShape_ =
-          [inputShape[0], inputShape[1], outputHeight, outputWidth];
-    } else {
-      this.outputShape_ =
-          [inputShape[0], outputHeight, outputWidth, inputShape[3]];
+    switch (this.layout_) {
+      case MLInputOperandLayout.nchw:
+        this.outputShape_ =
+            [inputShape[0], inputShape[1], outputHeight, outputWidth];
+        break;
+      case MLInputOperandLayout.nhwc:
+        this.outputShape_ =
+            [inputShape[0], outputHeight, outputWidth, inputShape[3]];
+        break;
+      default:
+        throw new Error('The layout is invalid.');
     }
   
     this.outputs_.push(new OutputOperand(this,
@@ -142,22 +147,18 @@ export abstract class Pool extends SingleOutputOperation {
     if (roundingType === undefined) {
       roundFun = Math.trunc;
     } else {
-      switch(roundingType) {
-        case 'ceil': {
+      switch (roundingType) {
+        case 'ceil':
           roundFun = Math.ceil;
           break;
-        }
-        case 'floor': {
+        case 'floor':
           roundFun = Math.floor;
           break;
-        }
-        case 'round': {
+        case 'round':
           roundFun = Math.round;
           break;
-        }
-        default: {
-          break;
-        }
+        default:
+          throw new Error('The rounding type is invalid.');
       }
     }
 
