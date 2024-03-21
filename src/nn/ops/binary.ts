@@ -22,22 +22,14 @@ export abstract class Binary extends SingleOutputOperation {
   createOutput(): void {
     if (this instanceof MatMul) {
       const rankA = this.a_.rank();
+      utils.assert(rankA >= 2, 'The inputA is at least 2-D.');
       const rankB = this.b_.rank();
-      if (rankA === 1 && rankB === 1) {
-        this.outputShape_ = []; // scalar
-      } else if (rankA >= 2 && rankB === 1) {
-        this.outputShape_ = this.a_.shape().slice();
-        this.outputShape_[rankA - 1] = 1;
-      } else if (rankA === 1 && rankB >= 2) {
-        this.outputShape_ = this.b_.shape().slice();
-        this.outputShape_[rankB - 2] = 1;
-      } else if (rankA >= 2 && rankB >= 2) {
-        this.outputShape_ = utils.getBroadcastShape(
-          this.a_.shape().slice(0, -2),
-          this.b_.shape().slice(0, -2));
-        this.outputShape_.push(this.a_.shape()[rankA - 2]);
-        this.outputShape_.push(this.b_.shape()[rankB - 1]);
-      }
+      utils.assert(rankB >= 2, 'The inputB is at least 2-D.');
+      this.outputShape_ = utils.getBroadcastShape(
+        this.a_.shape().slice(0, -2),
+        this.b_.shape().slice(0, -2));
+      this.outputShape_.push(this.a_.shape()[rankA - 2]);
+      this.outputShape_.push(this.b_.shape()[rankB - 1]);
     } else {
       this.outputShape_ = utils.getBroadcastShape(
           this.a_.shape(), this.b_.shape());
@@ -108,26 +100,12 @@ export class Pow extends Binary {
 
 export class MatMul extends Binary {
   runOp(a: tf.Tensor, b: tf.Tensor): tf.Tensor {
-    if (a.rank === 1) {
-      if (b.rank === 1) {
-        return tf.dot(a, b);
-      } else {
-        // a is 1-D, convert to a 2-D tensor by prepending a 1 to its dimesions
-        return tf.matMul(tf.reshape(a, [1, -1]), b);
-      }
-    } else {
-      if (b.rank === 1) {
-        // b is 1-D, convert to a 2-D tensor by appending a 1 to its dimesions
-        return tf.matMul(a, tf.reshape(b, [-1, 1]));
-      } else {
-        const rank = a.rank > b.rank ? a.rank : b.rank;
-        let c = tf.matMul(a, b);
-        // workaround https://github.com/tensorflow/tfjs/issues/4192
-        if (c.rank !== rank) {
-          c = tf.reshape(c, [1].concat(c.shape));
-        }
-        return c;
-      }
+    const rank = a.rank > b.rank ? a.rank : b.rank;
+    let c = tf.matMul(a, b);
+    // workaround https://github.com/tensorflow/tfjs/issues/4192
+    if (c.rank !== rank) {
+      c = tf.reshape(c, [1].concat(c.shape));
     }
+    return c;
   }
 }
