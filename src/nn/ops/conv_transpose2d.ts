@@ -15,7 +15,7 @@ export class ConvTranspose2d extends SingleOutputOperation
   private input_: MLOperand;
   private filter_: MLOperand;
   private bias_: MLOperand;
-  private padding_: ExplicitPadding;
+  private padding_: [number, number, number, number];
   private strides_?: [number, number];
   private dilations_?: [number, number];
   private groups_?: number;
@@ -61,7 +61,7 @@ export class ConvTranspose2d extends SingleOutputOperation
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
-    this.padding_ = utils.getPaddings(padding);
+    this.padding_ = padding;
 
     utils.assert(
         utils.isIntegerArray(strides) && strides.length === 2,
@@ -205,10 +205,10 @@ export class ConvTranspose2d extends SingleOutputOperation
       //              + 1 - beginningPadding - endingPadding + outputPadding
       outputHeight = (inputHeight - 1) * this.strides_[0] +
         (filterHeight - 1) * this.dilations_[0] + 1 -
-        this.padding_[1][0] - this.padding_[1][1] + this.outputPadding_[0];
+        this.padding_[0] - this.padding_[1] + this.outputPadding_[0];
       outputWidth = (inputWidth - 1) * this.strides_[1] +
         (filterWidth - 1) * this.dilations_[1] + 1 -
-        this.padding_[2][0] - this.padding_[2][1] + this.outputPadding_[1];
+        this.padding_[2] - this.padding_[3] + this.outputPadding_[1];
     }
 
     this.outputShape_ = this.inputLayout_ === MLInputOperandLayout.nchw ?
@@ -256,9 +256,10 @@ export class ConvTranspose2d extends SingleOutputOperation
     const outputShape = this.inputLayout_ === MLInputOperandLayout.nhwc ?
       this.outputShape_ : [this.outputShape_[0], this.outputShape_[2],
                            this.outputShape_[3], this.outputShape_[1]];
+    const tfPadding: ExplicitPadding = utils.getPaddings(this.padding_);
     let output = tf.conv2dTranspose(
         input, filter, outputShape as [number, number, number, number],
-        this.strides_, this.padding_);
+        this.strides_, tfPadding);
     if (bias) {
       // output is still nhwc
       output = tf.add(output, bias);

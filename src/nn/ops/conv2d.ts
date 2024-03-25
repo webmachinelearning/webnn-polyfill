@@ -14,7 +14,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private input_: MLOperand;
   private filter_: MLOperand;
   private bias_: MLOperand;
-  private padding_?: ExplicitPadding;
+  private padding_?: [number, number, number, number];
   private strides_?: [number, number];
   private dilations_?: [number, number];
   private groups_?: number;
@@ -54,7 +54,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
         'The padding parameter is invalid.');
-    this.padding_ = utils.getPaddings(padding);
+    this.padding_ = padding;
 
     utils.assert(
         utils.isIntegerArray(strides) && strides.length === 2,
@@ -180,10 +180,10 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     //      beginning padding + ending padding) / stride
     const outputHeight =
         1 + Math.floor((inputHeight - effectiveFilterHeight +
-          this.padding_[1][0] + this.padding_[1][1]) / this.strides_[0]);
+          this.padding_[0] + this.padding_[1]) / this.strides_[0]);
     const outputWidth =
         1 + Math.floor((inputWidth - effectiveFilterWidth +
-          this.padding_[2][0] + this.padding_[2][1]) / this.strides_[1]);
+          this.padding_[2] + this.padding_[3]) / this.strides_[1]);
 
     this.outputShape_ = [batches, outputHeight, outputWidth, channels];
     if (this.inputLayout_ === MLInputOperandLayout.nchw) {
@@ -236,13 +236,14 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       filter = this.filterTensor_;
     }
 
+    const tfPadding: ExplicitPadding = utils.getPaddings(this.padding_);
     let output;
     if (this.groups_ === 1) {
       output = tf.fused.conv2d({
         x: input,
         filter,
         strides: this.strides_,
-        pad: this.padding_,
+        pad: tfPadding,
         dataFormat: 'NHWC',
         dilations: this.dilations_,
         bias,
@@ -253,10 +254,10 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else if (
         this.groups_ === inputChannels && this.groups_ === filter.shape[2]) {
       if ((this.padding_ instanceof Array &&
-        this.padding_[1][0] === this.padding_[1][1] &&
-        this.padding_[1][0] === this.padding_[2][0] &&
-        this.padding_[1][0] === this.padding_[2][1])) {
-        const fusedDepthwisePad: number = this.padding_[1][0];
+        this.padding_[0] === this.padding_[1] &&
+        this.padding_[0] === this.padding_[2] &&
+        this.padding_[0] === this.padding_[3])) {
+        const fusedDepthwisePad: number = this.padding_[0];
         output = tf.fused.depthwiseConv2d({
           x: input,
           filter,
@@ -271,7 +272,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
         fused = true;
       } else {
         output = tf.depthwiseConv2d(
-            input, filter, this.strides_, this.padding_, 'NHWC',
+            input, filter, this.strides_, tfPadding, 'NHWC',
             this.dilations_);
       }
     } else {
