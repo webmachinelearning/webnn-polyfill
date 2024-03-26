@@ -11,9 +11,9 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test sub + clamp converted from sub_broadcast_float test', async () => {
     // Converted test case (from: V1_1/sub_broadcast_float.mod.py)
     const builder = new MLGraphBuilder(context);
-    const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 2]});
+    const op1 = builder.input('op1', {dataType: 'float32', dimensions: [1, 2]});
     const op1Data = new Float32Array([1, 2]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [2, 2]});
+    const op2 = builder.input('op2', {dataType: 'float32', dimensions: [2, 2]});
     const op2Data = new Float32Array([1, 2, 3, 4]);
     const expected = [0, 0, -2, -2];
     const interOut0 = builder.sub(op1, op2);

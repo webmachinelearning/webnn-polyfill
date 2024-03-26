@@ -146,7 +146,8 @@ export class MLGraph {
       utils.assert(
           utils.isTypedArray(resource),
           'Only resource of ArrayBufferView type is supported.');
-      utils.validateTypedArray(resource, inputOperand.desc.type, dimensions);
+      utils.validateTypedArray(
+          resource, inputOperand.desc.dataType, dimensions);
     }
   }
 
@@ -178,7 +179,7 @@ export class MLGraph {
       for (const inputName of this.inputs_.keys()) {
         const inputOperand = this.inputs_.get(inputName);
         const typedArrayConstructor =
-            utils.getTypedArray(inputOperand.desc.type);
+            utils.getTypedArray(inputOperand.desc.dataType);
         const inputBuffer = new typedArrayConstructor(
             utils.sizeFromDimensions(inputOperand.desc.dimensions));
         inputs[inputName] = inputBuffer;
@@ -208,28 +209,11 @@ export class MLGraph {
       const tensor = outputTensors[outputName] as tf.Tensor;
       const desc = utils.createOperandDescriptorFromTensor(tensor);
       const resource = outputs[outputName] ;
-      utils.validateTypedArray(resource, desc.type, desc.dimensions);
+      utils.validateTypedArray(resource, desc.dataType, desc.dimensions);
       resource.set(await tensor.data());
       tf.dispose(tensor);
     }
     return {inputs, outputs};
-  }
-
-  /** @internal */
-  computeSync(
-    inputs: MLNamedArrayBufferViews,
-    outputs: MLNamedArrayBufferViews): void {
-    const outputTensors: tf.TensorContainerObject =
-        this.computeOutputTensors(inputs, outputs);
-    // Setup the outputs.
-    for (const outputName of Object.keys(outputTensors)) {
-      const tensor = outputTensors[outputName] as tf.Tensor;
-      const desc = utils.createOperandDescriptorFromTensor(tensor);
-      const resource = outputs[outputName] ;
-      utils.validateTypedArray(resource, desc.type, desc.dimensions);
-      resource.set(tensor.dataSync());
-      tf.dispose(tensor);
-    }
   }
 
   /** @ignore */
@@ -249,14 +233,6 @@ export class MLGraph {
     const graph = new MLGraph(outputs);
     graph.build();
     await graph.compile();
-    return graph;
-  }
-
-  /** @internal */
-  static buildAndCompileSync(outputs?: MLNamedOperands): MLGraph {
-    const graph = new MLGraph(outputs);
-    graph.build();
-    graph.compileSync();
     return graph;
   }
 
@@ -306,11 +282,6 @@ export class MLGraph {
     await this.computeOnce();
   }
 
-  private compileSync(): void {
-    this.allocateConstants();
-    this.computeOnceSync();
-  }
-
   private allocateConstants(): void {
     for (const constant of this.constants_) {
       this.constantTensors_.set(
@@ -323,15 +294,6 @@ export class MLGraph {
     for (const outputName of Object.keys(outputTensors)) {
       const tensor = outputTensors[outputName] as tf.Tensor;
       await tensor.data();
-      tf.dispose(tensor);
-    }
-  }
-
-  private computeOnceSync(): void {
-    const outputTensors = this.computeOutputTensors();
-    for (const outputName of Object.keys(outputTensors)) {
-      const tensor = outputTensors[outputName] as tf.Tensor;
-      tensor.dataSync();
       tf.dispose(tensor);
     }
   }

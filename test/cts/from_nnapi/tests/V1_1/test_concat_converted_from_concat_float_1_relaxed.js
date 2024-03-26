@@ -11,9 +11,9 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test concat converted from concat_float_1_relaxed test', async () => {
     // Converted test case (from: V1_1/concat_float_1_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
-    const op1 = builder.input('op1', {type: 'float32', dimensions: [2, 3]});
+    const op1 = builder.input('op1', {dataType: 'float32', dimensions: [2, 3]});
     const op1Data = new Float32Array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [2, 3]});
+    const op2 = builder.input('op2', {dataType: 'float32', dimensions: [2, 3]});
     const op2Data = new Float32Array([7.0, 8.0, 9.0, 10.0, 11.0, 12.0]);
     const axis0 = 0;
     const expected = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0];

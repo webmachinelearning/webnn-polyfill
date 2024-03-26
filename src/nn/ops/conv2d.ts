@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
-import {MLAutoPad, MLConv2dOptions, MLConv2dFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
+import {MLConv2dOptions, MLConv2dFilterOperandLayout, MLInputOperandLayout} from '../graph_builder';
 import {ConstantOperand, MLOperand, OutputOperand} from '../operand';
 import {FusedOperation, MLActivation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -20,12 +20,12 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
   private groups_?: number;
   private inputLayout_?: MLInputOperandLayout;
   private filterLayout_?: MLConv2dFilterOperandLayout;
-  private autoPad_?: MLAutoPad;
   private activation_?: MLActivation;
   private fusedActivation_?: tf.fused.Activation;
   private leakyreluAlpha_?: number;
   private filterTensor_?: tf.Tensor4D;
   private needCheckOutputShape_ = true;
+  private outputShape_: [number, number, number, number];
 
   constructor(
       input: MLOperand, filter: MLOperand, options: MLConv2dOptions = {}) {
@@ -37,8 +37,10 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
 
     this.initOptions(
         options.padding, options.strides, options.dilations, options.groups,
-        options.inputLayout, options.filterLayout, options.autoPad, 
+        options.inputLayout, options.filterLayout,
         options.bias, options.activation);
+
+    this.createOutput();
   }
 
   private initOptions(
@@ -47,7 +49,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       groups = 1, inputLayout: MLInputOperandLayout = MLInputOperandLayout.nchw,
       filterLayout: 
       MLConv2dFilterOperandLayout = MLConv2dFilterOperandLayout.oihw,
-      autoPad: MLAutoPad = MLAutoPad.explicit, bias: MLOperand = undefined,
+      bias: MLOperand = undefined,
       activation: MLActivation = undefined) {
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
@@ -76,9 +78,6 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
         filterLayout in MLConv2dFilterOperandLayout,
         'The filter layout parameter is invalid.');
     this.filterLayout_ = filterLayout;
-
-    utils.assert(autoPad in MLAutoPad, 'The autoPad parameter is invalid.');
-    this.autoPad_ = autoPad;
     
     this.bias_ = bias;
     if (this.bias_) {
@@ -131,6 +130,71 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     return inputs;
   }
 
+  createOutput(): void {
+    let batches, channels, inputHeight, inputWidth, filterHeight, filterWidth;
+    const inputShape = this.input_.shape();
+    switch (this.inputLayout_) {
+      case MLInputOperandLayout.nchw:
+        [batches, , inputHeight, inputWidth] = inputShape;
+        break;
+      case MLInputOperandLayout.nhwc:
+        [batches, inputHeight, inputWidth, ] = inputShape;
+        break;
+      default:
+        throw new Error('The input layout is invalid.');
+    }
+
+    const filterShape = this.filter_.shape();
+    switch (this.filterLayout_) {
+      case MLConv2dFilterOperandLayout.oihw:
+        channels = filterShape[0];
+        filterHeight = filterShape[2];
+        filterWidth = filterShape[3];
+        break;
+      case MLConv2dFilterOperandLayout.hwio:
+        channels = filterShape[3];
+        filterHeight = filterShape[0];
+        filterWidth = filterShape[1];
+        break;
+      case MLConv2dFilterOperandLayout.ihwo:
+        channels = filterShape[3];
+        filterHeight = filterShape[1];
+        filterWidth = filterShape[2];
+        break;
+      case MLConv2dFilterOperandLayout.ohwi:
+        channels = filterShape[0];
+        filterHeight = filterShape[1];
+        filterWidth = filterShape[2];
+        break;
+      default:
+        throw new Error('The filter layout is invalid.');
+    }
+
+    const effectiveFilterHeight =
+        filterHeight + (filterHeight - 1) * (this.dilations_[0] - 1);
+    const effectiveFilterWidth =
+        filterWidth + (filterWidth- 1) * (this.dilations_[1] - 1);
+
+    // output size = 1 +
+    //     (input size - filter size - (filter size - 1) * (dilation - 1) +
+    //      beginning padding + ending padding) / stride
+    const outputHeight =
+        1 + Math.floor((inputHeight - effectiveFilterHeight +
+          this.padding_[0] + this.padding_[1]) / this.strides_[0]);
+    const outputWidth =
+        1 + Math.floor((inputWidth - effectiveFilterWidth +
+          this.padding_[2] + this.padding_[3]) / this.strides_[1]);
+
+    this.outputShape_ = [batches, outputHeight, outputWidth, channels];
+    if (this.inputLayout_ === MLInputOperandLayout.nchw) {
+      // nhwc -> nchw
+      this.outputShape_ = [batches, channels, outputHeight, outputWidth];
+    }
+
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
+  }
+
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
     let input: tf.Tensor4D = inputTensors.get(this.input_) as tf.Tensor4D;
     let filter: tf.Tensor4D;
@@ -171,16 +235,15 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
     } else {
       filter = this.filterTensor_;
     }
-    const padding: ExplicitPadding = utils.getPaddings(input, filter,
-        this.padding_, this.strides_, this.dilations_, this.autoPad_);
+
+    const tfPadding: ExplicitPadding = utils.getPaddings(this.padding_);
     let output;
-    
     if (this.groups_ === 1) {
       output = tf.fused.conv2d({
         x: input,
         filter,
         strides: this.strides_,
-        pad: padding,
+        pad: tfPadding,
         dataFormat: 'NHWC',
         dilations: this.dilations_,
         bias,
@@ -190,10 +253,11 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       fused = true;
     } else if (
         this.groups_ === inputChannels && this.groups_ === filter.shape[2]) {
-      if ((padding instanceof Array && padding[1][0] === padding[1][1] &&
-            padding[1][0] === padding[2][0] &&
-            padding[1][0] === padding[2][1])) {
-        const fusedDepthwisePad: number = padding[1][0];
+      if ((this.padding_ instanceof Array &&
+        this.padding_[0] === this.padding_[1] &&
+        this.padding_[0] === this.padding_[2] &&
+        this.padding_[0] === this.padding_[3])) {
+        const fusedDepthwisePad: number = this.padding_[0];
         output = tf.fused.depthwiseConv2d({
           x: input,
           filter,
@@ -208,7 +272,8 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
         fused = true;
       } else {
         output = tf.depthwiseConv2d(
-            input, filter, this.strides_, padding, 'NHWC', this.dilations_);
+            input, filter, this.strides_, tfPadding, 'NHWC',
+            this.dilations_);
       }
     } else {
       throw new Error(
@@ -237,36 +302,7 @@ export class Conv2d extends SingleOutputOperation implements FusedOperation {
       output = tf.transpose(output, [0, 3, 1, 2]);
     }
     if (this.needCheckOutputShape_) {
-      const effectiveFilterHeight =
-          filter.shape[0] + (filter.shape[0] - 1) * (this.dilations_[0] - 1);
-      const effectiveFilterWidth =
-          filter.shape[1] + (filter.shape[1] - 1) * (this.dilations_[1] - 1);
-      // output size = 1 +
-      //     (input size - filter size - (filter size - 1) * (dilation - 1) +
-      //      beginning padding + ending padding) / stride
-      const outputHeight =
-          1 + Math.floor((input.shape[1] - effectiveFilterHeight +
-              padding[1][0] + padding[1][1]) / this.strides_[0]);
-      const outputWidth =
-          1 + Math.floor((input.shape[2] - effectiveFilterWidth +
-              padding[2][0] + padding[2][1]) / this.strides_[1]);
-      // A depthwise conv2d operation is a variant of grouped convolution, used
-      // in models like the MobileNet, where the
-      //   options.groups = input_channels = output_channels
-      const outputChannels =
-          this.groups_ !== 1 ? filter.shape[2] : filter.shape[3];
-      const outputShape = new Array(4);
-      outputShape[0] = input.shape[0];
-      outputShape[1] = outputHeight;
-      outputShape[2] = outputWidth;
-      outputShape[3] = outputChannels;
-      if (this.inputLayout_ === MLInputOperandLayout.nchw) {
-        // nhwc -> nchw
-        outputShape[1] = outputChannels;
-        outputShape[2] = outputHeight;
-        outputShape[3] = outputWidth;
-      }
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
     return output;

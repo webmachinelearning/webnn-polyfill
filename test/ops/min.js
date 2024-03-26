@@ -9,9 +9,11 @@ describe('test min', () => {
 
   it('min', async () => {
     const builder = new MLGraphBuilder(context);
-    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
-    const b = builder.input('b', {type: 'float32', dimensions: [3, 4, 5]});
+    const a = builder.input('a', {dataType: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.input('b', {dataType: 'float32', dimensions: [3, 4, 5]});
     const c = builder.min(a, b);
+    utils.checkDataType(c.dataType(), a.dataType());
+    utils.checkShape(c.shape(), [3, 4, 5]);
     const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([
@@ -64,9 +66,11 @@ describe('test min', () => {
 
   it('min broadcast', async () => {
     const builder = new MLGraphBuilder(context);
-    const a = builder.input('a', {type: 'float32', dimensions: [3, 4, 5]});
-    const b = builder.input('b', {type: 'float32', dimensions: [5]});
+    const a = builder.input('a', {dataType: 'float32', dimensions: [3, 4, 5]});
+    const b = builder.input('b', {dataType: 'float32', dimensions: [5]});
     const c = builder.min(a, b);
+    utils.checkDataType(c.dataType(), a.dataType());
+    utils.checkShape(c.shape(), [3, 4, 5]);
     const graph = await builder.build({c});
     const inputs = {
       'a': new Float32Array([

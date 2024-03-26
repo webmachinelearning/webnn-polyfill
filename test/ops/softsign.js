@@ -9,8 +9,10 @@ describe('test softsign', () => {
 
   it('softsign', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [3]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [3]});
     const y = builder.softsign(x);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), [3]);
     const graph = await builder.build({y});
     const inputs = {
       'x': new Float32Array([-1, 0, 1]),

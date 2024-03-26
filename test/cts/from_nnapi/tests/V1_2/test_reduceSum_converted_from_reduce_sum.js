@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test reduceSum converted from reduce_sum test', async () => {
     // Converted test case (from: V1_2/reduce_sum.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [3, 2]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [3, 2]});
     const input0Data = new Float32Array([-1, -2, 3, 4, 5, -6]);
     const param = [1];
     const param1 = false;
@@ -26,7 +26,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test reduceSum converted from reduce_sum_relaxed test', async () => {
     // Converted test case (from: V1_2/reduce_sum.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [3, 2]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [3, 2]});
     const input0Data = new Float32Array([-1, -2, 3, 4, 5, -6]);
     const param = [1];
     const param1 = false;
@@ -41,7 +41,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test reduceSum converted from reduce_sum_2 test', async () => {
     // Converted test case (from: V1_2/reduce_sum.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input01 = builder.input('input01', {type: 'float32', dimensions: [1]});
+    const input01 = builder.input('input01', {dataType: 'float32', dimensions: [1]});
     const input01Data = new Float32Array([9.527]);
     const param2 = [0];
     const param3 = true;
@@ -56,7 +56,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test reduceSum converted from reduce_sum_relaxed_2 test', async () => {
     // Converted test case (from: V1_2/reduce_sum.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input01 = builder.input('input01', {type: 'float32', dimensions: [1]});
+    const input01 = builder.input('input01', {dataType: 'float32', dimensions: [1]});
     const input01Data = new Float32Array([9.527]);
     const param2 = [0];
     const param3 = true;
@@ -71,7 +71,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test reduceSum converted from reduce_sum_4 test', async () => {
     // Converted test case (from: V1_2/reduce_sum.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input03 = builder.input('input03', {type: 'float32', dimensions: [4, 3, 2]});
+    const input03 = builder.input('input03', {dataType: 'float32', dimensions: [4, 3, 2]});
     const input03Data = new Float32Array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4]);
     const param6 = [0, 2];
     const param7 = true;
@@ -86,7 +86,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test reduceSum converted from reduce_sum_relaxed_4 test', async () => {
     // Converted test case (from: V1_2/reduce_sum.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input03 = builder.input('input03', {type: 'float32', dimensions: [4, 3, 2]});
+    const input03 = builder.input('input03', {dataType: 'float32', dimensions: [4, 3, 2]});
     const input03Data = new Float32Array([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4]);
     const param6 = [0, 2];
     const param7 = true;

@@ -53,13 +53,22 @@ describe('test resnet101v2 nhwc', function() {
       if (options !== undefined) {
         options.inputLayout = layout;
         options.filterLayout = 'ohwi';
+        // WebNN spec drops autoPad support,
+        // compute the explicit padding instead.
+        if (options.autoPad == 'same-upper') {
+          options.padding =
+            utils.computePadding2DForAutoPad(
+                /* nhwc */[input.shape()[1], input.shape()[2]],
+                /* ohwi */[weights.shape()[1], weights.shape()[2]],
+                options.strides, options.dilations, options.autoPad);
+        }
       } else {
         options = {inputLayout: layout, filterLayout: 'ohwi'};
       }
       if (!fusedConv) {
         const add = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, null]));
+            builder.reshape(bias, [1, 1, 1, bias.shape()[0]]));
         if (relu) {
           return builder.relu(add);
         }
@@ -106,8 +115,9 @@ describe('test resnet101v2 nhwc', function() {
             fusedBn, nameIndices.concat(['shortcut']), {autoPad}, false);
       }
       if (!downsample && shortcut) {
-        residual = builder.maxPool2d(
-            input, {windowDimensions: [1, 1], strides, layout, autoPad});
+        residual = utils.buildMaxPool2d(
+            input, {windowDimensions: [1, 1], strides, layout, autoPad},
+            builder);
         const pad = builder.pad(conv1, [0, 1, 1, 0], [0, 1, 1, 0]);
         conv2 = await buildConv(pad, nameIndices.concat(['2']), {strides});
       } else {
@@ -121,11 +131,11 @@ describe('test resnet101v2 nhwc', function() {
 
     async function buildResNet() {
       const input = builder.input('input',
-          {type: 'float32', dimensions: [1, 299, 299, 3]});
+          {dataType: 'float32', dimensions: [1, 299, 299, 3]});
       const pad = builder.pad(input, [0, 3, 3, 0], [0, 3, 3, 0]);
       const conv1 = await buildConv(pad, ['', '', '1'], {strides}, false);
-      const pool = builder.maxPool2d(
-          conv1, {windowDimensions: [3, 3], strides, layout, autoPad});
+      const pool = utils.buildMaxPool2d(
+          conv1, {windowDimensions: [3, 3], strides, layout, autoPad}, builder);
       // Block 1
       const bottleneck1 = await buildBottleneckV2(pool, ['1', '1'], true);
       const bottleneck2 =
@@ -169,7 +179,7 @@ describe('test resnet101v2 nhwc', function() {
           builder.reduceMean(fusedBn, {keepDimensions: true, axes: [1, 2]});
       const conv2 =
           await buildConv(mean, ['', '', 'logits'], {autoPad}, false);
-      const reshape = builder.reshape(conv2, [1, null]);
+      const reshape = builder.reshape(conv2, [1, 1001]);
       const resNetGraph = await builder.build({reshape});
       return resNetGraph;
     }

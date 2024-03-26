@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -23,10 +23,16 @@ export class Slice extends SingleOutputOperation {
         utils.isUnsignedIntegerArray(sizes) && sizes.every(v => v > 0),
         'The sizes parameter is invalid.');
     this.sizes_ = sizes;
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
     return [this.input_];
+  }
+
+  createOutput(): void {
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.sizes_})); 
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {

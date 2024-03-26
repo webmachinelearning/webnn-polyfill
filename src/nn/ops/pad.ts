@@ -1,7 +1,7 @@
 import * as tf from '@tensorflow/tfjs-core';
 
 import {MLPaddingMode, MLPadOptions} from '../graph_builder';
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -12,6 +12,7 @@ export class Pad extends SingleOutputOperation {
   private mode_: MLPaddingMode = MLPaddingMode.constant;
   private value_ = 0;
   private needCheckOutputShape_ = true;
+  private outputShape_: number[];
 
   constructor(
       input: MLOperand,
@@ -39,10 +40,19 @@ export class Pad extends SingleOutputOperation {
     if (options.value !== undefined) {
       this.value_ = options.value;
     }
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
     return [this.input_];
+  }
+
+  createOutput(): void {
+    this.outputShape_ = this.input_.shape().map(
+      (value, index) => 
+          value + this.beginningPadding_[index] + this.endingPadding_[index]);
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
@@ -57,9 +67,6 @@ export class Pad extends SingleOutputOperation {
             'lenght of input shape.');
     const paddingArray: Array<[number, number]> = this.beginningPadding_.map(
         (val, index) => [val, this.endingPadding_[index]]);
-    const outputShape = input.shape.map(
-        (val, index) => 
-            val + this.beginningPadding_[index] + this.endingPadding_[index]);
     let output;
     if (this.mode_ === MLPaddingMode.constant) {
       output = tf.pad(input, paddingArray, this.value_);
@@ -97,7 +104,7 @@ export class Pad extends SingleOutputOperation {
       }
     }
     if (this.needCheckOutputShape_) {
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
     return output;

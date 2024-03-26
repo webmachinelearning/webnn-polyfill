@@ -1,8 +1,8 @@
 import * as tf from '@tensorflow/tfjs-core';
 import {ExplicitPadding} from '@tensorflow/tfjs-core/dist/ops/conv_util';
 
-import {MLAutoPad, MLInputOperandLayout, MLPooling2dOptions, MLRoundingType} from '../graph_builder';
-import {MLOperand} from '../operand';
+import {MLInputOperandLayout, MLPooling2dOptions, MLRoundingType} from '../graph_builder';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -16,33 +16,45 @@ export abstract class Pool extends SingleOutputOperation {
   protected dilations_?: [number, number];
   protected groups_?: number;
   protected layout_?: MLInputOperandLayout;
-  private autoPad_?: MLAutoPad;
   protected roundingType_?: MLRoundingType;
   protected outputSizes_?: [number, number];
   private needCheckOutputShape_ = true;
+  private outputShape_: [number, number, number, number];
 
   constructor(input: MLOperand, options: MLPooling2dOptions = {}) {
     super(input.builder);
     utils.validateOperand(input);
     this.input_ = input;
+
     this.initOptions(
         options.windowDimensions, options.padding, options.strides,
-        options.dilations, options.layout, options.autoPad,
-        options.roundingType, options.outputSizes);
+        options.dilations, options.layout, options.roundingType,
+        options.outputSizes);
+    this.createOutput();
   }
 
   private initOptions(
-      windowDimensions: [number, number] = [-1, -1],
+      windowDimensions: [number, number],
       padding: [number, number, number, number] = [0, 0, 0, 0],
       strides: [number, number] = [1, 1], dilations: [number, number] = [1, 1],
       layout: MLInputOperandLayout = MLInputOperandLayout.nchw,
-      autoPad: MLAutoPad = MLAutoPad.explicit,
       roundingType: MLRoundingType = MLRoundingType.floor,
       outputSizes: [number, number] = undefined) {
     utils.assert(
-        utils.isIntegerArray(windowDimensions) && windowDimensions.length === 2,
-        'The padding parameter is invalid.');
-    this.windowDimensions_ = windowDimensions;
+      layout in MLInputOperandLayout, 'The layout parameter is invalid.');
+    this.layout_ = layout;
+
+    if (windowDimensions) {
+      utils.assert(
+        utils.isUnsignedIntegerArray(windowDimensions) &&
+        windowDimensions.length === 2,
+        'The windowDimensions parameter is invalid.');
+      this.windowDimensions_ = windowDimensions;
+    } else {
+      this.windowDimensions_ = layout === MLInputOperandLayout.nchw ?
+          this.input_.shape().slice(2) as [number, number] :
+          this.input_.shape().slice(1, 3) as [number, number];
+    }
 
     utils.assert(
         utils.isIntegerArray(padding) && padding.length === 4,
@@ -63,9 +75,6 @@ export abstract class Pool extends SingleOutputOperation {
         layout in MLInputOperandLayout, 'The layout parameter is invalid.');
     this.layout_ = layout;
 
-    utils.assert(autoPad in MLAutoPad, 'The autoPad parameter is invalid.');
-    this.autoPad_ = autoPad;
-
     utils.assert(
         roundingType in MLRoundingType,
         'The roundingType parameter is invalid.');
@@ -84,56 +93,72 @@ export abstract class Pool extends SingleOutputOperation {
     return [this.input_];
   }
 
+  createOutput(): void {
+    let outputHeight;
+    let outputWidth;
+    if (this.outputSizes_ !== undefined) {
+      outputHeight = this.outputSizes_[0];
+      outputWidth = this.outputSizes_[1];
+    } else {
+      const dimRoundingMode =
+          this.roundingType_ === MLRoundingType.floor ? 'floor' : 'ceil';
+      [outputHeight, outputWidth] = this.calculateOutputSizes(
+        this.input_.shape() as [number, number, number, number],
+        dimRoundingMode);
+    }
+
+    const inputShape = this.input_.shape();
+    switch (this.layout_) {
+      case MLInputOperandLayout.nchw:
+        this.outputShape_ =
+            [inputShape[0], inputShape[1], outputHeight, outputWidth];
+        break;
+      case MLInputOperandLayout.nhwc:
+        this.outputShape_ =
+            [inputShape[0], outputHeight, outputWidth, inputShape[3]];
+        break;
+      default:
+        throw new Error('The layout is invalid.');
+    }
+  
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
+  }
   /**
    * Calcuate output sizes for a given input shape and round type.
-   * @param inputShape - A shape array of [N, H, W, C]
+   * @param inputShape - A shape array
    * @param roundingType - String value: 'ceil' | 'floor' | 'round'
    * @returns output sizes array of [outputHeight, outputWidth].
    */
   calculateOutputSizes(
-      inputShape:[number, number, number, number],
+      inputShape: [number, number, number, number],
       roundingType?: 'ceil' | 'floor' | 'round'): [number, number] {
     // nhwc layout
-    const inputHeight = inputShape[1];
-    const inputWidth = inputShape[2];
+    let inputHeight = inputShape[1];
+    let inputWidth = inputShape[2];
+    if (this.layout_ === MLInputOperandLayout.nchw) {
+      inputHeight = inputShape[2];
+      inputWidth = inputShape[3];
+    }
     const windowHeight = this.windowDimensions_[0];
     const windowWidth = this.windowDimensions_[1];
-    let paddingBeginningHeight = this.padding_[0];
-    let paddingEndingHeight = this.padding_[1];
-    let paddingBeginningWidth = this.padding_[2];
-    let paddingEndingWidth = this.padding_[3];
-
-    if (this.autoPad_ !== MLAutoPad.explicit) {
-      [paddingBeginningHeight, paddingEndingHeight] =
-          utils.computeImplicitPaddingForAutoPad(
-              this.autoPad_, this.dilations_[0], inputHeight, windowHeight,
-              this.strides_[0], paddingBeginningHeight, paddingEndingHeight);
-      [paddingBeginningWidth, paddingEndingWidth] =
-          utils.computeImplicitPaddingForAutoPad(
-              this.autoPad_, this.dilations_[1], inputWidth, windowWidth,
-              this.strides_[1], paddingBeginningWidth, paddingEndingWidth);
-    }
-
     let roundFun;
+  
     if (roundingType === undefined) {
       roundFun = Math.trunc;
     } else {
-      switch(roundingType) {
-        case 'ceil': {
+      switch (roundingType) {
+        case 'ceil':
           roundFun = Math.ceil;
           break;
-        }
-        case 'floor': {
+        case 'floor':
           roundFun = Math.floor;
           break;
-        }
-        case 'round': {
+        case 'round':
           roundFun = Math.round;
           break;
-        }
-        default: {
-          break;
-        }
+        default:
+          throw new Error('The rounding type is invalid.');
       }
     }
 
@@ -142,9 +167,9 @@ export abstract class Pool extends SingleOutputOperation {
     const effectiveWindowWidth =
         windowWidth + (windowWidth - 1) * (this.dilations_[1] - 1);
     const outputHeight = 1 + roundFun((inputHeight - effectiveWindowHeight +
-        paddingBeginningHeight + paddingEndingHeight) / this.strides_[0]);
+        this.padding_[0] + this.padding_[1]) / this.strides_[0]);
     const outputWidth = 1 + roundFun((inputWidth - effectiveWindowWidth +
-        paddingBeginningWidth + paddingEndingWidth) / this.strides_[1]);
+        this.padding_[2] + this.padding_[3]) / this.strides_[1]);
 
     return [outputHeight, outputWidth];
   }
@@ -185,42 +210,17 @@ export abstract class Pool extends SingleOutputOperation {
 
     const poolingType = this.getPoolingType();
     let padding: 'valid'|'same'|ExplicitPadding;
-    if (this.autoPad_ === MLAutoPad.explicit) {
-      if (this.padding_.every(v => v === 0)) {
-        padding = 'valid';
-        // unset dimRoundingMode when using valid pad, refer to
-        //   https://github.com/tensorflow/tfjs/blob/master/tfjs-core/src/ops/conv_util.ts#L604
-        dimRoundingMode = undefined;
-      } else {
-        padding = [
-          [0, 0], [this.padding_[0], this.padding_[1]],
-          [this.padding_[2], this.padding_[3]], [0, 0]
-        ] as ExplicitPadding;
-      }
+
+    if (this.padding_.every(v => v === 0)) {
+      padding = 'valid';
+      // unset dimRoundingMode when using valid pad, refer to
+      //   https://github.com/tensorflow/tfjs/blob/master/tfjs-core/src/ops/conv_util.ts#L604
+      dimRoundingMode = undefined;
     } else {
-      if (this.autoPad_ === MLAutoPad['same-upper']) {
-        padding = 'same';
-        // unset dimRoundingMode when using same pad, refer to
-        //   https://github.com/tensorflow/tfjs/blob/master/tfjs-core/src/ops/conv_util.ts#L604
-        dimRoundingMode = undefined;
-      } else {
-        // Calculate the explicit paddings for 'same-lower'
-        padding = [[0, 0], [0, 0], [0, 0], [0, 0]];
-        const outputSizes = [0, 0];
-        for (let i = 0; i < 2; ++i) {
-          outputSizes[i] = Math.ceil(input.shape[1 + i] / this.strides_[i]);
-        }
-        const totalPadding: [number, number] = [0, 0];
-        for (let i = 0; i < 2; ++i) {
-          totalPadding[i] = this.strides_[i] * (outputSizes[i] - 1) +
-              ((windowDimensions[i] - 1) * this.dilations_[i] + 1) -
-              input.shape[1 + i];
-        }
-        for (let i = 0; i < 2; ++i) {
-          padding[i + 1][0] = totalPadding[i] - Math.floor(totalPadding[i] / 2);
-          padding[i + 1][1] = Math.floor(totalPadding[i] / 2);
-        }
-      }
+      padding = [
+        [0, 0], [this.padding_[0], this.padding_[1]],
+        [this.padding_[2], this.padding_[3]], [0, 0]
+      ] as ExplicitPadding;
     }
 
     let output;
@@ -241,28 +241,8 @@ export abstract class Pool extends SingleOutputOperation {
     }
 
     if (this.needCheckOutputShape_) {
-      let outputHeight;
-      let outputWidth;
-      let outputShape;
-      if (this.outputSizes_ !== undefined) {
-        outputHeight = this.outputSizes_[0];
-        outputWidth = this.outputSizes_[1];
-      } else {
-        dimRoundingMode =
-            this.roundingType_ === MLRoundingType.floor ? 'floor' : 'ceil';
-        [outputHeight, outputWidth] =
-            this.calculateOutputSizes(input.shape, dimRoundingMode);
-      }
-      if (this.layout_ === MLInputOperandLayout.nchw) {
-        outputShape =
-            [input.shape[0], input.shape[3], outputHeight, outputWidth];
-      } else {
-        outputShape =
-            [input.shape[0], outputHeight, outputWidth, input.shape[3]];
-      }
-
       // check output shape by TF.js with own calculated output shape
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
 

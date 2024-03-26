@@ -48,6 +48,7 @@ export class BatchNormalization extends SingleOutputOperation implements
       this.epsilon_ = 1e-5;
     }
     this.activation_ = options.activation;
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
@@ -59,6 +60,11 @@ export class BatchNormalization extends SingleOutputOperation implements
       inputs.push(this.bias_);
     }
     return inputs;
+  }
+
+  createOutput(): void {
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.input_.shape()}));
   }
 
   getFusedOutputs(): OutputOperand[] {

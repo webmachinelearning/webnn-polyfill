@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLGruCellOptions, MLGruOptions, MLRecurrentNetworkDirection, MLRecurrentNetworkWeightLayout} from '../graph_builder';
+import {MLGruCellOptions, MLGruOptions, MLRecurrentNetworkDirection, MLGruWeightLayout} from '../graph_builder';
 import {MLOperand, OutputOperand} from '../operand';
 import {MLActivation, Operation, SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
@@ -18,9 +18,10 @@ export class Gru extends Operation {
   private resetAfter_: boolean;
   private returnSequence_: boolean;
   private direction_: MLRecurrentNetworkDirection;
-  private layout_: MLRecurrentNetworkWeightLayout;
+  private layout_: MLGruWeightLayout;
   private activations_: MLActivation[];
   private needCheckOutputShape_ = true;
+  private outputsShape_ = new Array(2);
 
   constructor(
       input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
@@ -44,9 +45,26 @@ export class Gru extends Operation {
         options.resetAfter, options.returnSequence, options.direction,
         options.layout, options.activations);
 
-    this.outputs.push(new OutputOperand(this));
-    if (this.returnSequence_) {
-      this.outputs_.push(new OutputOperand(this));
+    let numDirections = 1;
+    if (options.direction &&
+      options.direction === MLRecurrentNetworkDirection.both) {
+      numDirections = 2;
+    }
+
+    // the first output is 3-D tensor of shape
+    //   [num_directions, batch_size, hidden_size]
+    this.outputsShape_[0] = [numDirections, this.input_.shape()[1], hiddenSize];
+    this.outputs.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(),
+        dimensions: this.outputsShape_[0]}));
+    if (options.returnSequence) {
+      // returnSequence true, the second output tensor of shape
+      //   [steps, num_directions, batch_size, hidden_size]
+      this.outputsShape_[1] =
+        [steps, numDirections, this.input_.shape()[1], hiddenSize];
+      this.outputs_.push(new OutputOperand(this,
+        {dataType: this.input_.dataType(),
+          dimensions: this.outputsShape_[1]}));
     }
   }
 
@@ -56,7 +74,7 @@ export class Gru extends Operation {
       direction:
           MLRecurrentNetworkDirection = MLRecurrentNetworkDirection.forward,
       layout:
-          MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
+          MLGruWeightLayout = MLGruWeightLayout.zrn,
       activations:
           MLActivation[] = [this.builder.sigmoid(), this.builder.tanh()]):
   void {
@@ -79,7 +97,7 @@ export class Gru extends Operation {
         'The direction parameter is invalid.');
     this.direction_ = direction;
     utils.assert(
-        layout in MLRecurrentNetworkWeightLayout,
+        layout in MLGruWeightLayout,
         'The layout parameter is invalid.');
     this.layout_ = layout;
     utils.assert(
@@ -191,16 +209,8 @@ export class Gru extends Operation {
       outputs.push(sequence);
     }
     if (this.needCheckOutputShape_) {
-      // the first output is 3-D tensor of shape
-      //   [num_directions, batch_size, hidden_size]
-      const outputsShape = [[numDirections, input.shape[1], hiddenSize]];
-      if (returnSequence) {
-        // returnSequence true, the second output tensor of shape
-        //   [steps, num_directions, batch_size, hidden_size]
-        outputsShape.push([steps, numDirections, input.shape[1], hiddenSize]);
-      }
       for (let i = 0; i < outputs.length; ++i) {
-        utils.checkShape(outputs[i].shape, outputsShape[i]);
+        utils.checkShape(outputs[i].shape, this.outputsShape_[i]);
       }
       this.needCheckOutputShape_ = false;
     }
@@ -217,9 +227,10 @@ export class GruCell extends SingleOutputOperation {
   private bias_?: MLOperand;
   private recurrentBias_?: MLOperand;
   private resetAfter_: boolean;
-  private layout_: MLRecurrentNetworkWeightLayout;
+  private layout_: MLGruWeightLayout;
   private activations_: MLActivation[];
   private needCheckOutputShape_ = true;
+  private outputShape_: number[];
 
   constructor(
       input: MLOperand, weight: MLOperand, recurrentWeight: MLOperand,
@@ -241,12 +252,13 @@ export class GruCell extends SingleOutputOperation {
     this.initOptions(
         options.bias, options.recurrentBias, options.resetAfter, options.layout,
         options.activations);
+    this.createOutput();
   }
 
   private initOptions(
       bias?: MLOperand, recurrentBias?: MLOperand, resetAfter = true,
       layout:
-          MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn,
+          MLGruWeightLayout = MLGruWeightLayout.zrn,
       activations:
           MLActivation[] = [this.builder.sigmoid(), this.builder.tanh()]) {
     utils.validateOptionalOperand(bias);
@@ -258,7 +270,7 @@ export class GruCell extends SingleOutputOperation {
         'The resetAfter parameter is not a boolean.');
     this.resetAfter_ = resetAfter;
     utils.assert(
-        layout in MLRecurrentNetworkWeightLayout,
+        layout in MLGruWeightLayout,
         'The layout parameter is invalid.');
     this.layout_ = layout;
     utils.assert(
@@ -280,16 +292,23 @@ export class GruCell extends SingleOutputOperation {
     return inputs;
   }
 
+  createOutput(): void {
+    // output shape [batch_size, hidden_size]
+    this.outputShape_ = [this.input_.shape()[0], this.hiddenSize_];
+    this.outputs_.push(new OutputOperand(this,
+      {dataType: this.input_.dataType(), dimensions: this.outputShape_}));
+  }
+
   static compute(
       input: tf.Tensor, weight: tf.Tensor, recurrentWeight: tf.Tensor,
       hiddenState: tf.Tensor, hiddenSize: number, activations: MLActivation[],
       bias?: tf.Tensor, recurrentBias?: tf.Tensor, resetAfter = true,
       layout:
-          MLRecurrentNetworkWeightLayout = MLRecurrentNetworkWeightLayout.zrn):
+          MLGruWeightLayout = MLGruWeightLayout.zrn):
       tf.Tensor {
     const one = tf.scalar(1);
     const zero = tf.scalar(0);
-    const starts = layout === MLRecurrentNetworkWeightLayout.zrn ?
+    const starts = layout === MLGruWeightLayout.zrn ?
         {z: 0, r: hiddenSize, n: 2 * hiddenSize} :
         /*rzn*/ {r: 0, z: hiddenSize, n: 2 * hiddenSize};
     const activation0: UnaryMLActivation = activations[0] as UnaryMLActivation;
@@ -377,9 +396,7 @@ export class GruCell extends SingleOutputOperation {
         this.recurrentBias_ ? inputTensors.get(this.recurrentBias_) : undefined,
         this.resetAfter_, this.layout_);
     if (this.needCheckOutputShape_) {
-      // output shape [batch_size, hidden_size]
-      const outputShape = [input.shape[0], this.hiddenSize_];
-      utils.checkShape(output.shape, outputShape);
+      utils.checkShape(output.shape, this.outputShape_);
       this.needCheckOutputShape_ = false;
     }
     return output;

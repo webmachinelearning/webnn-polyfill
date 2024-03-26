@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test split converted from split_int32_1 test', async () => {
     // Converted test case (from: V1_2/split_int32_1.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'int32', dimensions: [6]});
+    const input0 = builder.input('input0', {dataType: 'int32', dimensions: [6]});
     const input0Data = new Int32Array([1, 2, 3, 4, 5, 6]);
     const axis = 0;
     const numSplits = 3;
@@ -28,7 +28,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test split converted from split_int32_1_relaxed test', async () => {
     // Converted test case (from: V1_2/split_int32_1.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'int32', dimensions: [6]});
+    const input0 = builder.input('input0', {dataType: 'int32', dimensions: [6]});
     const input0Data = new Int32Array([1, 2, 3, 4, 5, 6]);
     const axis = 0;
     const numSplits = 3;

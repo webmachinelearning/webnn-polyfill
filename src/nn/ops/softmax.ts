@@ -1,6 +1,6 @@
 import * as tf from '@tensorflow/tfjs-core';
 
-import {MLOperand} from '../operand';
+import {MLOperand, OutputOperand} from '../operand';
 import {SingleOutputOperation} from '../operation';
 import * as utils from '../utils';
 
@@ -12,10 +12,15 @@ export class Softmax extends SingleOutputOperation {
     super(x.builder);
     utils.validateOperand(x);
     this.x_ = x;
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
     return [this.x_];
+  }
+
+  createOutput(): void {
+    this.outputs_.push(new OutputOperand(this, this.x_.desc));
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {

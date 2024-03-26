@@ -9,68 +9,18 @@ describe('test matmul', () => {
 
   async function testMatmul(A, B, expected) {
     const builder = new MLGraphBuilder(context);
-    const a = builder.input('a', {type: 'float32', dimensions: A.shape});
+    const a = builder.input('a', {dataType: 'float32', dimensions: A.shape});
     const b = builder.constant(
-        {type: 'float32', dimensions: B.shape}, new Float32Array(B.value));
+        {dataType: 'float32', dimensions: B.shape}, new Float32Array(B.value));
     const c = builder.matmul(a, b);
+    utils.checkDataType(c.dataType(), a.dataType());
+    utils.checkShape(c.shape(), expected.shape);
     const graph = await builder.build({c});
     const inputs = {'a': new Float32Array(A.value)};
     const outputs = {'c': new Float32Array(utils.sizeOfShape(expected.shape))};
     const result = await context.compute(graph, inputs, outputs);
     utils.checkValue(result.outputs.c, expected.value);
   }
-
-  it('matmul 1d', async () => {
-    await testMatmul(
-        {shape: [4], value: [0.9025404, 0.89538723, 0.16789329, 0.7440875]},
-        {shape: [4], value: [0.8782074, 0.22533207, 0.7134056, 0.04190519]},
-        {shape: [], value: [1.1453342]});
-  });
-
-  it('matmul 1dx2d', async () => {
-    await testMatmul(
-        {shape: [4], value: [0.1309212, 0.9090703, 0.62183434, 0.9195683]}, {
-          shape: [4, 3],
-          value: [
-            0.3093976,
-            -1.2924036,
-            -0.64339244,
-            1.1423386,
-            1.5052135,
-            1.8182521,
-            -1.825652,
-            -0.39694095,
-            -0.90111053,
-            0.7807154,
-            -1.9163561,
-            -0.13988003,
-          ],
-        },
-        {shape: [1, 3], value: [0.6616409, -0.80990994, 0.8797145]});
-  });
-
-  it('matmul 2dx1d', async () => {
-    await testMatmul(
-        {
-          shape: [3, 4],
-          value: [
-            0.3582649,
-            0.83665735,
-            0.30253866,
-            0.6446781,
-            0.4684662,
-            0.94761264,
-            0.4122941,
-            0.6787481,
-            0.15072346,
-            0.2820577,
-            0.67296237,
-            0.3856028,
-          ],
-        },
-        {shape: [4], value: [0.25528687, 0.2126722, 0.26320502, 0.8297401]},
-        {shape: [3, 1], value: [0.8839391, 0.9928265, 0.5955407]});
-  });
 
   it('matmul 2d', async () => {
     await testMatmul(

@@ -27,6 +27,14 @@ describe('test squeezenet1.0 nhwc', function() {
       const weightsName = prefix + '_kernel.npy';
       const weights =
           await utils.buildConstantFromNpy(builder, new URL(weightsName, url));
+      // WebNN spec drops autoPad support, compute the explicit padding instead.
+      if (options.autoPad == 'same-upper') {
+        options.padding =
+          utils.computePadding2DForAutoPad(
+              /* nwhc */[input.shape()[1], input.shape()[2]],
+              /* ohwi or ihwo */[weights.shape()[1], weights.shape()[2]],
+              options.strides, options.dilations, options.autoPad);
+      }
       const biasName = prefix + '_Conv2D_bias.npy';
       const bias =
           await utils.buildConstantFromNpy(builder, new URL(biasName, url));
@@ -36,7 +44,7 @@ describe('test squeezenet1.0 nhwc', function() {
       if (fusedConv === false) {
         return builder.relu(builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, null])));
+            builder.reshape(bias, [1, 1, 1, bias.shape()[0]])));
       } else {
         options.bias = bias;
         options.activation = builder.relu();
@@ -56,7 +64,7 @@ describe('test squeezenet1.0 nhwc', function() {
       const strides = [2, 2];
       const layout = 'nhwc';
       const placeholder = builder.input(
-          'placeholder', {type: 'float32', dimensions: [1, 224, 224, 3]});
+          'placeholder', {dataType: 'float32', dimensions: [1, 224, 224, 3]});
       const conv1 = await buildConv(
           placeholder, 'conv1', {strides, autoPad: 'same-upper'});
       const maxpool1 =
@@ -76,7 +84,7 @@ describe('test squeezenet1.0 nhwc', function() {
       const conv10 = await buildConv(fire9, 'conv10');
       const averagePool2d =
           builder.averagePool2d(conv10, {windowDimensions: [13, 13], layout});
-      const reshape = builder.reshape(averagePool2d, [1, null]);
+      const reshape = builder.reshape(averagePool2d, [1, 1001]);
       const softmax = builder.softmax(reshape);
       const squeezeNetGraph = await builder.build({softmax});
       return squeezeNetGraph;
