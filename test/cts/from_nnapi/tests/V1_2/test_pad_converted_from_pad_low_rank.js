@@ -11,7 +11,7 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test pad converted from pad_low_rank test', async () => {
     // Converted test case (from: V1_2/pad_low_rank.mod.py)
     const builder = new MLGraphBuilder(context);
-    const input0 = builder.input('input0', {type: 'float32', dimensions: [3]});
+    const input0 = builder.input('input0', {dataType: 'float32', dimensions: [3]});
     const input0Data = new Float32Array([1.0, 2.0, 3.0]);
     const beginningPadding = [3];
     const endingPadding = [1];

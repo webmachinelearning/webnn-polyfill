@@ -11,11 +11,11 @@ describe('CTS converted from NNAPI CTS', () => {
   it('test conv2d + add + clamp converted from conv_float_channels_weights_as_inputs_relaxed test', async () => {
     // Converted test case (from: V1_1/conv_float_channels_weights_as_inputs_relaxed.mod.py)
     const builder = new MLGraphBuilder(context);
-    const op1 = builder.input('op1', {type: 'float32', dimensions: [1, 1, 1, 3]});
+    const op1 = builder.input('op1', {dataType: 'float32', dimensions: [1, 1, 1, 3]});
     const op1Data = new Float32Array([99.0, 99.0, 99.0]);
-    const op2 = builder.input('op2', {type: 'float32', dimensions: [3, 1, 1, 3]});
+    const op2 = builder.input('op2', {dataType: 'float32', dimensions: [3, 1, 1, 3]});
     const op2Data = new Float32Array([1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0]);
-    const op3 = builder.input('op3', {type: 'float32', dimensions: [3]});
+    const op3 = builder.input('op3', {dataType: 'float32', dimensions: [3]});
     const op3Data = new Float32Array([0.0, 0.0, 0.0]);
     const pad0 = 0;
     const stride = 1;

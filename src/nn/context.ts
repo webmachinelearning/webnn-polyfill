@@ -44,7 +44,7 @@ export interface MLContextOptions {
 }
 
 /**
- * [API spec](https://webmachinelearning.github.io/webnn/#mlcontext)
+ * [API spec](https://webmachinelearning.github.io/webnn/#api-mlcontext)
  */
 export class MLContext {
   private options_: MLContextOptions;
@@ -79,7 +79,7 @@ export class MLContext {
   }
 
   /**
-   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlcontext-compute)
+   * [spec](https://webmachinelearning.github.io/webnn/#api-mlcontext-compute)
    */
   async compute(
       graph: MLGraph,
@@ -87,19 +87,6 @@ export class MLContext {
       outputs: MLNamedArrayBufferViews): Promise<MLComputeResult> {
     const result = await graph.compute(inputs, outputs);
     return result;
-  }
-
-  /**
-   * [spec](https://webmachinelearning.github.io/webnn/#dom-mlcontext-computesync)
-   */
-  computeSync(
-      graph: MLGraph,
-      inputs: MLNamedArrayBufferViews,
-      outputs: MLNamedArrayBufferViews): void {
-      utils.assert(
-          typeof window === 'undefined' && typeof importScripts === 'function',
-          'computeSync() should only be allowed in dedicated worker.');
-      graph.computeSync(inputs, outputs);
   }
 
   /** @internal */

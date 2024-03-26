@@ -24,7 +24,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">MLConv2dOptions</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L83">nn/graph_builder.ts:83</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L73">nn/graph_builder.ts:73</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -33,7 +33,6 @@
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Properties</h3>
 <div class="tsd-index-list"><a href="nn_graph_builder.MLConv2dOptions.html#activation" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>activation?</span></a>
-<a href="nn_graph_builder.MLConv2dOptions.html#autoPad" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>auto<wbr/>Pad?</span></a>
 <a href="nn_graph_builder.MLConv2dOptions.html#bias" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>bias?</span></a>
 <a href="nn_graph_builder.MLConv2dOptions.html#dilations" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>dilations?</span></a>
 <a href="nn_graph_builder.MLConv2dOptions.html#filterLayout" class="tsd-index-link tsd-kind-property tsd-parent-kind-interface"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>filter<wbr/>Layout?</span></a>
@@ -48,47 +47,42 @@
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>activation</span><a href="#activation" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <div class="tsd-signature">activation<span class="tsd-signature-symbol">?:</span> <a href="nn_operation.MLActivation.html" class="tsd-signature-type" data-tsd-kind="Interface">MLActivation</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L92">nn/graph_builder.ts:92</a></li></ul></aside></section>
-<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="autoPad" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>auto<wbr/>Pad</span><a href="#autoPad" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">auto<wbr/>Pad<span class="tsd-signature-symbol">?:</span> <a href="../enums/nn_graph_builder.MLAutoPad.html" class="tsd-signature-type" data-tsd-kind="Enumeration">MLAutoPad</a></div><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L87">nn/graph_builder.ts:87</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L81">nn/graph_builder.ts:81</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="bias" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>bias</span><a href="#bias" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">bias<span class="tsd-signature-symbol">?:</span> <a href="../classes/nn_operand.MLOperand.html" class="tsd-signature-type" data-tsd-kind="Class">MLOperand</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L91">nn/graph_builder.ts:91</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L80">nn/graph_builder.ts:80</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="dilations" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>dilations</span><a href="#dilations" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">dilations<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L86">nn/graph_builder.ts:86</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L76">nn/graph_builder.ts:76</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="filterLayout" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>filter<wbr/>Layout</span><a href="#filterLayout" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">filter<wbr/>Layout<span class="tsd-signature-symbol">?:</span> <a href="../enums/nn_graph_builder.MLConv2dFilterOperandLayout.html" class="tsd-signature-type" data-tsd-kind="Enumeration">MLConv2dFilterOperandLayout</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L90">nn/graph_builder.ts:90</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L79">nn/graph_builder.ts:79</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="groups" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>groups</span><a href="#groups" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">groups<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L88">nn/graph_builder.ts:88</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L77">nn/graph_builder.ts:77</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="inputLayout" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>input<wbr/>Layout</span><a href="#inputLayout" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">input<wbr/>Layout<span class="tsd-signature-symbol">?:</span> <a href="../enums/nn_graph_builder.MLInputOperandLayout.html" class="tsd-signature-type" data-tsd-kind="Enumeration">MLInputOperandLayout</a></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L89">nn/graph_builder.ts:89</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L78">nn/graph_builder.ts:78</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="padding" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>padding</span><a href="#padding" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">padding<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L84">nn/graph_builder.ts:84</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L74">nn/graph_builder.ts:74</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface"><a id="strides" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagOptional">Optional</code> <span>strides</span><a href="#strides" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">strides<span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">[</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">]</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/graph_builder.ts#L85">nn/graph_builder.ts:85</a></li></ul></aside></section></section></div>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/graph_builder.ts#L75">nn/graph_builder.ts:75</a></li></ul></aside></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -120,7 +114,6 @@
 <li class="current tsd-kind-interface tsd-parent-kind-module"><a href="nn_graph_builder.MLConv2dOptions.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg><span>MLConv2d<wbr/>Options</span></a>
 <ul>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="nn_graph_builder.MLConv2dOptions.html#activation" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>activation?</a></li>
-<li class="tsd-kind-property tsd-parent-kind-interface"><a href="nn_graph_builder.MLConv2dOptions.html#autoPad" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>auto<wbr/>Pad?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="nn_graph_builder.MLConv2dOptions.html#bias" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>bias?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="nn_graph_builder.MLConv2dOptions.html#dilations" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>dilations?</a></li>
 <li class="tsd-kind-property tsd-parent-kind-interface"><a href="nn_graph_builder.MLConv2dOptions.html#filterLayout" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>filter<wbr/>Layout?</a></li>

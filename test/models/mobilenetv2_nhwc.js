@@ -29,6 +29,14 @@ describe('test mobilenetv2 nhwc', function() {
       const weightsName = `${testDataDir}/weights/Const_${weightsSubName}.npy`;
       const weights =
           await utils.buildConstantFromNpy(builder, new URL(weightsName, url));
+      // WebNN spec drops autoPad support, compute the explicit padding instead.
+      if (options.autoPad == 'same-upper') {
+        options.padding =
+          utils.computePadding2DForAutoPad(
+              /* nwhc */[input.shape()[1], input.shape()[2]],
+              /* ohwi or ihwo */[weights.shape()[1], weights.shape()[2]],
+              options.strides, options.dilations, options.autoPad);
+      }
       const biasName =
           `${testDataDir}/weights/MobilenetV2_${biasSubName}_bias.npy`;
       const bias =
@@ -37,7 +45,7 @@ describe('test mobilenetv2 nhwc', function() {
       if (!fusedConv) {
         const add = builder.add(
             builder.conv2d(input, weights, options),
-            builder.reshape(bias, [1, 1, 1, null]));
+            builder.reshape(bias, [1, 1, 1, bias.shape()[0]]));
         // `relu6` in TFLite equals to `clamp` in WebNN API
         if (relu6) {
           return builder.clamp(add, {
@@ -87,7 +95,7 @@ describe('test mobilenetv2 nhwc', function() {
       const autoPad = 'same-upper';
       const filterLayout = 'ohwi';
       const data = builder.input(
-          'input', {type: 'float32', dimensions: [1, 224, 224, 3]});
+          'input', {dataType: 'float32', dimensions: [1, 224, 224, 3]});
       const conv0 = await buildConv(
           data, '90', 'Conv_Conv2D', true, {strides, autoPad, filterLayout});
       const conv1 = await buildConv(
@@ -139,7 +147,7 @@ describe('test mobilenetv2 nhwc', function() {
       const conv4 = await buildConv(
           averagePool2d, '222', 'Logits_Conv2d_1c_1x1_Conv2D', false,
           {autoPad, filterLayout});
-      const reshape = builder.reshape(conv4, [1, null]);
+      const reshape = builder.reshape(conv4, [1, 1001]);
       const softmax = builder.softmax(reshape);
       const mobileNetGraph = await builder.build({softmax});
       return mobileNetGraph;

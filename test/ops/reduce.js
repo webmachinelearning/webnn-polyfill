@@ -9,8 +9,11 @@ describe('test reduce', () => {
 
   async function testReduce(op, options, input, expected) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: input.shape});
+    const x =
+        builder.input('x', {dataType: 'float32', dimensions: input.shape});
     const y = builder['reduce' + op](x, options);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), expected.shape);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input.values)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(expected.shape))};
@@ -252,7 +255,7 @@ describe('test reduce', () => {
           ],
         },
         {
-          shape: [2, 2],
+          shape: [1, 2, 2],
           values: [
             8.0184793, 9.0184793,
             10.0184793, 11.0184793,

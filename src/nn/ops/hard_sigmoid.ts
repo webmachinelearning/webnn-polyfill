@@ -36,7 +36,7 @@ export class HardSigmoid extends UnaryMLActivation {
         this.beta_ = beta;
       }
     }
-    
+
     runOp(x: tf.Tensor): tf.Tensor {
       // max(min(alpha * x + beta, 1), 0)
       return tf.maximum(

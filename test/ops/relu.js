@@ -9,8 +9,10 @@ describe('test relu', () => {
 
   it('relu', async () => {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: [3, 4, 5]});
+    const x = builder.input('x', {dataType: 'float32', dimensions: [3, 4, 5]});
     const y = builder.relu(x);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), x.shape());
     const graph = await builder.build({y});
     const inputs = {
       'x': new Float32Array([

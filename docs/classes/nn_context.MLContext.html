@@ -17,14 +17,14 @@
 <li><a href="nn_context.MLContext.html">MLContext</a></li></ul>
 <h1>Class MLContext</h1></div>
 <section class="tsd-panel tsd-comment">
-<div class="tsd-comment tsd-typography"><p><a href="https://webmachinelearning.github.io/webnn/#mlcontext">API spec</a></p>
+<div class="tsd-comment tsd-typography"><p><a href="https://webmachinelearning.github.io/webnn/#api-mlcontext">API spec</a></p>
 </div></section>
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li><span class="target">MLContext</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/context.ts#L49">nn/context.ts:49</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/context.ts#L49">nn/context.ts:49</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -33,7 +33,6 @@
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading">Methods</h3>
 <div class="tsd-index-list"><a href="nn_context.MLContext.html#compute" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF4DB8" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-2048-path"></rect><path d="M9.162 16V7.24H10.578L11.514 10.072C11.602 10.328 11.674 10.584 11.73 10.84C11.794 11.088 11.842 11.28 11.874 11.416C11.906 11.28 11.954 11.088 12.018 10.84C12.082 10.584 12.154 10.324 12.234 10.06L13.122 7.24H14.538V16H13.482V12.82C13.482 12.468 13.49 12.068 13.506 11.62C13.53 11.172 13.558 10.716 13.59 10.252C13.622 9.78 13.654 9.332 13.686 8.908C13.726 8.476 13.762 8.1 13.794 7.78L12.366 12.16H11.334L9.894 7.78C9.934 8.092 9.97 8.456 10.002 8.872C10.042 9.28 10.078 9.716 10.11 10.18C10.142 10.636 10.166 11.092 10.182 11.548C10.206 12.004 10.218 12.428 10.218 12.82V16H9.162Z" fill="var(--color-text)" id="icon-2048-text"></path></svg><span>compute</span></a>
-<a href="nn_context.MLContext.html#computeSync" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>compute<wbr/>Sync</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
@@ -42,7 +41,7 @@
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
 <li class="tsd-signature tsd-anchor-link" id="compute.compute-1">compute<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="nn_graph.MLGraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a>, inputs<span class="tsd-signature-symbol">: </span><a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a>, outputs<span class="tsd-signature-symbol">: </span><a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/nn_graph.MLComputeResult.html" class="tsd-signature-type" data-tsd-kind="Interface">MLComputeResult</a><span class="tsd-signature-symbol">&gt;</span><a href="#compute.compute-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p><a href="https://webmachinelearning.github.io/webnn/#dom-mlcontext-compute">spec</a></p>
+<div class="tsd-comment tsd-typography"><p><a href="https://webmachinelearning.github.io/webnn/#api-mlcontext-compute">spec</a></p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -55,26 +54,7 @@
 <h5>outputs: <a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/nn_graph.MLComputeResult.html" class="tsd-signature-type" data-tsd-kind="Interface">MLComputeResult</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/context.ts#L84">nn/context.ts:84</a></li></ul></aside></li></ul></section>
-<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="computeSync" class="tsd-anchor"></a>
-<h3 class="tsd-anchor-link"><span>compute<wbr/>Sync</span><a href="#computeSync" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="computeSync.computeSync-1">compute<wbr/>Sync<span class="tsd-signature-symbol">(</span>graph<span class="tsd-signature-symbol">: </span><a href="nn_graph.MLGraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a>, inputs<span class="tsd-signature-symbol">: </span><a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a>, outputs<span class="tsd-signature-symbol">: </span><a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#computeSync.computeSync-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
-<li class="tsd-description">
-<div class="tsd-comment tsd-typography"><p><a href="https://webmachinelearning.github.io/webnn/#dom-mlcontext-computesync">spec</a></p>
-</div>
-<div class="tsd-parameters">
-<h4 class="tsd-parameters-title">Parameters</h4>
-<ul class="tsd-parameter-list">
-<li>
-<h5>graph: <a href="nn_graph.MLGraph.html" class="tsd-signature-type" data-tsd-kind="Class">MLGraph</a></h5></li>
-<li>
-<h5>inputs: <a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a></h5></li>
-<li>
-<h5>outputs: <a href="../types/nn_graph.MLNamedArrayBufferViews.html" class="tsd-signature-type" data-tsd-kind="Type alias">MLNamedArrayBufferViews</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
-<ul>
-<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/866d72b/src/nn/context.ts#L95">nn/context.ts:95</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/webmachinelearning/webnn-polyfill/blob/d20c9f4/src/nn/context.ts#L84">nn/context.ts:84</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -105,8 +85,7 @@
 <ul>
 <li class="current tsd-kind-class tsd-parent-kind-module"><a href="nn_context.MLContext.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg><span>MLContext</span></a>
 <ul>
-<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_context.MLContext.html#compute" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>compute</a></li>
-<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_context.MLContext.html#computeSync" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>compute<wbr/>Sync</a></li></ul></li></ul></nav></div></div>
+<li class="tsd-kind-method tsd-parent-kind-class"><a href="nn_context.MLContext.html#compute" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>compute</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="../assets/main.js"></script></body></html>

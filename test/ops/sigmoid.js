@@ -8,8 +8,10 @@ describe('test sigmoid', () => {
   });
   async function testSigmoid(input, expected, shape) {
     const builder = new MLGraphBuilder(context);
-    const x = builder.input('x', {type: 'float32', dimensions: shape});
+    const x = builder.input('x', {dataType: 'float32', dimensions: shape});
     const y = builder.sigmoid(x);
+    utils.checkDataType(y.dataType(), x.dataType());
+    utils.checkShape(y.shape(), shape);
     const graph = await builder.build({y});
     const inputs = {'x': new Float32Array(input)};
     const outputs = {'y': new Float32Array(utils.sizeOfShape(shape))};

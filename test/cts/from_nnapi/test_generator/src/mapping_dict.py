@@ -1059,24 +1059,6 @@ MappingDict = {
             }
         ]
     },
-    'SQUEEZE': {
-        'webnnOperation': 'squeeze',
-        'insList': [
-            {
-                'name': 'input',
-                'mappingParamIndex': 0,
-                'mappingRuleType': 0
-            }
-        ],
-        'optionalInsList': [
-            {
-                'name': 'axes',
-                'mappingParamIndex': 1,
-                'optionsDictKey': 'axes',
-                'mappingRuleType': 2
-            }
-        ]
-    },
     'SUB': {
         'webnnOperation': 'sub',
         'insList': [

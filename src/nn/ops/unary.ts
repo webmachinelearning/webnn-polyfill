@@ -7,6 +7,7 @@ import * as utils from '../utils';
 export abstract class Unary extends SingleOutputOperation {
   protected x_: MLOperand;
   private needCheckOutputShape_: boolean;
+  // private outputShape_: number[];
 
   constructor(x: MLOperand) {
     if (x !== undefined) {
@@ -18,10 +19,17 @@ export abstract class Unary extends SingleOutputOperation {
       this.x_ = undefined;
     }
     this.needCheckOutputShape_ = true;
+    this.createOutput();
   }
 
   inputs(): MLOperand[] {
     return [this.x_];
+  }
+
+  createOutput(): void {
+    if (this.x_) {
+      this.outputs_.push(new OutputOperand(this, this.x_.desc));
+    }
   }
 
   run(inputTensors: Map<MLOperand, tf.Tensor>): tf.Tensor {
@@ -97,7 +105,7 @@ export abstract class UnaryMLActivation extends Unary implements MLActivation {
     this.builder_ = x.builder;
     utils.validateOperand(x);
     this.x_ = x;
-    this.createOutput();
+    this.outputs_.push(new OutputOperand(this, this.x_.desc));
     return this.output;
   }
 }
