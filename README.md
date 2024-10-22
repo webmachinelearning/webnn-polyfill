@@ -1,6 +1,9 @@
 [![build and test](https://github.com/webmachinelearning/webnn-polyfill/workflows/build%20and%20test/badge.svg)](https://github.com/webmachinelearning/webnn-polyfill/actions)
 [![deploy](https://github.com/webmachinelearning/webnn-polyfill/workflows/deploy/badge.svg)](https://github.com/webmachinelearning/webnn-polyfill/actions)
 
+>[!NOTE]
+>**This repository is archived. This polyfill demonstrated early feasibility of the WebNN API. Now that the [native implementations](https://webmachinelearning.github.io/webnn-status/) across multiple backends track the latest specification closely all web developers are advised to use the native implementations for their development and experimentation needs.**
+
 # WebNN Polyfill
 
 A JavaScript implementation of the [Web Neural Network API](https://webmachinelearning.github.io/webnn/).
